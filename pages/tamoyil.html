@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Tamoyillar</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tamoyil-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tamoyil-item {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      border-left: 4px solid var(--p2);
+      display: flex;
+      gap: 16px;
+      transition: transform .2s;
+    }
+    .tamoyil-item:hover { transform: translateX(4px); }
+    .tamoyil-num {
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem;
+    }
+    .tamoyil-title {
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--tx);
+      margin-bottom: 5px;
+    }
+    .tamoyil-desc {
+      font-size: .85rem;
+      color: var(--mu);
+      line-height: 1.7;
+    }
+
+    .quote-box {
+      background: linear-gradient(135deg, #f8f6ff, #ede9ff);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin: 28px 0;
+      border: 2px dashed var(--br);
+    }
+    .quote-box .qtext {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--p);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    .quote-box .qauth { font-size: .8rem; color: var(--mu); }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">📌 Ilk Qadam Tamoyillari</div>
+  <div class="info-box">
+    Bu <b>6 ta tamoyil</b> — Ilk Qadam dasturining falsafiy asosi.
+    Har bir mashg'ulot va metodika shu tamoyillarga tayanadi.
+  </div>
+
+  <div class="tamoyil-list">
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">1</div>
+      <div>
+        <div class="tamoyil-title">Bolalikning o'ziga xos qadriyat ekanligini tan olish</div>
+        <div class="tamoyil-desc">Bola o'yin va muloqot orqali tezroq o'rganadi. Bolalik — kelajakka tayyorgarlik davri emas, o'z qadriga ega hayot bosqichi.</div>
+      </div>
+    </div>
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">2</div>
+      <div>
+        <div class="tamoyil-title">Har tomonlama rivojlanish va farovonlik</div>
+        <div class="tamoyil-desc">5 ta sohani integratsiyalash. Xavfsiz, inklyuziv muhit yaratish bolaning to'liq rivojlanishi uchun zarur.</div>
+      </div>
+    </div>
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">3</div>
+      <div>
+        <div class="tamoyil-title">Bola shaxsiga yo'naltirilgan va o'yinga asoslangan ta'lim</div>
+        <div class="tamoyil-desc">O'yin eng samarali o'qitish usuli. Tizimli va erkin o'yin har ikkisi ham qo'llab-quvvatlanadi.</div>
+      </div>
+    </div>
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">4</div>
+      <div>
+        <div class="tamoyil-title">Inklyuziv va teng huquqli ta'lim</div>
+        <div class="tamoyil-desc">Barcha bolalar, jismoniy yoki boshqa imkoniyatlaridan qat'i nazar, sifatli ta'limdan foydalanish huquqiga ega.</div>
+      </div>
+    </div>
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">5</div>
+      <div>
+        <div class="tamoyil-title">Ota-onalar va jamoatchilik bilan hamkorlik</div>
+        <div class="tamoyil-desc">Ota-onalar va mahallani ta'lim jarayoniga faol jalb qilish — bolaning rivojlanishi uchun muhim omil.</div>
+      </div>
+    </div>
+
+    <div class="tamoyil-item">
+      <div class="tamoyil-num">6</div>
+      <div>
+        <div class="tamoyil-title">Hayoti davomida ta'lim olishga tayyorgarlik</div>
+        <div class="tamoyil-desc">Tanqidiy fikrlash, mustaqillik va o'z-o'zini rivojlantirish ko'nikmalarini erta yoshdan shakllantirish.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="quote-box">
+    <div class="qtext">"O'yin — bolaning ishi, uning rivojlanishi uchun eng samarali yo'l"</div>
+    <div class="qauth">— Ilk Qadam dasturi falsafasi</div>
+  </div>
+
+  <div class="sec-title">🎯 Tamoyillar amaliyotda qanday ko'rinadi?</div>
+  <div class="grid-2" style="margin-bottom: 30px">
+    <div class="card">
+      <div style="font-size:1.5rem;margin-bottom:8px">🧩</div>
+      <div style="font-weight:700;font-size:.88rem;margin-bottom:6px">Erkin o'yin vaqti</div>
+      <div style="font-size:.82rem;color:var(--mu)">Har kuni bolalarga mustaqil tanlov va ijodkorlik uchun vaqt ajratiladi</div>
+    </div>
+    <div class="card">
+      <div style="font-size:1.5rem;margin-bottom:8px">👨‍👩‍👧</div>
+      <div style="font-weight:700;font-size:.88rem;margin-bottom:6px">Ota-ona uchrashuvlari</div>
+      <div style="font-size:.82rem;color:var(--mu)">Muntazam suhbat va bola rivojlanishi haqida fikr almashish</div>
+    </div>
+    <div class="card">
+      <div style="font-size:1.5rem;margin-bottom:8px">🌈</div>
+      <div style="font-weight:700;font-size:.88rem;margin-bottom:6px">Individual yondashuv</div>
+      <div style="font-size:.82rem;color:var(--mu)">Har bir bolaning o'ziga xos ehtiyojlari va qiziqishlari hisobga olinadi</div>
+    </div>
+    <div class="card">
+      <div style="font-size:1.5rem;margin-bottom:8px">🤝</div>
+      <div style="font-weight:700;font-size:.88rem;margin-bottom:6px">Inklyuziv muhit</div>
+      <div style="font-size:.82rem;color:var(--mu)">Barcha bolalar uchun teng imkoniyat va qo'llab-quvvatlash</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+})
+</script>
+
+</body>
+</html>
