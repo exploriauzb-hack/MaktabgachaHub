@@ -1,735 +1,934 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Attestatsiya Pro — MaktabgachaHub</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MaktabgachaHub — Attestatsiya Pro</title>
+  <link rel="stylesheet" href="../css/style.css"/>
   <style>
-    /* ── Umumiy ─────────────────────────────────────────────── */
-    .sec-title { font-size:1.1rem; font-weight:700; color:var(--tx); margin:1.75rem 0 1rem; }
+    /* ── Mode selection ── */
+    .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:700px; margin:0 auto; }
+    @media(max-width:560px){ .mode-grid{grid-template-columns:1fr;} }
+    .mode-card { border:2px solid var(--br); border-radius:16px; padding:28px 22px; cursor:pointer; transition:.2s; background:#fff; text-align:center; }
+    .mode-card:hover { border-color:var(--p); box-shadow:0 4px 20px rgba(108,71,255,.12); }
+    .mode-card.selected { border-color:var(--p); background:#f5f3ff; }
+    .mode-card .mode-icon { font-size:2.4rem; margin-bottom:10px; }
+    .mode-card h3 { font-size:1.1rem; margin-bottom:6px; color:var(--tx); }
+    .mode-card p { font-size:.85rem; color:var(--mu); }
+    .mode-badge { display:inline-block; background:var(--p); color:#fff; font-size:.72rem; padding:2px 8px; border-radius:20px; margin-top:8px; font-weight:600; }
 
-    /* ── Rejim tanlash ──────────────────────────────────────── */
-    .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin:1.5rem 0; }
-    .mode-card { background:#fff; border:2px solid var(--br); border-radius:14px; padding:1.75rem 1.5rem;
-                 cursor:pointer; transition:border-color .2s, box-shadow .2s; text-align:center; }
-    .mode-card:hover { border-color:var(--p); box-shadow:0 4px 16px #6c47ff22; }
-    .mode-card .mc-icon { font-size:2.5rem; }
-    .mode-card h3 { margin:.75rem 0 .4rem; font-size:1.05rem; color:var(--tx); }
-    .mode-card p  { font-size:.85rem; color:var(--mu); line-height:1.5; margin:0; }
-    .mode-card .mc-badge { display:inline-block; margin-top:.9rem; padding:.25rem .75rem;
-                           background:var(--p); color:#fff; border-radius:20px; font-size:.78rem; font-weight:600; }
+    /* ── Category select ── */
+    .cat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+    .cat-btn { border:2px solid var(--br); background:#fff; border-radius:12px; padding:14px 16px; cursor:pointer; text-align:left; transition:.15s; font-size:.9rem; }
+    .cat-btn:hover { border-color:var(--p); }
+    .cat-btn.active { border-color:var(--p); background:#f5f3ff; color:var(--p); font-weight:600; }
+    .cat-btn .cat-num { font-size:.75rem; color:var(--mu); margin-top:2px; }
 
-    /* ── Toifa tanlash (mashq rejimi) ───────────────────────── */
-    .cat-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:.75rem; margin:1rem 0; }
-    .cat-btn { background:#fff; border:2px solid var(--br); border-radius:10px; padding:.9rem .75rem;
-               cursor:pointer; text-align:center; transition:border-color .18s; font-size:.88rem; font-weight:600; color:var(--tx); }
-    .cat-btn:hover { border-color:var(--p); color:var(--p); }
+    /* ── Timer ── */
+    #timer-bar { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--br); padding:10px 0; margin-bottom:0; }
+    .timer-inner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:0 20px; max-width:900px; margin:0 auto; }
+    #timer-display { font-size:1.5rem; font-weight:700; color:var(--p); font-variant-numeric:tabular-nums; transition:color .3s; }
+    #timer-display.urgent { color:var(--err); animation:pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+    .timer-label { font-size:.8rem; color:var(--mu); }
 
-    /* ── Test oynasi ────────────────────────────────────────── */
-    #testArea { display:none; }
-    .t-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.75rem;
-                background:#fff; border:1px solid var(--br); border-radius:12px; padding:1rem 1.25rem; margin-bottom:1.25rem; }
-    .t-progress-wrap { flex:1; min-width:160px; }
-    .t-meta { font-size:.82rem; color:var(--mu); margin-bottom:.35rem; }
+    /* ── Nav grid ── */
+    .nav-grid { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0; }
+    .nav-btn { width:36px; height:36px; border-radius:8px; border:1.5px solid var(--br); background:#fff; cursor:pointer; font-size:.8rem; font-weight:600; display:flex; align-items:center; justify-content:center; transition:.15s; }
+    .nav-btn.answered { background:var(--ok); color:#fff; border-color:var(--ok); }
+    .nav-btn.current { border-color:var(--p); color:var(--p); }
+    .nav-btn.wrong { background:var(--err); color:#fff; border-color:var(--err); }
+    .nav-btn.correct { background:var(--ok); color:#fff; border-color:var(--ok); }
 
-    /* Taymer */
-    .timer-box { display:flex; align-items:center; gap:.5rem; font-size:1.5rem; font-weight:800;
-                 color:var(--p); min-width:100px; justify-content:flex-end; }
-    .timer-box.warning { color:var(--err); animation:pulse .8s infinite; }
-    @keyframes pulse { 0%,100%{ opacity:1; } 50%{ opacity:.55; } }
+    /* ── Question ── */
+    .q-box { background:#fff; border:1px solid var(--br); border-radius:16px; padding:28px; margin-bottom:16px; }
+    .q-num { font-size:.8rem; color:var(--mu); margin-bottom:10px; font-weight:600; }
+    .q-stage { display:inline-block; font-size:.75rem; padding:2px 10px; border-radius:20px; margin-bottom:10px; font-weight:600; }
+    .q-stage.s1 { background:#ede9ff; color:var(--p); }
+    .q-stage.s2 { background:#fef3c7; color:#92400e; }
+    .q-text { font-size:1rem; line-height:1.65; margin-bottom:20px; color:var(--tx); }
+    .q-case { background:#f4f2ff; border-left:4px solid var(--p); border-radius:0 10px 10px 0; padding:14px 16px; margin-bottom:18px; font-size:.92rem; color:var(--tx); line-height:1.6; }
+    .q-opts { display:flex; flex-direction:column; gap:10px; }
+    .q-opt { border:2px solid var(--br); border-radius:12px; padding:13px 16px; cursor:pointer; transition:.15s; font-size:.92rem; display:flex; align-items:flex-start; gap:10px; background:#fff; }
+    .q-opt:hover:not(.disabled) { border-color:var(--p); background:#f9f8ff; }
+    .q-opt.selected { border-color:var(--p); background:#f5f3ff; }
+    .q-opt.correct { border-color:var(--ok); background:#f0fdf4; }
+    .q-opt.wrong { border-color:var(--err); background:#fff1f2; }
+    .q-opt.disabled { cursor:default; }
+    .opt-letter { font-weight:700; color:var(--p); min-width:20px; }
+    .q-exp { margin-top:16px; padding:14px 16px; background:#f4f2ff; border-radius:10px; font-size:.88rem; color:var(--tx); line-height:1.6; display:none; }
+    .q-exp.show { display:block; }
 
-    /* Savol */
-    .tq { font-size:1rem; font-weight:600; color:var(--tx); margin:0 0 1rem; line-height:1.6; }
-    .topt { display:flex; align-items:flex-start; gap:.75rem; padding:.8rem 1rem; border:2px solid var(--br);
-            border-radius:10px; cursor:pointer; margin-bottom:.6rem; font-size:.9rem; color:var(--tx);
-            transition:border-color .15s, background .15s; }
-    .topt:hover { border-color:var(--p); background:#f5f2ff; }
-    .topt.selected { border-color:var(--p); background:#ede9ff; }
-    .topt.correct  { border-color:var(--ok); background:#f0fdf4; }
-    .topt.wrong    { border-color:var(--err); background:#fef2f2; }
-    .topt.reveal   { border-color:var(--ok); background:#f0fdf4; opacity:.85; }
-    .opt-letter    { min-width:26px; height:26px; border-radius:50%; background:var(--bg); display:flex;
-                     align-items:center; justify-content:center; font-weight:700; font-size:.8rem; color:var(--mu); }
-    .exp-box { background:#f0fdf4; border:1px solid var(--ok); border-radius:8px;
-               padding:.75rem 1rem; font-size:.87rem; color:#166534; margin-top:.75rem; }
+    /* ── Progress bar ── */
+    .qpbar { height:6px; background:var(--br); border-radius:4px; margin-bottom:20px; }
+    .qpfill { height:100%; background:var(--p); border-radius:4px; transition:.3s; }
 
-    /* Navigatsiya grid (imtihon) */
-    .nav-grid { display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0; }
-    .nav-num { width:32px; height:32px; border-radius:6px; border:1.5px solid var(--br);
-               background:#fff; font-size:.78rem; font-weight:700; cursor:pointer;
-               display:flex; align-items:center; justify-content:center; color:var(--mu); transition:all .15s; }
-    .nav-num.answered { background:var(--ok); border-color:var(--ok); color:#fff; }
-    .nav-num.current  { border-color:var(--p); color:var(--p); }
+    /* ── Nav buttons ── */
+    .q-nav { display:flex; gap:10px; justify-content:space-between; flex-wrap:wrap; }
+    .q-nav button { flex:1; min-width:120px; }
 
-    /* Alt tugmalar */
-    .t-actions { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.25rem; align-items:center; }
+    /* ── Result ── */
+    .result-circle { width:140px; height:140px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 24px; font-size:2rem; font-weight:800; }
+    .result-circle.excellent { background:#f0fdf4; color:var(--ok); border:4px solid var(--ok); }
+    .result-circle.good      { background:#f5f3ff; color:var(--p);  border:4px solid var(--p); }
+    .result-circle.average   { background:#fef3c7; color:#92400e;   border:4px solid var(--go); }
+    .result-circle.fail      { background:#fff1f2; color:var(--err); border:4px solid var(--err); }
+    .result-grade { font-size:.85rem; font-weight:600; }
+    .stage-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
+    @media(max-width:480px){ .stage-breakdown{grid-template-columns:1fr;} }
+    .stage-card { background:var(--bg); border-radius:12px; padding:14px; }
+    .stage-card h4 { font-size:.85rem; color:var(--mu); margin-bottom:4px; }
+    .stage-card .stage-score { font-size:1.3rem; font-weight:700; color:var(--tx); }
+    .history-item { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--br); font-size:.88rem; }
+    .history-item:last-child { border:none; }
 
-    /* ── Natija ─────────────────────────────────────────────── */
-    #resultArea { display:none; }
-    .result-hero { text-align:center; padding:2rem 1rem 1.5rem; }
-    .result-hero .r-percent { font-size:3.5rem; font-weight:800; color:var(--p); }
-    .result-hero .r-grade   { font-size:1.1rem; font-weight:700; margin:.5rem 0; }
-    .result-hero .r-sub     { color:var(--mu); font-size:.9rem; }
-    .cat-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.75rem; margin:1rem 0; }
-    .cs-card   { background:#fff; border:1px solid var(--br); border-radius:10px; padding:1rem 1.25rem; }
-    .cs-card .cs-name { font-size:.82rem; color:var(--mu); margin-bottom:.3rem; }
-    .cs-card .cs-score{ font-size:1.2rem; font-weight:700; color:var(--tx); }
-    .cs-card .pbar { margin-top:.5rem; }
-
-    /* Sertifikat */
-    .cert-box { border:3px solid var(--go); border-radius:16px; padding:2rem; text-align:center;
-                background:linear-gradient(135deg,#fffbeb,#fff); margin:1.5rem 0; }
-    .cert-box h2 { color:var(--go); margin:0 0 .5rem; font-size:1.4rem; }
-    .cert-box p  { color:var(--tx); margin:.25rem 0; }
-    @media print { nav,.btn-primary,.btn-secondary,#historySection,#errorSection { display:none!important; }
-                   .cert-box { border-color:#000; } }
-
-    /* ── Tarix ──────────────────────────────────────────────── */
-    .hist-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;
-                gap:.5rem; padding:.7rem 1rem; border-bottom:1px solid var(--br); font-size:.88rem; }
-    .hist-row:last-child { border-bottom:none; }
-
-    /* ── Premium bloklash ───────────────────────────────────── */
-    .lock-box { text-align:center; padding:3rem 1rem; }
-    .lock-box .lock-icon { font-size:3.5rem; }
-    .lock-box h2 { margin:.75rem 0 .5rem; }
-    .lock-box p  { color:var(--mu); max-width:360px; margin:0 auto .75rem; line-height:1.6; }
-
-    @media (max-width:580px) {
-      .mode-grid { grid-template-columns:1fr; }
-      .timer-box { font-size:1.2rem; }
+    /* ── Certificate ── */
+    @media print {
+      nav, #timer-bar, .no-print { display:none!important; }
+      .cert-box { border:3px solid #6c47ff!important; }
     }
+    .cert-box { border:3px solid var(--p); border-radius:20px; padding:40px; text-align:center; max-width:600px; margin:0 auto; background:#fff; }
+    .cert-box .cert-logo { font-size:3rem; margin-bottom:10px; }
+    .cert-box h2 { font-size:1.4rem; color:var(--p); margin-bottom:6px; }
+    .cert-box .cert-name { font-size:1.8rem; font-weight:800; color:var(--tx); margin:16px 0 8px; }
+    .cert-box .cert-score { font-size:3rem; font-weight:900; color:var(--p); }
+    .cert-box .cert-grade { font-size:1.1rem; font-weight:700; color:var(--ok); margin-bottom:16px; }
+    .cert-box .cert-date { font-size:.85rem; color:var(--mu); margin-top:16px; }
+    .cert-stars { font-size:1.8rem; margin:10px 0; }
+
+    /* ── Screens ── */
+    .screen { display:none; }
+    .screen.active { display:block; }
+
+    /* ── Misc ── */
+    .info-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .info-tag { background:var(--bg); border:1px solid var(--br); border-radius:8px; padding:5px 12px; font-size:.82rem; color:var(--mu); }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-left">
-    <a href="../dashboard.html" class="nav-logo" style="text-decoration:none;">MaktabgachaHub</a>
-  </div>
-  <div class="nav-right" id="navRight">
-    <span id="navName" class="nav-name"></span>
-    <span id="navBadge" class="badge"></span>
-    <a href="../dashboard.html" class="btn-secondary" style="font-size:.85rem;padding:.35rem .9rem;">← Dashboard</a>
+  <a href="../dashboard.html" class="nav-brand">🎓 MaktabgachaHub</a>
+  <div class="nav-right">
+    <a href="../dashboard.html" class="btn-secondary" style="padding:6px 14px;font-size:.85rem;">← Dashboard</a>
+    <span id="nav-plan" class="badge" style="margin-left:8px;"></span>
   </div>
 </nav>
 
-<div class="container" style="padding-top:5rem;padding-bottom:3rem;max-width:820px;">
+<!-- ════════════════════════════════════════
+     SCREEN 0: LOADING
+═══════════════════════════════════════════ -->
+<div id="screen-loading" class="screen active" style="text-align:center;padding:80px 20px;color:var(--mu);">
+  ⏳ Yuklanmoqda...
+</div>
 
-  <!-- PREMIUM BLOKLASH -->
-  <div id="lockView" style="display:none;">
-    <div class="lock-box">
-      <div class="lock-icon">🔒</div>
-      <h2>Bu bo'lim faqat Pro/Corporate uchun</h2>
-      <p>Attestatsiya simulyatsiyasi — professional imtihon tayyorgarlik vositasi. Pro rejimga o'ting va barcha funksiyalardan foydalaning.</p>
-      <a href="../premium.html" class="btn-primary">⚡ Pro rejimga o'tish</a>
+<!-- ════════════════════════════════════════
+     SCREEN LOCKED: Premium kerak
+═══════════════════════════════════════════ -->
+<div id="screen-locked" class="screen">
+  <div class="container" style="max-width:560px;text-align:center;padding-top:60px;">
+    <div style="font-size:3rem;">🎓</div>
+    <h2 style="margin:12px 0 8px;">Attestatsiya Pro</h2>
+    <p style="color:var(--mu);margin-bottom:24px;">Bu bo'lim faqat <strong>Professional</strong> obuna uchun. Haqiqiy davlat imtihoni formatida tayyorlaning.</p>
+    <div class="card" style="text-align:left;margin-bottom:20px;">
+      <div style="font-weight:600;margin-bottom:12px;">✅ Pro rejimda nima bor:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:.9rem;color:var(--mu);">
+        <span>📋 1-bosqich: 35 mutaxassislik + 5 kasbiy standart savoli</span>
+        <span>🧩 2-bosqich: 10 ta case study (vaziyatga asoslangan)</span>
+        <span>⏱️ 90 daqiqalik haqiqiy taymer</span>
+        <span>📊 Har bosqich bo'yicha batafsil natija</span>
+        <span>🏆 Sertifikat (75%+ natijada)</span>
+        <span>📈 Oldingi urinishlar tarixi</span>
+      </div>
+    </div>
+    <a href="../premium.html" class="btn-primary" style="display:inline-block;text-decoration:none;">⭐ Premium olish — 49 000 so'm/oy</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 1: MODE SELECTION
+═══════════════════════════════════════════ -->
+<div id="screen-home" class="screen">
+  <div class="container" style="max-width:800px;padding-top:28px;padding-bottom:48px;">
+    <h1 style="font-size:1.5rem;margin-bottom:4px;">🎓 Attestatsiya Pro</h1>
+    <p style="color:var(--mu);margin-bottom:28px;">O'zbekiston MTT tarbiyachilari uchun davlat attestatsiyasi simulyatsiyasi</p>
+
+    <div class="info-row">
+      <span class="info-tag">📋 1-bosqich: 40 ta test savol</span>
+      <span class="info-tag">🧩 2-bosqich: 10 ta case study</span>
+      <span class="info-tag">⏱️ 90 daqiqa</span>
+      <span class="info-tag">🏆 80 ball — A'lo toifa</span>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:16px;">Rejim tanlang</div>
+    <div class="mode-grid" style="margin-bottom:32px;">
+      <div class="mode-card" id="mode-mashq" onclick="selectMode('mashq')">
+        <div class="mode-icon">📚</div>
+        <h3>Mashq rejimi</h3>
+        <p>Har savoldan keyin to'g'ri javob va izoh darhol ko'rsatiladi. Vaqt cheklovi yo'q.</p>
+        <span class="mode-badge" style="background:var(--ok);">Yangi boshlovchilar uchun</span>
+      </div>
+      <div class="mode-card" id="mode-imtihon" onclick="selectMode('imtihon')">
+        <div class="mode-icon">🏛️</div>
+        <h3>To'liq imtihon simulyatsiyasi</h3>
+        <p>Haqiqiy davlat imtihoni formati. 2 bosqich, 90 daqiqa taymer, oxirida natija.</p>
+        <span class="mode-badge">Davlat imtihoni formati</span>
+      </div>
+    </div>
+
+    <!-- Mashq: toifa tanlash -->
+    <div id="mashq-cats" style="display:none;">
+      <div class="sec-title" style="margin-bottom:12px;">Toifa tanlang (mashq rejimi)</div>
+      <div class="cat-grid" style="margin-bottom:24px;">
+        <button class="cat-btn" onclick="selectCat('ilk_qadam')">🌱 Ilk Qadam dasturi<div class="cat-num">20 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('soha')">📊 Rivojlanish sohalari<div class="cat-num">20 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('metodika')">📖 Metodika<div class="cat-num">20 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('psixolog')">🧠 Psixologiya<div class="cat-num">20 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('qonun')">⚖️ Qonunchilik<div class="cat-num">20 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('sanitar')">🏥 Sanitariya va salomatlik<div class="cat-num">20 savol</div></button>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="start-btn" onclick="startExam()" style="min-width:200px;">Boshlash →</button>
+
+    <!-- History -->
+    <div class="card" style="margin-top:36px;" id="history-box">
+      <div class="sec-title" style="margin-bottom:12px;">📈 Oxirgi urinishlar</div>
+      <div id="history-list"><p style="color:var(--mu);font-size:.9rem;">Hali urinish yo'q.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 2: EXAM
+═══════════════════════════════════════════ -->
+<div id="screen-exam" class="screen">
+  <div id="timer-bar">
+    <div class="timer-inner">
+      <div>
+        <div class="timer-label">Qolgan vaqt</div>
+        <div id="timer-display">90:00</div>
+      </div>
+      <div style="text-align:center;">
+        <div class="timer-label" id="stage-label">1-BOSQICH</div>
+        <div style="font-size:.9rem;font-weight:600;color:var(--tx);" id="q-counter">Savol 1/50</div>
+      </div>
+      <div style="text-align:right;">
+        <button class="btn-secondary no-print" onclick="confirmFinish()" style="padding:7px 14px;font-size:.82rem;">✅ Yakunlash</button>
+      </div>
     </div>
   </div>
 
-  <!-- ASOSIY KONTENT (Pro uchun) -->
-  <div id="mainView" style="display:none;">
+  <div class="container" style="max-width:800px;padding-top:20px;padding-bottom:48px;">
+    <!-- Progress -->
+    <div class="qpbar"><div class="qpfill" id="qpfill"></div></div>
 
-    <!-- ── 1. REJIM TANLASH ───────────────────────────── -->
-    <div id="modeView">
-      <div class="sec-title" style="font-size:1.3rem;">🎓 Attestatsiya Pro</div>
-      <p style="color:var(--mu);margin-top:-.5rem;">Haqiqiy attestatsiya imtihoniga tayyorgarlik ko'ring</p>
-      <div class="mode-grid">
-        <div class="mode-card" onclick="startPractice()">
-          <div class="mc-icon">📖</div>
-          <h3>Mashq rejimi</h3>
-          <p>Har savoldan keyin darhol javob va izoh ko'rsatiladi. Toifani o'zingiz tanlaysiz.</p>
-          <span class="mc-badge">Vaqt cheklovi yo'q</span>
-        </div>
-        <div class="mode-card" onclick="startExam()">
-          <div class="mc-icon">⏱️</div>
-          <h3>To'liq simulyatsiya</h3>
-          <p>Barcha toifalardan aralash 40 ta savol, 45 daqiqa vaqt. Haqiqiy attestatsiyaga o'xshash.</p>
-          <span class="mc-badge" style="background:var(--ac);">Imtihon rejimi</span>
-        </div>
-      </div>
-      <!-- Tarix -->
-      <div id="historySection">
-        <div class="sec-title">📈 Oxirgi urinishlar</div>
-        <div class="card" style="padding:0 1rem;" id="histBody">
-          <div style="padding:1.25rem;text-align:center;color:var(--mu);">Yuklanmoqda...</div>
-        </div>
-      </div>
+    <!-- Nav grid -->
+    <div class="nav-grid" id="nav-grid"></div>
+
+    <!-- Question -->
+    <div class="q-box" id="q-box">
+      <div class="q-num" id="q-num"></div>
+      <span class="q-stage" id="q-stage"></span>
+      <div class="q-case" id="q-case" style="display:none;"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-opts" id="q-opts"></div>
+      <div class="q-exp" id="q-exp"></div>
     </div>
 
-    <!-- ── 2. TOIFA TANLASH (Mashq) ──────────────────── -->
-    <div id="catView" style="display:none;">
-      <button class="btn-secondary" onclick="showMode()" style="margin-bottom:1rem;">← Orqaga</button>
-      <div class="sec-title">Toifani tanlang</div>
-      <div class="cat-grid" id="catGrid"></div>
+    <!-- Nav -->
+    <div class="q-nav">
+      <button class="btn-secondary" onclick="prevQ()">← Oldingi</button>
+      <button class="btn-primary" onclick="nextQ()" id="next-btn">Keyingi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SCREEN 3: RESULT
+═══════════════════════════════════════════ -->
+<div id="screen-result" class="screen">
+  <div class="container" style="max-width:700px;padding-top:28px;padding-bottom:60px;">
+    <div class="card" style="text-align:center;margin-bottom:20px;">
+      <div class="result-circle" id="result-circle">
+        <span id="result-pct"></span>
+        <span class="result-grade" id="result-grade-short"></span>
+      </div>
+      <h2 id="result-grade-full" style="font-size:1.3rem;margin-bottom:6px;"></h2>
+      <p id="result-msg" style="color:var(--mu);font-size:.9rem;"></p>
     </div>
 
-    <!-- ── 3. TEST OYNASI ────────────────────────────── -->
-    <div id="testArea">
-      <button class="btn-secondary" onclick="exitTest()" style="margin-bottom:1rem;">← Chiqish</button>
+    <!-- Bosqich natijalari -->
+    <div class="stage-breakdown" id="stage-breakdown"></div>
 
-      <div class="t-header">
-        <div class="t-progress-wrap">
-          <div class="t-meta" id="tMeta">Savol 1 / 10</div>
-          <div class="pbar"><div class="pfill" id="tPfill" style="width:10%"></div></div>
-        </div>
-        <div class="timer-box" id="timerBox" style="display:none;">⏱ <span id="timerVal">45:00</span></div>
-      </div>
-
-      <!-- Imtihon navigatsiya gridi -->
-      <div id="navGridWrap" style="display:none;">
-        <div class="t-meta">Savollarga o'tish:</div>
-        <div class="nav-grid" id="navGrid"></div>
-      </div>
-
-      <div class="card" style="padding:1.5rem;" id="questionCard">
-        <div class="tq" id="qText"></div>
-        <div id="optsWrap"></div>
-        <div class="exp-box" id="expBox" style="display:none;"></div>
-      </div>
-
-      <div class="t-actions">
-        <button class="btn-secondary" id="prevBtn" onclick="goQ(-1)" style="display:none;">← Oldingi</button>
-        <button class="btn-primary"   id="nextBtn" onclick="goQ(1)">Keyingi →</button>
-        <button class="btn-secondary" id="finishBtn" onclick="finishExam(false)" style="display:none;margin-left:auto;background:var(--ac);color:#fff;border:none;">Imtihonni yakunlash ✓</button>
-      </div>
+    <!-- Actions -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;" class="no-print">
+      <button class="btn-primary" onclick="showWrong()" id="btn-wrong" style="flex:1;">❌ Xato savollarni ko'rish</button>
+      <button class="btn-secondary" onclick="showCert()" id="btn-cert" style="flex:1;display:none;">🏆 Sertifikat</button>
+      <button class="btn-secondary" onclick="goHome()" style="flex:1;">🔄 Qayta boshlash</button>
     </div>
 
-    <!-- ── 4. NATIJA ─────────────────────────────────── -->
-    <div id="resultArea">
-      <div class="result-hero card">
-        <div class="r-percent" id="rPercent">0%</div>
-        <div class="r-grade" id="rGrade"></div>
-        <div class="r-sub" id="rSub"></div>
-      </div>
+    <!-- Wrong questions -->
+    <div id="wrong-section" style="display:none;">
+      <div class="sec-title" style="margin-bottom:12px;">❌ Xato javob berilgan savollar</div>
+      <div id="wrong-list"></div>
+    </div>
+  </div>
+</div>
 
-      <!-- Sertifikat -->
-      <div class="cert-box" id="certBox" style="display:none;">
-        <div style="font-size:2rem;">🏆</div>
-        <h2>Tabriklaymiz!</h2>
-        <p id="certName" style="font-size:1.1rem;font-weight:700;"></p>
-        <p id="certDate" style="color:var(--mu);font-size:.88rem;"></p>
-        <p>Attestatsiya simulyatsiyasida <strong id="certScore"></strong> natija qo'lga kiritildi</p>
-        <button class="btn-secondary" onclick="window.print()" style="margin-top:1rem;">🖨️ Chop etish</button>
-      </div>
-
-      <!-- Toifa statistikasi -->
-      <div class="sec-title">Toifalar bo'yicha natija</div>
-      <div class="cat-stats" id="catStats"></div>
-
-      <!-- Xato savollar -->
-      <div id="errorSection">
-        <div class="sec-title">❌ Xato qilingan savollar</div>
-        <div id="errorList"></div>
-      </div>
-
-      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">
-        <button class="btn-primary" onclick="showMode()">🔄 Qayta boshlash</button>
-        <button class="btn-secondary" onclick="startExam()">⏱ Yangi simulyatsiya</button>
+<!-- ════════════════════════════════════════
+     SCREEN 4: CERTIFICATE
+═══════════════════════════════════════════ -->
+<div id="screen-cert" class="screen">
+  <div class="container" style="max-width:700px;padding-top:36px;padding-bottom:60px;">
+    <div class="cert-box">
+      <div class="cert-logo">🎓</div>
+      <div style="font-size:.85rem;color:var(--mu);margin-bottom:4px;">MaktabgachaHub | Attestatsiya Pro</div>
+      <h2>MUVAFFAQIYAT SERTIFIKATI</h2>
+      <p style="color:var(--mu);font-size:.9rem;">Quyidagi tarbiyachi attestatsiya simulyatsiyasini muvaffaqiyatli yakunladi:</p>
+      <div class="cert-name" id="cert-name"></div>
+      <div class="cert-stars" id="cert-stars"></div>
+      <div class="cert-score" id="cert-score"></div>
+      <div class="cert-grade" id="cert-grade"></div>
+      <div style="font-size:.85rem;color:var(--mu);margin:12px 0;">Jami 50 ta savoldan (40 ta nazariy + 10 ta case study)</div>
+      <div class="cert-date" id="cert-date"></div>
+      <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--br);font-size:.8rem;color:var(--mu);">
+        Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting.
       </div>
     </div>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;" class="no-print">
+      <button class="btn-primary" onclick="window.print()" style="flex:1;">🖨️ Chop etish</button>
+      <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1;">← Natijaga qaytish</button>
+    </div>
+  </div>
+</div>
 
-  </div><!-- /mainView -->
-</div><!-- /container -->
-
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase.js"></script>
 <script src="../js/auth.js"></script>
 <script>
-// ═══════════════════════════════════════════════════════════
-//  SAVOLLAR BAZASI  (attestatsiya uchun, takrorlanmaydigan)
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// SAVOLLAR BANKI
+// 1-bosqich: nazariy (ilk_qadam, soha, metodika, psixolog, qonun, sanitar)
+// 2-bosqich: case study (vaziyatga asoslangan pedagogik mahorat)
+// ════════════════════════════════════════════════════════════════
 const QUESTIONS = {
+
+  // ── 1-BOSQICH: Nazariy ──────────────────────────────────────
   ilk_qadam: [
-    { q:"«Ilk Qadam» davlat o'quv dasturi qaysi yil tasdiqlangan?", opts:["2018","2015","2020","2016"], ans:0, exp:"«Ilk Qadam» dasturi 2018-yilda O'zbekiston Respublikasi Maktabgacha ta'lim vazirligi tomonidan tasdiqlangan." },
-    { q:"«Ilk Qadam» dasturida bolaning yaxlit rivojlanishi uchun asosiy yondashuv qanday nomlanadi?", opts:["Predmetli yondashuv","Kompetensiyaviy yondashuv","Integratsiyalashgan yondashuv","Loyiha yondashuvi"], ans:2, exp:"Dastur integratsiyalashgan yondashuvga asoslangan — turli soha va ko'nikmalar o'zaro bog'liq holda rivojlantiriladi." },
-    { q:"«Ilk Qadam» dasturi bo'yicha rivojlanish sohalari nechta?", opts:["4","5","6","7"], ans:2, exp:"Dasturda 6 ta rivojlanish sohasi: jismoniy, kognitiv, nutq, ijtimoiy-hissiy, estetik va o'zini o'zi boshqarish." },
-    { q:"Qaysi yondashuvda bola o'zi o'ylaydigan va muammoni hal etadigan faol ishtirokchi sifatida qaraladi?", opts:["Passiv o'rganish","Tarbiyachi markazli yondashuv","Bola markazli yondashuv","Dasturli o'qitish"], ans:2, exp:"«Ilk Qadam»da bola markazli yondashuv qo'llaniladi: bola o'rganish jarayonining faol ishtirokchisi hisoblanadi." },
-    { q:"«Ilk Qadam» dasturida kuzatish (observatsiya) nima uchun ishlatiladi?", opts:["Bolani baholash uchun","Bolani jazolash uchun","Ota-onaga hisobot uchun","Kundalik dars rejasini to'ldirish uchun"], ans:0, exp:"Kuzatish — bolaning rivojlanish darajasini aniqlash, individual ehtiyojlarini tushunish va ta'limni moslashtirishda asosiy vosita." },
-    { q:"Maktabgacha yoshdagi bolalar uchun ta'limning asosiy shakli qaysi?", opts:["Dars","O'yin","Mashq","Yozma ish"], ans:1, exp:"Maktabgacha yoshda o'yin — bolaning asosiy faoliyati va o'rganishning tabiiy shaklidir." },
-    { q:"«Ilk Qadam» dasturida «rivojlanish muhiti» (developmental environment) tushunchasi nimani anglatadi?", opts:["Sinf xonasining bezagi","Bolaning rivojlanishiga xizmat qiladigan jismoniy va ijtimoiy muhit","Tarbiyachining ish joyi","Bolaning uyi"], ans:1, exp:"Rivojlanish muhiti — bolaning barcha sohalarda o'sishini qo'llab-quvvatlaydigan maqsadli tashkil etilgan jismoniy, ijtimoiy va hissiy muhit." },
-    { q:"Qaysi tamoyilga asosan har bir bola o'z sur'atida rivojlanishiga imkon beriladi?", opts:["Tizimlilik","Individual yondashuv","Izchillik","Ommaviylik"], ans:1, exp:"Individual yondashuv tamoyili har bir bolaning o'ziga xos rivojlanish sur'ati, qobiliyati va ehtiyojlarini hisobga olishni taqozo etadi." },
-    { q:"«Ilk Qadam» dasturida ota-onalar bilan hamkorlik qaysi yo'l bilan amalga oshiriladi?", opts:["Faqat ota-onalar yig'ilishlari orqali","Faqat kunlik xabar orqali","Faol sheriklik va birgalikdagi faoliyat orqali","Faqat yozma hisobotlar orqali"], ans:2, exp:"Dastur ota-onalarni tarbiya jarayonining faol ishtirokchilari sifatida ko'radi va birgalikdagi faoliyat, hamkorlikni tavsiya etadi." },
-    { q:"Maktabgacha ta'limda portfel (portfolio) nimani ifodalaydi?", opts:["Tarbiyachining ish faoliyati hujjati","Bolaning rivojlanish jarayonini aks ettiruvchi ishlar to'plami","Muassasa moliyaviy hujjatlari","Test natijalari jurnali"], ans:1, exp:"Portfolio — bolaning rivojlanishi, qo'lga kiritgan yutuqlari va o'zgarishlarini vaqt o'tishi bilan kuzatib borish uchun ishlatiladigan hujjatlar va namunalar to'plami." },
-    { q:"«Ilk Qadam» dasturida bolaning yoshi bo'yicha qaysi guruh ajratilmagan?", opts:["Kichik guruh (3-4 yosh)","Chaqaloqlar guruhi (0-1 yosh)","O'rta guruh (4-5 yosh)","Tayyorlov guruhi (6-7 yosh)"], ans:1, exp:"«Ilk Qadam» dasturi 3-7 yosh oralig'ini qamrab oladi. Chaqaloqlar guruhi (0-1 yosh) alohida dastur doirasida." },
-    { q:"Tarbiyachi bolaga nisbatan qanday munosabatda bo'lishi kerak?", opts:["Qattiq intizomchi","Faqat ko'rsatma beruvchi","Qo'llab-quvvatlovchi va yo'naltiruvchi","Baholovchi va nazoratchi"], ans:2, exp:"Zamonaviy maktabgacha ta'limda tarbiyachi bolani qo'llabquvvatlovchi, yo'naltiruvchi va rag'batlantiruvchi rol o'ynaydi." },
-    { q:"O'yin-faoliyat jarayonida bolalar o'rtasidagi ziddiyatga tarbiyachi qanday munosabatda bo'lishi kerak?", opts:["Darhol to'xtatish va jazolash","Aralashmay kuzatib turish","Bolalarga muammoni o'zlari hal qilishiga yordam berish","Ota-onaga xabar berish"], ans:2, exp:"Tarbiyachi bolalarga muzokaralar va muammo hal qilish ko'nikmalarini rivojlantirish uchun qulay sharoit yaratishi, kerak bo'lganda yo'naltirishi lozim." },
-    { q:"«Ilk Qadam»da «ta'lim berish» o'rniga qaysi tushuncha ishlatiladi?", opts:["O'rgatish","Qo'llab-quvvatlash va rivojlantirish","Tarbiyalash","Bilim berish"], ans:1, exp:"Dasturda bola tayyor bilim olmaydi, balki tarbiyachi bolaning tabiiy qiziqishi va rivojlanishini qo'llab-quvvatlaydi." },
-    { q:"MTT muhitida xavfsizlik va sog'liqni saqlash qaysi hujjat asosida tartibga solinadi?", opts:["Faqat «Ilk Qadam» dasturi","Sanitariya me'yorlari va qoidalari (SanPiN)","O'qituvchilar qo'llanmasi","Vazirlik buyruqlari to'plami"], ans:1, exp:"MTT faoliyatida sanitariya-gigiyena me'yorlari (SanPiN) asosida bolalar xavfsizligi va sog'lig'i ta'minlanadi." },
+    { q:"Ilk Qadam dasturining qaysi nashri hozir amalda?", opts:["2-nashr, 2022","3-nashr, 2026","1-nashr, 2018","4-nashr, 2024"], ans:1, exp:"Ilk Qadam dasturining 3-nashri 2026-yildan amalda." },
+    { q:"Ilk Qadam dasturida bolalar necha yoshdan necha yoshgacha qamrab olingan?", opts:["0-3 yosh","2-7 yosh","3-6 yosh","1-5 yosh"], ans:1, exp:"Ilk Qadam dasturi 2 yoshdan 7 yoshgacha bo'lgan bolalarni qamrab oladi." },
+    { q:"MTT da kunlik rejim qancha vaqtdan iborat bo'lishi tavsiya etiladi?", opts:["6 soat","8 soat","10-12 soat","24 soat (kunduzgi va tungi)"], ans:2, exp:"MTT ning ish vaqti odatda 10-12 soatni tashkil qiladi." },
+    { q:"'Aqliy rivojlanish' Ilk Qadam dasturida qaysi sohaga kiradi?", opts:["Ijtimoiy-hissiy rivojlanish","Kognitiv rivojlanish","Jismoniy rivojlanish","Nutq rivojlanishi"], ans:1, exp:"Aqliy (kognitiv) rivojlanish bilish jarayonlarini o'z ichiga oladi." },
+    { q:"Ilk Qadam dasturida haftalik mavzular nechta haftaga mo'ljallangan?", opts:["26 hafta","30 hafta","36 hafta","40 hafta"], ans:2, exp:"O'quv yili 36 haftadan iborat, har hafta alohida mavzu belgilanadi." },
+    { q:"Kichik guruhda (2-3 yosh) bolalar soni qancha bo'lishi kerak?", opts:["15-20 nafar","10-15 nafar","5-10 nafar","20-25 nafar"], ans:1, exp:"Kichik guruhlarda 10-15 nafar bola bo'lishi maqsadga muvofiq." },
+    { q:"O'rta guruh qaysi yoshdagi bolalarni o'z ichiga oladi?", opts:["2-3 yosh","3-4 yosh","4-5 yosh","5-6 yosh"], ans:2, exp:"O'rta guruh 4-5 yoshli bolalardan tashkil topadi." },
+    { q:"Ilk Qadam dasturida 'portfolio' nima maqsadda yuritiladi?", opts:["Faqat ota-onalar uchun","Bolaning rivojlanishini kuzatish va hujjatlashtirish uchun","Tarbiyachini baholash uchun","MTT reyting uchun"], ans:1, exp:"Portfolio bolaning individual rivojlanish yo'nalishini kuzatib borish vositasidir." },
+    { q:"'Erkin o'yin' vaqti kundalik rejimda necha daqiqadan kam bo'lmasligi kerak?", opts:["20 daqiqa","30 daqiqa","45 daqiqa","60 daqiqa"], ans:2, exp:"Erkin o'yin bolaning ijodiy va ijtimoiy rivojlanishi uchun kamida 45 daqiqa ajratilishi lozim." },
+    { q:"Ilk Qadam dasturida 5 ta asosiy rivojlanish sohasi qaysilar?", opts:["Nutq, Jismoniy, Ijtimoiy, Kognitiv, Hissiy","Nutq, Jismoniy, Ijtimoiy-hissiy, Kognitiv, Estetik","Musiqa, Rasm, Sport, Til, Fan","Matematik, Tabiat, San'at, Jismoniy, Til"], ans:1, exp:"Ilk Qadam dasturida 5 soha: Nutq va til, Jismoniy, Ijtimoiy-hissiy, Kognitiv (aqliy), Estetik rivojlanish." },
+    { q:"MTT da 'adaptatsiya davri' qancha davom etadi?", opts:["1 hafta","2 hafta","3-4 hafta","6 hafta"], ans:2, exp:"Adaptatsiya davri odatda 3-4 hafta davom etadi va bola yangi muhitga ko'nikadi." },
+    { q:"Ilk Qadam dasturida 'kuzatish daftari' nima uchun kerak?", opts:["Yo'qlamani belgilash","Har bir bolaning rivojlanish ko'rsatkichlarini qayd etish","Darslar jadvalini yozish","Moliyaviy hisobot uchun"], ans:1, exp:"Kuzatish daftarida tarbiyachi har bir bolaning rivojlanish dinamikasini qayd etib boradi." },
+    { q:"Maktabgacha ta'limda 'integratsiya' tamoyili nima?", opts:["Barcha bolalarni bir guruhda o'qitish","Turli fanlar va sohalarni bir-biri bilan bog'liq holda o'qitish","Faqat aqliy rivojlanishga e'tibor berish","Ota-onalarni ta'lim jarayoniga jalb qilish"], ans:1, exp:"Integratsiya — turli rivojlanish sohalari va mavzularni bir-biriga bog'liq holda o'rgatish tamoyili." },
+    { q:"'Induktiv' o'qitish usuli nima?", opts:["Umumiydan xususiyga o'tish","Xususiydan umumiyga o'tish","Faqat ko'rgazmali qurollardan foydalanish","Test orqali baholash"], ans:1, exp:"Induktiv usulda bola xususiy misol va tajribalardan umumiy xulosaga keladi." },
+    { q:"MTT da tarbiyachi malaka oshirish kursi qanchalik vaqtda o'tishi kerak?", opts:["Har 3 yilda bir marta","Har 5 yilda bir marta","Har yili","Ixtiyoriy"], ans:0, exp:"O'zbekistonda pedagoglar har 3 yilda bir marta malaka oshirish kurslaridan o'tishi majburiy." },
+    { q:"Bolaning maktabga tayyorligi ko'rsatkichlaridan biri EMAS?", opts:["Mantiqiy fikrlash","Xat-savod ko'nikmasi (o'qish-yozish)","Maktab tartibiga moslashish","Nutq rivojlanishi"], ans:1, exp:"Maktabgacha yoshda bolalarni o'qitish va yozishga o'rgatish talab qilinmaydi; asosiy tayyorlik — suhbat, mantiq, ijtimoiy ko'nikmalar." },
+    { q:"'Zona of proximal development' (YRZ) tushunchasini kim kiritgan?", opts:["J. Piazhe","L. Vigotskiy","E. Erikson","A. Maslou"], ans:1, exp:"'Yaqin rivojlanish zonasi' tushunchasini rus psixologi Lev Vigotskiy ilmga kiritgan." },
+    { q:"Ilk Qadam dasturida 'baholash' qanday tushuniladi?", opts:["Imtihon orqali bola bilimini tekshirish","Bolani reyting bo'yicha saralash","Kuzatish va hujjatlashtirish orqali rivojlanishni monitoring qilish","Ota-onalar bilan suhbat orqali daraja belgilash"], ans:2, exp:"Maktabgacha ta'limda baholash — raqamli baho emas, balki kuzatish va hujjatlashtirish jarayoni." },
+    { q:"'Faol o'rganish' (active learning) deganda nima tushuniladi?", opts:["Tarbiyachi gapirib, bolalar tinglab o'tiradi","Bola o'zi kashf qiladi, sinab ko'radi, savol beradi","Faqat kitob o'qish","Televizor ko'rish orqali o'rganish"], ans:1, exp:"Faol o'rganishda bola passiv tinglovchi emas, balki jarayonning faol ishtirokchisi bo'ladi." },
+    { q:"MTT da maxsus ehtiyojli bolalar uchun qo'llaniluvchi yondashuv?", opts:["Inklyuziv ta'lim","Alohida sinflarda o'qitish","Uyda o'qitish","Sport mashg'ulotlari"], ans:0, exp:"Inklyuziv ta'lim — maxsus ehtiyojli bolalarni oddiy guruhga integratsiya qilish tamoyili." },
   ],
+
   soha: [
-    { q:"Kognitiv rivojlanish sohasiga qaysi ko'nikma kiradi?", opts:["Chopish va sakrash","Mantiqiy fikrlash va muammolarni hal qilish","Qo'shiq aytish","Do'stlashish"], ans:1, exp:"Kognitiv rivojlanishga mantiqiy fikrlash, muammolarni hal qilish, tasniflash, qiyoslash, sababiy aloqalarni tushunish kiradi." },
-    { q:"Ijtimoiy-hissiy rivojlanish sohasida bolaning qaysi ko'nikmasi rivojlantiriladi?", opts:["Rasm chizish","Hislarni boshqarish va hamkorlik","Sonlarni hisoblash","Yugurishning tezligi"], ans:1, exp:"Ijtimoiy-hissiy soha bolaning his-tuyg'ularini anglash, boshqarish, empati va hamkorlikni o'z ichiga oladi." },
-    { q:"Nutq va til rivojlanishida qaysi faoliyat eng ko'p yordam beradi?", opts:["Matematika mashqlari","Hikoya tinglash va muhokama qilish","Rasm chizish","Yugurish o'yinlari"], ans:1, exp:"Hikoya tinglash, muhokama va suhbat — lug'at boyitish, tushunish va og'zaki ifodalash ko'nikmalarini rivojlantiradi." },
-    { q:"Jismoniy rivojlanish sohasiga qaysi faoliyat kiradi?", opts:["Raqamlarni o'rganish","Mayda va yirik motorika rivojlantirish","Qo'shiq yod olish","Hikoya tinglash"], ans:1, exp:"Jismoniy rivojlanish yirik motorika (yugurish, sakrash, qo'l-oyoq harakatlarini muvofiqlash) va mayda motorikani (qo'l barmoqlari, qalam tutish) o'z ichiga oladi." },
-    { q:"Estetik rivojlanish sohasida qaysi faoliyat muhim?", opts:["Matematik misol yechish","San'at, musiqa va ijodiy ifoda","Sport mashqlari","Xat yozish"], ans:1, exp:"Estetik soha bolaning badiiy-ijodiy qobiliyatlarini rivojlantiradi: rasm chizish, loy ishlash, musiqa tinglash va ijro etish." },
-    { q:"'O'zini o'zi boshqarish' sohasi qaysi ko'nikmalarni qamrab oladi?", opts:["Faqat yuvunish va kiyinish","O'z harakatlarini rejalashtirish, boshqarish va mustaqillik","Faqat tartib-intizom","Faqat uy vazifasini bajarish"], ans:1, exp:"O'zini o'zi boshqarish — maqsad qo'yish, diqqatni jamlash, harakatlarni rejalashtirish, sabr-toqat va mustaqillik ko'nikmalarini qamraydi." },
-    { q:"Tasviriy faoliyatda bola noto'g'ri shaklni chizganida tarbiyachi qanday munosabat bildirishishi kerak?", opts:["Noto'g'riligini ta'kidlash va qayta chizishni buyurish","Ijodini qo'llab-quvvatlash va jarayonni rag'batlantirish","E'tibor bermaslik","Yaxshiroq chizgan bolani ko'rsatish"], ans:1, exp:"Maktabgacha yoshda ijodiy jarayonning o'zi natijadan muhim. Tarbiyachi bolaning harakatini rag'batlantirishi va ijodiy tajribani qo'llabquvvatlashi kerak." },
-    { q:"Qaysi yosh davrida «simvolik o'yin» (pretend play) eng faol namoyon bo'ladi?", opts:["1-2 yosh","3-5 yosh","6-7 yosh","7-8 yosh"], ans:1, exp:"3-5 yosh — simvolik o'yin (rol o'yin, xayoliy o'yin) eng faol davr. Bu davr kognitiv, ijtimoiy va nutq rivojlanishida muhim." },
-    { q:"Bola maktabgacha yoshda eng yaxshi qanday o'rganadi?", opts:["Faqat ko'rsatmalar orqali","Faol o'yin va tajriba orqali","Yod olish orqali","Darslik o'qish orqali"], ans:1, exp:"Tadqiqotlar shuni ko'rsatadiki, maktabgacha yoshdagi bolalar faol o'yin, tajriba va o'z navbatida sinab ko'rish orqali eng samarali o'rganadilar." },
-    { q:"Bolada raqamlar haqida tushuncha qachon shakllanib boshlaydi?", opts:["Tug'ilgandan","2-3 yoshdan","5-6 yoshdan","7 yoshdan"], ans:1, exp:"Raqamlarga qiziqish va miqdor tushunchasi 2-3 yoshdan shakllanib boradi, ammo abstrakt hisoblash ko'nikmalari asta-sekin rivojlanadi." },
-    { q:"Ijtimoiy-hissiy sohada 'empati' deganda nima tushuniladi?", opts:["O'z his-tuyg'ularini yashirish","Boshqalarning his-tuyg'ularini tushunish va ulashish","Baland ovozda gapirmaslik","Buyruqni bajarish"], ans:1, exp:"Empati — boshqalarning hissiyotlarini tushunish va ularga hamdardlik bildirishdir. Bu bolaning ijtimoiy rivojlanishida asosiy ko'nikmalardan biri." },
-    { q:"«Mayda motorika» rivojlantirish uchun qaysi faoliyat mos?", opts:["Yugurish va sakrash","Ipga munchoq tizish, qaychi bilan kesish","Chalg'i musiqa tinglash","Ertak tinglash"], ans:1, exp:"Mayda motorika — qo'l barmoqlari va bilakdagi nozik harakatlar. Munchoq tizish, plastilin, qaychi va qalam bilan ishlash uni rivojlantiradi." },
-    { q:"Til rivojlanishida passiv lug'at va faol lug'at o'rtasidagi farq nima?", opts:["Farqi yo'q","Passiv — eshitib tushuniladigan so'zlar, faol — ishlatib gapiradigan so'zlar","Passiv — yozma, faol — og'zaki","Passiv — o'zbek, faol — chet el so'zlari"], ans:1, exp:"Passiv lug'at — bolaning tushungan, lekin hali ishlatmagan so'zlari. Faol lug'at — nutqida qo'llaydigan so'zlar. Maktabgacha yoshda passiv lug'at keng bo'ladi." },
-    { q:"«Zoning» yoki «joy-joy ajratish» MTT muhitida nima uchun kerak?", opts:["Xona katta ko'rinishi uchun","Bolalar xavfsizligi uchun","Har xil faoliyat turlari uchun alohida muhit yaratish uchun","Tarbiyachining ishlashiga qulay bo'lishi uchun"], ans:2, exp:"Hudud ajratish (zoning) — dam olish, faol o'yin, ijodiy faoliyat, kitob o'qish kabi turli ehtiyojlar uchun maxsus joylar belgilash. Bu bolaga tanlov imkonini beradi." },
-    { q:"Bolaning o'z-o'ziga munosabatini (self-concept) rivojlantirish uchun tarbiyachi nima qilishi kerak?", opts:["Bolani boshqalar bilan doim taqqoslash","Faqat muvaffaqiyatlarini ta'kidlash","Bolani qabul qilish, uning kuchi va qiziqishlarini belgilash","Kamchiligini ochiq aytib berish"], ans:2, exp:"Sog'lom o'z-o'ziga baho (self-esteem) uchun bola qabul qilinganini his etishi, kuchliliklari tan olinishi va musbat aloqa bo'lishi muhim." },
+    { q:"'Nutq va til' sohasida 5-6 yoshli bola nechta so'zlik faol lug'atga ega bo'lishi kerak?", opts:["500-800 so'z","1000-1500 so'z","2000-3500 so'z","4000+ so'z"], ans:2, exp:"5-6 yoshli bolaning faol lug'ati odatda 2000-3500 so'zni tashkil qiladi." },
+    { q:"FEMP (Elementar matematik tushunchalar) sohasida 4-5 yoshli bola qaysi ko'nikmaga ega bo'lishi kerak?", opts:["Ko'paytirish va bo'lishni bilish","10 gacha sanash va miqdorlarni taqqoslash","Kasrlarni tushunish","Geometrik isbotlarni bajarish"], ans:1, exp:"4-5 yoshda bola 10 gacha sanay oladi, ko'proq/kamroq/teng tushunchalarini tushunadi." },
+    { q:"'Tabiat bilan tanishuv' sohasida qaysi yondashuv samarali?", opts:["Faqat suratlardan o'rganish","Tabiatga chiqish va bevosita kuzatish","Kitob o'qish","Video ko'rsatish"], ans:1, exp:"Bolalar tabiatni bevosita kuzatish, ushlab ko'rish, tajriba orqali yaxshiroq o'rganadilar." },
+    { q:"'Ijtimoiy-hissiy rivojlanish' sohasida tarbiyachining asosiy vazifasi?", opts:["Bolalarni raqobatga o'rgatish","Bolaning his-tuyg'ularini ifodalashga yordam berish va ijobiy munosabatlarni shakllantirish","Faqat intizomni saqlash","Akademik bilimlarni o'rgatish"], ans:1, exp:"Tarbiyachi bolaning hissiyotlarini tan oladi, ifodalashga yordam beradi va ijobiy muloqotni targ'ib qiladi." },
+    { q:"'Estetik rivojlanish' sohasiga qaysilar kiradi?", opts:["Faqat rasm chizish","Musiqa, rasm, teatr, badiiy adabiyot","Sport va harakatli o'yinlar","Matematika va mantiq"], ans:1, exp:"Estetik rivojlanish musiqiy, tasviriy, adabiy va dramatik faoliyatlarni o'z ichiga oladi." },
+    { q:"Jismoniy rivojlanish sohasida yirik motorikani rivojlantiruvchi mashg'ulot qaysi?", opts:["Plastik massa bilan ishlash","Mozaika yig'ish","Sakrash va yugurish","Qo'lda rasm chizish"], ans:2, exp:"Yirik motorika — katta mushaklar faoliyati: yugurish, sakrash, chiqish, uloqtirish." },
+    { q:"Mayda motorikani rivojlantirish nima uchun muhim?", opts:["Faqat chiroyli yozuv uchun","Miya rivojlanishi va keyinchalik yozuv ko'nikmasiga zamin yaratish","Sport uchun","Bolani band qilish uchun"], ans:1, exp:"Mayda motorika rivojlanishi miya faoliyatini faollashtiradi va nutq, yozuv ko'nikmalariga ta'sir qiladi." },
+    { q:"'Kognitiv rivojlanish' sohasida 3-4 yoshli bolaga xos bo'lgan fikrlash turi?", opts:["Abstrak fikrlash","Ko'rgazmali-amaliy fikrlash","Mantiqiy-verbal fikrlash","Nazariy fikrlash"], ans:1, exp:"3-4 yoshda bolalar ko'rgazmali-amaliy fikrlaydi — narsalarni ushlab, ko'rib, sinab o'rganadilar." },
+    { q:"'Nutq va til' sohasida monolog nutqni rivojlantirish uchun qaysi usul samarali?", opts:["So'z diktant","Hikoya qilish, ertak aytib berish va rasm bo'yicha suhbat","Yod olish","Imlo mashqlari"], ans:1, exp:"Monolog nutqni rivojlantirish uchun ertak, hikoya va suratlar bo'yicha suhbat eng samarali usullardir." },
+    { q:"Rivojlanish sohalari bir-biridan mustaqil o'rgatiladimi?", opts:["Ha, har bir soha alohida o'rgatiladi","Yo'q, sohalar o'zaro bog'liq va integratsiya qilinadi","Faqat o'rta guruhda integratsiya qilinadi","Bu tarbiyachi ixtiyorida"], ans:1, exp:"Ilk Qadam dasturida barcha rivojlanish sohalari o'zaro bog'liq holda, integratsiya tamoyilida o'rgatiladi." },
   ],
+
   metodika: [
-    { q:"Tarbiyachi darsni rejalashtirish jarayonida birinchi nimani aniqlashi kerak?", opts:["Qanday jihozlar kerakligini","Darsning maqsadi (nima o'rganilishi)ni","Dars qancha davom etishini","Qaysi bolalar ishtirok etishini"], ans:1, exp:"Dars rejalashtirish maqsadni aniqlashdan boshlanadi: bolalar bu faoliyatdan nima o'rganadilar? Keyin unga mos usul va vositalar tanlanadi." },
-    { q:"Konspektda «kutilgan natija» qismi nima uchun yoziladi?", opts:["Vazirlika hisobot uchun","Dars maqsadiga erishilganini baholash mezoni sifatida","Tarbiyachining ish faoliyatini boshqarish uchun","Ota-onaga yuborish uchun"], ans:1, exp:"Kutilgan natija — bolalar dars oxirida nima bilishi, nima qila olishi yoki qanday his etishi kerakligini ko'rsatadi. Bu baholash mezoni bo'lib xizmat qiladi." },
-    { q:"«Scaffolding» (ko'mak berish) usuli nimani anglatadi?", opts:["Bolaning o'rniga vazifani bajarib berish","Bolaning hozirgi imkoniyatidan biroz yuqorida bo'lgan darajada qo'llab-quvvatlash","Bolani mustaqil qoldirish","Faqat yaxshi bolalarga yordam berish"], ans:1, exp:"Scaffolding — Vigotskiy nazariyasiga asoslangan yondashuv: bolaning mustaqil bajara olmasligini, lekin yordam bilan bajara olishini qo'llab-quvvatlash." },
-    { q:"Differentsiyalashgan ta'lim deb nimaga aytiladi?", opts:["Hamma bolaga bir xil topshiriq berish","Har bir bolaning individual ehtiyoji va darajasiga moslashtirilgan ta'lim","Faqat iqtidorli bolalarga qiyin topshiriq berish","Bolalarni qobiliyatiga qarab guruhlarga ajratish"], ans:1, exp:"Differentsiyalashgan ta'lim — har bir bolaning rivojlanish darajasi, o'rganish uslubi va qiziqishlarini hisobga olib, faoliyatni moslashtirishdir." },
-    { q:"Tarbiyachi kuzatish (observatsiya) vaqtida nima qilmaydi?", opts:["Bolaning harakatini yozib oladi","Bolaning muloqotini kuzatadi","Kuzatish chog'ida darhol baho beradi va xulosa chiqaradi","Bolaning nima bilan qiziqayotganini qayd etadi"], ans:2, exp:"Kuzatish vaqtida tarbiyachi ob'ektiv ma'lumot to'playdi, darhol xulosaga bormaydi. Baho va xulosalar keyinchalik mulohaza qilinganidan so'ng chiqariladi." },
-    { q:"«O'z-o'zidan o'rganish» (self-directed learning) uchun tarbiyachi nima qiladi?", opts:["Barchaga bir xil topshiriq beradi","Bolalarga tanlov imkoniyati yaratadi va qiziqishlarini qo'llab-quvvatlaydi","Doimiy nazorat qiladi","Har bir qadamda ko'rsatma beradi"], ans:1, exp:"O'z-o'zidan o'rganish uchun muhit va tanlov berish kerak: burchaklar, materiallar xilma-xil bo'lishi, bola qiziqgan narsani o'rganishiga imkon yaratilishi lozim." },
-    { q:"Bolaga savol berish metodologiyasida «ochiq savollar» (open-ended questions) nima uchun afzal?", opts:["Tez javob olish uchun","Ha/yo'q dan ko'ra fikrlash va ifodalashni rag'batlantirish uchun","Bolaning bilimini tezroq tekshirish uchun","Tartib uchun"], ans:1, exp:"Ochiq savollar («Nima deb o'ylaysan?», «Qanday qilardingiz?») bolaning fikrlash, tahlil qilish va o'z fikrini ifodalash qobiliyatini rivojlantiradi." },
-    { q:"Guruhda ishlaganda bolalar o'rtasidagi hamkorlikni rivojlantirish uchun tarbiyachi nima qiladi?", opts:["Faqat kuchli bolani boshchilik qilishga tayinlaydi","Hamkorlikni talab qiladigan, birgalikda bajarilishi mumkin bo'lgan vazifalar beradi","Bolalarni alohida o'tqizadi","Faqat tarbiyachi boshchilik qiladi"], ans:1, exp:"Guruh ishida hamkorlikni o'rgatish uchun birgalikda maqsadga erishish kerak bo'lgan topshiriqlar, rol taqsimlash va muloqotni talab etadigan faoliyatlar qo'llaniladi." },
-    { q:"«Rivojlanishning yaqin zonasi» (ZPD) kimning nazariyasiga asoslanadi?", opts:["Zigmund Freyd","Lev Vigotskiy","Jean Piaget","Erik Erikson"], ans:1, exp:"«Rivojlanishning yaqin zonasi» (Zone of Proximal Development) — L.S.Vigotskiy tomonidan kiritilgan tushuncha. Bola mustaqil va yordam bilan bajara oladigan o'rtasidagi masofa." },
-    { q:"Muammo asosida o'qitish (problem-based learning) bolaga qanday foyda keltiradi?", opts:["Faqat bilimini sinaydi","Tanqidiy fikrlash va muammo yechish ko'nikmalarini rivojlantiradi","Faqat yod olishni yaxshilaydi","Tartib-intizomni o'rgatadi"], ans:1, exp:"Muammo asosida o'qitish bolani o'ylashga, tahlil qilishga va yechim izlashga undaydi — bu tanqidiy va ijodiy fikrlashni rivojlantiradi." },
-    { q:"Dars davomida bolaning diqqati so'nganini sezgan tarbiyachi nima qilishi kerak?", opts:["Darsni tezroq tugallash","Bolani jazolash","Faoliyat turini o'zgartirish yoki harakatli pauza qo'shish","Faoliyat davom etaveradi"], ans:2, exp:"Bolaning diqqat uzoqligi cheklangan. Harakatli pauza, faoliyat turini o'zgartirish yoki qisqa ko'ngil ochish bolani qayta jalb etadi." },
-    { q:"Tarbiyachi rag'batlantirish vositasi sifatida qaysi usul eng samarali?", opts:["Moddiy mukofot (konfet, o'yinchoq)","Musbat og'zaki rag'batlantirish va jarayonni ta'riflash","Raqobat va solishtirish","Yuqori baho va yulduzcha berish"], ans:1, exp:"«Barakalla, sen ko'p harakat qilding!» yoki «Qanday qiziqarli usulni topdingiz!» kabi musbat og'zaki rag'batlantirish intrinsik motivatsiyani oshiradi." },
-    { q:"Bolalar guruhida «inkluziv ta'lim» tamoyili nimani talab qiladi?", opts:["Faqat qobiliyatli bolalar uchun maxsus shart yaratish","Barcha bolalar, shu jumladan alohida ehtiyojli bolalar uchun ham qulay muhit va ta'lim","Alohida ehtiyojli bolalarni boshqa guruhga o'tkazish","Faqat sog'lom bolalarga e'tibor berish"], ans:1, exp:"Inkluziv ta'lim — barcha bolalar, jumladan nogironligi yoki alohida ehtiyoji bor bolalar ham bir muhitda o'rganishiga imkon yaratish." },
-    { q:"Rejalashtirishda «haftalik mavzu» (thematic planning) usulining afzalligi nima?", opts:["Har kuni yangi mavzu o'rganiladi","Turli sohalardagi ko'nikmalar bitta mavzu atrofida integratsiya qilinadi","Faqat bir soha o'rganiladi","Tarbiyachining ishi osonlashadi"], ans:1, exp:"Haftalik mavzu yondashuvi turli fanlar va sohalardagi bilimlarni bir mavzu atrofida birlashtiradi (masalan: «Fasllar» mavzusida — nutq, matematik, tabiat, san'at)." },
-    { q:"Kunlik jadval (day schedule) maktabgacha ta'limda nima uchun muhim?", opts:["Faqat vazirlikh talabi uchun","Bolaga bashorat qilish imkonini beradi va xavfsizlik hissini shakllantiradi","Tarbiyachi uchun qulay","Ota-ona bilishi uchun"], ans:1, exp:"Muntazam va bashorat qilinadigan kundalik jadval bolaga xavfsizlik hissi beradi, o'zini boshqarish va vaqtni anglash ko'nikmalarini rivojlantiradi." },
+    { q:"Mashg'ulotda 'motivatsiya' bosqichining maqsadi nima?", opts:["Bolani tinchlantirish","Bolaning qiziqishini uyg'otish va darsga tayyorlash","Yangi mavzuni tushuntirish","Bilimlarni mustahkamlash"], ans:1, exp:"Motivatsiya bosqichi bolaning e'tiborini jalb qiladi va mavzuга qiziqish uyg'otadi." },
+    { q:"'Didaktik o'yin' qanday o'yin turi?", opts:["Bolalar o'zi ixtiro qiladigan o'yin","Ta'lim maqsadini ko'zlovchi, qoidali o'yin","Faqat ko'cha o'yinlari","Raqobatli sport o'yinlari"], ans:1, exp:"Didaktik o'yin aniq ta'lim maqsadiga ega, qoidali o'yin bo'lib, bilim va ko'nikmalarni rivojlantiradi." },
+    { q:"Mashg'ulot davomiyligi kichik guruhda (2-3 yosh) qancha bo'lishi kerak?", opts:["30-35 daqiqa","20-25 daqiqa","10-15 daqiqa","45 daqiqa"], ans:2, exp:"Kichik guruhda (2-3 yosh) mashg'ulot 10-15 daqiqadan oshmasligi kerak." },
+    { q:"'Ko'rgazmalilik' tamoyili nima?", opts:["Faqat rasmlar ko'rsatish","O'rganilayotgan narsani ko'rsatish, eshittirish, ushlatish orqali bilimni mustahkamlash","Video dars o'tkazish","Doskaga yozish"], ans:1, exp:"Ko'rgazmalilik — bolaning barcha sezgi organlarini jalb etib, bilimni aniq, ko'rgazmali shaklda berish." },
+    { q:"'Loyiha usuli' (project method) maktabgacha ta'limda qanday qo'llaniladi?", opts:["Bolalar katta ilmiy loyiha yozadi","Muammo asosida bir necha kun/haftali tadqiqot faoliyati","Faqat rassom loyihalari","Qurilish materiallari bilan ishlash"], ans:1, exp:"Loyiha usulida bolalar muammoni hal qilish uchun bir necha kun davomida birgalikda tadqiqot olib boradi." },
+    { q:"Tarbiyachi mashg'ulotda bolaning noto'g'ri javobiga qanday munosabat bildirishi kerak?", opts:["'Noto'g'ri!' deb qat'iy aytish","Javobni e'tiborsiz qoldirish","Javobini qadrlab, to'g'ri yo'nalishga yo'naltirish","Ota-onasiga aytib qo'yish"], ans:2, exp:"Tarbiyachi har bir bolaning javobini qadrlaydi va konstruktiv yo'l bilan to'g'ri javobga yo'naltiradi." },
+    { q:"'Hamkorlikda o'rganish' (cooperative learning) usulida bolalar qanday ishlaydi?", opts:["Har biri o'zi mustaqil ishlaydi","Kichik guruhlarda birgalikda vazifa bajaradi","Faqat tarbiyachi ko'rsatib, bolalar takrorlaydi","Kitobdan o'qib o'rganadi"], ans:1, exp:"Hamkorlikda o'rganishda 2-4 nafarlik guruhlarda bolalar birgalikda muammo hal qiladi." },
+    { q:"Mashg'ulotda 'refleksiya' bosqichi nima uchun kerak?", opts:["Vaqtni to'ldirish uchun","Bolalar nima o'rganganini ifodalashi va tuyg'ularini baham ko'rishi uchun","Uyga vazifa berish uchun","Intizomni tekshirish uchun"], ans:1, exp:"Refleksiya bosqichida bolalar o'rganganlari haqida gapirib, bilimlarini mustahkamlaydi va anglaydi." },
+    { q:"'STEM' yondashuvi maktabgacha ta'limda nimani anglatadi?", opts:["Sport, Teatr, Ekologiya, Musiqa","Fan, Texnologiya, Muhandislik, Matematika elementlarini o'yin orqali o'rgatish","Faqat matematika darslarini","Ingliz tili o'rgatish"], ans:1, exp:"STEM — Science (fan), Technology, Engineering (muhandislik), Mathematics elementlarini integratsiya qilgan yondashuv." },
+    { q:"Bolaning mustaqilligini rivojlantirish uchun tarbiyachi nima qilishi kerak?", opts:["Hamma ishni tarbiyachi qilib berishi","Har doim bolaga yordam berishi","Bolaga vazifani bajarish imkoniyatini berish, faqat zaruriy yordamni ko'rsatish","Bola xato qilsa jazolashi"], ans:2, exp:"Mustaqillikni rivojlantirish uchun bola o'zi sinab ko'rishi kerak; tarbiyachi faqat zarur paytda yordam beradi." },
   ],
+
   psixolog: [
-    { q:"Erik Erikson nazariyasiga ko'ra 3-6 yosh davrining asosiy inqirozi qaysi?", opts:["Ishonch va ishonchsizlik","Tashabbuskorlik va aybdorlik hissi","Ziyraklik va pastlik","Qobiliyat va past baho"], ans:1, exp:"Erikson nazariyasida 3-6 yosh «Tashabbuskorlik va aybdorlik hissi» bosqichi bo'lib, bola mustaqil harakat qilishga intiladi, muvaffaqiyatsizlikda esa aybdorlik paydo bo'ladi." },
-    { q:"«Hissiy intellekt» (EQ) deganda nimaga aytiladi?", opts:["Faqat yuksak IQ ko'rsatkichi","O'z va boshqalarning hissiyotlarini anglash, boshqarish va foydalanish qobiliyati","Faqat ma'lumotlililik darajasi","Matematik qobiliyat"], ans:1, exp:"Hissiy intellekt (Daniel Goleman) — o'z hissiyotlarini anglash va boshqarish, boshqalarning hissiyotlarini tushunish va munosabatlarda foydalanish qobiliyati." },
-    { q:"Bolada «ajralish tashvishi» (separation anxiety) eng ko'p qaysi yoshda kuzatiladi?", opts:["6 oylikdan 3 yoshgacha","5-6 yoshda","7-8 yoshda","1 oylikda"], ans:0, exp:"Ajralish tashvishi odatda 6 oy — 3 yosh oralig'ida kuchli namoyon bo'ladi. Bu normal rivojlanish bosqichi bo'lib, bolajonning ulg'ayishi bilan kamayib boradi." },
-    { q:"Bola aggressiv xulq ko'rsatganda tarbiyachi qaysi yondashuvni qo'llashi kerak?", opts:["Jazolash","Xulqni e'tiborsiz qoldirish","Hissiyotni tan olish va muqobil yo'lni ko'rsatish","Darhol ota-onaga xabar berish"], ans:2, exp:"Aggressiya ko'pincha ifodalanmagan his-tuyg'ulardan kelib chiqadi. Tarbiyachi bolaning hissiyotini tan olishi, sababni tushunishi va ijobiy muqobil xulqni o'rgatishi kerak." },
-    { q:"Piagening «operatsiyalar oldi davri» (preoperational stage) qaysi yoshlarni qamraydi?", opts:["0-2 yosh","2-7 yosh","7-11 yosh","11-15 yosh"], ans:1, exp:"Piaget nazariyasida operatsiyalar oldi davri 2-7 yosh oralig'ini qamraydi. Bu davrda ramziy fikrlash, til rivojlanishi va egosentrizm kuzatiladi." },
-    { q:"«Xavfsiz bog'lanish» (secure attachment) bola uchun nimani ta'minlaydi?", opts:["Faqat jismoniy xavfsizlikni","Yangi narsalarni o'rganishga asos bo'luvchi xavfsizlik hissi va ishonchni","Faqat intizomni","Faqat ovqatlanish ehtiyojini"], ans:1, exp:"Xavfsiz bog'lanish (Bowlby nazariyasi) — kattalar bilan ishonchli munosabat bolaga dunyo va o'zini o'rganishda asos bo'ladigan psixologik xavfsizlik beradi." },
-    { q:"Maktabgacha yoshdagi bolada «egosentrizm» (egocentrism) nimani anglatadi?", opts:["Xudbin bo'lish","Boshqalarning nuqtai nazarini tushunishga qiyinchilik","Faqat o'yini bilan band bo'lish","Kattalar bilan gaplashmaslik"], ans:1, exp:"Piaget tushunchasi bo'yicha egosentrizm — bolaning boshqalar o'zidan farqli ko'rishi, bilishi, his etishi mumkinligini anglamasligidir. Bu axloqiy nuqson emas, rivojlanish bosqichi." },
-    { q:"Bolaning stress holatini aniqlashda qaysi belgilar muhim?", opts:["Faqat yig'lash","Ishtahaning o'zgarishi, uyqu buzilishi, regressiya yoki xulq o'zgarishlari","Faqat qo'rquv","Faqat janjalkashlik"], ans:1, exp:"Bolada stress belgilari turlicha namoyon bo'ladi: ishtaha va uyqu o'zgarishi, avval o'rgangan ko'nikmalardan regressiya, xulq o'zgarishlari, tez charchash." },
-    { q:"«Rivojlanishning eng muhim davri» (critical/sensitive period) tushunchasi nimani anglatadi?", opts:["Bola kasallik davrida eng yaxshi o'rganadi","Muayyan ko'nikmalarni o'rganish uchun eng qulay biologik vaqt oralig'i","Bola uchun imtihon davri","Faqat maktab yoshiga oid tushuncha"], ans:1, exp:"Sezgir davr — nutq, ijtimoiy ko'nikmalar kabi ma'lum ko'nikmalar eng tez va samarali o'rganilishi mumkin bo'lgan biologik jihatdan qulay vaqt oralig'i." },
-    { q:"Bolada «o'zini o'zi tartibga solish» (self-regulation) ko'nikmasi nima?", opts:["Boshqalarni boshqarish","Xulq, hissiyot va fikrlarni maqsad yo'lida boshqara olish","Faqat sokin o'tirish","Kattalar ko'rsatmalariga itoat etish"], ans:1, exp:"O'zini o'zi tartibga solish — impulslarni boshqarish, diqqatni jamlash, hissiyotlarni muvozanatlash va maqsadga yo'nalgan harakat qilish qobiliyati." },
-    { q:"Bolada ijobiy o'z-o'ziga baho (positive self-esteem) shakllanishi uchun nima muhim?", opts:["Faqat moddiy mukofotlar","Shartsiz qabul qilish, yutuqlarni tan olish va xavfsiz muhit","Faqat qattiq intizom","Boshqalar bilan taqqoslash"], ans:1, exp:"O'z-o'ziga ijobiy baho uchun bola o'zini shartlarsiz sevilgan va qabul qilingan his etishi, urinishlari va yutuqlari tan olinishi, xato qilishdan qo'rqmasligi kerak." },
-    { q:"Montessori metodida bolaning mustaqilligiga alohida e'tibor berilishining asosiy sababi nima?", opts:["Tarbiyachi ishi kamaysin uchun","Mustaqillik ichki motivatsiya va o'z-o'ziga ishonchni mustahkamlaydi","Bola tezroq o'qishni o'rgansin uchun","Xarajatlarni kamaytirib borish uchun"], ans:1, exp:"Montessori metodida mustaqillik — bola o'z harakatlarining natijasini ko'rishi, muvaffaqiyatni his etishi va o'z-o'ziga ishonohi orqali ichki motivatsiyani rivojlantiradi." },
+    { q:"3 yoshli bolaning asosiy psixologik inqirozi qanday ataladi?", opts:["'Men o'zim!' inqirozi (mustaqillikka intilish)","Maktabga adaptatsiya","O'spirin inqirozi","Identifikatsiya inqirozi"], ans:0, exp:"3 yosh inqirozida bola 'Men o'zim!' deb mustaqillikka intiladi, negativizm va qaysarlik ko'rinadi." },
+    { q:"Eriksonning psixosotial rivojlanish nazariyasida 3-6 yosh davri qanday nomlanadi?", opts:["Ishonch vs Ishonchsizlik","Tashabbuskorlik vs Aybdorlik","Mehnatsevarlik vs Pastlik hissi","Identifikatsiya vs Rol chalkashuvi"], ans:1, exp:"Erikson bo'yicha 3-6 yosh — 'Tashabbuskorlik vs Aybdorlik' bosqichi: bola tashabbusni o'rganadi." },
+    { q:"Piajening 'preoperatsional' bosqichi qaysi yoshni qamrab oladi?", opts:["0-2 yosh","2-7 yosh","7-11 yosh","11+ yosh"], ans:1, exp:"Piaje bo'yicha preoperatsional bosqich 2-7 yosh oralig'ini qamrab oladi." },
+    { q:"'Bolalar egosentrizmi' (Piaje) nima?", opts:["Bola o'zini haddan ziyod yaxshi ko'rishi","Bola dunyoni faqat o'z nuqtai nazaridan idrok etishi","Bola tengdoshlari bilan do'stlasha olmasligi","Bola o'qishni istamamasligi"], ans:1, exp:"Egosentrizm — bolaning boshqalar nuqtai nazarini tushuna olmaslik holati, bu normal rivojlanish bosqichidir." },
+    { q:"Maslou ehtiyojlar ierarxiyasida eng quyi pog'ona nima?", opts:["Xavfsizlik ehtiyoji","Sevgi va mansublik ehtiyoji","Fiziologik ehtiyojlar (ovqat, uxlash)","O'zini namoyon qilish ehtiyoji"], ans:2, exp:"Maslou piramidasi asosida fiziologik ehtiyojlar (ovqat, suv, uxlash) eng birinchi qondirilishi kerak." },
+    { q:"Bolada 'xavotir' (tashvish) belgilari qanday ko'rinadi?", opts:["Faollik va qo'lini ko'tarish","Ishtahaning yo'qolishi, uyqusizlik, qo'rquv, yolg'izlikka intilish","Baland ovozda gapirish","Ko'p savol berish"], ans:1, exp:"Tashvishli bolada ishtaha va uyqu buziladi, qo'rquv, yig'i, ijtimoiy izolatsiya belgilari ko'rinadi." },
+    { q:"'Temperament' turlari ichida moslashuvchan, faol va quvnoq bola qaysi temperament turiga kiradi?", opts:["Melanxolik","Flegmatik","Sangvinik","Xolerik"], ans:2, exp:"Sangvinik — ijobiy kayfiyatli, tez moslashadigan, ijtimoiy, faol temperament turi." },
+    { q:"Tarbiyachi bolada agressiv xulq-atvorni kuzatsa, birinchi navbatda nima qilishi kerak?", opts:["Darhol jazolash","Sababini aniqlashga harakat qilish va xotirjam munosabat bildirish","E'tiborsiz qoldirish","Boshqa bolalardan ajratish"], ans:1, exp:"Agressiv xulq-atvor ortida sabab bor: stress, e'tibor etishmasligi yoki ehtiyoj. Sabab aniqlanib, xotirjam munosabat ko'rsatiladi." },
+    { q:"'Ijobiy mustahkamlash' (positive reinforcement) nima?", opts:["Bolani kuzatish","Yaxshi xulq-atvorni maqtash va rag'batlantirish orqali uni mustahkamlash","Yomon xulqni jazolash","Bolaga ko'proq o'yin berish"], ans:1, exp:"Ijobiy mustahkamlash — kerakli xulq-atvor maqtalsa yoki mukofotlansa, u takrorlanish ehtimoli ortadi." },
+    { q:"'Att attachment theory' (Bolning bog'lanish nazariyasi) asosida 'xavfsiz bog'lanish' qanday shakllanadi?", opts:["Bola yolg'iz qoldirilganda","Ota-onalar bola ehtiyojlariga izchil va sezgir munosabat ko'rsatganda","Bola ko'p jimoiy tarboiyat olganda","Bolaga ko'p o'yinchoq berilganda"], ans:1, exp:"Xavfsiz bog'lanish ota-onalar bola ehtiyojlariga (ovqat, yupatish, e'tibor) izchil va sezgirlik bilan javob berganda shakllanadi." },
   ],
+
   qonun: [
-    { q:"O'zbekistonda maktabgacha ta'lim sohasini boshqaruvchi asosiy vakolat organi qaysi?", opts:["Xalq ta'limi vazirligi","Maktabgacha ta'lim vazirligi","Sog'liqni saqlash vazirligi","Mahalla qo'mitasi"], ans:1, exp:"O'zbekiston Respublikasi Maktabgacha ta'lim vazirligi 2017-yilda tashkil etilgan bo'lib, MTT faoliyatini boshqaradi, tartibga soladi va nazorat qiladi." },
-    { q:"«Maktabgacha ta'lim tashkilotlari to'g'risida»gi nizomga ko'ra tarbiyachiga qo'yiladigan asosiy ta'lim talabi qaysi?", opts:["Oliy ma'lumot majburiy","O'rta maxsus yoki oliy pedagogik ma'lumot","Har qanday oliy ma'lumot","Malaka oshirish kursi yetarli"], ans:1, exp:"O'zbekistonda MTT tarbiyachilariga o'rta maxsus yoki oliy pedagogik ta'lim talabi qo'yiladi. Malaka oshirish har 3 yilda o'tkazilishi shart." },
-    { q:"O'zbekiston Respublikasida bola huquqlari qaysi xalqaro hujjat asosida himoya qilinadi?", opts:["Jeneva konvensiyasi","BMT Bola huquqlari konvensiyasi","Xalqaro mehnat konvensiyasi","Inson huquqlari umumjahon deklaratsiyasi"], ans:1, exp:"O'zbekiston 1994-yilda BMT Bola huquqlari konvensiyasini ratifikatsiya qilgan. Konvensiya bolaning rivojlanish, himoya, ishtirok va hayot huquqlarini kafolatlaydi." },
-    { q:"MTT tarbiyachilarining attestatsiyasi qanchalik muddatda o'tkaziladi?", opts:["Har yili","Har 2 yilda","Har 3 yilda","Har 5 yilda"], ans:2, exp:"O'zbekistonda maktabgacha ta'lim tarbiyachilari attestatsiyasi har 3 yilda o'tkaziladi. Bu professional malakani tasdiqlash va daraja belgilash imtihonidir." },
-    { q:"«Bolalar huquqlarini himoya qilish» vazifasi qaysi organlar zimmasida?", opts:["Faqat sudlar","Faqat ota-onalar","Davlat organlari, ota-onalar, MTT va jamiyat birgalikda","Faqat maktab"], ans:2, exp:"Bola huquqlarini himoya qilish — davlat, mahalliy hokimiyat, ta'lim muassasalari, ota-onalar va jamiyatning birgalikdagi majburiyati." },
-    { q:"MTT da sodir bo'lgan baxtsiz hodisani tarbiyachi qancha vaqt ichida rahbariyatga xabar berishi kerak?", opts:["24 soat ichida","Darhol (zudlik bilan)","Ish kunining oxirida","Haftaning oxirida"], ans:1, exp:"MTT da bola bilan bog'liq har qanday baxtsiz hodisa, xavf yoki favqulodda holat darhol MTT rahbariga va tegishli organlarga xabar qilinishi shart." },
-    { q:"O'zbekistonda bolalarga nisbatan zo'ravonlikni aniqlagan tarbiyachi nima qilishi kerak?", opts:["Oilaga nisbatan da'vo ko'tarmaslik uchun indamash","Tegishli organlarga (ota-ona, rahbar, ijtimoiy xizmat) darhol xabar berish","Bolani o'zi maslahat berish bilan cheklanish","Sinfni kuzatishni kuchaytirish"], ans:1, exp:"Tarbiyachi bolaga nisbatan zo'ravonlik, e'tiborsizlik yoki boshqa zarar belgilarini sezganda darhol MTT rahbari, ijtimoiy xizmat va kerak bo'lsa huquq-tartibot organlariga murojaat etishi majburiy." },
-    { q:"Tarbiyachining «kasb sirini saqlash» majburiyati nimani anglatadi?", opts:["Hech qanday ma'lumotni hech kimga bermaslik","Bolalar va oilalar haqidagi shaxsiy ma'lumotlarni ruxsatsiz tarqatmaslik","Faqat bolalarga sir saqlash","Rahbariyatdan ham sir saqlash"], ans:1, exp:"Tarbiyachi bola va oila haqida olgan shaxsiy, tibbiy va ijtimoiy ma'lumotlarni maxfiy saqlashi, faqat vakolatli organlarga yoki zaruriyat bo'lganda berishi majburiy." },
-    { q:"«Bolalar to'g'risida»gi qonunga ko'ra MTT da ta'lim olish nechi yoshdan boshlanadi?", opts:["1 yoshdan","2 yoshdan","3 yoshdan","6 yoshdan"], ans:1, exp:"O'zbekistonda MTT (maktabgacha ta'lim tashkilotlari) ga 2 yoshdan qabul qilinishi mumkin. Maktabga tayyorlov guruhi 6 yoshdan boshlanadi." },
-    { q:"Tarbiyachi ish faoliyatini nazorat qiluvchi hujjatlar qaysi?", opts:["Faqat dars konspekti","Ish rejasi, kundalik jadval, kuzatish jurnali, attestatsiya hujjatlari","Faqat yig'ilish bayonnomasi","Faqat bolalar ro'yxati"], ans:1, exp:"Tarbiyachi faoliyatini nazorat qiladigan hujjatlar: yillik va oylik ish rejasi, kundalik jadval, kuzatish va rivojlanish jurnali, pedagogik kengash bayonnomalari va boshqalar." },
+    { q:"O'zbekistonda maktabgacha ta'limni tartibga soluvchi asosiy qonun qaysi?", opts:["'Ta'lim to'g'risida' Qonun 1997","'Maktabgacha ta'lim va tarbiya to'g'risida' Qonun","'Bola huquqlari kafolatlari to'g'risida' Qonun","Vazirlar Mahkamasi Qarori"], ans:1, exp:"'Maktabgacha ta'lim va tarbiya to'g'risida'gi qonun MTT faoliyatining huquqiy asosini belgilaydi." },
+    { q:"BMT Bola huquqlari konvensiyasi O'zbekiston tomonidan qachon ratifikatsiya qilingan?", opts:["1990","1992","1994","1999"], ans:1, exp:"O'zbekiston BMT Bola huquqlari konvensiyasini 1992-yilda ratifikatsiya qilgan." },
+    { q:"MTT tarbiyachisi uchun majburiy hujjatlar qaysilar?", opts:["Faqat yillik ish reja","Yillik ish reja, kunlik konspektlar, kuzatish daftari, yo'qlama jurnali","Faqat yo'qlama jurnali","Faqat konspektlar"], ans:1, exp:"Tarbiyachi yillik reja, kunlik konspekt, kuzatish daftari, yo'qlama jurnali va boshqa hujjatlarni yuritishi shart." },
+    { q:"Bolani jismoniy jazolash O'zbekiston qonunchiligida qanday baholanadi?", opts:["Ma'muriy jarima","Taqiqlangan va jinoiy javobgarlik bo'lishi mumkin","Faqat ogohlantiriladi","Qonunda ko'rsatilmagan"], ans:1, exp:"Bolani jismoniy jazolash O'zbekiston qonunchiligida taqiqlangan va jinoyat sifatida javobgarlik nazarda tutiladi." },
+    { q:"MTT tarbiyachisining ish haqqi toifasini kim belgilaydi?", opts:["MTT direktori","Attestatsiya natijasiga ko'ra davlat tomonidan","Ota-onalar","Mahalliy hokimiyat"], ans:1, exp:"Tarbiyachi malaka toifasi (toifasiz, ikkinchi, birinchi, oliy) attestatsiya natijasiga ko'ra belgilanadi." },
+    { q:"'Maxfiylik' (konfidentsiallik) tamoyili MTT da nima uchun muhim?", opts:["Tarbiyachi qo'rqishi uchun","Bola va oila haqidagi ma'lumotlarni himoya qilish va ishonch muhitini saqlash uchun","Hujjatlarni kamaytirish uchun","Ish yukini kamaytirish uchun"], ans:1, exp:"MTT xodimi bola va oila haqidagi ma'lumotlarni uchinchi shaxslarga ruxsatsiz oshkor qilmasligi shart." },
+    { q:"Bolaga shikast yetkazilganda MTT rahbari qaysi muddatda tegishli organlarga xabar berishi shart?", opts:["3 kun ichida","24 soat ichida","1 hafta ichida","Keyingi ish kunida"], ans:1, exp:"Shikast holatlari 24 soat ichida (zarur hollarda darhol) tegishli organlarga xabar qilinishi shart." },
+    { q:"MTT litsenziyasi kim tomonidan beriladi?", opts:["Tuman hokimiyati","Maktabgacha va maktab ta'limi vazirligi yoki uning vakolatli organi","MTT direktori","Ta'lim boshqarmasi"], ans:1, exp:"MTT litsenziyalash Maktabgacha va maktab ta'limi vazirligi tomonidan belgilangan tartibda amalga oshiriladi." },
+    { q:"'Inklyuziv ta'lim' huquqi kimga kafolatlanadi?", opts:["Faqat nogiron bolalarga","Barcha maxsus ta'lim ehtiyojli bolalarga, jumladan nogironligi bo'lgan bolalarga","Faqat imkoniyati cheklangan bolalarga","Faqat yetimxona bolalariga"], ans:1, exp:"Inklyuziv ta'lim huquqi maxsus ta'lim ehtiyojiga ega barcha bolalarga, ularning rivojlanish xususiyatidan qat'i nazar kafolatlanadi." },
+    { q:"Ota-onalarning MTT bilan munosabati qanday huquqiy asosda quriladi?", opts:["Og'zaki kelishuv","Shartnoma (kontrakt) va MTT ichki qoidalari asosida","Faqat MTT qoidalari","Hokimlik qarori"], ans:1, exp:"MTT va ota-onalar o'rtasida ta'lim xizmatlari shartnomasi tuziladi, bu huquq va majburiyatlarni belgilaydi." },
   ],
+
   sanitar: [
-    { q:"MTT da bolalarning shaxsiy gigiena ko'nikmalarini shakllantirish maqsadida nimalar o'rgatiladi?", opts:["Faqat qo'l yuvish","Qo'l yuvish, tish tozalash, sochlarni tarash, kiyinib-yechinish va h.k.","Faqat uyda o'rgatiladi","Faqat kattalar nazoratida amalga oshiriladi"], ans:1, exp:"MTT da bolalarga keng shaxsiy gigiena ko'nikmalari o'rgatiladi: qo'l yuvish, tish tozalash, kiyimni tartibli saqlash, tualet gigiena va boshqalar." },
-    { q:"MTT da kunlik havo harorati qanday bo'lishi shart (yoz davri)?", opts:["15-17°C","18-22°C","24-28°C","30°C dan yuqori"], ans:1, exp:"SanPiN talabiga ko'ra MTT xonalarida yoz davrida havo harorati 18-22°C, qish davrida esa 20-22°C bo'lishi belgilangan." },
-    { q:"Bolalar ovqatlanishi uchun qanday interval tavsiya qilinadi?", opts:["Har 1 soatda","Har 3-4 soatda","Har 6 soatda","Istalgan vaqtda"], ans:1, exp:"Maktabgacha yoshdagi bolalar uchun 3-4 soat oralig'idagi ovqatlanish optimal: ertalabki nonushta, ikkinchi nonushta, tushlik, tushdan keyingi ovqat." },
-    { q:"MTT binolarida havo almashinuvi uchun nima qilinadi?", opts:["Havo tozalagich ishlatiladi","Bolalar yo'q paytda xonalar shamollatiladi","Doim derazalar yopiq bo'ladi","Faqat yozda shamollatiladi"], ans:1, exp:"SanPiN bo'yicha bolalar yo'q paytda (uyqugacha, sayrdan keyin) xonalar muntazam shamollatilishi — to'liq havo almashinuvi ta'minlanishi kerak." },
-    { q:"Bolalar o'yinchoqlari qanday muddatda tozalanishi shart?", opts:["Haftada bir marta","Kuniga kamida bir marta, iflos bo'lganda zudlik bilan","Oyda bir marta","Faqat kasallik tarqalganda"], ans:1, exp:"Bolalar o'yinchoqlari sanitar qoidalarga ko'ra kuniga kamida bir marta, va har qanday ifloslanganda zudlik bilan tozalanishi va zararsizlantirilishi shart." },
-    { q:"MTT da kasallik aniqlangan bola qanday tartibda izolatsiya qilinadi?", opts:["Bola uyga yuboriladi","Darhol guruhdan ajratiladi va tibbiy xodim yoki ota-ona kelguncha maxsus xonada qolinadi","Kuzatuv ostida guruhda qoladi","Faqat boshqa xonada o'tiradi"], ans:1, exp:"Kasallik belgilari ko'rsatgan bola darhol guruhdan ajratilishi, tibbiy xodim ko'rishi va ota-onaga xabar berishi shart. Bola tibbiy ruxsatsiz guruhga qaytmaydi." },
-    { q:"MTT da yong'in xavfsizligi bo'yicha tarbiyachining asosiy vazifasi nima?", opts:["Xonani qulflash","Bolalarni xavfsiz evakuatsiya qilish yo'llarini bilish va mashq o'tkazish","Faqat yong'in o'chirish asboblarini bilish","Faqat rahbariyatga xabar berish"], ans:1, exp:"Tarbiyachi yong'in evakuatsiya sxemasini yoddan bilishi, bolalar bilan muntazam mashq o'tkazishi va favqulodda vaziyatda bolalarni xavfsiz joyga olib chiqishi shart." },
-    { q:"Bolalarning kunlik uyqu rejimi (yotoq soati) qancha bo'lishi tavsiya etiladi?", opts:["30-40 daqiqa","1,5-2,5 soat","3-4 soat","Umuman kerak emas"], ans:1, exp:"Maktabgacha yoshdagi bolalar (3-7 yosh) uchun kunlik uyqu (yotoq soati) 1,5-2,5 soat bo'lishi maqbul. Bu miyaning rivojlanishi va energiyani tiklash uchun zarur." },
-    { q:"MTT oshxonasida ovqat tayyorlashda sanitariya talabi qaysi?", opts:["Istalgan sharoitda tayyorlanishi mumkin","Alohida himoyalangan zona, maxsus kiyim, sertifikatlangan mahsulotlar va harorat nazorati","Faqat mahsulotlar yangi bo'lsa yetarli","Faqat tozalik yetarli"], ans:1, exp:"MTT oshxonasida: alohida sanitariya zonasi, maxsus kiyim va qo'lqop, sertifikatlangan va sifatli mahsulotlar, pishirish harorat nazorati va kundalik namuna saqlash talablari bajarilishi shart." },
-    { q:"MTT da qo'l yuvish uchun qaysi tartib o'rgatiladi?", opts:["Tez-tez yuvilsa bo'ladi","Kamida 20 soniya sovun bilan, barmoqlar orasigacha, suv bilan yaxshilab chayqash","Faqat suv bilan chayqash","Faqat dezinfeksiyalovchi vosita ishlatish"], ans:1, exp:"To'g'ri qo'l yuvish — kamida 20 soniya sovun bilan barcha yuzalarni: kaft, barmoqlar orasi, tirnoqlar atrofini yuvish, so'ng toza suv bilan yaxshilab chayqash." },
+    { q:"MTT xonasida harorat qancha darajada bo'lishi kerak?", opts:["15-17°C","18-20°C","20-22°C","24-26°C"], ans:2, exp:"MTT xonasidagi optimal harorat 20-22°C bo'lishi sanitar me'yorlarda belgilangan." },
+    { q:"Bolalar qo'l yuvishi qachon majburiy?", opts:["Faqat ovqatdan oldin","Ovqatdan oldin va keyin, tualet dan keyin, ko'chadan kelgach","Faqat tualet dan keyin","Kuniga bir marta"], ans:1, exp:"Qo'l yuvish — ovqatdan oldin/keyin, tualet dan so'ng, ko'chadan kelgach majburiy gigiena qoidasi." },
+    { q:"MTT da ventilatsiya qanchalik vaqtda amalga oshirilishi kerak?", opts:["Kuniga bir marta","Har 1.5-2 soatda","Faqat kechqurun","Havo issiq bo'lganda"], ans:1, exp:"Sanitariya me'yorlariga ko'ra MTT xonalari har 1.5-2 soatda shamolatilishi kerak." },
+    { q:"Bolalar uxlaganda tarbiyachi nima qilishi shart?", opts:["Xonadan chiqib dam olishi","Xonada qolishi va bolalarni kuzatishi","Hujjat to'ldirishi","Ota-onalar bilan gaplashishi"], ans:1, exp:"Kunduzgi uyqu vaqtida tarbiyachi xonada bo'lishi va bolalarni nazorat qilishi shart — xavfsizlik talabi." },
+    { q:"Ovqatlanish jadvaliga ko'ra MTT da bolalar kuniga necha marta ovqatlanadi?", opts:["2 marta","3 marta","4-5 marta (to'liq kunduzgi MTT)","1 marta"], ans:2, exp:"To'liq kunduzgi MTT da bolalar 4-5 marta (nonushta, ikkinchi nonushta, tushlik, tushdan keyingi choy, kechki ovqat) ovqatlanadi." },
+    { q:"MTT xonasini dezinfeksiya qilish qanchalik vaqtda amalga oshirilishi kerak?", opts:["Har kuni","Haftada bir marta","Oyda bir marta","Yiliga bir marta"], ans:0, exp:"Yuqumli kasalliklarning oldini olish uchun MTT xonalari har kuni dezinfeksiya qilinishi kerak." },
+    { q:"Kasal bola MTT ga qachon kela oladi?", opts:["Temperatura tushgandan keyingi kuni","Kasallik belgilari to'liq yo'qolgandan va shifokor ruxsati berilgandan so'ng","2 kun dam olgandan so'ng","Ota-onasi xohlasa istalgan vaqt"], ans:1, exp:"Kasal bolaning MTT ga qaytishi uchun kasallik belgilari yo'qolishi va shifokor ruxsati (ma'lumotnomasi) talab qilinadi." },
+    { q:"MTT da o'yinchoqlar qanchalik vaqtda yuvilishi kerak?", opts:["Haftada bir marta","Har kuni yoki zarur hollarda","Oyda bir marta","Yiliga ikki marta"], ans:1, exp:"Plastik va rezina o'yinchoqlar har kuni yoki ifloslanishi bilan yuviladi — infektsiya tarqalmasligi uchun." },
+    { q:"Yong'in xavfsizligi bo'yicha MTT da evakuatsiya rejasi nima?", opts:["Ixtiyoriy hujjat","Majburiy hujjat bo'lib, barcha xodimlar bilishi va mashq qilishi shart","Faqat direktor bilishi kerak","Yiliga bir marta ko'rib chiqiladi"], ans:1, exp:"Yong'in evakuatsiya rejasi majburiy bo'lib, barcha xodimlar bilan muntazam mashg'ulot o'tkaziladi." },
+    { q:"Bolaning allergiyasi haqida kim xabardor bo'lishi shart?", opts:["Faqat oshpaz","Barcha xodimlar (tarbiyachi, oshpaz, hamshira, direktor)","Faqat hamshira","Faqat tarbiyachi"], ans:1, exp:"Bolaning allergiyasi haqida barcha MTT xodimlari xabardor bo'lishi shart — bu hayot xavfsizligi masalasi." },
+  ],
+
+  // ── 2-BOSQICH: Case Study (Vaziyatga asoslangan) ─────────────
+  case_study: [
+    {
+      q:"Qaysi yondashuv to'g'ri?",
+      case:"Tarbiyachi Malika guruhdagi 4 yoshli Sardor bolani kuzatadi. Sardor har kuni ertalab MTT ga kelganda ko'p yig'laydi, ona bilan ajralishga qiynaladi. Boshqa bolalar bilan muloqotdan qochadi, ko'pincha burchakda o'tiradi. Ota-onasi bundan tashvishlanib, tarbiyachidan maslahat so'raydi.",
+      opts:[
+        "Sardorga e'tibor bermaslik — o'zi o'rganib ketadi",
+        "Sardorni majburiy ravishda boshqa bolalar bilan o'ynashga majburlash",
+        "Sardorning qiziqishlarini aniqlash, unga qulay muhit yaratish, ota-onasi bilan birgalikda adaptatsiya rejasi tuzish va psixologga yo'llash masalasini ko'rish",
+        "Sardorni boshqa guruhga o'tkazish"
+      ],
+      ans:2,
+      exp:"To'g'ri yondashuv: bolaning individual xususiyatlarini hisobga olib, ota-onalar bilan hamkorlikda qulay muhit yaratish va zarur bo'lsa mutaxassisga yo'llash."
+    },
+    {
+      q:"Tarbiyachining keyingi qadami nima bo'lishi kerak?",
+      case:"Tarbiyachi Dilnoza matematika mashg'ulotida bolalarga shakllarni o'rgatmoqda. U doska oldida turib, 'Bu doira, bu kvadrat' deb tushuntiradi. Bolalar esa zerikkan ko'rinadi — ba'zilari gaplashib o'tiribdi, ba'zilari derazadan tashqariga qaraydi. Mashg'ulot hali 20 daqiqa davom etishi kerak.",
+      opts:[
+        "Ovozini ko'tarib, bolalarni intizomga chaqirish",
+        "Mashg'ulotni to'xtatib, bolalarga dam berish",
+        "Metodni o'zgartirish: shakllarni qo'lga berish, ular bilan didaktik o'yin o'ynash yoki xonada shakl izlatish",
+        "Uyga vazifa berib, mashg'ulotni yakunlash"
+      ],
+      ans:2,
+      exp:"Bolalar zeriksa, faol o'rganishga o'tish kerak: shakllarni ushlatish, o'yin orqali o'rgatish — harakatli, qiziqarli mashg'ulot bolalarning e'tiborini qaytaradi."
+    },
+    {
+      q:"Tarbiyachi Nodira to'g'ri qilganmi?",
+      case:"Erkin o'yin vaqtida 5 yoshli Zulfiya va Kamola o'yinchoq uchun janjallashib qoladi. Zulfiya Kamolaga urib, o'yinchoqni olib qochadi. Tarbiyachi Nodira darhol 'Zulfiya, burchakka bor, o'tir!' deb jazolaydi.",
+      opts:[
+        "Ha, jazolash kerak edi — intizom muhim",
+        "Yo'q — avval ikkalasining ham his-tuyg'usini tinglab, muammoni birga hal qilishga yordam berish kerak edi",
+        "Yo'q — e'tiborsiz qoldirish kerak edi",
+        "Ha, lekin ko'proq qattiq jazolash kerak edi"
+      ],
+      ans:1,
+      exp:"Konflikt vaziyatida tarbiyachi avval ikki bolaning his-tuyg'ularini tan olib ('Sen xafa bo'lding, u ham xafa bo'ldi'), muammoni birgalikda hal qilishga yo'naltirishi kerak."
+    },
+    {
+      q:"Tarbiyachining to'g'ri harakati qaysi?",
+      case:"Tarbiyachi Shahnoza rasm chizish mashg'ulotida bolalarga 'Kuz' rasmini chizishni topshiradi. 4 yoshli Ibrohim butunlay boshqa narsa — mashina chizadi va 'Men mashinani yaxshi ko'raman' deydi. Tarbiyachi nima qilishi kerak?",
+      opts:[
+        "'Noto'g'ri, kuz chizish kerak!' deb varaqni olib tashlash",
+        "Ibrohimning mashinasini maqtab, so'ng 'Kuz ham chizib ko'ramizmi?' deb qiziqtirish",
+        "Ibrohimni boshqa bolalar oldida tanqid qilish",
+        "Mashg'ulotni to'xtatish"
+      ],
+      ans:1,
+      exp:"Bolaning ijodini qadrlash va uning qiziqishidan kelib chiqqan holda vazifaga yo'naltirish — ijobiy pedagogik yondashuv."
+    },
+    {
+      q:"Tarbiyachining eng to'g'ri harakati qaysi?",
+      case:"MTT ga yangi bola — 3 yoshli Asilbek keldi. Birinchi kuni u ona bilan 30 daqiqa o'tirdi, so'ng ona ketdi. Asilbek 2 soat davomida yig'ladi, ovqat yemadi. Tarbiyachi nima qilishi kerak?",
+      opts:[
+        "Asilbekni e'tiborsiz qoldirish — o'zi tinchlanadi",
+        "Asilbekni doimo qo'lida ko'tarish va boshqa bolalarni unutish",
+        "Asilbekni yaqinida bo'lish, sevimli o'yinchoq bilan jalb qilish, ona bilan adaptatsiya jadvalini kelishish (avval qisqa, keyin uzunroq turish)",
+        "Onani darhol chaqirib, bolani olib ketishini so'rash"
+      ],
+      ans:2,
+      exp:"Adaptatsiya bosqichida bola bilan yaqin bo'lish, qiziqishini topish va ota-onalar bilan bosqichma-bosqich adaptatsiya rejasini amalga oshirish to'g'ri yondashuv."
+    },
+    {
+      q:"Tarbiyachi Gulnoraning harakati to'g'rimi?",
+      case:"Tarbiyachi Gulnora mashg'ulotda 5 yoshli Rustam savol berganda 'Sen hali bilmaysan, katta bo'lganingda bilib olasan' deb javob berdi.",
+      opts:[
+        "Ha, bola hali yoshligida tushunmaydi",
+        "Yo'q — bolaning savoli qadrlangan holda yoshiga mos tushuntirish berilishi kerak edi",
+        "Ha, vaqtni tejash uchun to'g'ri",
+        "Yo'q, lekin savolni e'tiborsiz qoldirish kerak edi"
+      ],
+      ans:1,
+      exp:"Bolaning har qanday savoli qimmatli. Tarbiyachi savol uchun maqtab, yoshga mos tilda javob berishi yoki birgalikda javob qidirishga taklif qilishi kerak."
+    },
+    {
+      q:"Bu vaziyatda eng to'g'ri yondashuv qaysi?",
+      case:"Ota-onalar kuni arafasida tarbiyachi Manzura barcha bolalarni bir xil 'chiroyli' rasmlar chizishga majburladi va ular ota-onalarga sovg'a sifatida beriladigan bo'ldi. 5 yoshli Feruza 'Men boshqacha chizmoqchiman' dedi.",
+      opts:[
+        "'Yo'q, hammasi bir xil bo'lishi kerak' deb Feruzani majburlash",
+        "Feruzaga o'z g'oyasi bilan chizishga ruxsat berish va buni ota-onasiga tushuntirish",
+        "Feruzaning rasmini o'zi chizib berish",
+        "Feruzani mashg'ulotdan chiqarib yuborish"
+      ],
+      ans:1,
+      exp:"Bolaning ijodiy tashabbusi qo'llab-quvvatlanishi kerak. Barcha bolalarni bir xil qilishga majburlash ijodkorlikni bo'g'adi."
+    },
+    {
+      q:"Tarbiyachi Lobar nima qilishi kerak?",
+      case:"Tarbiyachi Lobar guruhdagi 5 yoshli Muhammadning ota-onasi ajrashgandan so'ng bola xulq-atvori o'zgarganini sezdi: Muhammadjonov ko'p xafa bo'ladi, o'yindan chetda qoladi. Tarbiyachi nima qilishi kerak?",
+      opts:[
+        "E'tiborsiz qoldirish — bu oilaviy masala",
+        "Muhammadni boshqa bolalar oldida 'Ota-onang ajrashdi-ku' deb aytish",
+        "Bolaga qo'shimcha e'tibor va mehribonlik ko'rsatish, ota-onalardan biri bilan maxfiy suhbat qilib, MTT psixologa yo'llashni tavsiya etish",
+        "Bolani boshqa guruhga o'tkazishni so'rash"
+      ],
+      ans:2,
+      exp:"Qiyin hayotiy vaziyatdagi bola qo'shimcha e'tibor va tushunishga muhtoj. Tarbiyachi va psixolog birgalikda bolaga yordam berishi kerak."
+    },
+    {
+      q:"Eng to'g'ri yondashuv qaysi?",
+      case:"Guruhda 6 yoshli Dono juda faol va aqlli bola. U mashg'ulotlarda barcha savolga birinchi javob beradi, boshqa bolalar javob bergunga imkon bermaydi. Boshqa bolalar Dononi yoqtirmaslik belgilarini ko'rsatmoqda.",
+      opts:[
+        "Dononi mashg'ulotda gapirishdan man qilish",
+        "Donoga 'Sen eng aqllisan' deb doim uni birinchi o'ringa qo'yish",
+        "Donoga jamoa bo'lib ishlash ko'nikmalarini o'rgatish, navbat kutish, boshqalarni tinglash qoidalarini o'rgatish; uning liderlik potensialini ijobiy yo'nalishga yo'naltirish",
+        "Dononi boshqa guruhga o'tkazish"
+      ],
+      ans:2,
+      exp:"Iqtidorli bolaga ijtimoiy ko'nikmalarni o'rgatish kerak: navbat kutish, tinglay bilish, jamoa bo'lib ishlash — bu keyingi hayotida zarur."
+    },
+    {
+      q:"Tarbiyachining to'g'ri harakati qaysi?",
+      case:"Tarbiyachi Nasiba ovqatlanish vaqtida 4 yoshli Hulkarni kuzatdi: Hulkar ko'kat ovqatni yemay, chetga surdi. Tarbiyachi 'Ye, bo'lmasa uyga ketolmaysan' dedi.",
+      opts:[
+        "To'g'ri — bolaga qat'iy bo'lish kerak",
+        "Noto'g'ri — tahdid o'rniga ovqatni qiziqarli tarzda taqdim etish, ovqat haqida suhbat qilish, majburlamagan holda rag'batlantirish kerak edi",
+        "Noto'g'ri — bolani majburan yedirish kerak edi",
+        "To'g'ri — intizom muhim"
+      ],
+      ans:1,
+      exp:"Ovqatni tahdid bilan yedirish kuchli salbiy ta'sir qoldiradi. Ovqat bilan ijobiy munosabat o'rnatish, qiziqtirish va rag'batlantirish to'g'ri yondashuv."
+    },
   ]
 };
 
-// ═══════════════════════════════════════════════════════════
-//  KONFIGURATSIYA
-// ═══════════════════════════════════════════════════════════
-const CAT_LABELS = {
-  ilk_qadam: '📘 Ilk Qadam dasturi',
-  soha:      '🌱 Rivojlanish sohalari',
-  metodika:  '🎯 Pedagogik metodika',
-  psixolog:  '🧠 Psixologiya',
-  qonun:     '⚖️ Qonunchilik',
-  sanitar:   '🏥 Sanitariya va sog\'liqni saqlash',
-};
+// ════════════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════════════
+let mode = 'imtihon';
+let examQuestions = [];   // {q,case?,opts,ans,exp,stage,catKey}
+let userAnswers = [];     // index yoki null
+let currentQ = 0;
+let timerInterval = null;
+let timeLeft = 90 * 60;   // seconds
+let examActive = false;
 
-const EXAM_COUNT   = 40;   // imtihon uchun jami savol
-const EXAM_SECONDS = 45*60;// 45 daqiqa
-const MIN_ANSWERED = 10;   // yakunlash uchun minimum
-
-// ═══════════════════════════════════════════════════════════
-//  HOLAT O'ZGARUVCHILARI
-// ═══════════════════════════════════════════════════════════
-let _mode       = null;   // 'practice' | 'exam'
-let _questions  = [];     // joriy test savollari
-let _catKeys    = [];     // savollar qaysi toifaga tegishli (exam uchun)
-let _answers    = {};     // { index: answerIdx }
-let _current    = 0;
-let _timer      = null;
-let _timeLeft   = 0;
-let _examCat    = null;   // mashq uchun tanlangan toifa
-
-// ═══════════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
 (async () => {
   const auth = await initAuth(true);
   if (!auth) return;
-  fillNav();
+
+  showScreen('screen-loading');
+
+  const plan = getUserPlan();
+  document.getElementById('nav-plan').textContent = plan === 'pro' ? '⭐ Pro' : plan === 'corporate' ? '🏢 Corp' : '🆓 Free';
+  document.getElementById('nav-plan').className = plan === 'pro' ? 'badge badge-pro' : plan === 'corporate' ? 'badge badge-corp' : 'badge';
 
   if (!hasAccess('attestation')) {
-    document.getElementById('lockView').style.display = 'block';
+    showScreen('screen-locked');
     return;
   }
-  document.getElementById('mainView').style.display = 'block';
+
   await loadHistory();
+  showScreen('screen-home');
+  selectMode('imtihon');
 })();
 
-// ═══════════════════════════════════════════════════════════
-//  KO'RINISH BOSHQARUVI
-// ═══════════════════════════════════════════════════════════
-function showMode() {
-  clearTimer();
-  _mode = null; _questions = []; _answers = {}; _current = 0;
-  setView('modeView');
-  loadHistory();
-}
-function setView(id) {
-  ['modeView','catView','testArea','resultArea'].forEach(v => {
-    document.getElementById(v).style.display = (v === id) ? 'block' : 'none';
-  });
+// ════════════════════════════════════════════════════════════════
+// SCREEN HELPERS
+// ════════════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  MASHQ REJIMI
-// ═══════════════════════════════════════════════════════════
-function startPractice() {
-  _mode = 'practice';
-  const grid = document.getElementById('catGrid');
-  grid.innerHTML = Object.entries(CAT_LABELS).map(([k,v]) =>
-    `<div class="cat-btn" onclick="startPracticeCategory('${k}')">${v}</div>`
-  ).join('');
-  setView('catView');
+// ════════════════════════════════════════════════════════════════
+// MODE & CAT
+// ════════════════════════════════════════════════════════════════
+function selectMode(m) {
+  mode = m;
+  document.getElementById('mode-mashq').classList.toggle('selected', m === 'mashq');
+  document.getElementById('mode-imtihon').classList.toggle('selected', m === 'imtihon');
+  document.getElementById('mashq-cats').style.display = m === 'mashq' ? 'block' : 'none';
 }
 
-function startPracticeCategory(cat) {
-  _examCat  = cat;
-  _questions = [...QUESTIONS[cat]].sort(() => Math.random() - .5);
-  _answers   = {};
-  _current   = 0;
-  document.getElementById('timerBox').style.display = 'none';
-  document.getElementById('navGridWrap').style.display = 'none';
-  document.getElementById('prevBtn').style.display  = 'none';
-  document.getElementById('finishBtn').style.display = 'none';
-  document.getElementById('nextBtn').textContent = 'Keyingi →';
-  setView('testArea');
-  renderQuestion();
+let selectedCat = null;
+function selectCat(cat) {
+  selectedCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  IMTIHON REJIMI
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// BUILD EXAM
+// ════════════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildImtihon() {
+  // 1-bosqich: 35 mutaxassislik (har toifadan 5-6) + 5 kasbiy standart (qonun/sanitar)
+  // 2-bosqich: 10 case study
+  const cats = ['ilk_qadam','soha','metodika','psixolog'];
+  let stage1 = [];
+  cats.forEach(c => stage1.push(...shuffle(QUESTIONS[c]).slice(0,6).map(q => ({...q,stage:1,catKey:c}))));
+  // kasbiy standart (qonun + sanitar dan 5+6 = yana 11 dan 5 tasi)
+  const kasbiy = shuffle([
+    ...QUESTIONS.qonun.map(q=>({...q,stage:1,catKey:'qonun'})),
+    ...QUESTIONS.sanitar.map(q=>({...q,stage:1,catKey:'sanitar'}))
+  ]).slice(0,11);
+  stage1 = shuffle([...stage1, ...kasbiy]).slice(0,40);
+
+  const stage2 = shuffle(QUESTIONS.case_study).slice(0,10).map(q=>({...q,stage:2,catKey:'case_study'}));
+  return [...stage1, ...stage2];
+}
+
+function buildMashq(cat) {
+  return shuffle(QUESTIONS[cat]).slice(0,20).map(q=>({...q,stage:1,catKey:cat}));
+}
+
+// ════════════════════════════════════════════════════════════════
+// START
+// ════════════════════════════════════════════════════════════════
 function startExam() {
-  _mode = 'exam';
-  // Har toifadan teng savollar olish
-  const cats = Object.keys(QUESTIONS);
-  const perCat = Math.floor(EXAM_COUNT / cats.length);
-  _questions = []; _catKeys = [];
-  cats.forEach(cat => {
-    const pool = [...QUESTIONS[cat]].sort(() => Math.random() - .5).slice(0, perCat);
-    pool.forEach(q => { _questions.push(q); _catKeys.push(cat); });
-  });
-  // Qolgan savollarni to'ldirish
-  while (_questions.length < EXAM_COUNT) {
-    const cat = cats[Math.floor(Math.random() * cats.length)];
-    const extra = QUESTIONS[cat][Math.floor(Math.random() * QUESTIONS[cat].length)];
-    _questions.push(extra); _catKeys.push(cat);
-  }
-  // Aralashtirish
-  const combined = _questions.map((q,i) => ({q, cat: _catKeys[i]})).sort(() => Math.random() - .5);
-  _questions = combined.map(x => x.q);
-  _catKeys   = combined.map(x => x.cat);
-
-  _answers = {}; _current = 0;
-
-  // UI sozlash
-  document.getElementById('timerBox').style.display = 'flex';
-  document.getElementById('navGridWrap').style.display = 'block';
-  document.getElementById('prevBtn').style.display  = 'inline-flex';
-  document.getElementById('finishBtn').style.display = 'inline-flex';
-  document.getElementById('nextBtn').textContent = 'Keyingi →';
-  buildNavGrid();
-  startTimer();
-  setView('testArea');
-  renderQuestion();
-}
-
-// ═══════════════════════════════════════════════════════════
-//  SAVOL RENDER
-// ═══════════════════════════════════════════════════════════
-function renderQuestion() {
-  const q    = _questions[_current];
-  const tot  = _questions.length;
-  const pct  = Math.round((_current + 1) / tot * 100);
-  document.getElementById('tMeta').textContent   = `Savol ${_current + 1} / ${tot}`;
-  document.getElementById('tPfill').style.width  = pct + '%';
-  document.getElementById('qText').textContent   = q.q;
-  document.getElementById('expBox').style.display = 'none';
-
-  const letters = ['A','B','C','D'];
-  const wrap    = document.getElementById('optsWrap');
-  const chosen  = _answers[_current];
-  const isAnswered = chosen !== undefined;
-
-  wrap.innerHTML = q.opts.map((o, i) => {
-    let cls = 'topt';
-    if (_mode === 'practice' && isAnswered) {
-      if (i === q.ans) cls += ' correct';
-      else if (i === chosen) cls += ' wrong';
-    } else if (_mode === 'exam' && chosen === i) {
-      cls += ' selected';
-    }
-    const clickable = (_mode === 'practice' && isAnswered) ? '' : `onclick="selectOpt(${i})"`;
-    return `<div class="${cls}" ${clickable}>
-      <span class="opt-letter">${letters[i]}</span>${escHtml(o)}
-    </div>`;
-  }).join('');
-
-  if (_mode === 'practice' && isAnswered) {
-    const exp = document.getElementById('expBox');
-    exp.textContent = '💡 ' + q.exp;
-    exp.style.display = 'block';
-    document.getElementById('nextBtn').textContent =
-      _current < tot - 1 ? 'Keyingi →' : 'Natijani ko\'rish';
-  }
-
-  if (_mode === 'exam') updateNavGrid();
-}
-
-function selectOpt(i) {
-  if (_mode === 'practice' && _answers[_current] !== undefined) return;
-  _answers[_current] = i;
-  if (_mode === 'practice') {
-    renderQuestion();
-    // Oxirgi savol bo'lsa yakunlash
-    if (_current === _questions.length - 1) {
-      document.getElementById('nextBtn').textContent = 'Natijani ko\'rish';
-    }
+  if (mode === 'mashq') {
+    if (!selectedCat) { showToast('Toifani tanlang', 'err'); return; }
+    examQuestions = buildMashq(selectedCat);
+    timeLeft = 0; // no timer in mashq
   } else {
-    renderQuestion();
+    examQuestions = buildImtihon();
+    timeLeft = 90 * 60;
   }
-}
 
-function goQ(dir) {
-  const tot = _questions.length;
-  if (_mode === 'practice') {
-    if (_answers[_current] === undefined && dir === 1) {
-      return showToast('Avval javob tanlang', 'err');
-    }
-    if (_current + dir >= tot) { finishPractice(); return; }
-  }
-  const next = _current + dir;
-  if (next < 0 || next >= tot) return;
-  _current = next;
+  userAnswers = new Array(examQuestions.length).fill(null);
+  currentQ = 0;
+  examActive = true;
+
+  buildNavGrid();
   renderQuestion();
+  showScreen('screen-exam');
+
+  if (mode === 'imtihon') startTimer();
+  else document.getElementById('timer-display').textContent = '♾️ Cheksiz';
 }
 
-function jumpToQ(idx) {
-  _current = idx;
-  renderQuestion();
-}
-
-// ═══════════════════════════════════════════════════════════
-//  NAVIGATSIYA GRID (imtihon)
-// ═══════════════════════════════════════════════════════════
-function buildNavGrid() {
-  const grid = document.getElementById('navGrid');
-  grid.innerHTML = _questions.map((_, i) =>
-    `<div class="nav-num" id="nn${i}" onclick="jumpToQ(${i})">${i+1}</div>`
-  ).join('');
-}
-function updateNavGrid() {
-  _questions.forEach((_, i) => {
-    const el = document.getElementById('nn' + i);
-    if (!el) return;
-    el.className = 'nav-num'
-      + (_answers[i] !== undefined ? ' answered' : '')
-      + (i === _current ? ' current' : '');
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-//  TAYMER
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// TIMER
+// ════════════════════════════════════════════════════════════════
 function startTimer() {
-  _timeLeft = EXAM_SECONDS;
-  updateTimerUI();
-  _timer = setInterval(() => {
-    _timeLeft--;
-    updateTimerUI();
-    if (_timeLeft <= 0) { clearInterval(_timer); finishExam(true); }
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2,'0');
+    const s = (timeLeft % 60).toString().padStart(2,'0');
+    const el = document.getElementById('timer-display');
+    el.textContent = `${m}:${s}`;
+    el.classList.toggle('urgent', timeLeft <= 300);
+    if (timeLeft <= 0) { clearInterval(timerInterval); finishExam(true); }
   }, 1000);
 }
-function updateTimerUI() {
-  const m = String(Math.floor(_timeLeft / 60)).padStart(2,'0');
-  const s = String(_timeLeft % 60).padStart(2,'0');
-  document.getElementById('timerVal').textContent = `${m}:${s}`;
-  const box = document.getElementById('timerBox');
-  box.className = 'timer-box' + (_timeLeft <= 300 ? ' warning' : '');
-}
-function clearTimer() { if (_timer) { clearInterval(_timer); _timer = null; } }
 
-// ═══════════════════════════════════════════════════════════
-//  YAKUNLASH
-// ═══════════════════════════════════════════════════════════
-function finishPractice() {
-  clearTimer();
-  const correct = _questions.filter((q, i) => _answers[i] === q.ans).length;
-  const total   = _questions.length;
-  const pct     = Math.round(correct / total * 100);
-  showResult([{cat: _examCat, correct, total}], correct, total, pct, false);
-  saveResult('Mashq: ' + CAT_LABELS[_examCat], correct, total, pct);
-}
+// ════════════════════════════════════════════════════════════════
+// RENDER QUESTION
+// ════════════════════════════════════════════════════════════════
+function renderQuestion() {
+  const q = examQuestions[currentQ];
+  const total = examQuestions.length;
+  const answered = userAnswers.filter(a => a !== null).length;
+  const pct = (currentQ / total) * 100;
 
-function finishExam(auto) {
-  const answered = Object.keys(_answers).length;
-  if (!auto && answered < MIN_ANSWERED) {
-    return showToast(`Kamida ${MIN_ANSWERED} ta savolga javob bering (${answered}/${MIN_ANSWERED})`, 'err');
-  }
-  clearTimer();
+  document.getElementById('qpfill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `Savol ${currentQ+1}/${total}`;
+  document.getElementById('stage-label').textContent = q.stage === 2 ? '2-BOSQICH (CASE STUDY)' : '1-BOSQICH';
+  document.getElementById('q-num').textContent = `${currentQ + 1}-savol | ${answered} ta javob berildi`;
 
-  // Toifa bo'yicha statistika
-  const catMap = {};
-  Object.keys(CAT_LABELS).forEach(c => { catMap[c] = {correct:0,total:0}; });
-  _questions.forEach((q, i) => {
-    const cat = _catKeys[i];
-    catMap[cat].total++;
-    if (_answers[i] === q.ans) catMap[cat].correct++;
-  });
+  const stageEl = document.getElementById('q-stage');
+  if (q.stage === 2) { stageEl.textContent = '🧩 Vaziyatga asoslangan topshiriq'; stageEl.className = 'q-stage s2'; }
+  else { stageEl.textContent = '📋 Nazariy savol'; stageEl.className = 'q-stage s1'; }
 
-  const correct = _questions.filter((q,i) => _answers[i] === q.ans).length;
-  const total   = _questions.length;
-  const pct     = Math.round(correct / total * 100);
-  const stats   = Object.entries(catMap).map(([cat, d]) => ({cat, ...d}));
+  const caseEl = document.getElementById('q-case');
+  if (q.case) { caseEl.style.display = 'block'; caseEl.textContent = q.case; }
+  else { caseEl.style.display = 'none'; }
 
-  showResult(stats, correct, total, pct, true);
-  saveResult('Attestatsiya Simulyatsiyasi', correct, total, pct);
-}
+  document.getElementById('q-text').textContent = q.q;
 
-function gradeLabel(pct) {
-  if (pct >= 90) return { grade:"A'lo (Eng yuqori toifa)", color:"var(--ok)" };
-  if (pct >= 75) return { grade:"Birinchi toifa", color:"var(--p)" };
-  if (pct >= 60) return { grade:"Ikkinchi toifa", color:"var(--go)" };
-  return { grade:"Yetarli emas — qayta urinish kerak", color:"var(--err)" };
-}
+  const letters = ['A','B','D','E'];
+  const optsEl = document.getElementById('q-opts');
+  const isAnswered = userAnswers[currentQ] !== null;
+  const userAns = userAnswers[currentQ];
 
-function showResult(stats, correct, total, pct, isExam) {
-  const {grade, color} = gradeLabel(pct);
-  document.getElementById('rPercent').textContent = pct + '%';
-  document.getElementById('rPercent').style.color = color;
-  document.getElementById('rGrade').textContent   = grade;
-  document.getElementById('rSub').textContent     = `${correct} ta to'g'ri / ${total} ta savol`;
+  optsEl.innerHTML = q.opts.map((opt, i) => {
+    let cls = 'q-opt';
+    if (isAnswered) {
+      cls += ' disabled';
+      if (i === q.ans) cls += ' correct';
+      else if (i === userAns) cls += ' wrong';
+    } else if (i === userAns) cls += ' selected';
 
-  // Sertifikat
-  const certBox = document.getElementById('certBox');
-  if (pct >= 75) {
-    certBox.style.display = 'block';
-    document.getElementById('certName').textContent  = _currentProfile?.full_name || 'Hurmatli tarbiyachi';
-    document.getElementById('certDate').textContent  = new Date().toLocaleDateString('uz-UZ');
-    document.getElementById('certScore').textContent = `${pct}% (${grade})`;
-  } else {
-    certBox.style.display = 'none';
-  }
-
-  // Toifa statistika
-  const csEl = document.getElementById('catStats');
-  csEl.innerHTML = stats.map(({cat, correct: c, total: t}) => {
-    const p = t ? Math.round(c/t*100) : 0;
-    return `<div class="cs-card">
-      <div class="cs-name">${CAT_LABELS[cat] || cat}</div>
-      <div class="cs-score">${c} / ${t} <small style="font-size:.75rem;color:var(--mu);">(${p}%)</small></div>
-      <div class="pbar"><div class="pfill" style="width:${p}%;background:${p>=75?'var(--ok)':p>=60?'var(--go)':'var(--err)'}"></div></div>
-    </div>`;
+    return `<button class="${cls}" onclick="selectAnswer(${i})">
+      <span class="opt-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>`;
   }).join('');
 
-  // Xato savollar
-  const errEl = document.getElementById('errorList');
-  const errors = _questions.map((q,i) => ({q, i, given: _answers[i]}))
-    .filter(({q,i}) => _answers[i] !== q.ans && _answers[i] !== undefined);
-  if (errors.length === 0) {
-    errEl.innerHTML = '<div class="info-box">Barcha savollarga to\'g\'ri javob berdingiz! 🎉</div>';
+  const expEl = document.getElementById('q-exp');
+  if (mode === 'mashq' && isAnswered) {
+    expEl.textContent = '💡 ' + q.exp;
+    expEl.classList.add('show');
   } else {
-    errEl.innerHTML = errors.map(({q, i, given}) => {
-      const letters = ['A','B','C','D'];
-      return `<div class="card" style="padding:1.25rem;margin-bottom:.75rem;">
-        <div class="tq" style="font-size:.95rem;">${i+1}. ${escHtml(q.q)}</div>
-        <div style="display:flex;flex-direction:column;gap:.4rem;margin:.75rem 0;">
-          ${q.opts.map((o,oi) => `
-            <div class="topt ${oi===q.ans?'correct':oi===given?'wrong':'reveal'}" style="cursor:default;">
-              <span class="opt-letter">${letters[oi]}</span>${escHtml(o)}
-            </div>`).join('')}
-        </div>
-        <div class="exp-box">💡 ${escHtml(q.exp)}</div>
+    expEl.classList.remove('show');
+  }
+
+  document.getElementById('next-btn').textContent = currentQ === examQuestions.length - 1 ? '✅ Yakunlash' : 'Keyingi →';
+  updateNavGrid();
+}
+
+// ════════════════════════════════════════════════════════════════
+// ANSWER
+// ════════════════════════════════════════════════════════════════
+function selectAnswer(i) {
+  if (userAnswers[currentQ] !== null) return;
+  userAnswers[currentQ] = i;
+  if (mode === 'mashq') { addXP(5); }
+  renderQuestion();
+  updateNavGrid();
+}
+
+// ════════════════════════════════════════════════════════════════
+// NAV GRID
+// ════════════════════════════════════════════════════════════════
+function buildNavGrid() {
+  const grid = document.getElementById('nav-grid');
+  grid.innerHTML = examQuestions.map((_,i) =>
+    `<button class="nav-btn" id="nb-${i}" onclick="goToQ(${i})">${i+1}</button>`
+  ).join('');
+}
+
+function updateNavGrid() {
+  examQuestions.forEach((_,i) => {
+    const b = document.getElementById('nb-'+i);
+    if (!b) return;
+    b.className = 'nav-btn';
+    if (i === currentQ) b.classList.add('current');
+    if (userAnswers[i] !== null) b.classList.add('answered');
+  });
+}
+
+function goToQ(i) { currentQ = i; renderQuestion(); }
+function prevQ() { if (currentQ > 0) { currentQ--; renderQuestion(); } }
+function nextQ() {
+  if (currentQ < examQuestions.length - 1) { currentQ++; renderQuestion(); }
+  else { confirmFinish(); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// FINISH
+// ════════════════════════════════════════════════════════════════
+function confirmFinish() {
+  const answered = userAnswers.filter(a => a !== null).length;
+  if (mode === 'imtihon' && answered < 10) {
+    showToast(`Kamida 10 ta savolga javob bering (hozir: ${answered} ta)`, 'err');
+    return;
+  }
+  if (mode === 'imtihon') {
+    if (!confirm(`Imtihonni yakunlashni tasdiqlaysizmi?\n✅ Javob berildi: ${answered}/${examQuestions.length}`)) return;
+  }
+  finishExam(false);
+}
+
+async function finishExam(timeout) {
+  clearInterval(timerInterval);
+  examActive = false;
+
+  if (timeout) showToast('⏰ Vaqt tugadi! Natijalar hisoblanmoqda...', 'err');
+
+  // Natija hisoblash
+  let correct = 0;
+  let stage1correct = 0, stage1total = 0;
+  let stage2correct = 0, stage2total = 0;
+
+  examQuestions.forEach((q, i) => {
+    const isCorrect = userAnswers[i] === q.ans;
+    if (isCorrect) correct++;
+    if (q.stage === 1) { stage1total++; if (isCorrect) stage1correct++; }
+    else { stage2total++; if (isCorrect) stage2correct++; }
+  });
+
+  const total = examQuestions.length;
+  const pct = Math.round((correct / total) * 100);
+  const xp = correct * 10;
+
+  // Baholash
+  let grade, gradeShort, msg, cls;
+  if (pct >= 90) { grade = "A'lo — Eng yuqori toifa"; gradeShort = "A'LO"; msg = "Zo'r natija! Siz davlat attestatsiyasiga tayyor!"; cls = 'excellent'; }
+  else if (pct >= 75) { grade = "Birinchi toifa"; gradeShort = "1-TOIFA"; msg = "Yaxshi natija! Biroz mashq qiling va a'lo bo'lasiz."; cls = 'good'; }
+  else if (pct >= 60) { grade = "Ikkinchi toifa"; gradeShort = "2-TOIFA"; msg = "O'rtacha natija. Zaif toifalarni qayta o'rganing."; cls = 'average'; }
+  else { grade = "Yetarli emas — Qayta urinish kerak"; gradeShort = "PAST"; msg = "Qo'shimcha tayyorgarlik kerak. Mashq rejimida o'rganing."; cls = 'fail'; }
+
+  // Result UI
+  const circle = document.getElementById('result-circle');
+  circle.className = 'result-circle ' + cls;
+  document.getElementById('result-pct').textContent = pct + '%';
+  document.getElementById('result-grade-short').textContent = gradeShort;
+  document.getElementById('result-grade-full').textContent = grade;
+  document.getElementById('result-msg').textContent = msg + ` | XP: +${xp}`;
+
+  // Bosqich natijalari
+  const sb = document.getElementById('stage-breakdown');
+  if (mode === 'imtihon') {
+    sb.innerHTML = `
+      <div class="stage-card">
+        <h4>1-Bosqich: Nazariy bilimlar</h4>
+        <div class="stage-score">${stage1correct}/${stage1total}</div>
+        <div style="font-size:.82rem;color:var(--mu);">${Math.round(stage1correct/stage1total*100)}% to'g'ri</div>
+      </div>
+      <div class="stage-card">
+        <h4>2-Bosqich: Case Study</h4>
+        <div class="stage-score">${stage2correct}/${stage2total}</div>
+        <div style="font-size:.82rem;color:var(--mu);">${Math.round(stage2correct/stage2total*100)}% to'g'ri</div>
       </div>`;
-    }).join('');
+  } else {
+    sb.innerHTML = `<div class="stage-card" style="grid-column:1/-1;">
+      <h4>Mashq natijasi</h4>
+      <div class="stage-score">${correct}/${total}</div>
+    </div>`;
   }
 
-  setView('resultArea');
-}
+  // Sertifikat tugmasi
+  if (pct >= 75) document.getElementById('btn-cert').style.display = 'block';
 
-// ═══════════════════════════════════════════════════════════
-//  NATIJANI SAQLASH
-// ═══════════════════════════════════════════════════════════
-async function saveResult(category, correct, total, pct) {
+  // DB ga saqlash
   try {
-    const xp = correct * 10;
     await _sb.from('test_results').insert({
-      user_id:    _currentUser.id,
-      category,
-      score:      correct,
-      total,
-      percentage: pct,
-      xp_earned:  xp,
-      completed_at: new Date().toISOString(),
+      user_id: _currentUser.id,
+      category: mode === 'imtihon' ? 'Attestatsiya Simulyatsiyasi' : `Attestatsiya Mashq — ${selectedCat}`,
+      score: correct, total, percentage: pct, xp_earned: xp,
+      completed_at: new Date().toISOString()
     });
-    await addXP(xp);
-  } catch(e) {
-    console.error('Natija saqlashda xato:', e);
-  }
+    if (xp > 0) await addXP(xp);
+  } catch(e) { console.error('Saqlashda xato:', e); }
+
+  showScreen('screen-result');
 }
 
-// ═══════════════════════════════════════════════════════════
-//  TARIX
-// ═══════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// WRONG QUESTIONS
+// ════════════════════════════════════════════════════════════════
+function showWrong() {
+  const section = document.getElementById('wrong-section');
+  const list = document.getElementById('wrong-list');
+  section.style.display = 'block';
+
+  const wrongs = examQuestions.filter((q,i) => userAnswers[i] !== q.ans);
+  if (!wrongs.length) { list.innerHTML = '<p style="color:var(--ok);font-weight:600;">🎉 Barcha savollarga to\'g\'ri javob berdingiz!</p>'; return; }
+
+  const letters = ['A','B','D','E'];
+  list.innerHTML = wrongs.map((q,i) => `
+    <div class="q-box" style="margin-bottom:12px;">
+      <div class="q-num">Xato savol ${i+1}</div>
+      ${q.case ? `<div class="q-case">${q.case}</div>` : ''}
+      <div class="q-text">${q.q}</div>
+      <div style="padding:10px 14px;background:#fff1f2;border-radius:10px;margin-bottom:8px;font-size:.88rem;">
+        ❌ Sizning javobingiz: ${userAnswers[examQuestions.indexOf(q)] !== null ? letters[userAnswers[examQuestions.indexOf(q)]] + ') ' + q.opts[userAnswers[examQuestions.indexOf(q)]] : 'Javob berilmadi'}
+      </div>
+      <div style="padding:10px 14px;background:#f0fdf4;border-radius:10px;margin-bottom:8px;font-size:.88rem;">
+        ✅ To'g'ri javob: ${letters[q.ans]}) ${q.opts[q.ans]}
+      </div>
+      <div class="q-exp show">💡 ${q.exp}</div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+// CERTIFICATE
+// ════════════════════════════════════════════════════════════════
+function showCert() {
+  const total = examQuestions.length;
+  const correct = userAnswers.filter((a,i) => a === examQuestions[i].ans).length;
+  const pct = Math.round(correct/total*100);
+
+  let grade, stars;
+  if (pct>=90){grade="A'lo — Eng yuqori toifa";stars="⭐⭐⭐⭐⭐";}
+  else if(pct>=75){grade="Birinchi toifa";stars="⭐⭐⭐⭐";}
+  else{grade="Ikkinchi toifa";stars="⭐⭐⭐";}
+
+  document.getElementById('cert-name').textContent = _currentProfile?.full_name || 'Tarbiyachi';
+  document.getElementById('cert-stars').textContent = stars;
+  document.getElementById('cert-score').textContent = pct + '%';
+  document.getElementById('cert-grade').textContent = grade;
+  document.getElementById('cert-date').textContent = '📅 ' + new Date().toLocaleDateString('uz-UZ', {year:'numeric',month:'long',day:'numeric'});
+  showScreen('screen-cert');
+}
+
+// ════════════════════════════════════════════════════════════════
+// HISTORY
+// ════════════════════════════════════════════════════════════════
 async function loadHistory() {
-  const el = document.getElementById('histBody');
   try {
-    const { data, error } = await _sb
-      .from('test_results')
-      .select('category, score, total, percentage, completed_at')
+    const { data } = await _sb.from('test_results')
+      .select('*')
       .eq('user_id', _currentUser.id)
       .ilike('category', '%Attestatsiya%')
       .order('completed_at', { ascending: false })
       .limit(5);
-    if (error) throw error;
-    if (!data || !data.length) {
-      el.innerHTML = '<div style="padding:1.25rem;text-align:center;color:var(--mu);">Hali urinish bo\'lmagan. Birinchi simulyatsiyangizni boshlang!</div>';
-      return;
-    }
+
+    const el = document.getElementById('history-list');
+    if (!data || !data.length) { el.innerHTML = '<p style="color:var(--mu);font-size:.9rem;">Hali urinish yo\'q.</p>'; return; }
+
     el.innerHTML = data.map(r => {
-      const {grade} = gradeLabel(r.percentage);
-      const date    = r.completed_at ? new Date(r.completed_at).toLocaleDateString('uz-UZ') : '—';
-      return `<div class="hist-row">
-        <span>${date}</span>
-        <span style="color:var(--mu);font-size:.82rem;">${r.score}/${r.total}</span>
+      const date = new Date(r.completed_at).toLocaleDateString('uz-UZ');
+      let badge = r.percentage >= 90 ? "🟢 A'lo" : r.percentage >= 75 ? '🔵 1-toifa' : r.percentage >= 60 ? '🟡 2-toifa' : '🔴 Past';
+      return `<div class="history-item">
+        <span>${r.category}</span>
+        <span style="color:var(--mu);font-size:.8rem;">${date}</span>
         <span style="font-weight:700;">${r.percentage}%</span>
-        <span style="font-size:.82rem;color:var(--mu);">${grade}</span>
+        <span>${badge}</span>
       </div>`;
     }).join('');
-  } catch(e) {
-    el.innerHTML = '<div style="padding:1.25rem;text-align:center;color:var(--err);">Tarixni yuklashda xato</div>';
-  }
+  } catch(e) { console.error(e); }
 }
 
-function exitTest() {
-  if (!confirm('Testni to\'xtatmoqchimisiz? Barcha javoblar o\'chib ketadi.')) return;
-  clearTimer();
-  showMode();
-}
-
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function goHome() {
+  clearInterval(timerInterval);
+  selectedCat = null;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  loadHistory();
+  showScreen('screen-home');
+  selectMode('imtihon');
 }
 </script>
 </body>
