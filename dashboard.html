@@ -184,7 +184,7 @@
 <script>
 window.addEventListener('load', async () => {
   const auth = await initAuth(true);
-  if(!auth) return;
+  if (!auth) return;
   fillNav();
 
   const profile = auth.profile;
@@ -192,29 +192,27 @@ window.addEventListener('load', async () => {
   document.getElementById('hero-name').textContent = name;
 
   // ── PLAN ──
-  // isPro() va isCorporate() auth.js dan keladi
   const proUser  = isPro();
   const corpUser = isCorporate();
 
   document.getElementById('hero-plan').textContent =
     corpUser ? '🏢 Korporativ' : proUser ? '⭐ Pro' : '🆓 Bepul';
 
-  if(!proUser) document.getElementById('premiumBanner').style.display = 'flex';
-  if(proUser)  document.getElementById('test-limit-txt').textContent = 'Cheksiz';
+  if (!proUser) document.getElementById('premiumBanner').style.display = 'flex';
+  if (proUser)  document.getElementById('test-limit-txt').textContent = 'Cheksiz';
 
   // ── KARTALAR ONCLICK ──
-  // PRO kartalar
   const proCards = {
-    'card-games'      : { module:'games',       href:'pages/oyinlar.html'      },
-    'card-songs'      : { module:'songs',        href:'pages/qoshiqlar.html'    },
-    'card-activities' : { module:'activities',   href:'pages/mashgulotlar.html' },
-    'card-attestation': { module:'attestation',  href:'pages/attestatsiya.html' },
-    'card-portfolio'  : { module:'portfolio',    href:'pages/portfolio.html'    },
+    'card-games'      : { module:'games',      href:'pages/oyinlar.html'      },
+    'card-songs'      : { module:'songs',       href:'pages/qoshiqlar.html'    },
+    'card-activities' : { module:'activities',  href:'pages/mashgulotlar.html' },
+    'card-attestation': { module:'attestation', href:'pages/attestatsiya.html' },
+    'card-portfolio'  : { module:'portfolio',   href:'pages/portfolio.html'    },
   };
   Object.entries(proCards).forEach(([id, cfg]) => {
     const el = document.getElementById(id);
-    if(!el) return;
-    if(proUser){
+    if (!el) return;
+    if (proUser) {
       el.querySelector('.lock-badge').style.display = 'none';
       el.onclick = () => window.location.href = cfg.href;
     } else {
@@ -222,29 +220,47 @@ window.addEventListener('load', async () => {
     }
   });
 
-  // CORP kartalar — hozircha "Tez kunda"
   ['card-attendance','card-parents','card-monitoring'].forEach(id => {
     const el = document.getElementById(id);
-    if(!el) return;
+    if (!el) return;
     const badge = el.querySelector('.lock-badge');
-    if(badge){ badge.textContent = 'Tez kunda'; badge.style.background = '#94a3b8'; }
+    if (badge) { badge.textContent = 'Tez kunda'; badge.style.background = '#94a3b8'; }
     el.style.opacity = '0.6';
     el.style.cursor = 'default';
     el.onclick = () => showToast('🚀 Bu bo\'lim tez kunda ishga tushadi!', 'ok');
   });
 
-  // ── STATISTIKA ──
+  // ── XP (profile dan) ──
   const xp = profile?.xp || 0;
   document.getElementById('stat-xp').textContent = xp;
-  document.getElementById('stat-test').textContent = profile?.tests_count || 0;
-  document.getElementById('stat-avg').textContent = (profile?.avg_score || 0) + '%';
+
+  // ── KONSPEKT ──
   document.getElementById('stat-konspekt').textContent = profile?.konspekt_count || 0;
+
+  // ── TEST STATISTIKASI — test_results jadvalidan to'g'ridan-to'g'ri o'qiymiz ──
+  // (Bu profiledagi eski/noto'g'ri keshni chetlab o'tadi)
+  const { data: allTests } = await _sb
+    .from('test_results')
+    .select('percentage')
+    .eq('user_id', auth.user.id);
+
+  if (allTests && allTests.length > 0) {
+    const count = allTests.length;
+    const avg = Math.round(
+      allTests.reduce((sum, t) => sum + (t.percentage || 0), 0) / count
+    );
+    document.getElementById('stat-test').textContent = count;
+    document.getElementById('stat-avg').textContent = avg + '%';
+  } else {
+    document.getElementById('stat-test').textContent = 0;
+    document.getElementById('stat-avg').textContent = '0%';
+  }
 
   // ── XP DARAJA ──
   const lv = getLevel(xp);
   document.getElementById('xp-label').textContent = lv.lvl + '-daraja: ' + lv.title;
   document.getElementById('hero-xp-badge').textContent = '🏅 ' + lv.lvl + '-daraja';
-  const prevMin = [0,0,80,200,400,800][lv.lvl - 1] || 0;
+  const prevMin = [0, 0, 80, 200, 400, 800][lv.lvl - 1] || 0;
   const pct = lv.next < 9999
     ? Math.min(((xp - prevMin) / (lv.next - prevMin)) * 100, 100) : 100;
   document.getElementById('xp-fill').style.width = pct + '%';
@@ -252,18 +268,31 @@ window.addEventListener('load', async () => {
     lv.next < 9999 ? 'Keyingi: ' + lv.next + ' XP' : 'Maksimal daraja!';
 
   // ── SO'NGGI TESTLAR ──
-  const {data: tests} = await _sb.from('test_results')
-    .select('*').eq('user_id', auth.user.id)
-    .order('created_at', {ascending:false}).limit(5);
-  if(tests && tests.length){
+  const { data: tests } = await _sb
+    .from('test_results')
+    .select('*')
+    .eq('user_id', auth.user.id)
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  if (tests && tests.length) {
     const ul = document.getElementById('lastTests');
     ul.innerHTML = '';
     tests.forEach(t => {
       const row = document.createElement('div');
       row.style = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
       const date = new Date(t.created_at).toLocaleDateString('uz-UZ');
-      const color = t.score >= 80 ? '#16a34a' : t.score >= 60 ? '#d97706' : '#ef4444';
-      row.innerHTML = `<div><div style="font-weight:600;font-size:.9rem">${t.test_name||'Test'}</div><div style="font-size:.75rem;color:var(--mu)">${date}</div></div><div style="font-size:1.2rem;font-weight:800;color:${color}">${t.score}%</div>`;
+      const pct  = t.percentage ?? t.score ?? 0;
+      const color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#ef4444';
+      // test.html 'category' ustuniga saqlaydi, 'test_name' emas
+      const testName = t.test_name || t.category || 'Test';
+      row.innerHTML = `
+        <div>
+          <div style="font-weight:600;font-size:.9rem">${testName}</div>
+          <div style="font-size:.75rem;color:var(--mu)">${date}</div>
+        </div>
+        <div style="font-size:1.2rem;font-weight:800;color:${color}">${pct}%</div>
+      `;
       ul.appendChild(row);
     });
   }
