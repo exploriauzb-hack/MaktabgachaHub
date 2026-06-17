@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaktabgachaHub — Mashg'ulotlar</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.act-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+.act-card { background:#fff; border-radius:14px; padding:18px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-top:4px solid var(--ac); }
+.act-card .ai { font-size:1.9rem; margin-bottom:6px; }
+.act-card h4 { font-size:.92rem; font-weight:700; margin-bottom:6px; }
+.act-card p { font-size:.8rem; color:var(--mu); margin-bottom:9px; line-height:1.6; }
+.act-card .astep { background:#fff7ed; border-radius:8px; padding:8px 11px; font-size:.78rem; color:#92400e; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user"><span id="nav-name">—</span><span class="nav-badge" id="nav-plan">Bepul</span></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="sec-title">✏️ Ijodiy Mashg'ulotlar</div>
+  <div class="info-box">Ijodkorlik va amaliy ko'nikmalarni rivojlantiruvchi mashg'ulotlar to'plami.</div>
+  <div class="act-grid" id="act-grid"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+
+var actsData = [
+  { icon:'🖍️', soha:"5-soha: Ijodiy", name:"Bo'yash va chizish", desc:"Mavzuga mos rasm bo'yash.", steps:"Mavzu tanlash → Ranglar → Tekis bo'yash → Ko'rgazma" },
+  { icon:'✂️', soha:'1+5-soha', name:"Qirqish va applikatsiya", desc:"Qog'oz qirqib, yapishtirib rasm yasash.", steps:"Shakl chizish → Qirqish → Yapishtirish → Taqdimot" },
+  { icon:'🧱', soha:"5-soha: Ijodiy", name:'Plastilin va loy', desc:"Plastilindan shakllar yasash.", steps:"Yumshatish → Shakl berish → Bezak → Taqdim etish" },
+  { icon:'🔬', soha:'4-soha: Bilish', name:'Kichik tajribalar', desc:"Suv, qum, havo bilan tajribalar.", steps:"Material → Taxmin → Kuzatish → Xulosa" },
+  { icon:'🎭', soha:'2+5-soha', name:'Teatr va dramatizatsiya', desc:"Ertak qahramonlarini sahnalashtirish.", steps:"Ertak tanlash → Rol taqsimlash → Mashq → Namoyish" },
+  { icon:'🎵', soha:'5-soha: Musiqa', name:'Ritm va raqs', desc:"Musiqa ritmiga harakat.", steps:"Musiqa tinglash → Ritm topish → Harakat → Ijodiy raqs" },
+  { icon:'🔢', soha:'4-soha: FEMP', name:'Predmetlar bilan hisob', desc:"Haqiqiy predmetlar bilan sanash.", steps:"Predmet tarqatish → Sanash → Taqqoslash → Mustahkamlash" },
+  { icon:'📖', soha:'3-soha: Nutq', name:'Ertak va hikoya', desc:"Ertak tinglash va qayta so'zlash.", steps:"O'qish → Savol-javob → Qayta so'zlash → Chizish" },
+]
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+
+  if (!hasAccess('activities')) {
+    document.querySelector('.container').innerHTML = `
+      <div style="text-align:center;padding:60px 20px">
+        <div style="font-size:3rem;margin-bottom:14px">🔒</div>
+        <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:8px">Bu bo'lim Premium uchun</h2>
+        <p style="color:var(--mu);margin-bottom:24px">Barcha mashg'ulotlar to'plamiga ega bo'lish uchun Premium oling</p>
+        <a href="../premium.html" style="background:linear-gradient(135deg,#6c47ff,#9b7cff);
+          color:#fff;padding:13px 30px;border-radius:12px;font-weight:700;display:inline-block">
+          ⭐ Premium olish — 49 000 so'm/oy
+        </a>
+      </div>`
+    return
+  }
+
+  document.getElementById('act-grid').innerHTML = actsData.map(a => `
+    <div class="act-card">
+      <div class="ai">${a.icon}</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--ac);margin-bottom:4px">${a.soha}</div>
+      <h4>${a.name}</h4>
+      <p>${a.desc}</p>
+      <div class="astep">${a.steps}</div>
+    </div>
+  `).join('')
+})
+</script>
+
+</body>
+</html>
