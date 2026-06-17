@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .stat-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08);
+    }
+    .stat-num  { font-size: 2rem; font-weight: 800; color: var(--p); }
+    .stat-lbl  { font-size: .75rem; color: var(--mu); margin-top: 3px; }
+    .stat-icon { font-size: 1.5rem; margin-bottom: 4px; }
+
+    .module-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px 14px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08);
+      cursor: pointer;
+      transition: all .2s;
+      border: 2px solid transparent;
+      position: relative;
+      text-decoration: none;
+      display: block;
+      color: var(--tx);
+    }
+    .module-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(108,71,255,.15);
+      border-color: var(--p);
+    }
+    .module-card.locked {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+    .module-card.locked:hover {
+      transform: none;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08);
+      border-color: transparent;
+    }
+    .module-icon { font-size: 2rem; margin-bottom: 8px; }
+    .module-name { font-size: .85rem; font-weight: 700; }
+    .module-desc { font-size: .72rem; color: var(--mu); margin-top: 3px; }
+
+    .lock-icon {
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: .8rem;
+      background: var(--go);
+      color: #fff;
+      border-radius: 8px;
+      padding: 1px 6px;
+      font-weight: 700;
+    }
+
+    .xp-bar-wrap { max-width: 340px; margin: 0 auto 6px; }
+    .xp-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .78rem;
+      color: var(--mu);
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-btn active">🏠 Bosh sahifa</a>
+    <a href="premium.html"   class="nav-btn">⭐ Premium</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+    <button class="nav-btn" onclick="doLogout()" style="background:rgba(255,100,100,.25)">Chiqish</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero" id="hero-block">
+    <div style="font-size:2.4rem;margin-bottom:8px">🎓</div>
+    <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
+    <p>Ilk Qadam 2026 dasturi asosida professional ish yuritish vositalari</p>
+    <div class="badges">
+      <span class="badge">👶 4-5 yoshli guruh</span>
+      <span class="badge" id="hero-plan-badge">🆓 Bepul</span>
+      <span class="badge" id="hero-level">🏅 1-daraja</span>
+    </div>
+  </div>
+
+  <!-- PREMIUM BANNER (faqat free uchun) -->
+  <div class="premium-banner" id="premium-banner" style="display:none">
+    <div>
+      <h3>⭐ Professional obunaga o'ting!</h3>
+      <p>AI konspekt, attestatsiya testlari, portfolio va ko'p narsa — 49 000 so'm/oy</p>
+    </div>
+    <button class="btn-white" onclick="window.location.href='premium.html'">Batafsil →</button>
+  </div>
+
+  <!-- STATISTIKA -->
+  <div class="sec-title">📈 Mening natijalarim</div>
+  <div class="grid-4" style="margin-bottom:24px">
+    <div class="stat-card">
+      <div class="stat-icon">🧪</div>
+      <div class="stat-num" id="s-tests">0</div>
+      <div class="stat-lbl">Testlar</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-num" id="s-avg">0%</div>
+      <div class="stat-lbl">O'rtacha natija</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⭐</div>
+      <div class="stat-num" id="s-xp">0</div>
+      <div class="stat-lbl">Jami XP</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📝</div>
+      <div class="stat-num" id="s-kn">0</div>
+      <div class="stat-lbl">Konspektlar</div>
+    </div>
+  </div>
+
+  <!-- XP PROGRESS -->
+  <div style="background:#fff;border-radius:16px;padding:18px 20px;margin-bottom:24px;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-weight:700;font-size:.95rem" id="level-title">1-daraja: Yangi Tarbiyachi</div>
+      <div style="font-size:.8rem;color:var(--mu)" id="level-next">Keyingi: 80 XP</div>
+    </div>
+    <div class="xp-bar-wrap" style="max-width:100%">
+      <div class="pbar"><div class="pfill" id="xp-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- MODULLAR -->
+  <div class="sec-title">📌 Bo'limlar</div>
+  <div class="grid-3" style="margin-bottom:32px" id="modules-grid">
+
+    <!-- FREE modullar -->
+    <a href="pages/jadval.html" class="module-card">
+      <div class="module-icon">📅</div>
+      <div class="module-name">Kunlik jadval</div>
+      <div class="module-desc">Soatma-soat reja</div>
+    </a>
+
+    <a href="pages/haftalik.html" class="module-card">
+      <div class="module-icon">📚</div>
+      <div class="module-name">Haftalik mavzular</div>
+      <div class="module-desc">Yillik tematik reja</div>
+    </a>
+
+    <a href="pages/soha.html" class="module-card">
+      <div class="module-icon">📊</div>
+      <div class="module-name">Rivojlanish sohalari</div>
+      <div class="module-desc">5 ta asosiy soha</div>
+    </a>
+
+    <a href="pages/tamoyil.html" class="module-card">
+      <div class="module-icon">📌</div>
+      <div class="module-name">Tamoyillar</div>
+      <div class="module-desc">6 ta tamoyil</div>
+    </a>
+
+    <a href="pages/test.html" class="module-card">
+      <div class="module-icon">🧪</div>
+      <div class="module-name">Testlar</div>
+      <div class="module-desc" id="test-desc">5 ta / oy</div>
+    </a>
+
+    <a href="pages/konspekt.html" class="module-card">
+      <div class="module-icon">📝</div>
+      <div class="module-name">Konspektlar</div>
+      <div class="module-desc" id="kn-desc">3 ta ko'rish</div>
+    </a>
+
+    <!-- PRO modullar -->
+    <div class="module-card" id="mod-games" onclick="checkAndGo('games','pages/oyinlar.html')">
+      <div class="module-icon">🎮</div>
+      <div class="module-name">Oyinlar</div>
+      <div class="module-desc">Didaktik oyinlar</div>
+      <span class="lock-icon" id="lock-games">PRO</span>
+    </div>
+
+    <div class="module-card" id="mod-songs" onclick="checkAndGo('songs','pages/qoshiqlar.html')">
+      <div class="module-icon">🎵</div>
+      <div class="module-name">Qo'shiqlar</div>
+      <div class="module-desc">Mavzuga mos</div>
+      <span class="lock-icon" id="lock-songs">PRO</span>
+    </div>
+
+    <div class="module-card" id="mod-activities" onclick="checkAndGo('activities','pages/mashgulot.html')">
+      <div class="module-icon">✏️</div>
+      <div class="module-name">Mashg'ulotlar</div>
+      <div class="module-desc">Ijodiy faoliyat</div>
+      <span class="lock-icon" id="lock-activities">PRO</span>
+    </div>
+
+    <div class="module-card" id="mod-ai" onclick="checkAndGo('ai_konspekt','pages/ai.html')">
+      <div class="module-icon">🤖</div>
+      <div class="module-name">AI Konspekt</div>
+      <div class="module-desc">Avtomatik yaratish</div>
+      <span class="lock-icon" id="lock-ai">PRO</span>
+    </div>
+
+    <div class="module-card" id="mod-att" onclick="checkAndGo('attestation','pages/attestatsiya.html')">
+      <div class="module-icon">🎓</div>
+      <div class="module-name">Attestatsiya</div>
+      <div class="module-desc">Tayyorgarlik testlari</div>
+      <span class="lock-icon" id="lock-att">PRO</span>
+    </div>
+
+    <div class="module-card" id="mod-portfolio" onclick="checkAndGo('portfolio','pages/portfolio.html')">
+      <div class="module-icon">👤</div>
+      <div class="module-name">Portfolio</div>
+      <div class="module-desc">Professional profil</div>
+      <span class="lock-icon" id="lock-portfolio">PRO</span>
+    </div>
+
+    <!-- CORPORATE modullar -->
+    <div class="module-card" id="mod-attendance" onclick="checkAndGo('attendance','pages/davomat.html')">
+      <div class="module-icon">📋</div>
+      <div class="module-name">Davomat</div>
+      <div class="module-desc">QR bilan belgilash</div>
+      <span class="lock-icon" id="lock-attendance" style="background:#f59e0b">CORP</span>
+    </div>
+
+    <div class="module-card" id="mod-parent" onclick="checkAndGo('parent_portal','pages/otaona.html')">
+      <div class="module-icon">👨‍👩‍👧</div>
+      <div class="module-name">Ota-onalar</div>
+      <div class="module-desc">Xabar va hisobot</div>
+      <span class="lock-icon" id="lock-parent" style="background:#f59e0b">CORP</span>
+    </div>
+
+    <div class="module-card" id="mod-monitor" onclick="checkAndGo('child_monitoring','pages/monitoring.html')">
+      <div class="module-icon">📈</div>
+      <div class="module-name">Bola monitoringi</div>
+      <div class="module-desc">Rivojlanish grafigi</div>
+      <span class="lock-icon" id="lock-monitor" style="background:#f59e0b">CORP</span>
+    </div>
+
+  </div>
+
+  <!-- SO'NGI TESTLAR -->
+  <div class="sec-title">📊 So'nggi testlar</div>
+  <div id="recent-tests">
+    <div class="info-box">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a></div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- Premium modal -->
+<div class="modal-overlay" id="premium-modal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-hdr" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+      <h3>🔒 Premium kerak</h3>
+      <button class="modal-cls" onclick="closePremiumModal()">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:28px 24px">
+      <div style="font-size:2.5rem;margin-bottom:10px">⭐</div>
+      <h3 style="margin-bottom:6px">"<span id="premium-module-name"></span>" bo'limi</h3>
+      <p style="color:#7c7c9a;font-size:.88rem;margin-bottom:20px">
+        Bu bo'lim faqat Professional obuna uchun mavjud
+      </p>
+      <button onclick="window.location.href='premium.html'"
+        style="width:100%;padding:13px;background:linear-gradient(135deg,#6c47ff,#9b7cff);
+        color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer">
+        Premium olish — 49 000 so'm/oy
+      </button>
+      <button onclick="closePremiumModal()"
+        style="width:100%;padding:10px;margin-top:10px;background:none;
+        border:none;color:#7c7c9a;font-size:.85rem;cursor:pointer">
+        Keyinroq
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/premium.js"></script>
+<script>
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+
+  fillNav()
+
+  const plan = getUserPlan()
+  const name = getUserName()
+  const xp   = _currentProfile?.xp || 0
+  const lv   = getLevel(xp)
+
+  // Hero
+  document.getElementById('hero-name').textContent = name
+  document.getElementById('hero-level').textContent = '🏅 ' + lv.title
+  document.getElementById('hero-plan-badge').textContent =
+    plan === 'pro' ? '⭐ Professional' :
+    plan === 'corporate' ? '🏢 Korporativ' : '🆓 Bepul'
+
+  // Premium banner
+  if (plan === 'free') {
+    document.getElementById('premium-banner').style.display = 'flex'
+  }
+
+  // XP
+  document.getElementById('s-xp').textContent = xp
+  document.getElementById('level-title').textContent = lv.lvl + '-daraja: ' + lv.title
+  document.getElementById('level-next').textContent =
+    lv.next === 9999 ? 'MAX daraja!' : 'Keyingi: ' + lv.next + ' XP'
+  const pct = lv.next === 9999 ? 100 : Math.min(Math.round(xp / lv.next * 100), 100)
+  document.getElementById('xp-fill').style.width = pct + '%'
+
+  // Test va konspekt tavsifi
+  if (isPro()) {
+    document.getElementById('test-desc').textContent = 'Cheksiz'
+    document.getElementById('kn-desc').textContent   = '30+ ta'
+  }
+
+  // Pro modullarni ochish
+  const proMods = ['games','songs','activities','ai','att','portfolio']
+  proMods.forEach(m => {
+    const card = document.getElementById('mod-' + m)
+    const lock = document.getElementById('lock-' + m)
+    if (isPro() || isCorporate()) {
+      card?.classList.remove('locked')
+      if (lock) lock.style.display = 'none'
+    } else {
+      card?.classList.add('locked')
+    }
+  })
+
+  // Corporate modullarni ochish
+  const corpMods = ['attendance','parent','monitor']
+  corpMods.forEach(m => {
+    const card = document.getElementById('mod-' + m)
+    const lock = document.getElementById('lock-' + m)
+    if (isCorporate()) {
+      card?.classList.remove('locked')
+      if (lock) lock.style.display = 'none'
+    } else {
+      card?.classList.add('locked')
+    }
+  })
+
+  // Statistika
+  await loadStats()
+})
+
+async function loadStats() {
+  const { data: tests } = await _sb
+    .from('test_results')
+    .select('percentage')
+    .eq('user_id', _currentUser.id)
+    .order('completed_at', { ascending: false })
+
+  if (tests?.length) {
+    const avg = Math.round(tests.reduce((s, t) => s + t.percentage, 0) / tests.length)
+    document.getElementById('s-tests').textContent = tests.length
+    document.getElementById('s-avg').textContent   = avg + '%'
+
+    // So'nggi 3 ta test
+    const html = tests.slice(0, 3).map(t => {
+      const col = t.percentage >= 80 ? '#22c55e' : t.percentage >= 60 ? '#6c47ff' : '#ef4444'
+      return `<div style="background:#fff;border-radius:12px;padding:12px 16px;
+        display:flex;justify-content:space-between;align-items:center;
+        margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.05)">
+        <div style="font-size:.88rem;font-weight:600">${t.category || 'Test'}</div>
+        <div style="font-size:1.1rem;font-weight:800;color:${col}">${t.percentage}%</div>
+      </div>`
+    }).join('')
+    document.getElementById('recent-tests').innerHTML = html
+  }
+
+  const { count: knCount } = await _sb
+    .from('konspektlar')
+    .select('id', { count: 'exact' })
+    .eq('teacher_id', _currentUser.id)
+
+  document.getElementById('s-kn').textContent = knCount || 0
+}
+
+function checkAndGo(module, url) {
+  if (hasAccess(module)) {
+    window.location.href = url
+  } else {
+    openPremiumModal(module)
+  }
+}
+
+function closePremiumModal() {
+  document.getElementById('premium-modal').classList.remove('show')
+}
+
+function openPremiumModal(module) {
+  const names = {
+    games: 'Oyinlar', songs: "Qo'shiqlar", activities: "Mashg'ulotlar",
+    ai_konspekt: 'AI Konspekt', attestation: 'Attestatsiya',
+    portfolio: 'Portfolio', attendance: 'Davomat',
+    parent_portal: 'Ota-ona portali', child_monitoring: 'Bola monitoringi'
+  }
+  document.getElementById('premium-module-name').textContent = names[module] || module
+  document.getElementById('premium-modal').classList.add('show')
+}
+</script>
+
+</body>
+</html>
