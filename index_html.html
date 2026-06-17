@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Kirish</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-wrap">
+    <div class="auth-box">
+
+      <!-- Logo -->
+      <div class="auth-logo">🎓</div>
+      <h1 class="auth-title">MaktabgachaHub</h1>
+      <p class="auth-sub">MTT tarbiyachilari uchun metodic yordam markazi</p>
+
+      <!-- Tablar -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login-btn" onclick="switchTab('login')">Kirish</button>
+        <button class="auth-tab" id="tab-register-btn" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
+      </div>
+
+      <!-- Xabarlar -->
+      <div class="msg msg-err" id="msg-err"></div>
+      <div class="msg msg-ok" id="msg-ok"></div>
+
+      <!-- Login formasi -->
+      <div id="form-login">
+        <input class="inp" type="email" id="login-email" placeholder="Email manzilingiz" autocomplete="email">
+        <input class="inp" type="password" id="login-pass" placeholder="Parolingiz" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') doLogin()">
+        <button class="btn-primary" id="login-btn" onclick="doLogin()">Kirish</button>
+        <p class="auth-hint">Parolni unutdingizmi? <a href="#">Tiklash</a></p>
+      </div>
+
+      <!-- Register formasi -->
+      <div id="form-register" style="display:none">
+        <input class="inp" type="text" id="reg-name" placeholder="Ismingiz (ixtiyoriy)">
+        <input class="inp" type="email" id="reg-email" placeholder="Email manzilingiz" autocomplete="email">
+        <input class="inp" type="password" id="reg-pass" placeholder="Parol (kamida 6 belgi)"
+          onkeydown="if(event.key==='Enter') doRegister()">
+        <button class="btn-primary" id="reg-btn" onclick="doRegister()">Ro'yxatdan o'tish</button>
+        <p class="auth-hint">Ro'yxatdan o'tish orqali <a href="#">shartlarga</a> roziman</p>
+      </div>
+
+    </div>
+
+    <p class="auth-footer">🎓 MaktabgachaHub · Ilk Qadam 2026 · O'zbekiston MTT</p>
+  </div>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // Agar foydalanuvchi allaqachon kirgan bo'lsa — dashboardga
+    window.addEventListener('load', async () => {
+      const { data: { session } } = await _sb.auth.getSession()
+      if (session) window.location.href = 'dashboard.html'
+    })
+
+    function switchTab(tab) {
+      document.getElementById('form-login').style.display    = tab === 'login'    ? 'block' : 'none'
+      document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none'
+      document.getElementById('tab-login-btn').classList.toggle('active', tab === 'login')
+      document.getElementById('tab-register-btn').classList.toggle('active', tab === 'register')
+      clearMsgs()
+    }
+
+    function showErr(m) {
+      const el = document.getElementById('msg-err')
+      el.textContent = m; el.style.display = 'block'
+      document.getElementById('msg-ok').style.display = 'none'
+    }
+    function showOk(m) {
+      const el = document.getElementById('msg-ok')
+      el.textContent = m; el.style.display = 'block'
+      document.getElementById('msg-err').style.display = 'none'
+    }
+    function clearMsgs() {
+      document.getElementById('msg-err').style.display = 'none'
+      document.getElementById('msg-ok').style.display = 'none'
+    }
+
+    async function doLogin() {
+      const email = document.getElementById('login-email').value.trim()
+      const pass  = document.getElementById('login-pass').value
+      if (!email || !pass) { showErr('Email va parolni kiriting!'); return }
+
+      const btn = document.getElementById('login-btn')
+      btn.textContent = 'Kirilmoqda...'; btn.disabled = true
+
+      const { error } = await _sb.auth.signInWithPassword({ email, password: pass })
+
+      btn.textContent = 'Kirish'; btn.disabled = false
+
+      if (error) {
+        showErr(error.message === 'Invalid login credentials'
+          ? 'Email yoki parol noto\'g\'ri!' : error.message)
+      } else {
+        window.location.href = 'dashboard.html'
+      }
+    }
+
+    async function doRegister() {
+      const name  = document.getElementById('reg-name').value.trim()
+      const email = document.getElementById('reg-email').value.trim()
+      const pass  = document.getElementById('reg-pass').value
+      if (!email || !pass) { showErr('Email va parolni kiriting!'); return }
+      if (pass.length < 6) { showErr('Parol kamida 6 belgi bo\'lsin!'); return }
+
+      const btn = document.getElementById('reg-btn')
+      btn.textContent = 'Yuklanmoqda...'; btn.disabled = true
+
+      const { data, error } = await _sb.auth.signUp({
+        email, password: pass,
+        options: { data: { full_name: name || email.split('@')[0] } }
+      })
+
+      btn.textContent = 'Ro\'yxatdan o\'tish'; btn.disabled = false
+
+      if (error) {
+        showErr(error.message)
+      } else if (data.user) {
+        // Profiles jadvaliga qo'shish
+        await _sb.from('profiles').upsert({
+          id: data.user.id,
+          full_name: name || email.split('@')[0],
+          role: 'teacher',
+          subscription_tier: 'free',
+          xp: 0
+        })
+        showOk('Muvaffaqiyatli ro\'yxatdan o\'tdingiz! Endi kiring.')
+        switchTab('login')
+      }
+    }
+  </script>
+
+</body>
+</html>
