@@ -7,12 +7,19 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Segoe UI',sans-serif;background:#f0eef9;color:#2d2d2d;min-height:100vh}
-  
+
   /* HEADER */
-  .header{background:#fff;border-bottom:1px solid #e8e4f8;padding:14px 24px;display:flex;align-items:center;gap:10px}
+  .header{background:#fff;border-bottom:1px solid #e8e4f8;padding:14px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .header-logo{font-size:22px}
   .header-title{font-size:17px;font-weight:700;color:#5b4fcf}
-  .header-sub{font-size:12px;color:#888;margin-left:auto;background:#f0eef9;padding:4px 12px;border-radius:20px}
+  .header-nav{display:flex;gap:6px;margin-left:18px}
+  .nav-link{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:600;color:#666;text-decoration:none;transition:.2s}
+  .nav-link:hover{background:#f0eef9;color:#5b4fcf}
+  .nav-link.active{background:#f0eef9;color:#5b4fcf}
+  .header-sub{font-size:12px;color:#888;background:#f0eef9;padding:4px 12px;border-radius:20px}
+  .header-right{display:flex;align-items:center;gap:10px;margin-left:auto}
+  .logout-btn{display:flex;align-items:center;gap:6px;background:#fef2f2;color:#dc2626;border:none;padding:9px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+  .logout-btn:hover{background:#fee2e2}
 
   /* CONTAINER */
   .container{max-width:860px;margin:0 auto;padding:24px 16px 60px}
@@ -103,6 +110,9 @@
     .form-grid,.loc-row,.stats-row{grid-template-columns:1fr}
     .form-group.full{grid-column:1}
     .reyting-card{flex-wrap:wrap}
+    .header{padding:12px 16px}
+    .header-nav{margin-left:0;order:3;width:100%;justify-content:center;margin-top:8px}
+    .header-right{margin-left:0}
   }
 </style>
 </head>
@@ -111,7 +121,14 @@
 <div class="header">
   <span class="header-logo">🎓</span>
   <span class="header-title">MaktabgachaHub</span>
-  <span class="header-sub">Portfolio</span>
+  <nav class="header-nav">
+    <a href="/" class="nav-link">🏠 Bosh sahifa</a>
+    <a href="/portfolio" class="nav-link active">👤 Portfolio</a>
+  </nav>
+  <div class="header-right">
+    <span class="header-sub">Portfolio</span>
+    <button class="logout-btn" id="logoutBtn" onclick="logout()">🚪 Chiqish</button>
+  </div>
 </div>
 
 <div class="container">
@@ -521,11 +538,21 @@ document.getElementById('avatarFile').addEventListener('change',function(){
   reader.onload=e=>{
     const img=document.getElementById('avatarImg');
     img.src=e.target.result;img.style.display='block';
-    document.getElementById('avatarEl').querySelector('.avatar')
     document.getElementById('avatarEl').firstChild.textContent='';
   };
   reader.readAsDataURL(file);
 });
+
+// LOGOUT
+function logout(){
+  if(!confirm("Hisobdan chiqishni tasdiqlaysizmi?")) return;
+  // TODO: bu yerga haqiqiy autentifikatsiya tizimingizga mos chiqish kodini qo'shing.
+  // Agar Supabase Auth ishlatilsa, masalan:
+  //   await supabase.auth.signOut();
+  //   window.location.href = '/';
+  // Hozircha login sahifasiga qaytaramiz:
+  window.location.href = '/';
+}
 </script>
 </body>
 </html>
