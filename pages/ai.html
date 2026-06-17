@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Konspekt — MaktabgachaHub</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .ai-wrap{max-width:720px;margin:0 auto;padding:24px 16px;}
+  .ai-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+  .ai-header-icon{width:50px;height:50px;background:linear-gradient(135deg,#6c47ff,#9b7cff);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .ai-header h1{font-size:20px;font-weight:800;color:var(--tx);}
+  .ai-header p{font-size:13px;color:var(--mu);margin-top:2px;}
+
+  .ai-card{background:#fff;border-radius:20px;padding:26px;box-shadow:0 2px 16px rgba(108,71,255,.09);margin-bottom:20px;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:580px){.form-grid{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:12.5px;font-weight:700;color:var(--tx);}
+  .field input,.field select,.field textarea{
+    border:1.5px solid #e5e7eb;border-radius:10px;padding:10px 14px;
+    font-size:14px;color:var(--tx);outline:none;transition:.2s;
+    font-family:inherit;background:#fafafa;width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{
+    border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(108,71,255,.1);
+  }
+  .field textarea{resize:vertical;min-height:80px;}
+
+  .btn-gen{
+    width:100%;margin-top:10px;padding:14px;
+    background:linear-gradient(135deg,#6c47ff,#9b7cff);
+    color:#fff;border:none;border-radius:12px;
+    font-size:15px;font-weight:700;cursor:pointer;transition:.2s;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-gen:hover{opacity:.88;transform:translateY(-1px);}
+  .btn-gen:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+
+  /* Loader */
+  .ai-loader{display:none;flex-direction:column;align-items:center;gap:14px;padding:44px 0;}
+  .ai-loader.show{display:flex;}
+  .spinner{width:46px;height:46px;border:4px solid #ede9fe;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .ai-loader p{color:var(--p);font-weight:600;font-size:14px;}
+
+  /* Result */
+  .ai-result{display:none;}
+  .ai-result.show{display:block;}
+  .res-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+  .res-title{font-size:15px;font-weight:800;color:var(--tx);}
+  .res-btns{display:flex;gap:8px;align-items:center;}
+  .btn-copy{padding:8px 18px;background:linear-gradient(135deg,#6c47ff,#9b7cff);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn-copy:hover{opacity:.85;}
+  .btn-new{padding:8px 16px;background:#f3f4f6;color:var(--tx);border:1.5px solid #e5e7eb;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn-new:hover{background:#e5e7eb;}
+  .copied{display:none;background:#10b981;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;}
+  .copied.show{display:inline-block;}
+
+  .meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .chip{background:#ede9fe;color:var(--p);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;}
+
+  .konspekt-body{line-height:1.85;color:var(--tx);font-size:14.5px;}
+  .konspekt-body h2{font-size:15px;color:var(--p);margin:18px 0 6px;font-weight:800;}
+  .konspekt-body h3{font-size:13.5px;color:#5b21b6;margin:12px 0 4px;font-weight:700;}
+  .konspekt-body ul{padding-left:20px;margin:6px 0;}
+  .konspekt-body li{margin:3px 0;}
+  .konspekt-body strong{color:var(--tx);}
+  .konspekt-body p{margin:5px 0;}
+  .konspekt-body hr{border:none;border-top:1.5px dashed #e5e7eb;margin:16px 0;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">🏠 Bosh sahifa</a>
+    <a href="../premium.html" class="nav-btn">⭐ Premium</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+    <button class="nav-btn" onclick="doLogout()" style="background:rgba(255,100,100,.25)">Chiqish</button>
+  </div>
+</nav>
+
+<div class="ai-wrap">
+
+  <div class="ai-header">
+    <div class="ai-header-icon">🤖</div>
+    <div>
+      <h1>AI Konspekt</h1>
+      <p>Mavzuni kiriting — AI avtomatik dars konspekti yaratadi</p>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="ai-card" id="formCard">
+    <div class="form-grid">
+      <div class="field">
+        <label>📚 Mavzu nomi</label>
+        <input id="mavzu" type="text" placeholder="Masalan: Suv va uning ahamiyati"/>
+      </div>
+      <div class="field">
+        <label>👶 Yosh guruhi</label>
+        <select id="yosh">
+          <option value="3-4 yosh (kichik guruh)">3-4 yosh — Kichik guruh</option>
+          <option value="4-5 yosh (o'rta guruh)" selected>4-5 yosh — O'rta guruh</option>
+          <option value="5-6 yosh (katta guruh)">5-6 yosh — Katta guruh</option>
+          <option value="6-7 yosh (maktabga tayyorlov)">6-7 yosh — Maktabga tayyorlov</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>🎯 Rivojlanish sohasi</label>
+        <select id="soha">
+          <option value="Bilish va idrok">Bilish va idrok</option>
+          <option value="Til va nutq">Til va nutq</option>
+          <option value="Ijodiy faoliyat">Ijodiy faoliyat</option>
+          <option value="Jismoniy rivojlanish">Jismoniy rivojlanish</option>
+          <option value="Ijtimoiy-hissiy rivojlanish">Ijtimoiy-hissiy rivojlanish</option>
+          <option value="Matematika asoslari">Matematika asoslari</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>⏱ Dars davomiyligi</label>
+        <select id="davomiylik">
+          <option value="15 daqiqa">15 daqiqa</option>
+          <option value="20 daqiqa" selected>20 daqiqa</option>
+          <option value="25 daqiqa">25 daqiqa</option>
+          <option value="30 daqiqa">30 daqiqa</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>📝 Qo'shimcha eslatma (ixtiyoriy)</label>
+        <textarea id="eslatma" placeholder="Masalan: ko'rgazmali qurollar bilan o'tilsin, o'yin asosida bo'lsin..."></textarea>
+      </div>
+    </div>
+    <button class="btn-gen" id="genBtn" onclick="generateKonspekt()">
+      ✨ Konspekt yaratish
+    </button>
+  </div>
+
+  <!-- LOADER + RESULT -->
+  <div class="ai-card">
+    <div class="ai-loader" id="loader">
+      <div class="spinner"></div>
+      <p>AI konspekt yozmoqda...</p>
+    </div>
+
+    <div class="ai-result" id="resultBox">
+      <div class="res-header">
+        <span class="res-title" id="resTitle">📄 Konspekt tayyor</span>
+        <div class="res-btns">
+          <span class="copied" id="copiedBadge">✓ Nusxalandi!</span>
+          <button class="btn-copy" onclick="copyText()">📋 Nusxalash</button>
+          <button class="btn-new" onclick="newKonspekt()">🔄 Yangi</button>
+        </div>
+      </div>
+      <div class="meta-chips" id="metaChips"></div>
+      <div class="konspekt-body" id="konspektBody"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true);
+  if (!auth) return;
+  fillNav();
+  if (!hasAccess('ai_konspekt')) {
+    window.location.href = '../dashboard.html';
+  }
+});
+
+async function generateKonspekt() {
+  const mavzu = document.getElementById('mavzu').value.trim();
+  if (!mavzu) { alert('Iltimos, mavzu kiriting!'); return; }
+
+  const yosh = document.getElementById('yosh').value;
+  const soha = document.getElementById('soha').value;
+  const davomiylik = document.getElementById('davomiylik').value;
+  const eslatma = document.getElementById('eslatma').value.trim();
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  document.getElementById('loader').classList.add('show');
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('formCard').style.opacity = '.5';
+
+  const prompt = `Sen maktabgacha ta'lim mutaxassisi va tajribali tarbiyachi-metodistsan. Ilk Qadam o'quv dasturi asosida quyidagi ma'lumotlar bo'yicha to'liq va professional dars konspekti yoz:
+
+Mavzu: ${mavzu}
+Yosh guruhi: ${yosh}
+Rivojlanish sohasi: ${soha}
+Dars davomiyligi: ${davomiylik}
+${eslatma ? 'Qoshimcha: ' + eslatma : ''}
+
+Konspektni quyidagi tuzilmada yoz (faqat o'zbek tilida):
+
+## Maqsad va vazifalar
+(talimiy, tarbiyaviy, rivojlantiruvchi maqsadlar)
+
+## Kerakli materiallar
+(royxat shaklida)
+
+## Dars borishi
+
+### 1. Kirish qismi (3-5 daqiqa)
+(bolalar bilan salomlashish, motivatsiya, darsga tayyorlik)
+
+### 2. Asosiy qism
+(mavzu tushuntirish, faoliyat, savollar, korganmali misollar)
+
+### 3. Mustahkamlash (3-5 daqiqa)
+(oyin, mashq yoki yakun)
+
+## Tarbiyachi uchun namunaviy savollar
+(bolalarga beriladigan 5-6 ta savol)
+
+## Kutilayotgan natija
+(dars oxirida bolalar nima bila olishlari kerak)
+
+Konspekt professional, amaliy va ${yosh} yoshdagi bolalarga mos bolsin.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(b => b.text || '').join('') || '';
+
+    let html = text
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, m => '<ul>' + m + '</ul>')
+      .replace(/\n\n/g, '<hr>')
+      .replace(/\n/g, '<br/>');
+
+    document.getElementById('konspektBody').innerHTML = html;
+    document.getElementById('resTitle').textContent = '📄 ' + mavzu + ' — Konspekt';
+    document.getElementById('metaChips').innerHTML =
+      '<span class="chip">👶 ' + yosh + '</span>' +
+      '<span class="chip">🎯 ' + soha + '</span>' +
+      '<span class="chip">⏱ ' + davomiylik + '</span>';
+    document.getElementById('resultBox').classList.add('show');
+  } catch(e) {
+    alert('Xatolik yuz berdi. Qayta urinib koring.');
+  } finally {
+    document.getElementById('loader').classList.remove('show');
+    btn.disabled = false;
+    document.getElementById('formCard').style.opacity = '1';
+  }
+}
+
+function copyText() {
+  const text = document.getElementById('konspektBody').innerText;
+  const mavzu = document.getElementById('mavzu').value;
+  const yosh = document.getElementById('yosh').value;
+  const soha = document.getElementById('soha').value;
+  const davomiylik = document.getElementById('davomiylik').value;
+  navigator.clipboard.writeText(
+    'DARS KONSPEKTI\nMavzu: ' + mavzu + '\nYosh: ' + yosh +
+    ' | Soha: ' + soha + ' | Davomiylik: ' + davomiylik + '\n\n' + text
+  ).then(() => {
+    const b = document.getElementById('copiedBadge');
+    b.classList.add('show');
+    setTimeout(() => b.classList.remove('show'), 2500);
+  });
+}
+
+function newKonspekt() {
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('mavzu').value = '';
+  document.getElementById('eslatma').value = '';
+  document.getElementById('mavzu').focus();
+}
+</script>
+</body>
+</html>
