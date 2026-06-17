@@ -68,6 +68,37 @@
       color: var(--mu);
       margin-bottom: 5px;
     }
+
+    /* Takomillashtirish: bo'limlar sarlavhasi */
+    .sec-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--tx);
+      margin-bottom: 14px;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Bo'limlar guruhi ajratgich */
+    .mod-group-label {
+      grid-column: 1 / -1;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--mu);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: 4px 2px 2px;
+      border-bottom: 1.5px dashed #e5e7eb;
+      margin-bottom: 2px;
+    }
+
+    /* Premium banner takomillashtirilgan */
+    .premium-banner {
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
@@ -104,7 +135,7 @@
   <div class="premium-banner" id="premium-banner" style="display:none">
     <div>
       <h3>⭐ Professional obunaga o'ting!</h3>
-      <p>AI konspekt, attestatsiya testlari, portfolio va ko'p narsa — 49 000 so'm/oy</p>
+      <p>Attestatsiya testlari, portfolio va ko'p narsa — 49 000 so'm/oy</p>
     </div>
     <button class="btn-white" onclick="window.location.href='premium.html'">Batafsil →</button>
   </div>
@@ -149,7 +180,9 @@
   <div class="sec-title">📌 Bo'limlar</div>
   <div class="grid-3" style="margin-bottom:32px" id="modules-grid">
 
-    <!-- FREE modullar -->
+    <!-- BEPUL bo'limlar -->
+    <div class="mod-group-label">🆓 Bepul</div>
+
     <a href="pages/jadval.html" class="module-card">
       <div class="module-icon">📅</div>
       <div class="module-name">Kunlik jadval</div>
@@ -186,7 +219,9 @@
       <div class="module-desc" id="kn-desc">3 ta ko'rish</div>
     </a>
 
-    <!-- PRO modullar -->
+    <!-- PRO bo'limlar -->
+    <div class="mod-group-label">⭐ Professional</div>
+
     <div class="module-card" id="mod-games" onclick="checkAndGo('games','pages/oyinlar.html')">
       <div class="module-icon">🎮</div>
       <div class="module-name">Oyinlar</div>
@@ -208,13 +243,6 @@
       <span class="lock-icon" id="lock-activities">PRO</span>
     </div>
 
-    <div class="module-card" id="mod-ai" onclick="checkAndGo('ai_konspekt','pages/ai.html')">
-      <div class="module-icon">🤖</div>
-      <div class="module-name">AI Konspekt</div>
-      <div class="module-desc">Avtomatik yaratish</div>
-      <span class="lock-icon" id="lock-ai">PRO</span>
-    </div>
-
     <div class="module-card" id="mod-att" onclick="checkAndGo('attestation','pages/attestatsiya.html')">
       <div class="module-icon">🎓</div>
       <div class="module-name">Attestatsiya</div>
@@ -229,7 +257,9 @@
       <span class="lock-icon" id="lock-portfolio">PRO</span>
     </div>
 
-    <!-- CORPORATE modullar -->
+    <!-- KORPORATIV bo'limlar -->
+    <div class="mod-group-label">🏢 Korporativ</div>
+
     <div class="module-card" id="mod-attendance" onclick="checkAndGo('attendance','pages/davomat.html')">
       <div class="module-icon">📋</div>
       <div class="module-name">Davomat</div>
@@ -332,8 +362,8 @@ window.addEventListener('load', async () => {
     document.getElementById('kn-desc').textContent   = '30+ ta'
   }
 
-  // Pro modullarni ochish
-  const proMods = ['games','songs','activities','ai','att','portfolio']
+  // Pro modullarni ochish (ai o'chirildi)
+  const proMods = ['games','songs','activities','att','portfolio']
   proMods.forEach(m => {
     const card = document.getElementById('mod-' + m)
     const lock = document.getElementById('lock-' + m)
@@ -374,7 +404,6 @@ async function loadStats() {
     document.getElementById('s-tests').textContent = tests.length
     document.getElementById('s-avg').textContent   = avg + '%'
 
-    // So'nggi 3 ta test
     const html = tests.slice(0, 3).map(t => {
       const col = t.percentage >= 80 ? '#22c55e' : t.percentage >= 60 ? '#6c47ff' : '#ef4444'
       return `<div style="background:#fff;border-radius:12px;padding:12px 16px;
@@ -410,9 +439,9 @@ function closePremiumModal() {
 function openPremiumModal(module) {
   const names = {
     games: 'Oyinlar', songs: "Qo'shiqlar", activities: "Mashg'ulotlar",
-    ai_konspekt: 'AI Konspekt', attestation: 'Attestatsiya',
-    portfolio: 'Portfolio', attendance: 'Davomat',
-    parent_portal: 'Ota-ona portali', child_monitoring: 'Bola monitoringi'
+    attestation: 'Attestatsiya', portfolio: 'Portfolio',
+    attendance: 'Davomat', parent_portal: 'Ota-ona portali',
+    child_monitoring: 'Bola monitoringi'
   }
   document.getElementById('premium-module-name').textContent = names[module] || module
   document.getElementById('premium-modal').classList.add('show')
