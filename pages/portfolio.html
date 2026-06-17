@@ -222,14 +222,12 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ── SUPABASE ──────────────────────────────────────────
 const { createClient } = window.supabase;
 const sb = createClient(
   'https://oxpbltvnbjzxqwsxrpvg.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ'
 );
 
-// ── TOAST ─────────────────────────────────────────────
 function showToast(msg, err=false){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast'+(err?' error':'');
@@ -237,7 +235,6 @@ function showToast(msg, err=false){
   setTimeout(()=>t.style.display='none',3000);
 }
 
-// ── TUMANLAR ──────────────────────────────────────────
 const tumanlar={
   "Toshkent shahri":["Chilonzor","Yunusobod","Mirzo Ulug'bek","Shayxontohur","Olmazor","Uchtepa","Yakkasaroy","Bektemir","Sergeli","Mirobod","Hamza"],
   "Toshkent viloyati":["Angren","Bekobod","Bo'ka","Bo'stonliq","Chinoz","Ohangaron","Oqqo'rg'on","Parkent","Piskent","Qibray","Toshkent","Yuqorichirchiq","Zangiota","Yangiyul"],
@@ -254,6 +251,7 @@ const tumanlar={
   "Xorazm":["Urganch shahar","Bog'ot","Gurlan","Hazorasp","Xiva","Xonqa","Shovot","Tuproqqal'a","Yangiariq","Yangibozor"],
   "Qoraqalpog'iston":["Nukus shahar","Amudaryo","Beruniy","Chimboy","Ellikqal'a","Kegeyli","Mo'ynoq","Nukus","Qonliko'l","Qorao'zak","Shumanay","Taxtako'pir","To'rtko'l","Xo'jayli"]
 };
+
 function loadTumanlar(sel=''){
   const vil=document.getElementById('i-viloyat').value;
   const t=document.getElementById('i-tuman');
@@ -262,10 +260,10 @@ function loadTumanlar(sel=''){
   if(sel) t.value=sel;
 }
 
-// ── LOAD PROFILE ──────────────────────────────────────
 async function loadProfile(){
   const {data:{user}}=await sb.auth.getUser();
-  const uid = user?.id || 'demo-user'; // auth yo'q bo'lsa demo
+  const uid=user?.id;
+  if(!uid) return;
 
   const {data,error}=await sb.from('profiles').select('*').eq('user_id',uid).single();
   if(error||!data) return;
@@ -274,10 +272,7 @@ async function loadProfile(){
     const v=document.getElementById('v-'+id);
     const i=document.getElementById('i-'+id);
     if(v) v.textContent=val||'';
-    if(i){
-      if(i.tagName==='SELECT'){i.value=val||'';}
-      else i.value=val||'';
-    }
+    if(i){ if(i.tagName==='SELECT') i.value=val||''; else i.value=val||''; }
   };
   f('familiya',data.familiya); f('ism',data.ism); f('sharif',data.sharif);
   f('telefon',data.telefon); f('tugilgan',data.tugilgan); f('jinsi',data.jinsi);
@@ -292,24 +287,17 @@ async function loadProfile(){
   document.getElementById('dispMalumot').textContent='🎓 '+(data.malumot||'');
   document.getElementById('stat-staj').textContent=data.staj||0;
 
-  // Skills
-  if(data.skills && data.skills.length){
-    data.skills.forEach(s=>renderSkill(s));
-  }
-  // Yutuqlar
-  if(data.yutuqlar && data.yutuqlar.length){
-    data.yutuqlar.forEach(y=>renderYutuq(y.nomi,y.yil,y.icon));
-  }
+  if(data.skills?.length) data.skills.forEach(s=>renderSkill(s));
+  if(data.yutuqlar?.length) data.yutuqlar.forEach(y=>renderYutuq(y.nomi,y.yil,y.icon));
   updateScore();
 }
 
-// ── SAVE PROFILE ──────────────────────────────────────
 async function saveProfile(){
   const g=id=>document.getElementById(id)?.value||'';
   const {data:{user}}=await sb.auth.getUser();
-  const uid=user?.id||'demo-user';
+  const uid=user?.id;
+  if(!uid){ showToast('❌ Avval tizimga kiring!',true); return; }
 
-  // Skills & Yutuqlar
   const skills=[...document.querySelectorAll('.skill-tag')].map(el=>el.childNodes[0].textContent.trim());
   const yutuqlar=[...document.querySelectorAll('.yutuq-item')].map(el=>({
     icon:el.querySelector('.yutuq-icon').textContent,
@@ -328,10 +316,17 @@ async function saveProfile(){
     updated_at:new Date().toISOString()
   };
 
-  const {error}=await sb.from('profiles').upsert(payload,{onConflict:'user_id'});
-  if(error){showToast('❌ Xatolik: '+error.message,true);return;}
+  // upsert o'rniga: mavjudligini tekshirib insert yoki update
+  const {data:existing}=await sb.from('profiles').select('user_id').eq('user_id',uid).single();
+  let error;
+  if(existing){
+    ({error}=await sb.from('profiles').update(payload).eq('user_id',uid));
+  } else {
+    ({error}=await sb.from('profiles').insert(payload));
+  }
 
-  // Update display
+  if(error){ showToast('❌ Xatolik: '+error.message,true); return; }
+
   document.getElementById('dispName').textContent=payload.familiya+' '+payload.ism;
   document.getElementById('dispRole').textContent=payload.lavozim+' — '+payload.dmtt+', '+payload.tuman;
   document.getElementById('dispToifa').textContent='🏷️ '+payload.toifa;
@@ -339,7 +334,6 @@ async function saveProfile(){
   document.getElementById('dispMalumot').textContent='🎓 '+payload.malumot;
   document.getElementById('stat-staj').textContent=payload.staj;
 
-  // Sync form-val
   ['familiya','ism','sharif','telefon','tugilgan','jinsi','viloyat','tuman','dmtt','lavozim','toifa','staj','malumot','bio'].forEach(f=>{
     const v=document.getElementById('v-'+f);
     if(v) v.textContent=document.getElementById('i-'+f)?.value||'';
@@ -350,7 +344,6 @@ async function saveProfile(){
   showToast('✅ Muvaffaqiyatli saqlandi!');
 }
 
-// ── EDIT MODE ─────────────────────────────────────────
 function toggleEdit(){
   document.querySelectorAll('.form-val').forEach(el=>el.style.display='none');
   document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el=>el.style.display='block');
@@ -375,7 +368,6 @@ function exitEdit(){
   document.getElementById('avatarEditBtn').style.display='none';
 }
 
-// ── SKILLS ────────────────────────────────────────────
 function renderSkill(text){
   const wrap=document.getElementById('skillsWrap');
   const tag=document.createElement('span');
@@ -392,7 +384,6 @@ function addSkill(){
 }
 function delSkill(btn){btn.closest('.skill-tag').remove();updateScore();}
 
-// ── YUTUQLAR ──────────────────────────────────────────
 function renderYutuq(nomi,yil,icon){
   const ic=icon||['🏅','📜','🥇','🎖️','⭐'][Math.floor(Math.random()*5)];
   const li=document.createElement('div');li.className='yutuq-item';
@@ -412,7 +403,6 @@ function addYutuq(){
 }
 function delYutuq(btn){btn.closest('.yutuq-item').remove();updateScore();}
 
-// ── SCORE ─────────────────────────────────────────────
 function updateScore(){
   const skills=document.querySelectorAll('.skill-tag').length;
   const yutuqlar=document.querySelectorAll('.yutuq-item').length;
@@ -430,7 +420,6 @@ function updateScore(){
   document.getElementById('stat-skill').textContent=skills;
 }
 
-// ── AVATAR ────────────────────────────────────────────
 document.getElementById('avatarEditBtn').addEventListener('click',()=>document.getElementById('avatarFile').click());
 document.getElementById('avatarFile').addEventListener('change',function(){
   const file=this.files[0];if(!file)return;
@@ -443,14 +432,12 @@ document.getElementById('avatarFile').addEventListener('change',function(){
   reader.readAsDataURL(file);
 });
 
-// ── LOGOUT ────────────────────────────────────────────
 async function logout(){
   if(!confirm("Hisobdan chiqishni tasdiqlaysizmi?")) return;
   await sb.auth.signOut();
   window.location.href='/';
 }
 
-// ── INIT ──────────────────────────────────────────────
 loadTumanlar();
 loadProfile();
 </script>
