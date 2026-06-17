@@ -60,7 +60,6 @@
 
   <div class="sec-title">📅 Kunlik Jadval — 4-5 yosh</div>
   <div class="info-box">
-    Jadval <b>Ilk Qadam 3-nashr (2026)</b> dasturi asosida tuzilgan.
     Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan.
   </div>
 
@@ -166,8 +165,6 @@ window.addEventListener('load', async () => {
 
 function showDay(day) {
   const items = dailyData[day]
-
-  // Summary chips
   const mashgulotCount = items.filter(i => i.name.includes('mashg\'ulot')).length
   document.getElementById('day-summary').innerHTML = `
     <div class="summary-chip">📌 <b>${dayNames[day]}</b></div>
@@ -175,7 +172,6 @@ function showDay(day) {
     <div class="summary-chip">📝 ${mashgulotCount} ta mashg'ulot</div>
     <div class="summary-chip">🎯 ${items.length} ta faoliyat</div>
   `
-
   document.getElementById('day-content').innerHTML = items.map(i => `
     <div class="sched-item">
       <div class="time-b">${i.time}</div>
