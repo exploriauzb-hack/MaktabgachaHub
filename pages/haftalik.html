@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Haftalik mavzular</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+    .week-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      border-left: 4px solid var(--p);
+      transition: transform .2s;
+    }
+    .week-card:hover { transform: translateY(-3px); }
+    .week-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 6px; }
+    .stags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .stag {
+      background: #ede9ff; color: var(--p);
+      border-radius: 8px; padding: 3px 9px;
+      font-size: .7rem; font-weight: 600;
+    }
+    .week-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; background: var(--p); color: #fff;
+      border-radius: 50%; font-size: .7rem; font-weight: 800;
+      margin-right: 6px;
+    }
+    .quarter-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 24px 0 14px;
+    }
+    .quarter-divider .line { flex: 1; height: 2px; background: var(--br); }
+    .quarter-divider .label {
+      font-size: .82rem; font-weight: 700; color: var(--p);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">📚 Yillik Haftalik Mavzular Rejasi</div>
+  <div class="info-box">
+    Har hafta uchun mavzu barcha <b>5 ta rivojlanish sohasi</b> bilan integratsiyalashgan.
+    Jami <b>30 hafta</b> — o'quv yili davomida.
+  </div>
+
+  <div class="quarter-divider">
+    <div class="label">📘 I-CHORAK (1-8 hafta)</div>
+    <div class="line"></div>
+  </div>
+  <div class="week-grid" id="week-grid-1"></div>
+
+  <div class="quarter-divider">
+    <div class="label">📗 II-CHORAK (9-16 hafta)</div>
+    <div class="line"></div>
+  </div>
+  <div class="week-grid" id="week-grid-2"></div>
+
+  <div class="quarter-divider">
+    <div class="label">📙 III-CHORAK (17-23 hafta)</div>
+    <div class="line"></div>
+  </div>
+  <div class="week-grid" id="week-grid-3"></div>
+
+  <div class="quarter-divider">
+    <div class="label">📕 IV-CHORAK (24-30 hafta)</div>
+    <div class="line"></div>
+  </div>
+  <div class="week-grid" id="week-grid-4" style="margin-bottom:30px"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+
+var weeks = [
+  { n:1,  t:'Men va mening oilam',              tags:['Nutq','2-soha'] },
+  { n:2,  t:"Mening bog'cham va do'stlarim",    tags:['Muloqot','Do\'stlik'] },
+  { n:3,  t:'Kuz fasli',                         tags:['Tabiat','4-soha'] },
+  { n:4,  t:'Meva va sabzavotlar',               tags:['Tasnif','4-soha'] },
+  { n:5,  t:'Non va oziq-ovqat',                 tags:["Sog'lik",'Mehnat'] },
+  { n:6,  t:'Uy hayvonlari',                     tags:['Hayvonlar','Parvarish'] },
+  { n:7,  t:'Yovvoyi hayvonlar',                 tags:["O'rmon",'Tasnif'] },
+  { n:8,  t:'Qushlar dunyosi',                   tags:["Ko'chuvchi",'Kuzatish'] },
+  { n:9,  t:'Kiyim-kechak',                      tags:['Fasl','Rang'] },
+  { n:10, t:'Uy va mebel',                       tags:['Xona','Buyumlar'] },
+  { n:11, t:'Transport vositalari',               tags:['Quruqlik','Havo'] },
+  { n:12, t:'Kasb-hunar',                         tags:['Mehnat','Asbob'] },
+  { n:13, t:'Mening shahrim',                     tags:["Ko'cha",'Xavfsizlik'] },
+  { n:14, t:"Vatan - O'zbekiston",                tags:['Davlat','Milliy'] },
+  { n:15, t:'Qish fasli',                         tags:['Qor','Sovuq'] },
+  { n:16, t:'Yangi yil bayrami',                  tags:['Bezak','Sovga'] },
+  { n:17, t:"Navro'z bayrami",                    tags:["An'ana",'Milliy'] },
+  { n:18, t:'Bahor fasli',                        tags:['Gul','Yashillik'] },
+  { n:19, t:'Suv va xususiyatlari',                tags:['Tajriba','4-soha'] },
+  { n:20, t:'Kasblar dunyosi',                     tags:['Mehnat','Jamiyat'] },
+  { n:21, t:'Men va mening tanam',                 tags:['Jismoniy','1-soha'] },
+  { n:22, t:"Ovqatlanish va sog'lik",              tags:["Sog'lik",'Gigiyena'] },
+  { n:23, t:"O'simliklar",                         tags:['Tabiat','Kuzatish'] },
+  { n:24, t:'Hid va ranglar',                      tags:['Sezgi','1-soha'] },
+  { n:25, t:'Raqamlar dunyosi',                     tags:['FEMP','4-soha'] },
+  { n:26, t:'Shakllar va o\'lchamlar',              tags:['Geometriya','4-soha'] },
+  { n:27, t:'Vaqt tushunchasi',                     tags:['Kun',"Hafta",'4-soha'] },
+  { n:28, t:"Xalqimizning urf-odatlari",            tags:['Milliy','5-soha'] },
+  { n:29, t:'Kitob va savodxonlik',                 tags:['Nutq','3-soha'] },
+  { n:30, t:'Yoz fasli va dam olish',               tags:['Tabiat','Sayr'] },
+]
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+  renderWeeks()
+})
+
+function weekCardHtml(w) {
+  return `<div class="week-card">
+    <h4><span class="week-num">${w.n}</span>${w.t}</h4>
+    <div class="stags">${w.tags.map(t => `<span class="stag">${t}</span>`).join('')}</div>
+  </div>`
+}
+
+function renderWeeks() {
+  document.getElementById('week-grid-1').innerHTML = weeks.slice(0, 8).map(weekCardHtml).join('')
+  document.getElementById('week-grid-2').innerHTML = weeks.slice(8, 16).map(weekCardHtml).join('')
+  document.getElementById('week-grid-3').innerHTML = weeks.slice(16, 23).map(weekCardHtml).join('')
+  document.getElementById('week-grid-4').innerHTML = weeks.slice(23, 30).map(weekCardHtml).join('')
+}
+</script>
+
+</body>
+</html>
