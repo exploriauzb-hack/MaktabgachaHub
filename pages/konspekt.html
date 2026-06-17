@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Konspektlar</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .kn-filters {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 18px; align-items: center;
+    }
+    .kn-filters select {
+      padding: 8px 12px; border-radius: 10px;
+      border: 2px solid var(--p); font-size: .82rem;
+      color: var(--tx); outline: none; background: #fff;
+    }
+    .kn-filters button {
+      padding: 8px 14px; border-radius: 10px; border: none;
+      background: #e8e4ff; color: var(--p); cursor: pointer;
+      font-size: .82rem; font-weight: 600;
+    }
+    .kn-filters button:hover { background: #d8d0ff; }
+
+    .kn-card {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08);
+      overflow: hidden; border-left: 5px solid var(--p);
+      margin-bottom: 12px;
+    }
+    .kn-hdr {
+      padding: 14px 18px; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer; gap: 10px;
+      flex-wrap: wrap;
+    }
+    .kn-hdr:hover { background: #f8f6ff; }
+    .kn-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
+    .kb { border-radius: 9px; padding: 3px 10px; font-size: .72rem; font-weight: 700; }
+    .kb1 { background: #ede9ff; color: var(--p); }
+    .kb2 { background: #f0fff4; color: #166534; }
+    .kb3 { background: #fef3c7; color: #92400e; }
+    .kn-title { font-size: .94rem; font-weight: 700; }
+
+    .kn-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--br); }
+    .kn-body.open { display: block; }
+    .kn-sec { margin-top: 12px; }
+    .kn-sec h5 {
+      font-size: .74rem; text-transform: uppercase; letter-spacing: .05em;
+      color: var(--p); margin-bottom: 5px; font-weight: 700;
+    }
+    .kn-sec p, .kn-sec li { font-size: .86rem; color: var(--tx); line-height: 1.7; }
+    .kn-sec ul { padding-left: 16px; }
+    .kn-print {
+      margin-top: 12px; padding: 7px 16px;
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff; border: none; border-radius: 10px;
+      cursor: pointer; font-size: .8rem; font-weight: 600;
+    }
+
+    .lock-card {
+      background: #fff7ed; border: 2px solid #fed7aa;
+      border-radius: 16px; padding: 24px; text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">📝 Kundalik Mashg'ulot Konspekti</div>
+  <div class="info-box">
+    Konspektlar <b>Ilk Qadam</b> dasturi (3-nashr, 2026) asosida tuzilgan.
+    <span id="access-note"></span>
+  </div>
+
+  <div class="kn-filters">
+    <select id="kn-hafta" onchange="filterKn()"><option value="">Hafta</option></select>
+    <select id="kn-kun" onchange="filterKn()">
+      <option value="">Kun</option>
+      <option>Dushanba</option><option>Seshanba</option><option>Chorshanba</option><option>Payshanba</option><option>Juma</option>
+    </select>
+    <select id="kn-soha" onchange="filterKn()">
+      <option value="">Soha</option>
+      <option>Nutq va til</option><option>FEMP</option><option>Tabiat bilan tanishuv</option>
+      <option>Tasviriy sanat</option><option>Musiqa</option><option>Jismoniy tarbiya</option>
+    </select>
+    <button onclick="resetKn()">Tozalash</button>
+  </div>
+
+  <div id="kn-list"></div>
+  <div id="lock-section" style="display:none"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+
+var knData = [
+  { hafta:1, kun:'Dushanba', soha:'Nutq va til', kod:'3.1.2.b', mavzu:"Oila - suhbat va hikoya tuzish",
+    maqsad:"Oila a'zolari haqida lug'at boyligi va bog'lanish nutqni rivojlantirish.",
+    jihozlar:"Oila surati, kartochkalar, qo'g'irchoqlar",
+    borish:["Kirish (3 daq): Kayfiyat doirasi","Motivatsiya (4 daq): Qo'g'irchoq oilasi keldi","Asosiy qism (12 daq): Oila haqida suhbat","Jismoniy daqiqa (2 daq): Barmoq o'yini","Mustahkamlash (4 daq): Kartochkalar","Refleksiya (2 daq)"],
+    natija:"Oila a'zolarini nomlaydi, 2-3 so'zdan gap tuzadi.", izoh:"Surat o'rniga bolalar o'z oila rasmini olib kelishi mumkin." },
+  { hafta:1, kun:'Seshanba', soha:'FEMP', kod:'4.2.3.b', mavzu:"Bir va ko'p. Katta va kichik",
+    maqsad:"Bir, ko'p, katta, kichik tushunchalarini shakllantirish.",
+    jihozlar:"Turli hajmdagi o'yinchoqlar, geometrik shakllar",
+    borish:["Kirish (3 daq): Qo'shiq","Motivatsiya (4 daq): Qutidan narsalar","Asosiy qism (12 daq): Katta/kichik taqqoslash","Jismoniy daqiqa (2 daq): Harakatli o'yin","Mustahkamlash (4 daq): Mustaqil ishlash","Refleksiya (2 daq)"],
+    natija:"Bir va ko'pni farqlaydi, katta-kichikni taqqoslaydi.", izoh:"Haqiqiy narsalar ishlatish samaraliroq." },
+  { hafta:1, kun:'Chorshanba', soha:'Tabiat bilan tanishuv', kod:'4.3.1.b', mavzu:"Kuz fasli - tabiat o'zgarishlari",
+    maqsad:"Kuz belgilarini ajratish va tabiat o'zgarishlarini kuzatish.",
+    jihozlar:"Kuz barglari, suratlar, kuz kiyimlari",
+    borish:["Kirish (3 daq): Kuz haqida savol","Motivatsiya (4 daq): Barg ko'rsatiladi","Asosiy qism (12 daq): Kuz belgilari","Jismoniy daqiqa (2 daq): Barg kabi uchish","Mustahkamlash (4 daq): Barg yig'ish o'yini","Refleksiya (2 daq)"],
+    natija:"Kuzning 3 ta belgisini aytadi.", izoh:"Sayr paytida haqiqiy barglar yig'ish samarali." },
+  { hafta:2, kun:'Dushanba', soha:'Nutq va til', kod:'3.2.1.b', mavzu:"Bog'cha - mening ikkinchi uyim",
+    maqsad:"Bog'cha xonalari va qoidalar haqida nutqni rivojlantirish.",
+    jihozlar:"Bog'cha xaritasi, fotosuratlar",
+    borish:["Kirish (3 daq): Kayfiyat","Motivatsiya (4 daq): Bog'chamizni taniylik","Asosiy qism (12 daq): Xonalar haqida suhbat","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Chizish","Refleksiya (2 daq)"],
+    natija:"Bog'cha xonalarini nomlaydi, qoidalarni aytadi.", izoh:"Xona bo'ylab ekskursiya o'tkazish mumkin." },
+  { hafta:2, kun:'Seshanba', soha:'FEMP', kod:'4.2.1.b', mavzu:"Geometrik shakllar: doira, kvadrat, uchburchak",
+    maqsad:"Uchta asosiy geometrik shaklni farqlash va nomlash.",
+    jihozlar:"Shakllar to'plami, flanel doskasi",
+    borish:["Kirish (3 daq)","Motivatsiya (4 daq): Shakllar topshirig'i","Asosiy qism (12 daq): Shakllarni o'rganish","Jismoniy daqiqa (2 daq): Shakl bo'lib turaylik","Mustahkamlash (4 daq)","Refleksiya (2 daq)"],
+    natija:"3 ta shaklni nomlab, farqlab ko'rsatadi.", izoh:"" },
+  { hafta:3, kun:'Dushanba', soha:'Nutq va til', kod:'3.1.3.b', mavzu:"Meva va sabzavotlar - tasviriy suhbat",
+    maqsad:"Meva-sabzavotlar nomini bilish va tasvirlash.",
+    jihozlar:"Haqiqiy mevalar, sabzavotlar, suratlar",
+    borish:["Kirish (3 daq): Hid bilish tajribasi","Motivatsiya (4 daq): Sehrli quti","Asosiy qism (12 daq): Nomlash, tasvirlash","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Tasnif","Refleksiya (2 daq)"],
+    natija:"8 ta meva/sabzavot nomini biladi.", izoh:"Haqiqiy mevalar ishlatish eng samarali." },
+]
+
+var FREE_LIMIT = 3
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+
+  if (isPro()) {
+    document.getElementById('access-note').innerHTML = '<b>Cheksiz</b> konspektlarga ega siz! ⭐'
+  } else {
+    document.getElementById('access-note').innerHTML =
+      `Bepul rejada <b>${FREE_LIMIT} ta</b> konspekt ko'rishingiz mumkin.`
+  }
+
+  // Hafta filter to'ldirish
+  const weeks = [...new Set(knData.map(k => k.hafta))].sort((a,b) => a-b)
+  const sel = document.getElementById('kn-hafta')
+  weeks.forEach(h => {
+    const o = document.createElement('option')
+    o.value = h; o.textContent = h + '-hafta'
+    sel.appendChild(o)
+  })
+
+  renderKn(knData)
+})
+
+function renderKn(list) {
+  const isLimited = !isPro()
+  const visibleList = isLimited ? list.slice(0, FREE_LIMIT) : list
+  const lockedCount = isLimited ? Math.max(0, list.length - FREE_LIMIT) : 0
+
+  if (!visibleList.length) {
+    document.getElementById('kn-list').innerHTML = '<p style="color:var(--mu)">Konspekt topilmadi.</p>'
+    document.getElementById('lock-section').style.display = 'none'
+    return
+  }
+
+  document.getElementById('kn-list').innerHTML = visibleList.map((k, i) => `
+    <div class="kn-card">
+      <div class="kn-hdr" onclick="toggleKn(${i})">
+        <div>
+          <div class="kn-meta">
+            <span class="kb kb1">${k.hafta}-hafta</span>
+            <span class="kb kb2">${k.kun}</span>
+            <span class="kb kb3">${k.soha}</span>
+          </div>
+          <div class="kn-title">${k.mavzu}</div>
+        </div>
+        <span id="arr-${i}">▼</span>
+      </div>
+      <div class="kn-body" id="kn-${i}">
+        <div class="kn-sec"><h5>Indikator kodi</h5><p>${k.kod}</p></div>
+        <div class="kn-sec"><h5>Maqsad</h5><p>${k.maqsad}</p></div>
+        <div class="kn-sec"><h5>Jihozlar</h5><p>${k.jihozlar}</p></div>
+        <div class="kn-sec"><h5>Darsning borishi</h5><ul>${k.borish.map(b => `<li>${b}</li>`).join('')}</ul></div>
+        <div class="kn-sec"><h5>Kutilgan natija</h5><p>${k.natija}</p></div>
+        ${k.izoh ? `<div class="kn-sec"><h5>Tarbiyachi izohi</h5><p>${k.izoh}</p></div>` : ''}
+        <button class="kn-print" onclick="printKn(${i})">🖨️ Chop etish</button>
+      </div>
+    </div>
+  `).join('')
+
+  window._knVisible = visibleList
+
+  // Lock section
+  if (lockedCount > 0) {
+    document.getElementById('lock-section').style.display = 'block'
+    document.getElementById('lock-section').innerHTML = `
+      <div class="lock-card">
+        <div style="font-size:2.2rem;margin-bottom:8px">🔒</div>
+        <div style="font-weight:800;font-size:1.05rem;margin-bottom:6px">
+          Yana ${lockedCount} ta konspekt mavjud
+        </div>
+        <div style="font-size:.85rem;color:var(--mu);margin-bottom:16px">
+          Professional obuna bilan barcha 30+ konspektlarga ega bo'ling
+        </div>
+        <a href="../premium.html" style="background:linear-gradient(135deg,#6c47ff,#9b7cff);
+          color:#fff;padding:10px 24px;border-radius:10px;font-weight:700;font-size:.88rem;display:inline-block">
+          ⭐ Premium olish — 49 000 so'm/oy
+        </a>
+      </div>
+    `
+  } else {
+    document.getElementById('lock-section').style.display = 'none'
+  }
+}
+
+function toggleKn(i) {
+  const body = document.getElementById('kn-' + i)
+  const arr  = document.getElementById('arr-' + i)
+  body.classList.toggle('open')
+  arr.textContent = body.classList.contains('open') ? '▲' : '▼'
+}
+
+function filterKn() {
+  const h = document.getElementById('kn-hafta').value
+  const k = document.getElementById('kn-kun').value
+  const s = document.getElementById('kn-soha').value
+  renderKn(knData.filter(x =>
+    (!h || x.hafta == h) && (!k || x.kun === k) && (!s || x.soha === s)
+  ))
+}
+
+function resetKn() {
+  ['kn-hafta','kn-kun','kn-soha'].forEach(id => document.getElementById(id).value = '')
+  renderKn(knData)
+}
+
+function printKn(i) {
+  const k = window._knVisible[i]
+  const w = window.open('', '_blank')
+  w.document.write(`
+    <html><head><title>KN Konspekt</title>
+    <style>body{font-family:sans-serif;padding:24px;max-width:700px;margin:auto}
+    h2{color:#6c47ff}h4{border-bottom:1px solid #eee;padding-bottom:4px;margin-top:14px}li{margin:4px 0}</style>
+    </head><body>
+    <h2>KN Konspekt - MaktabgachaHub | Ilk Qadam 2026</h2>
+    <p>Hafta: ${k.hafta} | Kun: ${k.kun} | Soha: ${k.soha}</p>
+    <p>Indikator: ${k.kod}</p>
+    <h4>Mavzu</h4><p>${k.mavzu}</p>
+    <h4>Maqsad</h4><p>${k.maqsad}</p>
+    <h4>Jihozlar</h4><p>${k.jihozlar}</p>
+    <h4>Darsning borishi</h4><ul>${k.borish.map(b => `<li>${b}</li>`).join('')}</ul>
+    <h4>Kutilgan natija</h4><p>${k.natija}</p>
+    ${k.izoh ? `<h4>Izoh</h4><p>${k.izoh}</p>` : ''}
+    </body></html>
+  `)
+  w.document.close()
+  w.print()
+}
+</script>
+
+</body>
+</html>
