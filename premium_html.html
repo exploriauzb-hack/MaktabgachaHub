@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Premium</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .plan-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      border: 2px solid #e4e0ff;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(108,71,255,.15); }
+    .plan-card.selected { border-color: var(--p); box-shadow: 0 8px 32px rgba(108,71,255,.2); }
+    .plan-card.popular { border-color: var(--p); }
+
+    .popular-badge {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff;
+      font-size: .72rem;
+      font-weight: 800;
+      padding: 4px 16px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .plan-price {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 12px 0 4px;
+    }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: #7c7c9a; }
+
+    .feature-list { list-style: none; margin: 16px 0; }
+    .feature-list li {
+      padding: 5px 0;
+      font-size: .85rem;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .feature-list li .ico { flex-shrink: 0; }
+
+    .faq-item {
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    }
+    .faq-q {
+      padding: 14px 18px;
+      font-weight: 600;
+      font-size: .88rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-q:hover { background: #f8f6ff; }
+    .faq-a {
+      display: none;
+      padding: 0 18px 14px;
+      font-size: .83rem;
+      color: #7c7c9a;
+      line-height: 1.7;
+    }
+    .faq-a.open { display: block; }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .83rem;
+    }
+    .compare-table th {
+      padding: 10px 14px;
+      text-align: center;
+      font-weight: 700;
+      border-bottom: 2px solid #e4e0ff;
+    }
+    .compare-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #f0eeff;
+      text-align: center;
+    }
+    .compare-table td:first-child { text-align: left; color: #2d2d4e; }
+    .compare-table tr:hover td { background: #faf9ff; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div style="text-align:center;padding:32px 0 24px">
+    <div style="font-size:3rem;margin-bottom:10px">⭐</div>
+    <h1 style="font-size:1.8rem;font-weight:800;margin-bottom:8px">Premium obuna</h1>
+    <p style="color:#7c7c9a;font-size:.95rem;max-width:480px;margin:0 auto">
+      MTT tarbiyachilari uchun professional vositalar — testlar, konspektlar, AI generator va ko'p narsa
+    </p>
+  </div>
+
+  <!-- REJALАР -->
+  <div class="grid-2" style="max-width:720px;margin:0 auto 40px;gap:20px">
+
+    <!-- PRO -->
+    <div class="plan-card popular" id="card-pro" onclick="selectPlan('pro')">
+      <div class="popular-badge">ENG MASHHUR</div>
+      <div style="color:#6c47ff;font-weight:800;font-size:1.1rem">Professional ⭐</div>
+      <div class="plan-price" style="color:#6c47ff">
+        49 000 <span>so'm/oy</span>
+      </div>
+      <div style="font-size:.78rem;color:#7c7c9a;margin-bottom:4px">~ 4 500 so'm/kun</div>
+      <ul class="feature-list">
+        <li><span class="ico">✅</span> Cheksiz testlar (6 toifa)</li>
+        <li><span class="ico">✅</span> Barcha konspektlar (30+)</li>
+        <li><span class="ico">✅</span> Oyinlar, qo'shiqlar, mashg'ulotlar</li>
+        <li><span class="ico">✅</span> AI Konspekt generator</li>
+        <li><span class="ico">✅</span> Attestatsiya testlari</li>
+        <li><span class="ico">✅</span> Portfolio yaratish</li>
+        <li><span class="ico">❌</span> Davomat tizimi</li>
+        <li><span class="ico">❌</span> Ota-ona portali</li>
+      </ul>
+      <button onclick="startPayment('pro')"
+        style="width:100%;padding:12px;background:linear-gradient(135deg,#6c47ff,#9b7cff);
+        color:#fff;border:none;border-radius:12px;font-size:.92rem;font-weight:700;cursor:pointer">
+        Hozir olish →
+      </button>
+    </div>
+
+    <!-- CORPORATE -->
+    <div class="plan-card" id="card-corporate" onclick="selectPlan('corporate')">
+      <div style="color:#f59e0b;font-weight:800;font-size:1.1rem">MTT Korporativ 🏢</div>
+      <div class="plan-price" style="color:#f59e0b">
+        299 000 <span>so'm/oy</span>
+      </div>
+      <div style="font-size:.78rem;color:#7c7c9a;margin-bottom:4px">Butun muassasa uchun</div>
+      <ul class="feature-list">
+        <li><span class="ico">✅</span> Professional + hamma narsa</li>
+        <li><span class="ico">✅</span> 20+ tarbiyachi uchun</li>
+        <li><span class="ico">✅</span> Admin boshqaruv paneli</li>
+        <li><span class="ico">✅</span> Davomat tizimi (QR)</li>
+        <li><span class="ico">✅</span> Ota-ona portali</li>
+        <li><span class="ico">✅</span> Bola rivojlanish monitoringi</li>
+        <li><span class="ico">✅</span> Oylik hisobotlar (PDF)</li>
+        <li><span class="ico">✅</span> Texnik yordam (telefon)</li>
+      </ul>
+      <button onclick="startPayment('corporate')"
+        style="width:100%;padding:12px;background:linear-gradient(135deg,#f59e0b,#d97706);
+        color:#fff;border:none;border-radius:12px;font-size:.92rem;font-weight:700;cursor:pointer">
+        Bog'lanish →
+      </button>
+    </div>
+
+  </div>
+
+  <!-- TO'LOV USULLARI -->
+  <div style="background:#fff;border-radius:16px;padding:24px;margin-bottom:32px;text-align:center;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+    <div class="sec-title" style="justify-content:center">💳 To'lov usullari</div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+      <div style="background:#e3f4fd;border-radius:10px;padding:10px 20px;font-weight:700;color:#1BA8E0">Click</div>
+      <div style="background:#e0fafa;border-radius:10px;padding:10px 20px;font-weight:700;color:#00CCCC">Payme</div>
+      <div style="background:#e8edff;border-radius:10px;padding:10px 20px;font-weight:700;color:#1A56DB">UzCard</div>
+      <div style="background:#e8f5e9;border-radius:10px;padding:10px 20px;font-weight:700;color:#2e7d32">Telegram</div>
+    </div>
+    <p style="font-size:.82rem;color:#7c7c9a">
+      Hozircha to'lov <b>Telegram bot</b> orqali amalga oshiriladi.<br>
+      To'lovdan so'ng 1 soat ichida obuna faollashtiriladi.
+    </p>
+  </div>
+
+  <!-- TAQQOSLASH JADVALI -->
+  <div style="background:#fff;border-radius:16px;padding:24px;margin-bottom:32px;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+    <div class="sec-title">📊 Taqqoslash</div>
+    <div style="overflow-x:auto">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Imkoniyat</th>
+            <th style="color:#6b7280">Bepul</th>
+            <th style="color:#6c47ff">Pro ⭐</th>
+            <th style="color:#f59e0b">Korporativ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Kunlik jadval</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Haftalik mavzular</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Rivojlanish sohalari</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Tamoyillar</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Testlar</td><td>5 ta/oy</td><td>Cheksiz</td><td>Cheksiz</td></tr>
+          <tr><td>Konspektlar</td><td>3 ta</td><td>30+ ta</td><td>30+ ta</td></tr>
+          <tr><td>Oyinlar</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Qo'shiqlar</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Mashg'ulotlar</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>AI Konspekt</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Attestatsiya</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Portfolio</td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Davomat tizimi</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Ota-ona portali</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Tarbiyachilar soni</td><td>1</td><td>1</td><td>20+</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin-bottom:40px">
+    <div class="sec-title">❓ Savol-javoblar</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Qanday to'lov qilaman? <span>▼</span>
+      </div>
+      <div class="faq-a">
+        Hozircha to'lov Telegram bot orqali amalga oshiriladi. "Hozir olish" tugmasini bosing,
+        Telegram botga o'ting va ko'rsatmalarni bajaring. To'lovdan so'ng 1 soat ichida
+        obuna faollashtiriladi.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Obunani bekor qilish mumkinmi? <span>▼</span>
+      </div>
+      <div class="faq-a">
+        Ha, istalgan vaqt bekor qilishingiz mumkin. Bekor qilish uchun
+        Telegram orqali murojaat qiling. Joriy oy tugaguncha obuna davom etadi.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        AI Konspekt generator qanday ishlaydi? <span>▼</span>
+      </div>
+      <div class="faq-a">
+        Siz mavzu, soha va hafta raqamini tanlaysiz — sun'iy intellekt Ilk Qadam 2026
+        dasturi asosida to'liq konspekt yaratadi. Yaratilgan konspektni tahrirlash va
+        PDF qilib chop etish mumkin.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Korporativ rejada nechta tarbiyachi bo'lishi mumkin? <span>▼</span>
+      </div>
+      <div class="faq-a">
+        Korporativ rejada 20 tagacha tarbiyachi qo'shish mumkin. Agar ko'proq kerak
+        bo'lsa, alohida kelishib olish mumkin.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Pul qaytarilishini so'rasam bo'ladimi? <span>▼</span>
+      </div>
+      <div class="faq-a">
+        To'lovdan so'ng 3 kun ichida murojaat qilsangiz, to'liq qaytarib beramiz.
+        Telegram orqali murojaat qiling.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div style="background:linear-gradient(135deg,#6c47ff,#9b7cff);border-radius:20px;padding:32px;text-align:center;margin-bottom:32px;color:#fff">
+    <div style="font-size:2rem;margin-bottom:8px">🚀</div>
+    <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:8px">Bugun boshlang!</h2>
+    <p style="opacity:.9;font-size:.88rem;margin-bottom:20px">
+      O'zbekistondagi 1000+ MTT tarbiyachilari bilan birga professional bo'ling
+    </p>
+    <button onclick="startPayment('pro')"
+      style="background:#fff;color:#6c47ff;border:none;border-radius:12px;
+      padding:13px 32px;font-size:1rem;font-weight:800;cursor:pointer">
+      ⭐ 49 000 so'm/oydan boshlash
+    </button>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/premium.js"></script>
+<script>
+  window.addEventListener('load', async () => {
+    const auth = await initAuth(true)
+    if (!auth) return
+    fillNav()
+
+    // Agar allaqachon premium bo'lsa
+    if (isPro()) {
+      showToast('Siz allaqachon Premium foydalanuvchisiz! ⭐', 'ok')
+    }
+  })
+
+  function selectPlan(planId) {
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'))
+    document.getElementById('card-' + planId)?.classList.add('selected')
+  }
+
+  function toggleFaq(el) {
+    const ans = el.nextElementSibling
+    const arr = el.querySelector('span')
+    ans.classList.toggle('open')
+    arr.textContent = ans.classList.contains('open') ? '▲' : '▼'
+  }
+</script>
+
+</body>
+</html>
