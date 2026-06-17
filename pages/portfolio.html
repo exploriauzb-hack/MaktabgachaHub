@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio — MaktabgachaHub</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .p-container{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+
+  .profile-card{background:#fff;border-radius:20px;padding:28px;margin-bottom:16px;box-shadow:0 2px 12px rgba(108,71,255,.08);display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+  .avatar-wrap{position:relative;flex-shrink:0}
+  .avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#7c6fe0,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;border:3px solid #e4e0ff}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:none}
+  .avatar-edit{position:absolute;bottom:2px;right:2px;background:#6c47ff;color:#fff;border:none;border-radius:50%;width:28px;height:28px;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center}
+  .profile-info{flex:1;min-width:220px}
+  .pname{font-size:22px;font-weight:700;color:#2d2d4e;margin-bottom:4px}
+  .prole{font-size:14px;color:#6c47ff;font-weight:600;margin-bottom:12px}
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .pbadge{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600}
+  .pb-toifa{background:#fef3c7;color:#d97706}
+  .pb-staj{background:#e0f2fe;color:#0369a1}
+  .pb-malumot{background:#dcfce7;color:#16a34a}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+  .edit-btn{background:#6c47ff;color:#fff;border:none;padding:9px 22px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer}
+  .save-btn{background:#16a34a;color:#fff;border:none;padding:9px 22px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:none}
+  .cancel-btn{background:#f4f2ff;color:#6c47ff;border:none;padding:9px 18px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:none}
+
+  .psection{background:#fff;border-radius:20px;padding:24px;margin-bottom:14px;box-shadow:0 2px 12px rgba(108,71,255,.08)}
+  .psec-title{font-size:15px;font-weight:700;color:#6c47ff;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fg{display:flex;flex-direction:column;gap:5px}
+  .fg.full{grid-column:1/-1}
+  .fg label{font-size:12px;font-weight:600;color:#7c7c9a}
+  .fval{font-size:14px;color:#2d2d4e;padding:8px 0;min-height:36px;border-bottom:1px solid transparent}
+  .fval.empty{color:#aaa;font-style:italic}
+  .finp{border:1.5px solid #e4e0ff;border-radius:10px;padding:9px 12px;font-size:14px;font-family:inherit;color:#2d2d4e;background:#f8f7ff;outline:none;transition:.2s;display:none;width:100%}
+  .finp:focus{border-color:#6c47ff;background:#fff}
+  textarea.finp{resize:vertical;min-height:80px}
+
+  .loc-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+  .skills-wrap{display:flex;flex-wrap:wrap;gap:8px;min-height:32px}
+  .skill-tag{background:#f4f2ff;color:#6c47ff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .skill-del{background:none;border:none;color:#9b7cff;cursor:pointer;font-size:16px;display:none;line-height:1;padding:0}
+  .skill-add-row{display:none;gap:8px;margin-top:12px}
+  .skill-input{flex:1;border:1.5px solid #e4e0ff;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;background:#f8f7ff;outline:none}
+  .skill-input:focus{border-color:#6c47ff}
+  .skill-add-btn{background:#6c47ff;color:#fff;border:none;padding:8px 16px;border-radius:10px;font-size:13px;cursor:pointer;white-space:nowrap}
+
+  .yutuq-list{display:flex;flex-direction:column;gap:10px}
+  .yutuq-item{background:#f8f7ff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+  .yutuq-icon{font-size:22px;flex-shrink:0}
+  .yutuq-text{flex:1}
+  .yutuq-name{font-size:14px;font-weight:600}
+  .yutuq-year{font-size:12px;color:#7c7c9a}
+  .yutuq-del{background:none;border:none;color:#f87171;cursor:pointer;font-size:18px;display:none;padding:0}
+  .yutuq-add-row{display:none;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .yutuq-add-row .finp{display:flex;flex:1;min-width:140px}
+  .add-yutuq-btn{background:#f4f2ff;color:#6c47ff;border:none;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;display:none}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .stat-mini{background:#f8f7ff;border-radius:14px;padding:16px;text-align:center}
+  .stat-mini .snum{font-size:26px;font-weight:800;color:#6c47ff}
+  .stat-mini .slbl{font-size:11px;color:#7c7c9a;margin-top:2px}
+
+  .prog-item{margin-bottom:14px}
+  .prog-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px}
+  .prog-bar{background:#e4e0ff;border-radius:10px;height:8px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,#6c47ff,#9b7cff);border-radius:10px;transition:width .6s}
+
+  .reyting-card{background:linear-gradient(135deg,#6c47ff,#9b7cff);border-radius:20px;padding:22px;color:#fff;display:flex;align-items:center;gap:20px;margin-bottom:16px;flex-wrap:wrap}
+  .reyting-score{font-size:52px;font-weight:800;line-height:1}
+  .reyting-info h3{font-size:16px;font-weight:700;margin-bottom:4px}
+  .reyting-info p{font-size:13px;opacity:.85}
+  .reyting-rank{margin-left:auto;background:rgba(255,255,255,.2);border-radius:14px;padding:12px 18px;text-align:center}
+  .reyting-rank .rnum{font-size:28px;font-weight:800}
+  .reyting-rank .rlbl{font-size:11px;opacity:.85}
+
+  .saving-overlay{display:none;position:fixed;inset:0;background:rgba(108,71,255,.15);z-index:999;align-items:center;justify-content:center}
+  .saving-overlay.show{display:flex}
+  .saving-box{background:#fff;border-radius:16px;padding:24px 32px;font-weight:700;color:#6c47ff;font-size:15px;box-shadow:0 8px 32px rgba(108,71,255,.2)}
+
+  .empty-skills{color:#aaa;font-size:13px;font-style:italic}
+
+  @media(max-width:600px){
+    .form-grid,.loc-row,.stats-row{grid-template-columns:1fr}
+    .fg.full{grid-column:1}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">🏠 Bosh sahifa</a>
+    <a href="../premium.html" class="nav-btn">⭐ Premium</a>
+    <a href="portfolio.html" class="nav-btn active">👤 Portfolio</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+    <button class="nav-btn" onclick="doLogout()" style="background:rgba(255,100,100,.25)">Chiqish</button>
+  </div>
+</nav>
+
+<div class="p-container">
+
+  <!-- REYTING -->
+  <div class="reyting-card">
+    <div class="reyting-score" id="reytingBall">—</div>
+    <div class="reyting-info">
+      <h3>Umumiy ball</h3>
+      <p>Profil to'ldirilishi, yutuqlar va faollik asosida</p>
+    </div>
+    <div class="reyting-rank">
+      <div class="rnum" id="reytingRank">#—</div>
+      <div class="rlbl">Reyting</div>
+    </div>
+  </div>
+
+  <!-- PROFIL CARD -->
+  <div class="profile-card">
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatarEl">
+        <span id="avatarEmoji">👩‍🏫</span>
+        <img id="avatarImg"/>
+      </div>
+      <button class="avatar-edit" id="avatarEditBtn" title="Rasm yuklash">📷</button>
+      <input type="file" id="avatarFile" accept="image/*" style="display:none"/>
+    </div>
+    <div class="profile-info">
+      <div class="pname" id="dispName">Yuklanmoqda...</div>
+      <div class="prole" id="dispRole">— </div>
+      <div class="badge-row">
+        <span class="pbadge pb-toifa" id="dispToifa">🏷️ —</span>
+        <span class="pbadge pb-staj" id="dispStaj">📅 — yil staj</span>
+        <span class="pbadge pb-malumot" id="dispMalumot">🎓 —</span>
+      </div>
+      <div class="btn-row">
+        <button class="edit-btn" id="editBtn" onclick="startEdit()">✏️ Tahrirlash</button>
+        <button class="save-btn" id="saveBtn" onclick="saveProfile()">💾 Saqlash</button>
+        <button class="cancel-btn" id="cancelBtn" onclick="cancelEdit()">✕ Bekor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHAXSIY -->
+  <div class="psection">
+    <div class="psec-title">👤 Shaxsiy ma'lumotlar</div>
+    <div class="form-grid">
+      <div class="fg"><label>Familiya</label><div class="fval" id="v-familiya">—</div><input class="finp" type="text" id="i-familiya" placeholder="Familiya"/></div>
+      <div class="fg"><label>Ism</label><div class="fval" id="v-ism">—</div><input class="finp" type="text" id="i-ism" placeholder="Ism"/></div>
+      <div class="fg"><label>Sharif</label><div class="fval" id="v-sharif">—</div><input class="finp" type="text" id="i-sharif" placeholder="Sharif"/></div>
+      <div class="fg"><label>Telefon</label><div class="fval" id="v-telefon">—</div><input class="finp" type="tel" id="i-telefon" placeholder="+998 XX XXX XX XX"/></div>
+      <div class="fg"><label>Tug'ilgan sana</label><div class="fval" id="v-tugilgan">—</div><input class="finp" type="date" id="i-tugilgan"/></div>
+      <div class="fg"><label>Jinsi</label><div class="fval" id="v-jinsi">—</div>
+        <select class="finp" id="i-jinsi"><option>Ayol</option><option>Erkak</option></select>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOYLASHUV -->
+  <div class="psection">
+    <div class="psec-title">📍 Joylashuv va muassasa</div>
+    <div class="loc-row">
+      <div class="fg"><label>Viloyat</label><div class="fval" id="v-viloyat">—</div>
+        <select class="finp" id="i-viloyat" onchange="loadTumanlar()">
+          <option>Toshkent shahri</option><option>Toshkent viloyati</option>
+          <option>Andijon</option><option>Farg'ona</option><option>Namangan</option>
+          <option>Samarqand</option><option>Buxoro</option><option>Navoiy</option>
+          <option>Qashqadaryo</option><option>Surxondaryo</option><option>Jizzax</option>
+          <option>Sirdaryo</option><option>Xorazm</option><option>Qoraqalpog'iston</option>
+        </select>
+      </div>
+      <div class="fg"><label>Tuman/Shahar</label><div class="fval" id="v-tuman">—</div>
+        <select class="finp" id="i-tuman"></select>
+      </div>
+      <div class="fg"><label>DMTT nomi</label><div class="fval" id="v-dmtt">—</div>
+        <input class="finp" type="text" id="i-dmtt" placeholder="Masalan: 12-DMTT"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- KASB -->
+  <div class="psection">
+    <div class="psec-title">💼 Kasb ma'lumotlari</div>
+    <div class="form-grid">
+      <div class="fg"><label>Lavozim</label><div class="fval" id="v-lavozim">—</div>
+        <select class="finp" id="i-lavozim">
+          <option>Tarbiyachi</option><option>Katta tarbiyachi</option><option>Metodist</option>
+          <option>Mudir o'rinbosari</option><option>Mudir</option><option>Musiqa rahbari</option>
+          <option>Jismoniy tarbiya o'qituvchisi</option><option>Logoped</option><option>Psixolog</option>
+        </select>
+      </div>
+      <div class="fg"><label>Toifa</label><div class="fval" id="v-toifa">—</div>
+        <select class="finp" id="i-toifa">
+          <option>Toifasiz</option><option>2-toifa</option><option>1-toifa</option><option>Oliy toifa</option>
+        </select>
+      </div>
+      <div class="fg"><label>Ish staji (yil)</label><div class="fval" id="v-staj">—</div>
+        <input class="finp" type="number" id="i-staj" min="0" max="50" placeholder="Yil"/>
+      </div>
+      <div class="fg"><label>Ma'lumot darajasi</label><div class="fval" id="v-malumot">—</div>
+        <select class="finp" id="i-malumot">
+          <option>O'rta ma'lumot</option><option>O'rta maxsus ma'lumot</option>
+          <option>Oliy ma'lumot</option><option>Magistr</option>
+        </select>
+      </div>
+      <div class="fg full"><label>O'zi haqida</label><div class="fval" id="v-bio">—</div>
+        <textarea class="finp" id="i-bio" placeholder="O'zingiz haqingizda qisqacha..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATISTIKA -->
+  <div class="psection">
+    <div class="psec-title">📊 Statistika</div>
+    <div class="stats-row">
+      <div class="stat-mini"><div class="snum" id="stat-staj">0</div><div class="slbl">Yil tajriba</div></div>
+      <div class="stat-mini"><div class="snum" id="stat-yutuq">0</div><div class="slbl">Yutuq / Sertifikat</div></div>
+      <div class="stat-mini"><div class="snum" id="stat-skill">0</div><div class="slbl">Ko'nikma</div></div>
+    </div>
+  </div>
+
+  <!-- KO'NIKMALAR -->
+  <div class="psection">
+    <div class="psec-title">🎯 Ko'nikmalar</div>
+    <div class="skills-wrap" id="skillsWrap"></div>
+    <div class="skill-add-row" id="skillAddRow">
+      <input class="skill-input" id="skillInput" placeholder="Yangi ko'nikma..."/>
+      <button class="skill-add-btn" onclick="addSkill()">+ Qo'shish</button>
+    </div>
+  </div>
+
+  <!-- PROFESSIONAL DARAJA -->
+  <div class="psection">
+    <div class="psec-title">📈 Professional darajasi</div>
+    <div class="prog-item"><div class="prog-head"><span>Dars rejalashtirish</span><span>90%</span></div><div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div></div>
+    <div class="prog-item"><div class="prog-head"><span>Bolalar bilan ishlash</span><span>95%</span></div><div class="prog-bar"><div class="prog-fill" style="width:95%"></div></div></div>
+    <div class="prog-item"><div class="prog-head"><span>Raqamli savodxonlik</span><span>70%</span></div><div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div></div>
+    <div class="prog-item"><div class="prog-head"><span>Ota-onalar bilan hamkorlik</span><span>85%</span></div><div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div></div>
+  </div>
+
+  <!-- YUTUQLAR -->
+  <div class="psection">
+    <div class="psec-title">🏆 Yutuqlar va sertifikatlar</div>
+    <div class="yutuq-list" id="yutuqList"></div>
+    <div class="yutuq-add-row" id="yutuqAddRow">
+      <input class="finp" id="y-nomi" placeholder="Yutuq/Sertifikat nomi" style="flex:2"/>
+      <input class="finp" id="y-yil" placeholder="Yil" type="number" min="1990" max="2030" style="flex:0.6;min-width:80px"/>
+      <button class="skill-add-btn" onclick="addYutuq()">+ Qo'shish</button>
+    </div>
+    <button class="add-yutuq-btn" id="addYutuqBtn" onclick="document.getElementById('yutuqAddRow').style.display='flex'">+ Yutuq qo'shish</button>
+  </div>
+
+</div>
+
+<!-- Saqlash overlay -->
+<div class="saving-overlay" id="savingOverlay">
+  <div class="saving-box">💾 Saqlanmoqda...</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+// ──────────────────────────────
+// TUMANLAR
+// ──────────────────────────────
+const TUMANLAR = {
+  "Toshkent shahri":["Chilonzor","Yunusobod","Mirzo Ulug'bek","Shayxontohur","Olmazor","Uchtepa","Yakkasaroy","Bektemir","Sergeli","Mirobod","Hamza"],
+  "Toshkent viloyati":["Angren","Bekobod","Bo'ka","Bo'stonliq","Chinoz","Ohangaron","Oqqo'rg'on","Parkent","Piskent","Qibray","Toshkent","Yuqorichirchiq","Zangiota","Yangiyul"],
+  "Andijon":["Andijon shahar","Asaka","Baliqchi","Bo'z","Buloqboshi","Izboskan","Jalaquduq","Marhamat","Oltinkul","Paxtaobod","Qo'rg'ontepa","Shahrixon","Ulug'nor","Xo'jaobod"],
+  "Farg'ona":["Farg'ona shahar","Beshariq","Bog'dod","Buvayda","Dang'ara","Furqat","Qo'qon","Quva","Rishton","O'zbekiston","Oltiariq","Toshloq","Uchko'prik","Yozyovon"],
+  "Namangan":["Namangan shahar","Chortoq","Chust","Kosonsoy","Mingbuloq","Norin","Pop","To'raqo'rg'on","Uychi","Yangiqo'rg'on"],
+  "Samarqand":["Samarqand shahar","Bulungur","Ishtixon","Jomboy","Kattaqo'rg'on","Narpay","Nurobod","Oqdaryo","Paxtachi","Payariq","Pastdarg'om","Qo'shrabot","Tayloq","Urgut"],
+  "Buxoro":["Buxoro shahar","G'ijduvon","Jondor","Kogon","Qorovulbozor","Romitan","Shofirkon","Vobkent","Olot","Peshku"],
+  "Navoiy":["Navoiy shahar","Karmana","Konimex","Navbahor","Nurota","Qiziltepa","Tomdi","Uchquduq","Xatirchi","Zafarobod"],
+  "Qashqadaryo":["Qarshi shahar","Chiroqchi","Dehqonobod","G'uzor","Kasbi","Kitob","Koson","Mirishkor","Muborak","Nishon","Qamashi","Shahrisabz","Yakkabog'"],
+  "Surxondaryo":["Termiz shahar","Angor","Bandixon","Boysun","Denov","Jarqo'rg'on","Muzrabot","Oltinsoy","Qiziriq","Qumqo'rg'on","Sariosiyo","Sherobod","Sho'rchi","Uzun"],
+  "Jizzax":["Jizzax shahar","Arnasoy","Baxmal","Do'stlik","Forish","G'allaorol","Mirzacho'l","Paxtakor","Yangiobod","Zarbdor","Zafarobod","Zomin"],
+  "Sirdaryo":["Guliston shahar","Boyovut","Mirzaobod","Oqoltin","Sardoba","Sayxunobod","Shirin","Xovos"],
+  "Xorazm":["Urganch shahar","Bog'ot","Gurlan","Hazorasp","Xiva","Xonqa","Shovot","Tuproqqal'a","Yangiariq","Yangibozor"],
+  "Qoraqalpog'iston":["Nukus shahar","Amudaryo","Beruniy","Chimboy","Ellikqal'a","Kegeyli","Mo'ynoq","Nukus","Qonliko'l","Qorao'zak","Shumanay","Taxtako'pir","To'rtko'l","Xo'jayli"]
+};
+
+function loadTumanlar(current){
+  const vil = document.getElementById('i-viloyat').value;
+  const sel = document.getElementById('i-tuman');
+  sel.innerHTML = '';
+  (TUMANLAR[vil]||[]).forEach(t=>{
+    const o=document.createElement('option');
+    o.textContent=t;
+    if(current && t===current) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+// ──────────────────────────────
+// AUTH & LOAD
+// ──────────────────────────────
+let currentUser = null;
+let profileData = {};
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true);
+  if(!auth) return;
+  fillNav();
+  currentUser = auth.user;
+  await loadProfile();
+});
+
+async function loadProfile(){
+  const {data, error} = await _sb.from('profiles').select('*').eq('id', currentUser.id).single();
+  if(error || !data){ showToast('Profil yuklanmadi', 'err'); return; }
+  profileData = data;
+  fillDisplay(data);
+  calcScore(data);
+}
+
+function fillDisplay(d){
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = val || '—';
+    if(!val) el.classList.add('empty'); else el.classList.remove('empty');
+  };
+  // Shaxsiy
+  set('v-familiya', d.familiya);
+  set('v-ism', d.ism);
+  set('v-sharif', d.sharif);
+  set('v-telefon', d.telefon);
+  set('v-tugilgan', d.tugilgan);
+  set('v-jinsi', d.jinsi || 'Ayol');
+  set('v-viloyat', d.viloyat);
+  set('v-tuman', d.tuman);
+  set('v-dmtt', d.dmtt);
+  set('v-lavozim', d.lavozim || 'Tarbiyachi');
+  set('v-toifa', d.toifa || 'Toifasiz');
+  set('v-staj', d.staj != null ? d.staj+' yil' : '—');
+  set('v-malumot', d.malumot || '—');
+  set('v-bio', d.bio);
+  // Header
+  const fam = d.familiya || '';
+  const ism = d.ism || d.full_name || 'Tarbiyachi';
+  document.getElementById('dispName').textContent = (fam+' '+ism).trim() || 'Tarbiyachi';
+  document.getElementById('dispRole').textContent = (d.lavozim||'Tarbiyachi')+' — '+(d.dmtt||'DMTT')+', '+(d.tuman||'Tuman');
+  document.getElementById('dispToifa').textContent = '🏷️ '+(d.toifa||'Toifasiz');
+  document.getElementById('dispStaj').textContent = '📅 '+(d.staj||0)+' yil staj';
+  document.getElementById('dispMalumot').textContent = '🎓 '+(d.malumot||'—');
+  document.getElementById('stat-staj').textContent = d.staj || 0;
+  // Avatar
+  if(d.avatar_url){
+    document.getElementById('avatarImg').src = d.avatar_url;
+    document.getElementById('avatarImg').style.display = 'block';
+    document.getElementById('avatarEmoji').style.display = 'none';
+  }
+  // Ko'nikmalar
+  renderSkills(d.skills || []);
+  // Yutuqlar
+  renderYutuqlar(d.yutuqlar || []);
+}
+
+// ──────────────────────────────
+// KO'NIKMALAR
+// ──────────────────────────────
+function renderSkills(arr){
+  const wrap = document.getElementById('skillsWrap');
+  wrap.innerHTML = '';
+  if(!arr.length){
+    wrap.innerHTML='<span class="empty-skills">Ko\'nikma qo\'shilmagan</span>';
+  } else {
+    arr.forEach(s=>{
+      const tag = document.createElement('span');
+      tag.className='skill-tag';
+      tag.innerHTML=`${s} <button class="skill-del" onclick="delSkill(this)">×</button>`;
+      wrap.appendChild(tag);
+    });
+  }
+  document.getElementById('stat-skill').textContent = arr.length;
+}
+
+function addSkill(){
+  const inp = document.getElementById('skillInput');
+  const val = inp.value.trim();
+  if(!val) return;
+  const wrap = document.getElementById('skillsWrap');
+  const empty = wrap.querySelector('.empty-skills');
+  if(empty) empty.remove();
+  const tag = document.createElement('span');
+  tag.className='skill-tag';
+  tag.innerHTML=`${val} <button class="skill-del" onclick="delSkill(this)" style="display:inline">×</button>`;
+  wrap.appendChild(tag);
+  inp.value='';
+  document.getElementById('stat-skill').textContent = wrap.querySelectorAll('.skill-tag').length;
+}
+
+function delSkill(btn){ btn.closest('.skill-tag').remove(); document.getElementById('stat-skill').textContent = document.getElementById('skillsWrap').querySelectorAll('.skill-tag').length; }
+
+function getSkills(){
+  return [...document.getElementById('skillsWrap').querySelectorAll('.skill-tag')].map(t=>t.textContent.trim().replace('×','').trim());
+}
+
+// ──────────────────────────────
+// YUTUQLAR
+// ──────────────────────────────
+const ICONS = ['🥇','📜','🏅','🎖️','⭐','🏆'];
+
+function renderYutuqlar(arr){
+  const list = document.getElementById('yutuqList');
+  list.innerHTML = '';
+  if(!arr.length){
+    list.innerHTML='<div style="color:#aaa;font-size:13px;font-style:italic">Yutuq qo\'shilmagan</div>';
+  } else {
+    arr.forEach((y,i)=>{
+      const ic = ICONS[i % ICONS.length];
+      const div = document.createElement('div');
+      div.className='yutuq-item';
+      div.innerHTML=`<span class="yutuq-icon">${ic}</span><div class="yutuq-text"><div class="yutuq-name">${y.nomi}</div><div class="yutuq-year">${y.yil||''}</div></div><button class="yutuq-del" onclick="delYutuq(this)">🗑</button>`;
+      list.appendChild(div);
+    });
+  }
+  document.getElementById('stat-yutuq').textContent = arr.length;
+}
+
+function addYutuq(){
+  const nomi = document.getElementById('y-nomi').value.trim();
+  const yil  = document.getElementById('y-yil').value.trim();
+  if(!nomi) return;
+  const list = document.getElementById('yutuqList');
+  const empty = list.querySelector('div[style]');
+  if(empty) empty.remove();
+  const i = list.querySelectorAll('.yutuq-item').length;
+  const ic = ICONS[i % ICONS.length];
+  const div = document.createElement('div');
+  div.className='yutuq-item';
+  div.innerHTML=`<span class="yutuq-icon">${ic}</span><div class="yutuq-text"><div class="yutuq-name">${nomi}</div><div class="yutuq-year">${yil}</div></div><button class="yutuq-del" onclick="delYutuq(this)" style="display:inline">🗑</button>`;
+  list.appendChild(div);
+  document.getElementById('y-nomi').value='';
+  document.getElementById('y-yil').value='';
+  document.getElementById('yutuqAddRow').style.display='none';
+  document.getElementById('stat-yutuq').textContent = list.querySelectorAll('.yutuq-item').length;
+}
+
+function delYutuq(btn){ btn.closest('.yutuq-item').remove(); document.getElementById('stat-yutuq').textContent = document.getElementById('yutuqList').querySelectorAll('.yutuq-item').length; }
+
+function getYutuqlar(){
+  return [...document.getElementById('yutuqList').querySelectorAll('.yutuq-item')].map(el=>({
+    nomi: el.querySelector('.yutuq-name').textContent,
+    yil:  el.querySelector('.yutuq-year').textContent
+  }));
+}
+
+// ──────────────────────────────
+// REYTING BALL
+// ──────────────────────────────
+function calcScore(d){
+  const staj    = parseInt(d.staj)||0;
+  const skills  = (d.skills||[]).length;
+  const yutuqlar= (d.yutuqlar||[]).length;
+  const toifa   = d.toifa||'';
+  const hasName = !!(d.familiya && d.ism);
+  const hasLoc  = !!(d.viloyat && d.tuman && d.dmtt);
+  const hasBio  = !!(d.bio);
+  let score = 20;
+  if(hasName) score += 10;
+  if(hasLoc)  score += 10;
+  if(hasBio)  score += 5;
+  score += Math.min(staj*2, 20);
+  score += Math.min(skills*3, 15);
+  score += Math.min(yutuqlar*5, 20);
+  if(toifa==='Oliy toifa') score+=5;
+  else if(toifa==='1-toifa') score+=3;
+  else if(toifa==='2-toifa') score+=1;
+  score = Math.min(score, 100);
+  document.getElementById('reytingBall').textContent = score;
+  return score;
+}
+
+// ──────────────────────────────
+// EDIT MODE
+// ──────────────────────────────
+function startEdit(){
+  document.querySelectorAll('.fval').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.finp').forEach(el=>el.style.display='block');
+  // Fill inputs
+  const d = profileData;
+  const setI = (id, val) => { const el=document.getElementById(id); if(el && val!=null) el.value=val; };
+  setI('i-familiya', d.familiya); setI('i-ism', d.ism); setI('i-sharif', d.sharif);
+  setI('i-telefon', d.telefon);   setI('i-tugilgan', d.tugilgan); setI('i-jinsi', d.jinsi||'Ayol');
+  setI('i-lavozim', d.lavozim||'Tarbiyachi'); setI('i-toifa', d.toifa||'Toifasiz');
+  setI('i-staj', d.staj||0); setI('i-malumot', d.malumot||'Oliy ma\'lumot'); setI('i-bio', d.bio);
+  // Viloyat & tuman
+  setI('i-viloyat', d.viloyat||'Toshkent shahri');
+  loadTumanlar(d.tuman);
+  setI('i-dmtt', d.dmtt);
+  // Skill del buttons
+  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='inline');
+  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='inline');
+  document.getElementById('skillAddRow').style.display='flex';
+  document.getElementById('addYutuqBtn').style.display='block';
+  document.getElementById('avatarEditBtn').style.display='flex';
+  document.getElementById('editBtn').style.display='none';
+  document.getElementById('saveBtn').style.display='block';
+  document.getElementById('cancelBtn').style.display='block';
+}
+
+function cancelEdit(){
+  fillDisplay(profileData);
+  exitEditMode();
+}
+
+function exitEditMode(){
+  document.querySelectorAll('.fval').forEach(el=>el.style.display='block');
+  document.querySelectorAll('.finp').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='none');
+  document.getElementById('skillAddRow').style.display='none';
+  document.getElementById('addYutuqBtn').style.display='none';
+  document.getElementById('yutuqAddRow').style.display='none';
+  document.getElementById('avatarEditBtn').style.display='none';
+  document.getElementById('editBtn').style.display='block';
+  document.getElementById('saveBtn').style.display='none';
+  document.getElementById('cancelBtn').style.display='none';
+}
+
+// ──────────────────────────────
+// SAQLASH
+// ──────────────────────────────
+async function saveProfile(){
+  document.getElementById('savingOverlay').classList.add('show');
+  const g = id => (document.getElementById(id)||{}).value || '';
+  const updatedData = {
+    familiya: g('i-familiya'), ism: g('i-ism'), sharif: g('i-sharif'),
+    telefon:  g('i-telefon'),  tugilgan: g('i-tugilgan') || null,
+    jinsi:    g('i-jinsi'),    viloyat: g('i-viloyat'),
+    tuman:    g('i-tuman'),    dmtt: g('i-dmtt'),
+    lavozim:  g('i-lavozim'),  toifa: g('i-toifa'),
+    staj:     parseInt(g('i-staj'))||0,
+    malumot:  g('i-malumot'),  bio: g('i-bio'),
+    skills:   getSkills(),
+    yutuqlar: getYutuqlar(),
+  };
+  updatedData.reyting_ball = calcScore(updatedData);
+
+  const {error} = await _sb.from('profiles').update(updatedData).eq('id', currentUser.id);
+  document.getElementById('savingOverlay').classList.remove('show');
+
+  if(error){
+    showToast('Xatolik: '+error.message, 'err');
+  } else {
+    profileData = {...profileData, ...updatedData};
+    fillDisplay(profileData);
+    exitEditMode();
+    showToast('✅ Profil saqlandi!', 'ok');
+  }
+}
+
+// ──────────────────────────────
+// AVATAR YUKLASH
+// ──────────────────────────────
+document.getElementById('avatarEditBtn').addEventListener('click', ()=>document.getElementById('avatarFile').click());
+document.getElementById('avatarFile').addEventListener('change', async function(){
+  const file = this.files[0]; if(!file) return;
+  const ext  = file.name.split('.').pop();
+  const path = `avatars/${currentUser.id}.${ext}`;
+  const {error: upErr} = await _sb.storage.from('avatars').upload(path, file, {upsert:true});
+  if(upErr){ showToast('Rasm yuklanmadi', 'err'); return; }
+  const {data} = _sb.storage.from('avatars').getPublicUrl(path);
+  const url = data.publicUrl;
+  await _sb.from('profiles').update({avatar_url: url}).eq('id', currentUser.id);
+  profileData.avatar_url = url;
+  document.getElementById('avatarImg').src = url+'?t='+Date.now();
+  document.getElementById('avatarImg').style.display='block';
+  document.getElementById('avatarEmoji').style.display='none';
+  showToast('✅ Rasm saqlandi!', 'ok');
+});
+
+// ──────────────────────────────
+// TOAST
+// ──────────────────────────────
+function showToast(msg, type='ok'){
+  let t = document.querySelector('.toast');
+  if(!t){ t=document.createElement('div'); t.className='toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
