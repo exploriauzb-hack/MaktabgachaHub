@@ -222,21 +222,15 @@ window.addEventListener('load', async () => {
     }
   });
 
-  // CORP kartalar
-  const corpCards = {
-    'card-attendance' : { module:'attendance',       href:'pages/davomat.html'    },
-    'card-parents'    : { module:'parent_portal',    href:'pages/ota-onalar.html' },
-    'card-monitoring' : { module:'child_monitoring', href:'pages/monitoring.html' },
-  };
-  Object.entries(corpCards).forEach(([id, cfg]) => {
+  // CORP kartalar — hozircha "Tez kunda"
+  ['card-attendance','card-parents','card-monitoring'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
-    if(corpUser){
-      el.querySelector('.lock-badge').style.display = 'none';
-      el.onclick = () => window.location.href = cfg.href;
-    } else {
-      el.onclick = () => openPremiumModal(cfg.module);
-    }
+    const badge = el.querySelector('.lock-badge');
+    if(badge){ badge.textContent = 'Tez kunda'; badge.style.background = '#94a3b8'; }
+    el.style.opacity = '0.6';
+    el.style.cursor = 'default';
+    el.onclick = () => showToast('🚀 Bu bo\'lim tez kunda ishga tushadi!', 'ok');
   });
 
   // ── STATISTIKA ──
