@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MaktabgachaHub — Qo'shiqlar</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.song-list { display:flex; flex-direction:column; gap:9px; }
+.song-card {
+  background:#fff; border-radius:12px; padding:13px 16px;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05); cursor:pointer;
+}
+.song-num {
+  background:linear-gradient(135deg,#ec4899,#f43f5e); color:#fff;
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:.85rem; flex-shrink:0;
+}
+.song-card h5 { font-size:.9rem; font-weight:600; margin-bottom:2px; }
+.song-card p { font-size:.76rem; color:var(--mu); }
+.song-pre {
+  background:#fff5f7; border-radius:10px; padding:12px 16px;
+  margin-top:7px; display:none; border-left:3px solid #f43f5e;
+  font-size:.85rem; line-height:1.9; color:var(--tx); white-space:pre-line;
+}
+.song-pre.open { display:block; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user"><span id="nav-name">—</span><span class="nav-badge" id="nav-plan">Bepul</span></div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="sec-title">🎵 Bolalar Qo'shiqlari</div>
+  <div class="info-box">Mavzuga mos qo'shiqlar — kunlik va haftalik rejaga moslashtirilgan. Qo'shiqni bosing — so'zlari ochiladi.</div>
+  <div class="song-list" id="song-list"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+
+var songsData = [
+  { title:"Bog'cha qo'shig'i", mavzu:"Bog'cha, do'stlik (2-soha)", lyrics:"Bog'chamiz go'zal,\nDo'stlarim bilan!\nKulgu to'la, o'yin to'la,\nBiz baxtli bolalar." },
+  { title:'Kuz keldi', mavzu:'Kuz fasli (4-soha)', lyrics:"Kuz keldi, kuz keldi,\nBarg to'kildi yellar esdi,\nSariq, qizil, yashil barg -\nKuz qanday go'zal fasl." },
+  { title:'Onam haqida', mavzu:'Oila (2-soha)', lyrics:"Onam borki menga baxt bor,\nUning ishi doim halol,\nQo'li mehribon, yuzi yorug' -\nOnam mening quyoshim." },
+  { title:'Hayvonlar ashulasi', mavzu:'Uy hayvonlari (4-soha)', lyrics:"Mushuk miyov, it vov-vov,\nSigir mo-mo, ot duv-duv,\nHammasi yaqin bizga -\nYoqimli hayvonlar." },
+  { title:"Qo'lchalarim", mavzu:'Jismoniy (1-soha)', lyrics:"Qo'lchalarim, qo'lchalarim,\nNimalar qila oladi?\nUshlaydi va ko'taradi,\nRasm chizib bera oladi." },
+  { title:'Bahor keldi', mavzu:'Bahor fasli (4-soha)', lyrics:"Bahor keldi shodlik bilan,\nGullar ochdi dalada,\nQushlar sayrar osmondan,\nBiz sevinamiz bahorda." },
+  { title:'Sonlar qo\'shig\'i', mavzu:'FEMP (4-soha)', lyrics:"Bir - bitta qo'shiq,\nIkki - ikki dost,\nUch - uchta olma,\nTo'rt - to'rtta yulduz,\nBesh - besh barmoq." },
+  { title:'Xayrli kun', mavzu:'Salomlashish (2-soha)', lyrics:"Xayrli kun, bog'chaginam,\nXayrli kun, do'stlarim,\nBugun ham birga o'qiymiz,\nBirga kulamiz, sevinamiz." },
+  { title:"Navro'z", mavzu:'Milliy bayram (5-soha)', lyrics:"Navro'z keldi, bahor keldi,\nQizil gullar ochildi,\nSumalakning isi keldi -\nO'zbekiston suyundi." },
+  { title:'Tabiat', mavzu:'Tabiat (4-soha)', lyrics:"Daryo oqar tog'lardan,\nBaliqlar suzar suvda,\nDaraxtlar o'sar dalada -\nTabiatni sevamiz." },
+]
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+
+  if (!hasAccess('songs')) {
+    document.querySelector('.container').innerHTML = `
+      <div style="text-align:center;padding:60px 20px">
+        <div style="font-size:3rem;margin-bottom:14px">🔒</div>
+        <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:8px">Bu bo'lim Premium uchun</h2>
+        <p style="color:var(--mu);margin-bottom:24px">Barcha qo'shiqlar to'plamiga ega bo'lish uchun Premium oling</p>
+        <a href="../premium.html" style="background:linear-gradient(135deg,#6c47ff,#9b7cff);
+          color:#fff;padding:13px 30px;border-radius:12px;font-weight:700;display:inline-block">
+          ⭐ Premium olish — 49 000 so'm/oy
+        </a>
+      </div>`
+    return
+  }
+
+  renderSongs()
+})
+
+function renderSongs() {
+  document.getElementById('song-list').innerHTML = songsData.map((s, i) => `
+    <div>
+      <div class="song-card" onclick="toggleSong(${i})">
+        <div class="song-num">${i+1}</div>
+        <div><h5>${s.title}</h5><p>${s.mavzu}</p></div>
+        <span style="margin-left:auto;font-size:1.2rem">🎵</span>
+      </div>
+      <div class="song-pre" id="sq-${i}">${s.lyrics}</div>
+    </div>
+  `).join('')
+}
+
+function toggleSong(i) {
+  document.getElementById('sq-' + i).classList.toggle('open')
+}
+</script>
+
+</body>
+</html>
