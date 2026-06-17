@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Rivojlanish Sohalari</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .soha-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .soha-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.06);
+      transition: transform .2s;
+    }
+    .soha-card:hover { transform: translateY(-3px); }
+    .soha-card h4 {
+      font-size: .95rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .soha-card ul {
+      list-style: none;
+      font-size: .82rem;
+      color: var(--mu);
+      line-height: 1.9;
+    }
+    .soha-card ul li {
+      padding-left: 16px;
+      position: relative;
+    }
+    .soha-card ul li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      font-weight: 800;
+    }
+    .s1 { border-top: 4px solid #22c55e; }
+    .s2 { border-top: 4px solid #f59e0b; }
+    .s3 { border-top: 4px solid #3b82f6; }
+    .s4 { border-top: 4px solid var(--p); }
+    .s5 { border-top: 4px solid #ec4899; }
+
+    .s1 ul li::before { color: #22c55e; }
+    .s2 ul li::before { color: #f59e0b; }
+    .s3 ul li::before { color: #3b82f6; }
+    .s4 ul li::before { color: var(--p); }
+    .s5 ul li::before { color: #ec4899; }
+
+    .integration-box {
+      background: linear-gradient(135deg, #6c47ff, #9b7cff);
+      border-radius: 16px;
+      padding: 22px;
+      color: #fff;
+      margin-bottom: 24px;
+    }
+    .integration-box h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .integration-box p { font-size: .87rem; opacity: .92; line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">📊 Rivojlanish Sohalari</div>
+  <div class="info-box">
+    Ilk Qadam dasturi <b>5 ta asosiy rivojlanish sohasi</b>ga asoslangan.
+    Har bir mashg'ulot bir nechta sohani birgalikda rivojlantirishga qaratilgan.
+  </div>
+
+  <div class="soha-grid">
+
+    <div class="soha-card s1">
+      <h4>🏃 1. Jismoniy rivojlanish</h4>
+      <ul>
+        <li>Yirik motorika</li>
+        <li>Mayda motorika va sensomotorika</li>
+        <li>Sog'lom turmush tarzi</li>
+        <li>Shaxsiy gigiyena</li>
+        <li>Harakat muvofiqlash</li>
+      </ul>
+    </div>
+
+    <div class="soha-card s2">
+      <h4>💛 2. Ijtimoiy-hissiy rivojlanish</h4>
+      <ul>
+        <li>Men konsepsiyasi</li>
+        <li>Hissiy nazorat</li>
+        <li>Tengdoshlar bilan hamkorlik</li>
+        <li>Nizolarni hal etish</li>
+        <li>Ijtimoiy muloqot</li>
+      </ul>
+    </div>
+
+    <div class="soha-card s3">
+      <h4>💬 3. Nutq va muloqot</h4>
+      <ul>
+        <li>Nutq va til rivojlanishi</li>
+        <li>O'qishga tayyorgarlik</li>
+        <li>Yozuvga tayyorgarlik</li>
+        <li>Lug'at boyligini kengaytirish</li>
+        <li>Badiiy asarlarga qiziqish</li>
+      </ul>
+    </div>
+
+    <div class="soha-card s4">
+      <h4>🧠 4. Bilish jarayonlari</h4>
+      <ul>
+        <li>Mantiqiy fikrlash</li>
+        <li>Elementar matematika (FEMP)</li>
+        <li>Dunyoni anglash</li>
+        <li>Raqamli savodxonlik</li>
+        <li>Kuzatish va tadqiqot</li>
+      </ul>
+    </div>
+
+    <div class="soha-card s5">
+      <h4>🎨 5. Ijodiy rivojlanish</h4>
+      <ul>
+        <li>Badiiy tasavvur</li>
+        <li>Ijodiy qobiliyatlar</li>
+        <li>Tasviriy sanat, musiqa, raqs</li>
+        <li>Teatr va dramatizatsiya</li>
+        <li>Milliy an'analarga qiziqish</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="integration-box">
+    <h3>🔗 Integratsiyalashgan yondashuv</h3>
+    <p>
+      Ilk Qadam dasturida sohalar alohida emas, balki bir-biriga bog'liq holda rivojlantiriladi.
+      Masalan, "Kuz bargi" mavzusidagi bir mashg'ulot bir vaqtning o'zida tabiat bilan tanishuv (4-soha),
+      mayda motorika (1-soha) va ijodkorlikni (5-soha) rivojlantiradi.
+    </p>
+  </div>
+
+  <div class="sec-title">🔢 Indikator kodlari haqida</div>
+  <div class="info-box">
+    Har bir indikator kodi 4 qismdan iborat: <b>soha.kichik_soha.indikator.yosh_guruhi</b><br>
+    Misol: <b>3.1.2.b</b> — 3-soha (Nutq), 1-kichik soha, 2-indikator, b-guruh (4-5 yosh)
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+})
+</script>
+
+</body>
+</html>
