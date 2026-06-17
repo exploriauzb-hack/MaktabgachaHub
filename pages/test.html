@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Testlar</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tc-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(108,71,255,.08);
+      cursor: pointer;
+      transition: all .2s;
+      border: 2px solid transparent;
+      position: relative;
+    }
+    .tc-card:hover { border-color: var(--p); transform: translateY(-3px); }
+    .tc-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .tc-card h3 { font-size: .95rem; font-weight: 800; margin-bottom: 4px; }
+    .tc-card p  { font-size: .78rem; color: var(--mu); }
+    .tc-count {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--p); color: #fff;
+      border-radius: 10px; padding: 2px 9px;
+      font-size: .7rem; font-weight: 700;
+    }
+
+    .tpbar { background: #e8e4ff; border-radius: 10px; height: 7px; margin-bottom: 16px; }
+    .tpfill { background: linear-gradient(90deg,var(--p),var(--p2)); height: 100%; border-radius: 10px; transition: width .4s; }
+
+    .tq { font-size: 1rem; font-weight: 700; color: var(--tx); margin-bottom: 16px; line-height: 1.5; }
+    .topts { display: flex; flex-direction: column; gap: 9px; }
+    .topt {
+      background: #f8f6ff; border: 2px solid var(--br); border-radius: 12px;
+      padding: 12px 16px; cursor: pointer; font-size: .88rem; color: var(--tx);
+      transition: all .2s; text-align: left;
+    }
+    .topt:hover { border-color: var(--p); background: #ede9ff; }
+    .topt.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+    .topt.wrong   { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+    .topt.disabled { pointer-events: none; }
+
+    .texpl {
+      background: #f0fff4; border-radius: 10px; padding: 11px 14px;
+      margin-top: 12px; font-size: .82rem; color: #166534; display: none;
+      border-left: 3px solid #22c55e; line-height: 1.6;
+    }
+    .texpl.show { display: block; }
+    .texpl.werr { background: #fff1f2; color: #991b1b; border-left-color: #ef4444; }
+
+    .res-circle {
+      width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 16px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 800; color: #fff;
+    }
+    .rc-gold  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+    .rc-green { background: linear-gradient(135deg,#22c55e,#16a34a); }
+    .rc-blue  { background: linear-gradient(135deg,#3b82f6,#1d4ed8); }
+    .rc-red   { background: linear-gradient(135deg,#ef4444,#dc2626); }
+
+    .res-bd { background: #f8f6ff; border-radius: 12px; padding: 14px; margin-bottom: 16px; text-align: left; }
+    .rb-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--br); font-size: .83rem; }
+    .rb-row:last-child { border-bottom: none; }
+
+    .limit-box {
+      background: #fff7ed; border: 2px solid #fed7aa; border-radius: 14px;
+      padding: 16px; text-align: center; margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">🧪 Toifa Testlari</div>
+  <div class="info-box">Har toifada <b>20 ta savol</b>. <b>80%</b> va yuqori — A'lo toifa!</div>
+
+  <!-- Limit ogohlandirish (free uchun) -->
+  <div class="limit-box" id="limit-box" style="display:none">
+    <div style="font-size:1.5rem;margin-bottom:6px">⚠️</div>
+    <div style="font-weight:700;margin-bottom:4px" id="limit-text">Bu oy 5 ta test ishlandi</div>
+    <div style="font-size:.83rem;color:var(--mu);margin-bottom:12px">
+      Cheksiz test ishlash uchun Premium oling
+    </div>
+    <a href="../premium.html" style="background:linear-gradient(135deg,#6c47ff,#9b7cff);
+      color:#fff;padding:9px 20px;border-radius:10px;font-weight:700;font-size:.85rem;display:inline-block">
+      ⭐ Premium olish
+    </a>
+  </div>
+
+  <div class="grid-3" id="test-grid"></div>
+
+</div>
+
+<!-- TEST MODAL -->
+<div class="modal-overlay" id="test-modal">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-hdr">
+      <h3 id="test-modal-title">Test</h3>
+      <button class="modal-cls" onclick="closeTest()">✕</button>
+    </div>
+    <div class="modal-body" id="test-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+
+var TEST_CATS = [
+  { id:'ilk_qadam', icon:'📖', title:"Ilk Qadam Dasturi", desc:'Milliy dastur asoslari, tamoyillar' },
+  { id:'soha',      icon:'📊', title:'Rivojlanish Sohalari', desc:'5 ta soha, indikatorlar' },
+  { id:'metodika',  icon:'🎓', title:'Maktabgacha Metodikasi', desc:'Talim usullari, shakllari' },
+  { id:'psixolog',  icon:'🧠', title:'Bolalar Psixologiyasi', desc:'4-5 yosh rivojlanishi' },
+  { id:'qonun',     icon:'⚖️', title:'Qonunchilik va Meyor', desc:'Qonunlar, DTS, tartib-qoidalar' },
+  { id:'sanitar',   icon:'🏥', title:'Sanitariya va Gigiyena', desc:'MTT sanitariya meyorlari' },
+]
+
+var QUESTIONS = {
+  ilk_qadam: [
+    { q:"Ilk Qadam dasturining nechanchi nashri 2026 yilda joriy etildi?", opts:['1-nashr','2-nashr','3-nashr','4-nashr'], ans:2, exp:"2026 yilda Ilk Qadam ning uchinchi (3-nashr) nashri joriy etildi." },
+    { q:"Ilk Qadam dasturida majburiy tarkib qancha foiz?", opts:['60%','70%','80%','90%'], ans:2, exp:"Dasturning 80 foizi majburiy tarkib, 20 foizi hududiy komponent." },
+    { q:"Ilk Qadam dasturidagi rivojlanish sohalarining soni?", opts:['3','4','5','6'], ans:2, exp:"Dasturda 5 ta rivojlanish sohasi belgilangan." },
+    { q:"4-5 yoshli bola guruhi qaysi kod bilan belgilanadi?", opts:['a kodi','b kodi','c kodi','d kodi'], ans:1, exp:"4-5 yoshli bolalar b kodi bilan belgilanadi." },
+    { q:"Ilk Qadam dasturining asosiy maqsadi nima?", opts:['Maktabga tayyorlash','Har tomonlama rivojlanish','Savodxonlikni oshirish','Intizomni shakllantirish'], ans:1, exp:"Asosiy maqsad bolaning har tomonlama rivojlanishini taminlash." },
+    { q:"Hududiy komponent ulushi necha foiz?", opts:['10%','15%','20%','25%'], ans:2, exp:"Hududiy komponent 20 foizni tashkil etadi." },
+    { q:"Ilk Qadam dasturining 6-tamoyili nima?", opts:['Inklyuzivlik','Ota-onalar hamkorligi','Hayoti davomida talim','Oyinga asoslangan talim'], ans:2, exp:"6-tamoyil: Hayoti davomida talim olishga tayyorgarlik." },
+    { q:"MTT deb nima ataladi?", opts:['Maktab talim tashkiloti','Maktabgacha talim tashkiloti','Malakali talim tizimi','Maxsus talim tizimi'], ans:1, exp:"MTT - Maktabgacha Talim Tashkiloti." },
+    { q:"4-5 yoshli bola indikator kodi qanday?", opts:['1.2.3.a','1.2.3.b','1.2.3.c','1.2.3.d'], ans:1, exp:"4-5 yosh guruhi b kodi bilan belgilanadi." },
+    { q:"Dasturda nechta asosiy tamoyil?", opts:['4','5','6','7'], ans:2, exp:"Ilk Qadam dasturida 6 ta asosiy tamoyil." },
+    { q:"Oyinga asoslangan talim nechanchi tamoyil?", opts:['1-tamoyil','2-tamoyil','3-tamoyil','4-tamoyil'], ans:2, exp:"3-tamoyil: Bola shaxsiga yonaltirilgan va oyinga asoslangan talim." },
+    { q:"6-7 yoshli bolalar uchun nechta tayanch kompetensiya?", opts:['3','4','5','6'], ans:2, exp:"6-7 yoshli bolalar uchun 5 ta tayanch kompetensiya." },
+    { q:"Inklyuziv talim tamoyili nechanchi?", opts:['2-tamoyil','3-tamoyil','4-tamoyil','5-tamoyil'], ans:2, exp:"Inklyuziv va teng huquqli talim 4-tamoyil." },
+    { q:"Ozbekiston MMV qisqartmasi nimani anglatadi?", opts:['Maktab va muassasalar vazirligi','Maktabgacha va maktab talimi vazirligi','Malaka va mehnat vazirligi','Milliy malumot vazirligi'], ans:1, exp:"MMV - Maktabgacha va Maktab Talimi Vazirligi." },
+    { q:"Tayanch kompetensiyalar qaysi yoshdan?", opts:['4-5 yosh','5-6 yosh','6-7 yosh','7-8 yosh'], ans:2, exp:"Tayanch kompetensiyalar 6-7 yoshli bolalar uchun." },
+    { q:"Integratsiyalashgan talim nima?", opts:['Faqat bitta sohaga etibor','Barcha sohalarni ozaro boglab orgatish','Bolalarni alohida guruhlarga ajratish','Faqat oyin orqali orgatish'], ans:1, exp:"Integratsiyalashgan talim - barcha 5 ta soha ozaro boglik holda rivojlantiriladi." },
+    { q:"MTT tarbiyachisining asosiy roli?", opts:['Boshqaruvchi','Fasiliyatchi va qollab-quvvatlovchi','Nazoratchi','Baholovchi'], ans:1, exp:"Tarbiyachi bolaning rivojlanishini qollab-quvvatlovchi sifatida ishlaydi." },
+    { q:"Dastur kim tomonidan tasdiqlangan?", opts:['Ozbekiston Prezidenti','Ozbekiston MMV','Ozbekiston Kengashi','Xalq talimi vazirligi'], ans:1, exp:"Ilk Qadam Ozbekiston Maktabgacha va Maktab Talimi vazirligi tomonidan tasdiqlangan." },
+    { q:"Boshlangich talim necha yoshdan boshlanadi?", opts:['5','6','7','8'], ans:2, exp:"Ozbekistonda boshlangich talim 7 yoshdan boshlanadi." },
+    { q:"Ilk Qadam dasturi qanday yondashuvga asoslangan?", opts:['Faqat akademik','Integratsiyalashgan va bolaga yonaltirilgan','Qattiq tartibli','Ananаviy talim'], ans:1, exp:"Dastur integratsiyalashgan va bolaga yonaltirilgan yondashuvga asoslangan." }
+  ],
+  soha: [
+    { q:"Jismoniy rivojlanish qaysi soha?", opts:['2-soha','3-soha','1-soha','4-soha'], ans:2, exp:"Jismoniy rivojlanish - 1-soha." },
+    { q:"Nutq va muloqot qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"Nutq, muloqot, oqush va yozish - 3-soha." },
+    { q:"Ijodiy rivojlanish qaysi soha?", opts:['3-soha','4-soha','5-soha','2-soha'], ans:2, exp:"Ijodiy rivojlanish - 5-soha." },
+    { q:"Men konsepsiyasini shakllantirish qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Men konsepsiyasi - 2-soha (Ijtimoiy-hissiy rivojlanish)." },
+    { q:"Elementar matematika (FEMP) qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Elementar matematika - 4-soha (Bilish jarayonlari)." },
+    { q:"4-5 yoshli bola nechagacha sana olishi kutiladi?", opts:['1 dan 3 gacha','1 dan 5 gacha','1 dan 7 gacha','1 dan 10 gacha'], ans:1, exp:"4-5 yoshda bola 1 dan 5 gacha sanashni organadi." },
+    { q:"Mayda motorika qaysi soha?", opts:['2-soha','1-soha','4-soha','5-soha'], ans:1, exp:"Mayda motorika 1-soha - Jismoniy rivojlanish." },
+    { q:"Oqushga tayyorgarlik qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"Oqushga tayyorgarlik - 3-soha." },
+    { q:"Teatr va dramatizatsiya qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:3, exp:"Teatr va dramatizatsiya - 5-soha (Ijodiy rivojlanish)." },
+    { q:"Tabiat bilan tanishuv qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Tabiat bilan tanishuv - 4-soha." },
+    { q:"Indikator kodi 2.1.4.b da 2 neni anglatadi?", opts:['Kichik soha','Rivojlanish sohasi raqami','Indikator raqami','Yosh guruhi'], ans:1, exp:"2.1.4.b - 2=2-soha, 1=kichik soha, 4=indikator, b=4-5 yosh." },
+    { q:"Gigiyena konimasi qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:0, exp:"Shaxsiy gigiyena konimasi - 1-soha." },
+    { q:"Hissiy nazorat konimasi qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Hissiy rivojlanish - 2-soha." },
+    { q:"Raqamli savodxonlik asoslari qaysi soha?", opts:['3-soha','4-soha','5-soha','1-soha'], ans:1, exp:"Raqamli savodxonlik - 4-soha." },
+    { q:"Milliy ananalarga qiziqish qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:3, exp:"Milliy ananalarga qiziqish - 5-soha." },
+    { q:"Geometrik shakllarni farqlash qaysi soha?", opts:['3-soha','4-soha','5-soha','2-soha'], ans:1, exp:"Geometrik shakllar - 4-soha." },
+    { q:"Nizolarni tinch hal etish qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Nizolarni hal etish - 2-soha." },
+    { q:"Lugat boyligini kengaytirish qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"Lugat boyligini kengaytirish - 3-soha." },
+    { q:"Kuzatish va tadqiqot qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Kuzatish va tadqiqot - 4-soha." },
+    { q:"Yirik motorika qaysi soha?", opts:['1-soha','2-soha','3-soha','5-soha'], ans:0, exp:"Yirik motorika - 1-soha." }
+  ],
+  metodika: [
+    { q:"Tarbiyachi qollanadigan asosiy talim metodi?", opts:['Faqat namoyish','Tushuntirish, namoyish, amaliyot','Faqat oyin','Faqat kuzatish'], ans:1, exp:"Asosiy metodlar: tushuntirish, namoyish, amaliyot va oyin." },
+    { q:"Didaktik oyin nima?", opts:['Erkin oyin','Talim maqsadiga ega qoidali oyin','Raqobatli oyin','Jismoniy mashq'], ans:1, exp:"Didaktik oyin - talim maqsadiga ega va qoidalari bor oyin." },
+    { q:"MTTda bir kunlik mashgulot necha daqiqa (4-5 yosh)?", opts:['10 daq','15 daq','20-25 daq','40 daq'], ans:2, exp:"4-5 yoshli bolalar uchun mashgulot 20-25 daqiqa." },
+    { q:"Kayfiyat doirasi qanday vosita?", opts:['Oyin turi','Refleksiya va his-tuygu aniqlash','Jismoniy mashq','Matematik topshiriq'], ans:1, exp:"Kayfiyat doirasi - bolalarning kundalik his-tuygusini aniqlash metodikasi." },
+    { q:"Ijodiy tafakkurni rivojlantirishda eng samarali usul?", opts:['Yodlash','Qoida orgatish','Muammoli vaziyat yaratish','Test otkazish'], ans:2, exp:"Muammoli vaziyat bolaning mustaqil fikrlashini ragbatlantiradi." },
+    { q:"Jismoniy daqiqa nimaga xizmat qiladi?", opts:['Vaqtni toldirish','Ovqatlantirishga tayyorlash','Charçoqni kamaytirish','Baholash'], ans:2, exp:"Jismoniy daqiqa bolaning charcoqini kamaytiradi." },
+    { q:"FEMP qisqartmasi nimani anglatadi?", opts:['Fizik va Estetik Mashgulotlar Plani','Faol Erkin Mashgulotlar','Elementar Matematik Tushunchalarni Shakllantirish','Fizik Emosional Mashgulotlar'], ans:2, exp:"FEMP - Elementar Matematik Tushunchalarni Shakllantirish." },
+    { q:"Refleksiya darsning qaysi qismida?", opts:['Boshida','Ortasida','Asosiy qismida','Oxirida'], ans:3, exp:"Refleksiya darsning oxirida - bolalar organganlari haqida fikr yuritadi." },
+    { q:"Induktiv usul nima?", opts:['Umumiydan xususiyga','Xususiydan umumiyga','Savol berish','Namoyish'], ans:1, exp:"Induktiv usul - xususiy misollardan umumiy xulosaga otish." },
+    { q:"MTTda frontal mashgulot nima?", opts:['Bir bola bilan','Kichik guruh','Butun guruh bilan','Mustaqil ishlash'], ans:2, exp:"Frontal mashgulot - tarbiyachi butun guruh bilan ishlaydi." },
+    { q:"Individual yondashuv nima uchun muhim?", opts:['Vaqtni tejash','Har bola oziga xos suratda','Tartibni saqlash','Baholashni osonlashtirish'], ans:1, exp:"Har bir bola oziga xos. Individual yondashuv har bolaning ehtiyojiga mos talim beradi." },
+    { q:"Korgazmali metod nimaga asoslanadi?", opts:['Verbal','Korish orqali organish','Amaliy','Oyinli'], ans:1, exp:"Korgazmali metod - suratlar, modellar korsatish orqali orgatish." },
+    { q:"Loyihaviy talim nima?", opts:['Bolaga vazifa berish','Uzoq muddatli tadqiqot olib borish','Tarbiyachi tushuntirish','Bolani sinash'], ans:1, exp:"Loyihaviy talim - bolalar birgalikda mavzuda uzoq muddatli tadqiqot qiladilar." },
+    { q:"Erkin oyin nima uchun muhim?", opts:['Bolaning mustaqil rivojlanishi','Tarbiyachi dam olishi','Tartibni saqlash','Vaqtni toldirish'], ans:0, exp:"Erkin oyin - mustaqillik, ijodkorlik va ijtimoiy konnikmalarni rivojlantiradi." },
+    { q:"Kuzatish metodiga mos faoliyat?", opts:['FEMP darsi','Tabiat sayr','Musiqa darsi','Jismoniy tarbiya'], ans:1, exp:"Kuzatish metodi tabiat sayrida eng yaxshi qollaniladi." },
+    { q:"Bolani ragbatlantirishda eng samarali usul?", opts:['Moddiy sovga','Jazo','Ogzaki maqtov va tabassum','Etibor bermaslik'], ans:2, exp:"Bolalarni ogzaki maqtash eng kuchli ragbat." },
+    { q:"KN konspekti qanday hujjat?", opts:['Bolalar reytingi','Kunlik dars rejalashtirilgan hujjat','Ota-ona uchun xabar','Rahbar uchun hisobot'], ans:1, exp:"KN Konspekti - tarbiyachining har kunlik darsini rejalashtiradigan pedagogik hujjat." },
+    { q:"Suhbat metodining asosiy maqsadi?", opts:['Bolani baholash','Mavjud bilimlarni faollashtirish','Vaqt otkazish','Tartib saqlash'], ans:1, exp:"Suhbat - bolaning avvalgi bilimlari asosida yangi malumotni muloqot orqali ozlashtirish." },
+    { q:"Darsning kirish qismi necha daqiqa?", opts:['1-2 daq','3-5 daq','10-12 daq','15 daq'], ans:1, exp:"Kirish qismi 3-5 daqiqa - motivatsiya va qiziqish uygotish uchun." },
+    { q:"Integratsiyalashgan dars nima?", opts:['Faqat bitta fanga bagishlangan','Bir nechta sohani birlashgan dars','Faqat oyindan iborat','Kompyuter yordamida'], ans:1, exp:"Integratsiyalashgan dars - bir mavzu asosida bir nechta sohani birgalikda otish." }
+  ],
+  psixolog: [
+    { q:"4-5 yoshli bolaning xotirasi qanday?", opts:['Uzoq muddatli va mustahkam','Korgazmali-hissiy va ixtiyorsiz','Mantiqiy va tizimli','Faqat eshitish orqali'], ans:1, exp:"4-5 yoshda bola korgazmali va hissiy xotiraga ega." },
+    { q:"Bu yoshda diqqat qanday?", opts:['Uzoq ushlab turadi','Ixtiyorsiz, tez chalgiydi','Juda barqaror','Bir joyda uzoq qoladi'], ans:1, exp:"4-5 yoshda diqqat ixtiyorsiz - yorqin narsalarga osongina chalgiydi." },
+    { q:"Bu yoshda fikrlash asosan qanday?", opts:['Abstrakt-mantiqiy','Korgazmali-obrazli','Ogzaki-mantiqiy','Nazariy'], ans:1, exp:"4-5 yoshda bola korgazmali-obrazli fikrlaydi." },
+    { q:"Hissiy rivojlanishda eng muhim omil?", opts:['Oyinlar soni','Xavfsizlik va sevgi hissi','Darslar soni','Raqobat'], ans:1, exp:"Bolaning emosional rivojlanishida xavfsizlik va sevgi hissi asosiy rol oynaydi." },
+    { q:"4-5 yoshda ijtimoiy rivojlanishning asosiy belgisi?", opts:['Yolgiz oynashni afzal koradi','Tengdoshlari bilan oynaydi va hamkorlik qiladi','Kattalarga qoshilmaydi','Faqat bajaradi'], ans:1, exp:"Bu yoshda bola tengdoshlari bilan oynashni boshlaydi." },
+    { q:"Krizis 3 yosh qaysi yoshda kuchayadi?", opts:['2 yoshda','3-4 yoshda','5-6 yoshda','7 yoshda'], ans:1, exp:"Krizis 3 yosh 3-4 yoshda kuchayadi - bola mustaqillikka intiladi." },
+    { q:"Oyinning etakchi faoliyat roli qachon?", opts:['1-2 yoshda','3-7 yoshda','7-10 yoshda','10 yoshdan keyin'], ans:1, exp:"3-7 yosh - bolaning etakchi faoliyati oyin." },
+    { q:"Bola sozni tushunmasligini bildirsa nima qilish kerak?", opts:['Baland ovozda takrorlash','Oddiyroq soz va korgazma','Etibor bermaslik','Uni qoyib yuborish'], ans:1, exp:"Oddiy til va korgazmali materialdan foydalanish tavsiya etiladi." },
+    { q:"Zona yaqin rivojlanish kim tomonidan kiritilgan?", opts:['Piaje','Freyd','Vigotskiy','Montessori'], ans:2, exp:"Zona yaqin rivojlanish konsepsiyasi L.S.Vigotskiy tomonidan kiritilgan." },
+    { q:"4-5 yoshda bolaning lugat boyligi taxminan?", opts:['200-400','800-1500','2000-3000','5000+'], ans:1, exp:"4-5 yoshda bolaning faol lugati taxminan 800-1500 soz." },
+    { q:"Bola yolgon gapirmasa ham notogri aytsa bu nima?", opts:['Yolgonchilik','Tasavvur va fantaziya','Xotira muammosi','Rivojlanish kechikishi'], ans:1, exp:"Bu yoshda bolalar fantaziya va haqiqatni aralashtirib yuborishi normal." },
+    { q:"Bola tengdoshi bilan mushtlashsa birinchi qadam?", opts:['Jazolamoq','Hissiyotlarini nom bilan atash','Etibor bermaslik','Ota-onasiga xabar'], ans:1, exp:"Bolaning hissiyotini nom bilan atash birinchi qadam." },
+    { q:"Egosentrizm 4-5 yoshda nima?", opts:['Bola ozini juda sevadi','Bola faqat oz nuqtai nazaridan fikrlaydi','Bola boshqalarni xafa qiladi','Bola ozi haqida gapirmaydi'], ans:1, exp:"Piaje boyicha egosentrizm - bola faqat oz nuqtai nazaridan fikrlaydi." },
+    { q:"4-5 yoshda qorquv qayerdan?", opts:['Faqat tashqi tasirdan','Tasavvur rivojlanishi bilan boglik','Faqat ota-onadan','Genetik'], ans:1, exp:"Tasavvur rivojlanishi bilan xayoliy qorquvlar paydo boladi." },
+    { q:"Temperament tugma ekanini kim isbotladi?", opts:['Piaje','Vigotskiy','Tomas va Chess','Freyd'], ans:2, exp:"Tomas va Chessning tadqiqoti bolaning temperamenti tugma ekanini korsatdi." },
+    { q:"Bolalarda oz-ozini baholash qachon shakllanadi?", opts:['1-2 yoshda','3-5 yoshda','6-7 yoshda','Maktab yoshida'], ans:1, exp:"Oz-ozini baholash 3-5 yoshda kattalar munosabati asosida shakllanadi." },
+    { q:"Rolli oyin qaysi rivojlanishga yordam beradi?", opts:['Faqat jismoniy','Ijtimoiy, hissiy va kognitiv','Faqat nutq','Faqat matematik'], ans:1, exp:"Rolli oyin ijtimoiy rollarni organish va hissiyotni tartibga solishga yordam beradi." },
+    { q:"Bola qorqsa tarbiyachi nima qilishi kerak?", opts:['Hissiyotlarini inkor etish','Jazolamoq','Tinchlantirish va xavfsizlik berish','Etibor bermaslik'], ans:2, exp:"Bolaning xavotirini tasdiqlash va xavfsizlikni taminlash eng togri yondashuv." },
+    { q:"Bola kattalar oldida yiglashdan uyalsa bu nima?", opts:['Muammo','Ijtimoiy-hissiy kamolot belgisi','Kasallik','Rivojlanish kechikishi'], ans:1, exp:"Bu bola ijtimoiy normalarni organayotganligining belgisi." },
+    { q:"4-5 yoshda bola qancha vaqt diqqatini ushlab tura oladi?", opts:['2-3 daqiqa','5-10 daqiqa','20-30 daqiqa','1 soat'], ans:1, exp:"4-5 yoshda bola 5-10 daqiqa diqqatini bir joyga ushlab tura oladi." }
+  ],
+  qonun: [
+    { q:"Ozbekistonda maktabgacha talimni tartibga soluvchi qonun?", opts:['Talim togrisida Qonun','Maktabgacha talim qonuni','Oila kodeksi','Bolalar huquqlari'], ans:0, exp:"Talim togrisida Qonun maktabgacha talimni tartibga soladi." },
+    { q:"MTTda bir guruhda necha bola?", opts:['10 ta','15 ta','20 ta','25 ta'], ans:2, exp:"Sanitariya meyorlariga kora bir guruhda 20 tagacha bola." },
+    { q:"Litsenziyalash nima uchun kerak?", opts:['Soliq tolash','Qonuniy faoliyat huquqi','Ota-onalardan tolov','Bino qurish'], ans:1, exp:"Litsenziya MTTning qonuniy faoliyat huquqini tasdiqlovchi hujjat." },
+    { q:"BMT Bola huquqlari konvensiyasi nechanchi yil?", opts:['1979','1989','1999','2009'], ans:1, exp:"BMT Bola huquqlari konvensiyasi 1989 yilda qabul qilingan." },
+    { q:"DTS qisqartmasi?", opts:['Davlat Talim Standarti','Dars Talim Strategiyasi','Didaktik Talim Sifati','Davlat Tarbiya Standarti'], ans:0, exp:"DTS - Davlat Talim Standarti." },
+    { q:"MTT tarbiyachisi uchun minimal talim?", opts:['Orta talim','Orta maxsus (pedagogika kollej)','Oliy talim','Kurs sertifikati'], ans:1, exp:"Tarbiyachi uchun minimal talab - pedagogika kollej." },
+    { q:"Attestatsiya maqsadi?", opts:['Soliq tolash','Kasbiy malakani baholash','Bino tekshirish','Ota-onalarni xabardor qilish'], ans:1, exp:"Attestatsiya - tarbiyachining kasbiy bilim va malakasini baholash." },
+    { q:"Tarbiyachi necha yilda bir attestatsiya?", opts:['Har yil','Har 3 yilda','Har 5 yilda','Faqat soralganda'], ans:2, exp:"Ozbekistonda tarbiyachilar har 5 yilda bir attestatsiyadan otadilar." },
+    { q:"Bolalarni jismoniy jazolaydigan tarbiyachi?", opts:['Ogohlantiriladi','Jarima tolaydi','Jinoyat yoki maburiy javobgarlik','Faqat kuzatuv'], ans:2, exp:"Jismoniy jazo - maburiy yoki jinoiy javobgarlik va ishdan ozod etish." },
+    { q:"MTTda mehnat xavfsizligi uchun kim javobgar?", opts:['Tarbiyachi','Ota-onalar','Muassasa rahbari','Viloyat bolimi'], ans:2, exp:"Mehnat xavfsizligi uchun muassasa rahbari (direktori) javobgar." },
+    { q:"Bolaning shaxsiy malumotlarini oshkor qilish?", opts:['Ha, har doim','Yoq, rozilik bolmasdan mumkin emas','Faqat ota-onaga','Har qanday holatda'], ans:1, exp:"Ota-onaning roziligisiz malumot oshkor etib bolmaydi." },
+    { q:"MTT direktori uchun asosiy talab?", opts:['Faqat tajriba','Oliy pedagogika va boshqaruv tajribasi','Faqat moliya bilimlari','Davlat xizmatida ishlash'], ans:1, exp:"Direktor uchun oliy pedagogika va boshqaruv tajribasi talab etiladi." },
+    { q:"Ekstremal vaziyatlarda birinchi harakat?", opts:['Avval ota-onalarga','Avval direktorgа','101/102/103 ga, keyin rahbariyatga','Avval viloyat bolimiga'], ans:2, exp:"Ekstremal holatda birinchi 101/102/103 ga murojaat, keyin rahbariyatga." },
+    { q:"MTT tolovlari qanday belgilanadi?", opts:['Tarbiyachi belgilaydi','Viloyat bolimi','Qonun va hukumat qarorlari','Ota-onalar kengashi'], ans:2, exp:"MTT tolovlari qonun va hukumat qarorlari asosida belgilanadi." },
+    { q:"Bola MTTda shikastlansa kim javobgar?", opts:['Faqat bola','Faqat ota-ona','MTT muassasasi','Faqat sugurta'], ans:2, exp:"MTT muassasasi bolaning xavfsizligi uchun masul." },
+    { q:"Malaka oshirish kurslarining minimal davomiyligi?", opts:['10 soat','36 soat','72 soat','144 soat'], ans:2, exp:"Malaka oshirish kurslari kamida 72 akademik soat." },
+    { q:"Ichki tartib-intizom qoidalari kim tasdiqlaydi?", opts:['Viloyat bolimi','Muassasa kengashi va direktori','Faqat tarbiyachilar','Ota-onalar kengashi'], ans:1, exp:"Ichki tartib-intizom qoidalari muassasa kengashi va direktori tomonidan tasdiqlanadi." },
+    { q:"Bola MTTga qabul hujjatlari?", opts:['Faqat pasport','Tugilganlik, tibbiy hujjatlar, ariza','Faqat ariza','Faqat tibbiy'], ans:1, exp:"MTTga qabul: tugilganlik guvohnomasi, tibbiy malumot, ariza." },
+    { q:"Inklyuziv talim qonuniy asosi?", opts:['Nogironlar huquqlari togrisida qonun','Faqat MMV buyrugi','Faqat bolalar konvensiyasi','Mahalliy tartib-qoida'], ans:0, exp:"Nogironlar huquqlari togrisida qonun inklyuziv talimni taminlaydi." },
+    { q:"MTT tarbiyachisining mehnat shartnomasi?", opts:['1 yil','3 yil','Muddatsiz yoki muddatli','5 yil'], ans:2, exp:"Mehnat Kodeksiga kora shartnoma muddatsiz yoki belgilangan muddatga tuzilishi mumkin." }
+  ],
+  sanitar: [
+    { q:"MTTda bolalar ovqatlanish necha marta?", opts:['2 marta','3 marta','4 marta','5 marta'], ans:1, exp:"MTTda bolalar odatda 3 marta ovqatlanadi." },
+    { q:"Bir bola uchun minimal xona maydoni?", opts:['1 m2','2 m2','4 m2','6 m2'], ans:2, exp:"Sanitariya meyorlariga kora bir bola uchun kamida 4 m2." },
+    { q:"Qol yuvish nechta qadam?", opts:['3 qadam','5 qadam','6 qadam','8 qadam'], ans:1, exp:"DSM boyicha qol yuvish 5 bosqichli." },
+    { q:"Bolalar uchun maqbul xona harorati?", opts:['16-18 daraja','20-22 daraja','25-27 daraja','28-30 daraja'], ans:1, exp:"Guruh xonasida optimal harorat 20-22 daraja." },
+    { q:"Xonalar qancha vaqtda shamollatiladi?", opts:['Aytilmagan','Har 2 soatda bir marta','Shamollatish mumkin emas','Faqat yozda'], ans:1, exp:"Xonalar har 2 soatda (bolalar yogligida) shamollatilishi kerak." },
+    { q:"Ovqat saqlash harorati?", opts:['0 daraja','2-6 daraja (sovutgich)','10-15 daraja','Xona haroratida'], ans:1, exp:"Tez buziladigan mahsulotlar 2-6 darajada saqlanishi kerak." },
+    { q:"Bolalar uchun ichimlik suvi?", opts:['Xona haroratida ariq suvi','Qaynagan yoki tozalangan suv','Faqat filtr kerak','Biron talabi yoq'], ans:1, exp:"Bolalarga faqat qaynagan yoki tozalangan ichimlik suvi berilishi kerak." },
+    { q:"Yangi va eski ovqatlarni aralashtirish?", opts:['Ha, agar toza bolsa','Faqat sutli taomlar','Yoq, mumkin emas','Faqat kichik miqdorda'], ans:2, exp:"Yangi va otgan ovqatlarni aralashtirish mutlaqo taqiqlangan." },
+    { q:"MTTda pedikulos topilsa birinchi harakat?", opts:['Bolani uyga yuboring','Ota-onaga va tibbiy xodimga xabar','Bolani ozingiz davolang','Dorilar bilan guruhi davolang'], ans:1, exp:"Pedikulos aniqlanganda ota-onaga va tibbiy xodimga xabar berish kerak." },
+    { q:"Qolqop ishlatish qachon majburiy?", opts:['Hech qachon','Faqat oshxonada','Infeksiya xavfi bolganda','Har doim'], ans:2, exp:"Qolqop infeksiya xavfi bolganda majburiy." },
+    { q:"Yuqumli kasalik aniqlangan bola guruhga?", opts:['Ha, yengilroq bolsa','Faqat mask bilan','Yoq, sogom bolmaguncha','Faqat antibiotik ichsa'], ans:2, exp:"Yuqumli kasalik aniqlanganida bola tolik sogayib, tibbiy malumot olguncha MTTga qabul qilinmaydi." },
+    { q:"Xona havo namligi qanday bolishi kerak?", opts:['20-30%','40-60%','70-80%','90%+'], ans:1, exp:"Optimal havo namligi 40-60%." },
+    { q:"Dezinfeksiya eritmasi tayyorlash kim vazifasi?", opts:['Tarbiyachi','Texnik xodim yoki hamshira','Ota-onalar','Bolalar'], ans:1, exp:"Dezinfeksiya eritmalarini tayyorlash texnik xodim yoki tibbiy xodim vazifalari." },
+    { q:"Ovqat taqsimotida idishlar qanday bolishi kerak?", opts:['Istalgan holatda','Tozalangan, ammo sterillanmagan','Belgilangan, dezinfeksiya qilingan','Birgalikda'], ans:2, exp:"Alohida belgilangan, tozalangan va dezinfeksiya qilingan idishlar ishlatilishi kerak." },
+    { q:"Bola dorisi kim tomonidan beriladi?", opts:['Tarbiyachi ozi beradi','Faqat ota-onalar','Tibbiy xodim ota-ona yozma topshirigi bilan','Bolaning ozi'], ans:2, exp:"Dori faqat tibbiy xodim va ota-onaning yozma talabnomasi asosida beriladi." },
+    { q:"Oyin xonasiga qanday kiriladi?", opts:['Ha, har doim oyoq kiyimda','Faqat uy shippagi bilan','Faqat yozda','Tarbiyachi qaroriga boglik'], ans:1, exp:"Oyin xonalariga faqat uy shippagi bilan kiriladi." },
+    { q:"Choyshab qachon almashtiriladi?", opts:['Har kuni','Har hafta','Har 10 kunda','Har oy'], ans:1, exp:"Bolalar choyshabi kamida haftada bir marta almashtiriladi." },
+    { q:"MTT hududida tutun chekish?", opts:['Atrofdan uzoqda ruxsat','Taqiqlangan (mutlaqo)','Faqat kechasi','Bolalar yogligida'], ans:1, exp:"MTT hududida tutun chekish mutlaqo taqiqlangan." },
+    { q:"Ovqat yetkazishda nima ishlatiladi?", opts:['Ochiq idish','Yopiq termo-konteyner','Istalgan idish','Bolalar olib keladi'], ans:1, exp:"Ovqat yopiq termo-konteynerda yetkaziladi." },
+    { q:"Bola MTTga kelganda birinchi tibbiy tekshiruv?", opts:['Xona harorati olish','Teri va koz tekshiruvi','Qon tahlili','Bino tekshiruvi'], ans:1, exp:"Bola MTTga kelganda hamshira tomonidan teri va koz tekshiruvi otkaziladi." }
+  ]
+}
+
+var testState = {}
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+
+  if (!isPro()) {
+    const limit = await checkTestLimit()
+    if (!limit.allowed) {
+      document.getElementById('limit-box').style.display = 'block'
+      document.getElementById('limit-text').textContent =
+        `Bu oy ${limit.count}/${limit.limit} test ishlandi`
+    }
+  }
+
+  renderTestGrid()
+})
+
+async function renderTestGrid() {
+  let bestScores = {}
+  const { data: tests } = await _sb
+    .from('test_results')
+    .select('category, percentage')
+    .eq('user_id', _currentUser.id)
+
+  if (tests) {
+    tests.forEach(t => {
+      if (!bestScores[t.category] || t.percentage > bestScores[t.category]) {
+        bestScores[t.category] = t.percentage
+      }
+    })
+  }
+
+  document.getElementById('test-grid').innerHTML = TEST_CATS.map(c => {
+    const best = bestScores[c.id]
+    const stars = best === undefined ? "Hali ishlanmagan"
+      : best >= 90 ? "A'lo (3 yulduz)"
+      : best >= 70 ? "Yaxshi (2 yulduz)"
+      : best >= 50 ? "Qoniqarli (1 yulduz)"
+      : "Qayta ishlang"
+    const bar = best !== undefined
+      ? `<div class="pbar" style="margin-top:8px"><div class="pfill" style="width:${best}%"></div></div>`
+      : ''
+    return `<div class="tc-card" onclick="startTest('${c.id}','${c.title}')">
+      <div class="tc-count">${QUESTIONS[c.id].length} savol</div>
+      <div class="tc-icon">${c.icon}</div>
+      <h3>${c.title}</h3>
+      <p>${c.desc}</p>
+      ${bar}
+      <div style="margin-top:6px;font-size:.8rem;color:var(--mu)">
+        ${stars}${best !== undefined ? ' (' + best + '%)' : ''}
+      </div>
+    </div>`
+  }).join('')
+}
+
+async function startTest(catId, catTitle) {
+  if (!isPro()) {
+    const limit = await checkTestLimit()
+    if (!limit.allowed) {
+      showToast('Oylik test limitiga yetdingiz! Premium oling.', 'err')
+      return
+    }
+  }
+
+  const qs = QUESTIONS[catId].slice().sort(() => Math.random() - 0.5)
+  testState = { catId, catTitle, qs, cur: 0, answers: [], answered: false }
+  document.getElementById('test-modal-title').textContent = catTitle
+  document.getElementById('test-modal').classList.add('show')
+  renderQ()
+}
+
+function closeTest() {
+  document.getElementById('test-modal').classList.remove('show')
+}
+
+function renderQ() {
+  const s = testState
+  if (s.cur >= s.qs.length) { showResult(); return }
+  const q = s.qs[s.cur]
+  const pct = Math.round((s.cur / s.qs.length) * 100)
+  const optsHtml = q.opts.map((o, i) =>
+    `<button class="topt" id="opt-${i}" onclick="selectOpt(${i})">${o}</button>`
+  ).join('')
+
+  document.getElementById('test-body').innerHTML = `
+    <div style="font-size:.78rem;color:var(--mu);margin-bottom:5px">${s.cur+1} / ${s.qs.length} savol</div>
+    <div class="tpbar"><div class="tpfill" style="width:${pct}%"></div></div>
+    <div class="tq">${q.q}</div>
+    <div class="topts">${optsHtml}</div>
+    <div class="texpl" id="texpl"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:space-between;align-items:center">
+      <span style="font-size:.8rem;color:var(--mu)">${s.answers.filter(Boolean).length} togri</span>
+      <button class="btn-primary" style="width:auto;padding:10px 20px" id="tnext" onclick="nextQ()" disabled>Keyingi</button>
+    </div>
+  `
+}
+
+function selectOpt(i) {
+  if (testState.answered) return
+  testState.answered = true
+  const q = testState.qs[testState.cur]
+  const correct = i === q.ans
+  testState.answers.push(correct)
+
+  document.querySelectorAll('.topt').forEach((b, idx) => {
+    b.classList.add('disabled')
+    if (idx === q.ans) b.classList.add('correct')
+    else if (idx === i) b.classList.add('wrong')
+  })
+
+  const exp = document.getElementById('texpl')
+  exp.textContent = (correct ? 'Togri! ' : 'Notogri. ') + q.exp
+  exp.className = 'texpl show' + (correct ? '' : ' werr')
+  document.getElementById('tnext').disabled = false
+}
+
+function nextQ() {
+  testState.cur++
+  testState.answered = false
+  renderQ()
+}
+
+async function showResult() {
+  const s = testState
+  const correct = s.answers.filter(Boolean).length
+  const pct = Math.round((correct / s.qs.length) * 100)
+  const xpEarned = correct * 5
+
+  let grade, gradeColor, stars, advice
+  if (pct >= 90) { grade='ALO'; gradeColor='rc-gold'; stars="Mukammal!"; advice="Ajoyib! Bu mavzuni yaxshi bilasiz." }
+  else if (pct >= 70) { grade='YAXSHI'; gradeColor='rc-green'; stars="Yaxshi!"; advice="Yaxshi natija." }
+  else if (pct >= 50) { grade='QONIQARLI'; gradeColor='rc-blue'; stars="Qoniqarli"; advice="Mavzuni chuqurroq organish kerak." }
+  else { grade='PAST'; gradeColor='rc-red'; stars="Qayta ishlang"; advice="Mavzuni qayta oqib, testni takrorlang." }
+
+  // DB ga saqlash
+  await _sb.from('test_results').insert({
+    user_id: _currentUser.id,
+    category: s.catTitle,
+    score: correct,
+    total: s.qs.length,
+    percentage: pct,
+    xp_earned: xpEarned
+  })
+
+  await addXP(xpEarned)
+
+  document.getElementById('test-body').innerHTML = `
+    <div style="text-align:center;padding:20px 10px">
+      <div class="res-circle ${gradeColor}">${pct}%<div style="font-size:.5rem;margin-top:2px">${grade}</div></div>
+      <div style="font-size:1.4rem;font-weight:800;margin-bottom:6px">${stars}</div>
+      <div style="font-size:.85rem;color:var(--mu);margin-bottom:18px">${advice}</div>
+      <div class="res-bd">
+        <div class="rb-row"><span>Togri javoblar</span><b style="color:#22c55e">${correct} ta</b></div>
+        <div class="rb-row"><span>Notogri javoblar</span><b style="color:#ef4444">${s.qs.length-correct} ta</b></div>
+        <div class="rb-row"><span>Jami savollar</span><b>${s.qs.length} ta</b></div>
+        <div class="rb-row"><span>XP qoshildi</span><b style="color:var(--go)">+${xpEarned} XP</b></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" style="width:auto;padding:10px 20px" onclick="startTest('${s.catId}','${s.catTitle}')">Qayta ishlash</button>
+        <button class="btn-secondary" onclick="closeTest()">Yopish</button>
+      </div>
+    </div>
+  `
+  renderTestGrid()
+}
+</script>
+
+</body>
+</html>
