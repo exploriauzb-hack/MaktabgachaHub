@@ -81,7 +81,6 @@
 
   <div class="sec-title">📝 Kundalik Mashg'ulot Konspekti</div>
   <div class="info-box">
-    Konspektlar <b>Ilk Qadam</b> dasturi (3-nashr, 2026) asosida tuzilgan.
     <span id="access-note"></span>
   </div>
 
@@ -158,7 +157,6 @@ window.addEventListener('load', async () => {
       `Bepul rejada <b>${FREE_LIMIT} ta</b> konspekt ko'rishingiz mumkin.`
   }
 
-  // Hafta filter to'ldirish
   const weeks = [...new Set(knData.map(k => k.hafta))].sort((a,b) => a-b)
   const sel = document.getElementById('kn-hafta')
   weeks.forEach(h => {
@@ -208,7 +206,6 @@ function renderKn(list) {
 
   window._knVisible = visibleList
 
-  // Lock section
   if (lockedCount > 0) {
     document.getElementById('lock-section').style.display = 'block'
     document.getElementById('lock-section').innerHTML = `
@@ -260,7 +257,7 @@ function printKn(i) {
     <style>body{font-family:sans-serif;padding:24px;max-width:700px;margin:auto}
     h2{color:#6c47ff}h4{border-bottom:1px solid #eee;padding-bottom:4px;margin-top:14px}li{margin:4px 0}</style>
     </head><body>
-    <h2>KN Konspekt - MaktabgachaHub | Ilk Qadam 2026</h2>
+    <h2>KN Konspekt — MaktabgachaHub</h2>
     <p>Hafta: ${k.hafta} | Kun: ${k.kun} | Soha: ${k.soha}</p>
     <p>Indikator: ${k.kod}</p>
     <h4>Mavzu</h4><p>${k.mavzu}</p>
