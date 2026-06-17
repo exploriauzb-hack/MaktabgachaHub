@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MaktabgachaHub — Kunlik jadval</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .day-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+    .day-tab {
+      background: #e8e4ff; border: none; border-radius: 12px;
+      padding: 8px 16px; cursor: pointer; font-size: .85rem;
+      color: var(--p); font-weight: 600; transition: all .2s;
+    }
+    .day-tab:hover { background: #d8d0ff; }
+    .day-tab.active { background: var(--p); color: #fff; }
+
+    .sched-list { display: flex; flex-direction: column; gap: 8px; }
+    .sched-item {
+      background: #fff; border-radius: 12px; padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      transition: transform .15s;
+    }
+    .sched-item:hover { transform: translateX(4px); }
+    .time-b {
+      background: linear-gradient(135deg, var(--p), var(--p2));
+      color: #fff; border-radius: 10px; padding: 5px 10px;
+      font-size: .72rem; font-weight: 700; white-space: nowrap;
+      min-width: 92px; text-align: center;
+    }
+    .sched-icon { font-size: 1.3rem; }
+    .sched-name { font-size: .87rem; font-weight: 600; }
+    .sched-desc { font-size: .76rem; color: var(--mu); margin-top: 2px; }
+
+    .day-summary {
+      display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
+    }
+    .summary-chip {
+      background: #fff; border-radius: 10px; padding: 8px 14px;
+      font-size: .78rem; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      display: flex; align-items: center; gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="sec-title">📅 Kunlik Jadval — 4-5 yosh</div>
+  <div class="info-box">
+    Jadval <b>Ilk Qadam 3-nashr (2026)</b> dasturi asosida tuzilgan.
+    Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan.
+  </div>
+
+  <div class="day-tabs" id="day-tabs">
+    <button class="day-tab active" data-day="dush">Dushanba</button>
+    <button class="day-tab" data-day="sesh">Seshanba</button>
+    <button class="day-tab" data-day="chor">Chorshanba</button>
+    <button class="day-tab" data-day="pay">Payshanba</button>
+    <button class="day-tab" data-day="juma">Juma</button>
+  </div>
+
+  <div class="day-summary" id="day-summary"></div>
+
+  <div id="day-content" class="sched-list"></div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+
+var dailyData = {
+  dush: [
+    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Salomlashish, Kayfiyat doirasi' },
+    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Jismoniy mashqlar (1-soha)' },
+    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqil ovqatlanish' },
+    { time:'09:00-09:25', icon:'💬', name:'1-mashg\'ulot: Nutq ostirish', desc:"Mening oilam - suhbat (3-soha)" },
+    { time:'09:35-10:00', icon:'🎨', name:"2-mashg'ulot: Tasviriy sanat", desc:'Oila rasmini chizish (5-soha)' },
+    { time:'10:05-10:30', icon:'🚶', name:'Ertalabki sayr',          desc:'Tabiat kuzatuvi (1-soha)' },
+    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
+    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
+    { time:'15:30-16:00', icon:'🎮', name:'Didaktik o\'yin',          desc:'Kim yashaydi (4-soha)' },
+    { time:'16:00-16:30', icon:'🎵', name:"Qo'shiq va raqs",         desc:'Mavzuga mos (5-soha)' },
+  ],
+  sesh: [
+    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Kayfiyat aniqlash' },
+    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Harakatli mashqlar' },
+    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqil ovqatlanish' },
+    { time:'09:00-09:25', icon:'🔢', name:"1-mashg'ulot: FEMP",      desc:'Sonlar 1 dan 5 gacha (4-soha)' },
+    { time:'09:35-10:00', icon:'🎵', name:"2-mashg'ulot: Musiqa",    desc:'Qo\'shiq, ritm, raqs (5-soha)' },
+    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Tabiat kuzatuvi' },
+    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
+    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
+    { time:'15:30-16:00', icon:'🧩', name:'Qurilish o\'yini',         desc:'Kubiklar, konstruktor (4-soha)' },
+    { time:'16:00-16:30', icon:'📚', name:'Kitob o\'qish',           desc:'Ertak tinglash' },
+  ],
+  chor: [
+    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Kayfiyat aniqlash' },
+    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Musiqa bilan' },
+    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Ovqat madaniyati' },
+    { time:'09:00-09:25', icon:'🌿', name:'1-mashg\'ulot: Tabiat',   desc:'Kuz fasli, o\'simliklar (4-soha)' },
+    { time:'09:35-10:00', icon:'✂️', name:"2-mashg'ulot: Applikatsiya", desc:'Kuz bargi (1+5-soha)' },
+    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Barg yig\'ish, tabiat' },
+    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Mustaqillik' },
+    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
+    { time:'15:30-16:00', icon:'🎭', name:'Rolli o\'yin',            desc:'Do\'kon o\'yini (2-soha)' },
+    { time:'16:00-16:30', icon:'🖍️', name:'Erkin ijod',              desc:'Chizish, plastilin (5-soha)' },
+  ],
+  pay: [
+    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Salomlashish' },
+    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Sport mashqlari' },
+    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqillik' },
+    { time:'09:00-09:25', icon:'🏃', name:"1-mashg'ulot: Jismoniy tarbiya", desc:'Harakat, koordinatsiya (1-soha)' },
+    { time:'09:35-10:00', icon:'📖', name:"2-mashg'ulot: Savodxonlik", desc:'Tovush, harf, bo\'g\'im (3-soha)' },
+    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Harakatli o\'yinlar' },
+    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
+    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
+    { time:'15:30-16:00', icon:'🎨', name:'Tasviriy sanat',          desc:'Plastilin (5-soha)' },
+    { time:'16:00-16:30', icon:'🎲', name:'Didaktik o\'yin',         desc:'Mantiqiy o\'yin (4-soha)' },
+  ],
+  juma: [
+    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Hafta yakunini eslash' },
+    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Qiziqarli mashqlar' },
+    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Ovqatlanish' },
+    { time:'09:00-09:25', icon:'🎭', name:"1-mashg'ulot: Teatr faoliyati", desc:'Ertak sahnalashtirish (2+5-soha)' },
+    { time:'09:35-10:00', icon:'🎵', name:"2-mashg'ulot: Musiqa",    desc:'Qo\'shiq va raqs (5-soha)' },
+    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Erkin o\'yinlar' },
+    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
+    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
+    { time:'15:30-16:30', icon:'🎉', name:'Haftalik refleksiya',     desc:'Biz nimani o\'rgandik' },
+  ]
+}
+
+var dayNames = { dush:'Dushanba', sesh:'Seshanba', chor:'Chorshanba', pay:'Payshanba', juma:'Juma' }
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true)
+  if (!auth) return
+  fillNav()
+  showDay('dush')
+
+  document.querySelectorAll('.day-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'))
+      btn.classList.add('active')
+      showDay(btn.dataset.day)
+    })
+  })
+})
+
+function showDay(day) {
+  const items = dailyData[day]
+
+  // Summary chips
+  const mashgulotCount = items.filter(i => i.name.includes('mashg\'ulot')).length
+  document.getElementById('day-summary').innerHTML = `
+    <div class="summary-chip">📌 <b>${dayNames[day]}</b></div>
+    <div class="summary-chip">⏰ ${items[0].time.split('-')[0]} — ${items[items.length-1].time.split('-')[1]}</div>
+    <div class="summary-chip">📝 ${mashgulotCount} ta mashg'ulot</div>
+    <div class="summary-chip">🎯 ${items.length} ta faoliyat</div>
+  `
+
+  document.getElementById('day-content').innerHTML = items.map(i => `
+    <div class="sched-item">
+      <div class="time-b">${i.time}</div>
+      <div class="sched-icon">${i.icon}</div>
+      <div>
+        <div class="sched-name">${i.name}</div>
+        <div class="sched-desc">${i.desc}</div>
+      </div>
+    </div>
+  `).join('')
+}
+</script>
+
+</body>
+</html>
