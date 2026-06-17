@@ -3,100 +3,17 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Portfolio — MaktabgachaHub</title>
-<!-- MUHIM: bu fayl pages/ papkasida turgani uchun css/js yo'llari "../" bilan boshlanadi -->
-<link rel="stylesheet" href="../css/style.css">
-<style>
-  /* Faqat portfolio sahifasiga xos qo'shimcha uslublar (umumiy style.css'da yo'q komponentlar) */
-  .container{max-width:860px;margin:0 auto;padding:24px 16px 60px}
-
-  .profile-card{background:#fff;border-radius:20px;padding:28px;margin-bottom:20px;box-shadow:0 2px 12px rgba(108,71,255,.08);display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
-  .avatar-wrap{position:relative;flex-shrink:0}
-  .avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#7c6fe0,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;overflow:hidden;border:3px solid #e8e4f8}
-  .avatar img{width:100%;height:100%;object-fit:cover}
-  .avatar-edit{position:absolute;bottom:2px;right:2px;background:#6c47ff;color:#fff;border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-  .profile-info{flex:1;min-width:220px}
-  .profile-name{font-size:22px;font-weight:700;color:#2d2d2d;margin-bottom:4px}
-  .profile-role{font-size:14px;color:#6c47ff;font-weight:600;margin-bottom:12px}
-  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-  .badge{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600}
-  .badge-toifa{background:#fef3c7;color:#d97706}
-  .badge-staj{background:#e0f2fe;color:#0369a1}
-  .badge-malumot{background:#dcfce7;color:#16a34a}
-  .edit-btn{background:#6c47ff;color:#fff;border:none;padding:9px 22px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
-  .edit-btn:hover{background:#5a38e0}
-  .save-btn{background:#16a34a;color:#fff;border:none;padding:9px 22px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;display:none;transition:.2s}
-  .save-btn:hover{background:#15803d}
-  .btn-row{display:flex;gap:10px}
-
-  .section{background:#fff;border-radius:20px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(108,71,255,.08)}
-  .section-title{font-size:15px;font-weight:700;color:#6c47ff;margin-bottom:18px;display:flex;align-items:center;gap:8px}
-
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .form-group{display:flex;flex-direction:column;gap:5px}
-  .form-group.full{grid-column:1/-1}
-  .form-group label{font-size:12px;font-weight:600;color:#666}
-  .form-val{font-size:14px;color:#2d2d2d;padding:9px 0;border-bottom:1px solid transparent;min-height:36px}
-  .section input,.section select,.section textarea{border:1.5px solid #e8e4f8;border-radius:10px;padding:9px 12px;font-size:14px;font-family:inherit;color:#2d2d2d;background:#f8f7ff;outline:none;transition:.2s;display:none}
-  .section input:focus,.section select:focus,.section textarea:focus{border-color:#6c47ff;background:#fff}
-  .section textarea{resize:vertical;min-height:80px}
-
-  .loc-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-
-  .skills-wrap{display:flex;flex-wrap:wrap;gap:8px}
-  .skill-tag{background:#f0eef9;color:#6c47ff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
-  .skill-del{background:none;border:none;color:#a78bfa;cursor:pointer;font-size:15px;display:none;line-height:1}
-  .skill-add-row{display:none;gap:8px;margin-top:12px}
-  .skill-input{flex:1;border:1.5px solid #e8e4f8;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;background:#f8f7ff;outline:none}
-  .skill-input:focus{border-color:#6c47ff}
-  .skill-add-btn{background:#6c47ff;color:#fff;border:none;padding:8px 16px;border-radius:10px;font-size:13px;cursor:pointer}
-
-  .yutuq-list{display:flex;flex-direction:column;gap:10px}
-  .yutuq-item{background:#f8f7ff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px}
-  .yutuq-icon{font-size:22px}
-  .yutuq-text{flex:1}
-  .yutuq-name{font-size:14px;font-weight:600}
-  .yutuq-year{font-size:12px;color:#888}
-  .yutuq-del{background:none;border:none;color:#f87171;cursor:pointer;font-size:18px;display:none}
-  .yutuq-add-row{display:none;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .yutuq-add-row input{display:flex;flex:1;min-width:140px;border:1.5px solid #e8e4f8;border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;background:#f8f7ff;outline:none}
-  .yutuq-add-row input:focus{border-color:#6c47ff}
-  .add-yutuq-btn{background:#f0eef9;color:#6c47ff;border:none;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;display:none}
-
-  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .stat-card-mini{background:#f8f7ff;border-radius:14px;padding:16px;text-align:center}
-  .stat-card-mini .stat-num{font-size:26px;font-weight:800;color:#6c47ff}
-  .stat-card-mini .stat-label{font-size:11px;color:#888;margin-top:2px}
-
-  .prog-item{margin-bottom:14px}
-  .prog-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px}
-  .prog-bar{background:#e8e4f8;border-radius:10px;height:8px;overflow:hidden}
-  .prog-fill{height:100%;background:linear-gradient(90deg,#6c47ff,#9b7cff);border-radius:10px;transition:width .6s}
-
-  .reyting-card{background:linear-gradient(135deg,#6c47ff,#9b7cff);border-radius:20px;padding:22px;color:#fff;display:flex;align-items:center;gap:20px;margin-bottom:16px}
-  .reyting-score{font-size:52px;font-weight:800;line-height:1}
-  .reyting-info h3{font-size:16px;font-weight:700;margin-bottom:4px}
-  .reyting-info p{font-size:13px;opacity:.85}
-  .reyting-rank{margin-left:auto;background:rgba(255,255,255,.2);border-radius:14px;padding:12px 18px;text-align:center}
-  .reyting-rank .num{font-size:28px;font-weight:800}
-  .reyting-rank .lbl{font-size:11px;opacity:.85}
-
-  @media(max-width:600px){
-    .form-grid,.loc-row,.stats-row{grid-template-columns:1fr}
-    .form-group.full{grid-column:1}
-    .reyting-card{flex-wrap:wrap}
-  }
-</style>
+<title>MaktabgachaHub — Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAV — dashboard.html bilan AYNAN bir xil tuzilish, faqat yo'llar "../" bilan -->
 <nav class="nav">
-  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <a href="dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
   <div class="nav-links">
-    <a href="../dashboard.html" class="nav-btn">🏠 Bosh sahifa</a>
-    <a href="../premium.html" class="nav-btn">⭐ Premium</a>
-    <a href="portfolio.html" class="nav-btn active">👤 Portfolio</a>
+    <a href="dashboard.html" class="nav-btn active">🏠 Bosh sahifa</a>
+    <a href="premium.html" class="nav-btn">⭐ Premium</a>
+    <a href="pages/portfolio.html" class="nav-btn">👤 Portfolio</a>
     <div class="nav-user">
       <span id="nav-name">—</span>
       <span class="nav-badge" id="nav-plan">Bepul</span>
@@ -107,424 +24,261 @@
 
 <div class="container">
 
-  <!-- REYTING PREVIEW -->
-  <div class="reyting-card">
-    <div class="reyting-score">87</div>
-    <div class="reyting-info">
-      <h3>Umumiy ball</h3>
-      <p>Profil to'ldirilishi, yutuqlar va faollik asosida</p>
-    </div>
-    <div class="reyting-rank">
-      <div class="num">#—</div>
-      <div class="lbl">Reyting</div>
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
+    <p>Ilk Qadam 2026 dasturi asosida professional ish yuritish vositalari</p>
+    <div class="badges">
+      <span class="badge" id="hero-group">👶 Guruh —</span>
+      <span class="badge" id="hero-plan">🆓 Bepul</span>
+      <span class="badge" id="hero-xp-badge">🏅 1-daraja</span>
     </div>
   </div>
 
-  <!-- PROFIL CARD -->
-  <div class="profile-card">
-    <div class="avatar-wrap">
-      <div class="avatar" id="avatarEl">👩‍🏫
-        <img id="avatarImg" src="" style="display:none"/>
-      </div>
-      <button class="avatar-edit" id="avatarEditBtn" title="Rasm yuklash">✏️</button>
-      <input type="file" id="avatarFile" accept="image/*" style="display:none"/>
+  <!-- PREMIUM BANNER (faqat bepul foydalanuvchilar uchun) -->
+  <div class="premium-banner" id="premiumBanner" style="display:none">
+    <div>
+      <h3>⭐ Professional obunaga o'ting!</h3>
+      <p>Attestatsiya testlari, portfolio va ko'p narsa — 49 000 so'm/oy</p>
     </div>
-    <div class="profile-info">
-      <div class="profile-name" id="dispName">Malika Yusupova</div>
-      <div class="profile-role" id="dispRole">Tarbiyachi — 5-DMTT, Chilonzor</div>
-      <div class="badge-row">
-        <span class="badge badge-toifa" id="dispToifa">🏷️ Oliy toifa</span>
-        <span class="badge badge-staj" id="dispStaj">📅 12 yil staj</span>
-        <span class="badge badge-malumot" id="dispMalumot">🎓 Oliy ma'lumot</span>
-      </div>
-      <div class="btn-row">
-        <button class="edit-btn" id="editBtn" onclick="toggleEdit()">✏️ Tahrirlash</button>
-        <button class="save-btn" id="saveBtn" onclick="saveProfile()">💾 Saqlash</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHAXSIY MA'LUMOTLAR -->
-  <div class="section">
-    <div class="section-title">👤 Shaxsiy ma'lumotlar</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Familiya</label>
-        <div class="form-val" id="v-familiya">Yusupova</div>
-        <input type="text" id="i-familiya" value="Yusupova" placeholder="Familiya"/>
-      </div>
-      <div class="form-group">
-        <label>Ism</label>
-        <div class="form-val" id="v-ism">Malika</div>
-        <input type="text" id="i-ism" value="Malika" placeholder="Ism"/>
-      </div>
-      <div class="form-group">
-        <label>Sharif</label>
-        <div class="form-val" id="v-sharif">Karimovna</div>
-        <input type="text" id="i-sharif" value="Karimovna" placeholder="Sharif"/>
-      </div>
-      <div class="form-group">
-        <label>Telefon</label>
-        <div class="form-val" id="v-telefon">+998 90 123 45 67</div>
-        <input type="tel" id="i-telefon" value="+998 90 123 45 67" placeholder="+998 XX XXX XX XX"/>
-      </div>
-      <div class="form-group">
-        <label>Tug'ilgan sana</label>
-        <div class="form-val" id="v-tugilgan">1992-05-14</div>
-        <input type="date" id="i-tugilgan" value="1992-05-14"/>
-      </div>
-      <div class="form-group">
-        <label>Jinsi</label>
-        <div class="form-val" id="v-jinsi">Ayol</div>
-        <select id="i-jinsi">
-          <option value="Ayol">Ayol</option>
-          <option value="Erkak">Erkak</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- JOYLASHUV -->
-  <div class="section">
-    <div class="section-title">📍 Joylashuv va muassasa</div>
-    <div class="loc-row">
-      <div class="form-group">
-        <label>Viloyat</label>
-        <div class="form-val" id="v-viloyat">Toshkent shahri</div>
-        <select id="i-viloyat" onchange="loadTumanlar()">
-          <option>Toshkent shahri</option>
-          <option>Toshkent viloyati</option>
-          <option>Andijon</option>
-          <option>Farg'ona</option>
-          <option>Namangan</option>
-          <option>Samarqand</option>
-          <option>Buxoro</option>
-          <option>Navoiy</option>
-          <option>Qashqadaryo</option>
-          <option>Surxondaryo</option>
-          <option>Jizzax</option>
-          <option>Sirdaryo</option>
-          <option>Xorazm</option>
-          <option>Qoraqalpog'iston</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tuman/Shahar</label>
-        <div class="form-val" id="v-tuman">Chilonzor</div>
-        <select id="i-tuman">
-          <option>Chilonzor</option><option>Yunusobod</option><option>Mirzo Ulug'bek</option>
-          <option>Shayxontohur</option><option>Olmazor</option><option>Uchtepa</option>
-          <option>Yakkasaroy</option><option>Bektemir</option><option>Sergeli</option>
-          <option>Mirobod</option><option>Hamza</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>DMTT nomi</label>
-        <div class="form-val" id="v-dmtt">5-DMTT</div>
-        <input type="text" id="i-dmtt" value="5-DMTT" placeholder="Masalan: 12-DMTT yoki Nilufar bog'chasi"/>
-      </div>
-    </div>
-  </div>
-
-  <!-- KASB -->
-  <div class="section">
-    <div class="section-title">💼 Kasb ma'lumotlari</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Lavozim</label>
-        <div class="form-val" id="v-lavozim">Tarbiyachi</div>
-        <select id="i-lavozim">
-          <option>Tarbiyachi</option>
-          <option>Katta tarbiyachi</option>
-          <option>Metodist</option>
-          <option>Mudir o'rinbosari</option>
-          <option>Mudir</option>
-          <option>Musiqa rahbari</option>
-          <option>Jismoniy tarbiya o'qituvchisi</option>
-          <option>Logoped</option>
-          <option>Psixolog</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Toifa</label>
-        <div class="form-val" id="v-toifa">Oliy toifa</div>
-        <select id="i-toifa">
-          <option>Toifasiz</option>
-          <option>2-toifa</option>
-          <option>1-toifa</option>
-          <option>Oliy toifa</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Ish staji (yil)</label>
-        <div class="form-val" id="v-staj">12</div>
-        <input type="number" id="i-staj" value="12" min="0" max="50" placeholder="Yil"/>
-      </div>
-      <div class="form-group">
-        <label>Ma'lumot darajasi</label>
-        <div class="form-val" id="v-malumot">Oliy ma'lumot</div>
-        <select id="i-malumot">
-          <option>O'rta ma'lumot</option>
-          <option>O'rta maxsus ma'lumot</option>
-          <option>Oliy ma'lumot</option>
-          <option>Magistr</option>
-        </select>
-      </div>
-      <div class="form-group full">
-        <label>Qisqacha o'zi haqida</label>
-        <div class="form-val" id="v-bio">Maktabgacha ta'lim sohasida 12 yillik tajribaga ega tarbiyachi. Bolalar rivojlanishi va ijodiy faoliyatga ixtisoslashganman.</div>
-        <textarea id="i-bio" placeholder="O'zingiz haqingizda qisqacha...">Maktabgacha ta'lim sohasida 12 yillik tajribaga ega tarbiyachi. Bolalar rivojlanishi va ijodiy faoliyatga ixtisoslashganman.</textarea>
-      </div>
-    </div>
+    <button class="btn-white" onclick="window.location.href='premium.html'">Batafsil →</button>
   </div>
 
   <!-- STATISTIKA -->
-  <div class="section">
-    <div class="section-title">📊 Statistika</div>
-    <div class="stats-row">
-      <div class="stat-card-mini">
-        <div class="stat-num" id="stat-staj">12</div>
-        <div class="stat-label">Yil tajriba</div>
+  <div style="margin-bottom:20px">
+    <div class="sec-title">📈 Mening natijalarim</div>
+    <div class="grid-4">
+      <div class="card" style="text-align:center;cursor:default">
+        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-test">0</div>
+        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">🧪 Testlar</div>
       </div>
-      <div class="stat-card-mini">
-        <div class="stat-num" id="stat-yutuq">3</div>
-        <div class="stat-label">Yutuq / Sertifikat</div>
+      <div class="card" style="text-align:center;cursor:default">
+        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-avg">0%</div>
+        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">✅ O'rtacha natija</div>
       </div>
-      <div class="stat-card-mini">
-        <div class="stat-num" id="stat-skill">5</div>
-        <div class="stat-label">Ko'nikma</div>
+      <div class="card" style="text-align:center;cursor:default">
+        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-xp">0</div>
+        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">⭐ Jami XP</div>
       </div>
+      <div class="card" style="text-align:center;cursor:default">
+        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-konspekt">0</div>
+        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">📝 Konspektlar</div>
+      </div>
+    </div>
+    <!-- XP progress -->
+    <div style="margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px">
+        <span id="xp-label">1-daraja: Yangi Tarbiyachi</span>
+        <span id="xp-next">Keyingi: 80 XP</span>
+      </div>
+      <div class="pbar"><div class="pfill" id="xp-fill" style="width:0%"></div></div>
     </div>
   </div>
 
-  <!-- KO'NIKMALAR -->
-  <div class="section">
-    <div class="section-title">🎯 Ko'nikmalar</div>
-    <div class="skills-wrap" id="skillsWrap">
-      <span class="skill-tag">Ijodiy faoliyat <button class="skill-del" onclick="delSkill(this)">×</button></span>
-      <span class="skill-tag">Nutq o'stirish <button class="skill-del" onclick="delSkill(this)">×</button></span>
-      <span class="skill-tag">Sensorika <button class="skill-del" onclick="delSkill(this)">×</button></span>
-      <span class="skill-tag">Raqamli texnologiyalar <button class="skill-del" onclick="delSkill(this)">×</button></span>
-      <span class="skill-tag">Loyiha usuli <button class="skill-del" onclick="delSkill(this)">×</button></span>
+  <!-- BO'LIMLAR -->
+  <div class="sec-title">📌 Bo'limlar</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <a href="pages/jadval.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">📅</div>
+      <div style="font-weight:700;margin-bottom:4px">Kunlik jadval</div>
+      <div style="font-size:.8rem;color:var(--mu)">Soatma-soat reja</div>
+    </a>
+    <a href="pages/haftalik.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">📚</div>
+      <div style="font-weight:700;margin-bottom:4px">Haftalik mavzular</div>
+      <div style="font-size:.8rem;color:var(--mu)">Yillik tematik reja</div>
+    </a>
+    <a href="pages/soha.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">📊</div>
+      <div style="font-weight:700;margin-bottom:4px">Rivojlanish sohalari</div>
+      <div style="font-size:.8rem;color:var(--mu)">5 ta asosiy soha</div>
+    </a>
+    <a href="pages/tamoyil.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">📌</div>
+      <div style="font-weight:700;margin-bottom:4px">Tamoyillar</div>
+      <div style="font-size:.8rem;color:var(--mu)">6 ta tamoyil</div>
+    </a>
+    <a href="pages/test.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">🧪</div>
+      <div style="font-weight:700;margin-bottom:4px">Testlar</div>
+      <div style="font-size:.8rem;color:var(--mu)">5 ta / oy</div>
+    </a>
+    <a href="pages/konspekt.html" class="card" style="text-decoration:none;color:inherit">
+      <div style="font-size:1.5rem;margin-bottom:8px">📝</div>
+      <div style="font-weight:700;margin-bottom:4px">Konspektlar</div>
+      <div style="font-size:.8rem;color:var(--mu)">3 ta ko'rish</div>
+    </a>
+  </div>
+
+  <!-- PRO BO'LIMLAR -->
+  <div class="sec-title">⭐ Professional</div>
+  <div class="grid-4" style="margin-bottom:20px" id="proSection">
+    <div class="card pro-card" onclick="openPro('Oyinlar')">
+      <div style="font-size:1.5rem;margin-bottom:8px">🎮</div>
+      <div style="font-weight:700;margin-bottom:4px">Oyinlar</div>
+      <div style="font-size:.8rem;color:var(--mu)">Didaktik oyinlar</div>
+      <span class="lock-badge">PRO</span>
     </div>
-    <div class="skill-add-row" id="skillAddRow">
-      <input class="skill-input" id="skillInput" placeholder="Yangi ko'nikma..."/>
-      <button class="skill-add-btn" onclick="addSkill()">+ Qo'shish</button>
+    <div class="card pro-card" onclick="openPro('Qo\'shiqlar')">
+      <div style="font-size:1.5rem;margin-bottom:8px">🎵</div>
+      <div style="font-weight:700;margin-bottom:4px">Qo'shiqlar</div>
+      <div style="font-size:.8rem;color:var(--mu)">Mavzuga mos</div>
+      <span class="lock-badge">PRO</span>
+    </div>
+    <div class="card pro-card" onclick="openPro('Mashg\'ulotlar')">
+      <div style="font-size:1.5rem;margin-bottom:8px">✏️</div>
+      <div style="font-weight:700;margin-bottom:4px">Mashg'ulotlar</div>
+      <div style="font-size:.8rem;color:var(--mu)">Ijodiy faoliyat</div>
+      <span class="lock-badge">PRO</span>
+    </div>
+    <div class="card pro-card" onclick="openPro('Attestatsiya')">
+      <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
+      <div style="font-weight:700;margin-bottom:4px">Attestatsiya</div>
+      <div style="font-size:.8rem;color:var(--mu)">Tayyorgarlik testlari</div>
+      <span class="lock-badge">PRO</span>
+    </div>
+    <a href="pages/portfolio.html" class="card" style="text-decoration:none;color:inherit" id="portfolioCard">
+      <div style="font-size:1.5rem;margin-bottom:8px">👤</div>
+      <div style="font-weight:700;margin-bottom:4px">Portfolio</div>
+      <div style="font-size:.8rem;color:var(--mu)">Professional profil</div>
+      <span class="lock-badge">PRO</span>
+    </a>
+  </div>
+
+  <!-- KORPORATIV -->
+  <div class="sec-title">🏢 Korporativ</div>
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="card pro-card" onclick="openPro('Davomat')">
+      <div style="font-size:1.5rem;margin-bottom:8px">📋</div>
+      <div style="font-weight:700;margin-bottom:4px">Davomat</div>
+      <div style="font-size:.8rem;color:var(--mu)">QR bilan belgilash</div>
+      <span class="lock-badge" style="background:#6c47ff">CORP</span>
+    </div>
+    <div class="card pro-card" onclick="openPro('Ota-onalar')">
+      <div style="font-size:1.5rem;margin-bottom:8px">👨‍👩‍👧</div>
+      <div style="font-weight:700;margin-bottom:4px">Ota-onalar</div>
+      <div style="font-size:.8rem;color:var(--mu)">Xabar va hisobot</div>
+      <span class="lock-badge" style="background:#6c47ff">CORP</span>
+    </div>
+    <div class="card pro-card" onclick="openPro('Bola monitoringi')">
+      <div style="font-size:1.5rem;margin-bottom:8px">📈</div>
+      <div style="font-weight:700;margin-bottom:4px">Bola monitoringi</div>
+      <div style="font-size:.8rem;color:var(--mu)">Rivojlanish grafigi</div>
+      <span class="lock-badge" style="background:#6c47ff">CORP</span>
     </div>
   </div>
 
-  <!-- PROFESSIONAL DARAJASI -->
-  <div class="section">
-    <div class="section-title">📈 Professional darajasi</div>
-    <div class="prog-item">
-      <div class="prog-head"><span>Dars rejalashtirish</span><span>90%</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:90%"></div></div>
+  <!-- SO'NGGI TESTLAR -->
+  <div class="sec-title">📊 So'nggi testlar</div>
+  <div id="lastTests">
+    <div style="background:#fff;border-radius:14px;padding:20px;text-align:center;color:var(--mu);font-size:.9rem;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+      Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a>
     </div>
-    <div class="prog-item">
-      <div class="prog-head"><span>Bolalar bilan ishlash</span><span>95%</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:95%"></div></div>
-    </div>
-    <div class="prog-item">
-      <div class="prog-head"><span>Raqamli savodxonlik</span><span>70%</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:70%"></div></div>
-    </div>
-    <div class="prog-item">
-      <div class="prog-head"><span>Ota-onalar bilan hamkorlik</span><span>85%</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:85%"></div></div>
-    </div>
-  </div>
-
-  <!-- YUTUQLAR -->
-  <div class="section">
-    <div class="section-title">🏆 Yutuqlar va sertifikatlar</div>
-    <div class="yutuq-list" id="yutuqList">
-      <div class="yutuq-item">
-        <span class="yutuq-icon">🥇</span>
-        <div class="yutuq-text">
-          <div class="yutuq-name">Yil tarbiyachisi — tuman bosqichi</div>
-          <div class="yutuq-year">2023</div>
-        </div>
-        <button class="yutuq-del" onclick="delYutuq(this)">🗑</button>
-      </div>
-      <div class="yutuq-item">
-        <span class="yutuq-icon">📜</span>
-        <div class="yutuq-text">
-          <div class="yutuq-name">Malaka oshirish sertifikati (PDPU)</div>
-          <div class="yutuq-year">2022</div>
-        </div>
-        <button class="yutuq-del" onclick="delYutuq(this)">🗑</button>
-      </div>
-      <div class="yutuq-item">
-        <span class="yutuq-icon">🏅</span>
-        <div class="yutuq-text">
-          <div class="yutuq-name">Innovatsion tarbiyachi — viloyat</div>
-          <div class="yutuq-year">2021</div>
-        </div>
-        <button class="yutuq-del" onclick="delYutuq(this)">🗑</button>
-      </div>
-    </div>
-    <div class="yutuq-add-row" id="yutuqAddRow">
-      <input id="y-nomi" placeholder="Yutuq/Sertifikat nomi" style="flex:2"/>
-      <input id="y-yil" placeholder="Yil" style="flex:0.6;min-width:80px" type="number" min="1990" max="2030"/>
-      <button class="skill-add-btn" onclick="addYutuq()">+ Qo'shish</button>
-    </div>
-    <button class="add-yutuq-btn" id="addYutuqBtn" onclick="showYutuqRow()">+ Yutuq qo'shish</button>
   </div>
 
 </div>
 
-<!-- Saytning real autentifikatsiya skriptlari (dashboard.html bilan bir xil, "../" bilan) -->
+<!-- PRO MODAL -->
+<div class="modal-overlay" id="proModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3>🔒 Premium kerak</h3>
+      <button class="modal-cls" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:32px">
+      <div style="font-size:3rem;margin-bottom:12px">⭐</div>
+      <h3 style="font-size:1.1rem;margin-bottom:8px" id="modalTitle">— bo'limi</h3>
+      <p style="color:var(--mu);font-size:.9rem;margin-bottom:24px">Bu bo'lim faqat Professional obuna uchun mavjud</p>
+      <button class="btn-primary" onclick="window.location.href='premium.html'">Premium olish — 49 000 so'm/oy</button>
+      <br><br>
+      <button onclick="closeModal()" style="background:none;border:none;color:var(--mu);cursor:pointer;font-size:.85rem">Keyinroq</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/premium.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/premium.js"></script>
 <script>
+const DARAJA = [
+  {nom:'Yangi Tarbiyachi', min:0,  max:80},
+  {nom:'Faol Tarbiyachi',  min:80, max:200},
+  {nom:'Tajribali',        min:200,max:400},
+  {nom:'Professional',     min:400,max:700},
+  {nom:'Usta Tarbiyachi',  min:700,max:1000},
+];
+
 window.addEventListener('load', async () => {
-  // dashboard.html'dagi kabi: sessiyani tekshiradi, yo'q bo'lsa kirish sahifasiga yo'naltiradi
-  const auth = await initAuth(true)
-  if (!auth) return
-  fillNav() // nav-name va nav-plan'ni to'ldiradi
-})
+  const auth = await initAuth(true);
+  if(!auth) return;
+  fillNav();
 
-// TUMANLAR
-const tumanlar = {
-  "Toshkent shahri": ["Chilonzor","Yunusobod","Mirzo Ulug'bek","Shayxontohur","Olmazor","Uchtepa","Yakkasaroy","Bektemir","Sergeli","Mirobod","Hamza"],
-  "Toshkent viloyati": ["Angren","Bekobod","Bo'ka","Bo'stonliq","Chinoz","Ohangaron","Oqqo'rg'on","Parkent","Piskent","Qibray","Toshkent","Yuqorichirchiq","Zangiota","Yangiyul"],
-  "Andijon": ["Andijon shahar","Asaka","Baliqchi","Bo'z","Buloqboshi","Izboskan","Jalaquduq","Marhamat","Oltinkul","Paxtaobod","Qo'rg'ontepa","Shahrixon","Ulug'nor","Xo'jaobod"],
-  "Farg'ona": ["Farg'ona shahar","Beshariq","Bog'dod","Buvayda","Dang'ara","Furqat","Qo'qon","Quva","Rishton","O'zbekiston","Oltiariq","Toshloq","Uchko'prik","Yozyovon"],
-  "Namangan": ["Namangan shahar","Chortoq","Chust","Kosonsoy","Mingbuloq","Norin","Pop","To'raqo'rg'on","Uychi","Yangiqo'rg'on"],
-  "Samarqand": ["Samarqand shahar","Bulungur","Ishtixon","Jomboy","Kattaqo'rg'on","Narpay","Nurobod","Oqdaryo","Paxtachi","Payariq","Pastdarg'om","Qo'shrabot","Tayloq","Urgut"],
-  "Buxoro": ["Buxoro shahar","G'ijduvon","Jondor","Kogon","Qorovulbozor","Romitan","Shofirkon","Vobkent","Olot","Peshku"],
-  "Navoiy": ["Navoiy shahar","Karmana","Konimex","Navbahor","Nurota","Qiziltepa","Tomdi","Uchquduq","Xatirchi","Zafarobod"],
-  "Qashqadaryo": ["Qarshi shahar","Chiroqchi","Dehqonobod","G'uzor","Kasbi","Kitob","Koson","Mirishkor","Muborak","Nishon","Qamashi","Shahrisabz","Yakkabog'"],
-  "Surxondaryo": ["Termiz shahar","Angor","Bandixon","Boysun","Denov","Jarqo'rg'on","Muzrabot","Oltinsoy","Qiziriq","Qumqo'rg'on","Sariosiyo","Sherobod","Sho'rchi","Uzun"],
-  "Jizzax": ["Jizzax shahar","Arnasoy","Baxmal","Do'stlik","Forish","G'allaorol","Mirzacho'l","Paxtakor","Yangiobod","Zarbdor","Zafarobod","Zomin"],
-  "Sirdaryo": ["Guliston shahar","Boyovut","Mirzaobod","Oqoltin","Sardoba","Sayxunobod","Shirin","Xovos"],
-  "Xorazm": ["Urganch shahar","Bog'ot","Gurlan","Hazorasp","Xiva","Xonqa","Shovot","Tuproqqal'a","Yangiariq","Yangibozor"],
-  "Qoraqalpog'iston": ["Nukus shahar","Amudaryo","Beruniy","Chimboy","Ellikqal'a","Kegeyli","Mo'ynoq","Nukus","Qonliko'l","Qorao'zak","Shumanay","Taxtako'pir","To'rtko'l","Xo'jayli"]
-};
+  const {data: profile} = await _sb.from('profiles').select('*').eq('id', auth.user.id).single();
+  if(!profile) return;
 
-function loadTumanlar(){
-  const vil = document.getElementById('i-viloyat').value;
-  const sel = document.getElementById('i-tuman');
-  sel.innerHTML = '';
-  (tumanlar[vil]||[]).forEach(t=>{
-    const o=document.createElement('option');o.textContent=t;sel.appendChild(o);
-  });
-}
+  // Hero
+  const name = profile.full_name || auth.user.email.split('@')[0];
+  document.getElementById('hero-name').textContent = name;
+  document.getElementById('nav-name').textContent = name;
 
-// EDIT MODE
-let editing = false;
-function toggleEdit(){
-  editing = true;
-  document.querySelectorAll('.form-val').forEach(el=>el.style.display='none');
-  document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el=>el.style.display='block');
-  document.getElementById('editBtn').style.display='none';
-  document.getElementById('saveBtn').style.display='block';
-  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='inline');
-  document.getElementById('skillAddRow').style.display='flex';
-  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='inline');
-  document.getElementById('addYutuqBtn').style.display='block';
-  document.getElementById('avatarEditBtn').style.display='flex';
-}
+  // Plan
+  const isPro = profile.subscription_tier === 'pro' || profile.subscription_tier === 'professional';
+  document.getElementById('hero-plan').textContent = isPro ? '⭐ Pro' : '🆓 Bepul';
+  if(!isPro) document.getElementById('premiumBanner').style.display = 'flex';
 
-function saveProfile(){
-  editing = false;
-  const fields = ['familiya','ism','sharif','telefon','tugilgan','jinsi','viloyat','tuman','dmtt','lavozim','toifa','staj','malumot','bio'];
-  fields.forEach(f=>{
-    const inp = document.getElementById('i-'+f);
-    const val = inp ? inp.value : '';
-    const el = document.getElementById('v-'+f);
-    if(el) el.textContent = val;
-  });
-  const ism = document.getElementById('i-ism').value;
-  const fam = document.getElementById('i-familiya').value;
-  const dmtt = document.getElementById('i-dmtt').value;
-  const tuman = document.getElementById('i-tuman').value;
-  const toifa = document.getElementById('i-toifa').value;
-  const staj = document.getElementById('i-staj').value;
-  const malumot = document.getElementById('i-malumot').value;
-  const lavozim = document.getElementById('i-lavozim').value;
-  document.getElementById('dispName').textContent = fam+' '+ism;
-  document.getElementById('dispRole').textContent = lavozim+' — '+dmtt+', '+tuman;
-  document.getElementById('dispToifa').textContent = '🏷️ '+toifa;
-  document.getElementById('dispStaj').textContent = '📅 '+staj+' yil staj';
-  document.getElementById('dispMalumot').textContent = '🎓 '+malumot;
-  document.getElementById('stat-staj').textContent = staj;
-  document.querySelectorAll('.form-val').forEach(el=>el.style.display='block');
-  document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el=>el.style.display='none');
-  document.getElementById('editBtn').style.display='block';
-  document.getElementById('saveBtn').style.display='none';
-  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='none');
-  document.getElementById('skillAddRow').style.display='none';
-  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='none');
-  document.getElementById('addYutuqBtn').style.display='none';
-  document.getElementById('yutuqAddRow').style.display='none';
-  updateScore();
-}
+  // Statistika
+  const xp = profile.xp || 0;
+  document.getElementById('stat-xp').textContent = xp;
+  document.getElementById('stat-test').textContent = profile.tests_count || 0;
+  document.getElementById('stat-avg').textContent = (profile.avg_score || 0) + '%';
+  document.getElementById('stat-konspekt').textContent = profile.konspekt_count || 0;
 
-function addSkill(){
-  const inp = document.getElementById('skillInput');
-  if(!inp.value.trim()) return;
-  const wrap = document.getElementById('skillsWrap');
-  const tag = document.createElement('span');
-  tag.className='skill-tag';
-  tag.innerHTML=inp.value.trim()+' <button class="skill-del" onclick="delSkill(this)" style="display:inline">×</button>';
-  wrap.appendChild(tag);
-  inp.value='';
-  updateScore();
-}
-function delSkill(btn){btn.closest('.skill-tag').remove();updateScore();}
+  // XP daraja
+  let d = DARAJA[0];
+  for(const dr of DARAJA){ if(xp >= dr.min) d = dr; }
+  const next = DARAJA[DARAJA.indexOf(d)+1];
+  document.getElementById('xp-label').textContent = (DARAJA.indexOf(d)+1)+'-daraja: '+d.nom;
+  document.getElementById('hero-xp-badge').textContent = '🏅 '+(DARAJA.indexOf(d)+1)+'-daraja';
+  if(next){
+    const pct = Math.min(((xp - d.min)/(next.min - d.min))*100, 100);
+    document.getElementById('xp-fill').style.width = pct+'%';
+    document.getElementById('xp-next').textContent = 'Keyingi: '+next.min+' XP';
+  } else {
+    document.getElementById('xp-fill').style.width = '100%';
+    document.getElementById('xp-next').textContent = 'Maksimal daraja!';
+  }
 
-function showYutuqRow(){
-  document.getElementById('yutuqAddRow').style.display='flex';
-}
-function addYutuq(){
-  const nomi=document.getElementById('y-nomi').value.trim();
-  const yil=document.getElementById('y-yil').value.trim();
-  if(!nomi) return;
-  const icons=['🏅','📜','🥇','🎖️','⭐'];
-  const ic=icons[Math.floor(Math.random()*icons.length)];
-  const li=document.createElement('div');li.className='yutuq-item';
-  li.innerHTML=`<span class="yutuq-icon">${ic}</span><div class="yutuq-text"><div class="yutuq-name">${nomi}</div><div class="yutuq-year">${yil}</div></div><button class="yutuq-del" onclick="delYutuq(this)" style="display:inline">🗑</button>`;
-  document.getElementById('yutuqList').appendChild(li);
-  document.getElementById('y-nomi').value='';
-  document.getElementById('y-yil').value='';
-  document.getElementById('yutuqAddRow').style.display='none';
-  updateScore();
-}
-function delYutuq(btn){btn.closest('.yutuq-item').remove();updateScore();}
-
-function updateScore(){
-  const skills=document.querySelectorAll('.skill-tag').length;
-  const yutuqlar=document.querySelectorAll('.yutuq-item').length;
-  const staj=parseInt(document.getElementById('i-staj')?document.getElementById('i-staj').value:12)||0;
-  const toifa=document.getElementById('i-toifa')?document.getElementById('i-toifa').value:'';
-  let score=40;
-  score+=Math.min(staj*2,20);
-  score+=Math.min(skills*3,15);
-  score+=Math.min(yutuqlar*5,20);
-  if(toifa==='Oliy toifa') score+=5;
-  else if(toifa==='1-toifa') score+=3;
-  else if(toifa==='2-toifa') score+=1;
-  score=Math.min(score,100);
-  document.querySelector('.reyting-score').textContent=score;
-  document.getElementById('stat-yutuq').textContent=yutuqlar;
-  document.getElementById('stat-skill').textContent=skills;
-}
-
-// AVATAR
-document.getElementById('avatarEditBtn').addEventListener('click',()=>document.getElementById('avatarFile').click());
-document.getElementById('avatarFile').addEventListener('change',function(){
-  const file=this.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=document.getElementById('avatarImg');
-    img.src=e.target.result;img.style.display='block';
-    document.getElementById('avatarEl').firstChild.textContent='';
-  };
-  reader.readAsDataURL(file);
+  // So'nggi testlar
+  const {data: tests} = await _sb.from('test_results')
+    .select('*').eq('user_id', auth.user.id)
+    .order('created_at', {ascending:false}).limit(5);
+  if(tests && tests.length){
+    const ul = document.getElementById('lastTests');
+    ul.innerHTML = '';
+    tests.forEach(t=>{
+      const row = document.createElement('div');
+      row.style = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
+      const date = new Date(t.created_at).toLocaleDateString('uz-UZ');
+      const color = t.score >= 80 ? '#16a34a' : t.score >= 60 ? '#d97706' : '#ef4444';
+      row.innerHTML = `<div><div style="font-weight:600;font-size:.9rem">${t.test_name||'Test'}</div><div style="font-size:.75rem;color:var(--mu)">${date}</div></div><div style="font-size:1.2rem;font-weight:800;color:${color}">${t.score}%</div>`;
+      ul.appendChild(row);
+    });
+  }
 });
+
+function openPro(nom){
+  document.getElementById('modalTitle').textContent = '"'+nom+'" bo\'limi';
+  document.getElementById('proModal').classList.add('show');
+}
+function closeModal(){ document.getElementById('proModal').classList.remove('show'); }
+document.getElementById('proModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
 </script>
+
+<style>
+.pro-card { cursor:pointer; position:relative; }
+.pro-card .lock-badge { margin-top:8px; }
+</style>
+
 </body>
 </html>
