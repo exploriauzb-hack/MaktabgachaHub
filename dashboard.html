@@ -29,13 +29,13 @@
     <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
     <p>Ilk Qadam 2026 dasturi asosida professional ish yuritish vositalari</p>
     <div class="badges">
-      <span class="badge" id="hero-group">👶 Guruh —</span>
+      <span class="badge">👶 <span id="hero-group">Guruh —</span></span>
       <span class="badge" id="hero-plan">🆓 Bepul</span>
       <span class="badge" id="hero-xp-badge">🏅 1-daraja</span>
     </div>
   </div>
 
-  <!-- PREMIUM BANNER (faqat bepul foydalanuvchilar uchun) -->
+  <!-- PREMIUM BANNER -->
   <div class="premium-banner" id="premiumBanner" style="display:none">
     <div>
       <h3>⭐ Professional obunaga o'ting!</h3>
@@ -65,7 +65,6 @@
         <div style="font-size:.8rem;color:var(--mu);margin-top:4px">📝 Konspektlar</div>
       </div>
     </div>
-    <!-- XP progress -->
     <div style="margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 12px rgba(108,71,255,.08)">
       <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px">
         <span id="xp-label">1-daraja: Yangi Tarbiyachi</span>
@@ -75,7 +74,7 @@
     </div>
   </div>
 
-  <!-- BO'LIMLAR -->
+  <!-- BEPUL BO'LIMLAR -->
   <div class="sec-title">📌 Bo'limlar</div>
   <div class="grid-2" style="margin-bottom:20px">
     <a href="pages/jadval.html" class="card" style="text-decoration:none;color:inherit">
@@ -101,7 +100,7 @@
     <a href="pages/test.html" class="card" style="text-decoration:none;color:inherit">
       <div style="font-size:1.5rem;margin-bottom:8px">🧪</div>
       <div style="font-weight:700;margin-bottom:4px">Testlar</div>
-      <div style="font-size:.8rem;color:var(--mu)">5 ta / oy</div>
+      <div style="font-size:.8rem;color:var(--mu)" id="test-limit-txt">5 ta / oy</div>
     </a>
     <a href="pages/konspekt.html" class="card" style="text-decoration:none;color:inherit">
       <div style="font-size:1.5rem;margin-bottom:8px">📝</div>
@@ -112,59 +111,59 @@
 
   <!-- PRO BO'LIMLAR -->
   <div class="sec-title">⭐ Professional</div>
-  <div class="grid-4" style="margin-bottom:20px" id="proSection">
-    <div class="card pro-card" onclick="openPro('Oyinlar')">
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="card" style="cursor:pointer" id="card-games">
       <div style="font-size:1.5rem;margin-bottom:8px">🎮</div>
       <div style="font-weight:700;margin-bottom:4px">Oyinlar</div>
       <div style="font-size:.8rem;color:var(--mu)">Didaktik oyinlar</div>
-      <span class="lock-badge">PRO</span>
+      <span class="lock-badge" id="badge-games">PRO</span>
     </div>
-    <div class="card pro-card" onclick="openPro('Qo\'shiqlar')">
+    <div class="card" style="cursor:pointer" id="card-songs">
       <div style="font-size:1.5rem;margin-bottom:8px">🎵</div>
       <div style="font-weight:700;margin-bottom:4px">Qo'shiqlar</div>
       <div style="font-size:.8rem;color:var(--mu)">Mavzuga mos</div>
-      <span class="lock-badge">PRO</span>
+      <span class="lock-badge" id="badge-songs">PRO</span>
     </div>
-    <div class="card pro-card" onclick="openPro('Mashg\'ulotlar')">
+    <div class="card" style="cursor:pointer" id="card-activities">
       <div style="font-size:1.5rem;margin-bottom:8px">✏️</div>
       <div style="font-weight:700;margin-bottom:4px">Mashg'ulotlar</div>
       <div style="font-size:.8rem;color:var(--mu)">Ijodiy faoliyat</div>
-      <span class="lock-badge">PRO</span>
+      <span class="lock-badge" id="badge-activities">PRO</span>
     </div>
-    <div class="card pro-card" onclick="openPro('Attestatsiya')">
+    <div class="card" style="cursor:pointer" id="card-attestation">
       <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
       <div style="font-weight:700;margin-bottom:4px">Attestatsiya</div>
       <div style="font-size:.8rem;color:var(--mu)">Tayyorgarlik testlari</div>
-      <span class="lock-badge">PRO</span>
+      <span class="lock-badge" id="badge-attestation">PRO</span>
     </div>
-    <a href="pages/portfolio.html" class="card" style="text-decoration:none;color:inherit" id="portfolioCard">
+    <div class="card" style="cursor:pointer" id="card-portfolio">
       <div style="font-size:1.5rem;margin-bottom:8px">👤</div>
       <div style="font-weight:700;margin-bottom:4px">Portfolio</div>
       <div style="font-size:.8rem;color:var(--mu)">Professional profil</div>
-      <span class="lock-badge">PRO</span>
-    </a>
+      <span class="lock-badge" id="badge-portfolio">PRO</span>
+    </div>
   </div>
 
   <!-- KORPORATIV -->
   <div class="sec-title">🏢 Korporativ</div>
   <div class="grid-4" style="margin-bottom:20px">
-    <div class="card pro-card" onclick="openPro('Davomat')">
+    <div class="card" style="cursor:pointer" id="card-attendance">
       <div style="font-size:1.5rem;margin-bottom:8px">📋</div>
       <div style="font-weight:700;margin-bottom:4px">Davomat</div>
       <div style="font-size:.8rem;color:var(--mu)">QR bilan belgilash</div>
-      <span class="lock-badge" style="background:#6c47ff">CORP</span>
+      <span class="lock-badge" id="badge-attendance" style="background:#6c47ff">CORP</span>
     </div>
-    <div class="card pro-card" onclick="openPro('Ota-onalar')">
+    <div class="card" style="cursor:pointer" id="card-parents">
       <div style="font-size:1.5rem;margin-bottom:8px">👨‍👩‍👧</div>
       <div style="font-weight:700;margin-bottom:4px">Ota-onalar</div>
       <div style="font-size:.8rem;color:var(--mu)">Xabar va hisobot</div>
-      <span class="lock-badge" style="background:#6c47ff">CORP</span>
+      <span class="lock-badge" id="badge-parents" style="background:#6c47ff">CORP</span>
     </div>
-    <div class="card pro-card" onclick="openPro('Bola monitoringi')">
+    <div class="card" style="cursor:pointer" id="card-monitoring">
       <div style="font-size:1.5rem;margin-bottom:8px">📈</div>
       <div style="font-weight:700;margin-bottom:4px">Bola monitoringi</div>
       <div style="font-size:.8rem;color:var(--mu)">Rivojlanish grafigi</div>
-      <span class="lock-badge" style="background:#6c47ff">CORP</span>
+      <span class="lock-badge" id="badge-monitoring" style="background:#6c47ff">CORP</span>
     </div>
   </div>
 
@@ -178,85 +177,94 @@
 
 </div>
 
-<!-- PRO MODAL -->
-<div class="modal-overlay" id="proModal">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <h3>🔒 Premium kerak</h3>
-      <button class="modal-cls" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body" style="text-align:center;padding:32px">
-      <div style="font-size:3rem;margin-bottom:12px">⭐</div>
-      <h3 style="font-size:1.1rem;margin-bottom:8px" id="modalTitle">— bo'limi</h3>
-      <p style="color:var(--mu);font-size:.9rem;margin-bottom:24px">Bu bo'lim faqat Professional obuna uchun mavjud</p>
-      <button class="btn-primary" onclick="window.location.href='premium.html'">Premium olish — 49 000 so'm/oy</button>
-      <br><br>
-      <button onclick="closeModal()" style="background:none;border:none;color:var(--mu);cursor:pointer;font-size:.85rem">Keyinroq</button>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/premium.js"></script>
 <script>
-const DARAJA = [
-  {nom:'Yangi Tarbiyachi', min:0,  max:80},
-  {nom:'Faol Tarbiyachi',  min:80, max:200},
-  {nom:'Tajribali',        min:200,max:400},
-  {nom:'Professional',     min:400,max:700},
-  {nom:'Usta Tarbiyachi',  min:700,max:1000},
-];
-
 window.addEventListener('load', async () => {
   const auth = await initAuth(true);
   if(!auth) return;
   fillNav();
 
-  const {data: profile} = await _sb.from('profiles').select('*').eq('id', auth.user.id).single();
-  if(!profile) return;
-
-  // Hero
-  const name = profile.full_name || auth.user.email.split('@')[0];
+  const profile = auth.profile;
+  const name = getUserName();
   document.getElementById('hero-name').textContent = name;
-  document.getElementById('nav-name').textContent = name;
 
-  // Plan
-  const isPro = profile.subscription_tier === 'pro' || profile.subscription_tier === 'professional';
-  document.getElementById('hero-plan').textContent = isPro ? '⭐ Pro' : '🆓 Bepul';
-  if(!isPro) document.getElementById('premiumBanner').style.display = 'flex';
+  // ── PLAN ──
+  // isPro() va isCorporate() auth.js dan keladi
+  const proUser  = isPro();
+  const corpUser = isCorporate();
 
-  // Statistika
-  const xp = profile.xp || 0;
+  document.getElementById('hero-plan').textContent =
+    corpUser ? '🏢 Korporativ' : proUser ? '⭐ Pro' : '🆓 Bepul';
+
+  if(!proUser) document.getElementById('premiumBanner').style.display = 'flex';
+  if(proUser)  document.getElementById('test-limit-txt').textContent = 'Cheksiz';
+
+  // ── KARTALAR ONCLICK ──
+  // PRO kartalar
+  const proCards = {
+    'card-games'      : { module:'games',       href:'pages/oyinlar.html'      },
+    'card-songs'      : { module:'songs',        href:'pages/qoshiqlar.html'    },
+    'card-activities' : { module:'activities',   href:'pages/mashgulotlar.html' },
+    'card-attestation': { module:'attestation',  href:'pages/attestatsiya.html' },
+    'card-portfolio'  : { module:'portfolio',    href:'pages/portfolio.html'    },
+  };
+  Object.entries(proCards).forEach(([id, cfg]) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(proUser){
+      el.querySelector('.lock-badge').style.display = 'none';
+      el.onclick = () => window.location.href = cfg.href;
+    } else {
+      el.onclick = () => openPremiumModal(cfg.module);
+    }
+  });
+
+  // CORP kartalar
+  const corpCards = {
+    'card-attendance' : { module:'attendance',       href:'pages/davomat.html'    },
+    'card-parents'    : { module:'parent_portal',    href:'pages/ota-onalar.html' },
+    'card-monitoring' : { module:'child_monitoring', href:'pages/monitoring.html' },
+  };
+  Object.entries(corpCards).forEach(([id, cfg]) => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    if(corpUser){
+      el.querySelector('.lock-badge').style.display = 'none';
+      el.onclick = () => window.location.href = cfg.href;
+    } else {
+      el.onclick = () => openPremiumModal(cfg.module);
+    }
+  });
+
+  // ── STATISTIKA ──
+  const xp = profile?.xp || 0;
   document.getElementById('stat-xp').textContent = xp;
-  document.getElementById('stat-test').textContent = profile.tests_count || 0;
-  document.getElementById('stat-avg').textContent = (profile.avg_score || 0) + '%';
-  document.getElementById('stat-konspekt').textContent = profile.konspekt_count || 0;
+  document.getElementById('stat-test').textContent = profile?.tests_count || 0;
+  document.getElementById('stat-avg').textContent = (profile?.avg_score || 0) + '%';
+  document.getElementById('stat-konspekt').textContent = profile?.konspekt_count || 0;
 
-  // XP daraja
-  let d = DARAJA[0];
-  for(const dr of DARAJA){ if(xp >= dr.min) d = dr; }
-  const next = DARAJA[DARAJA.indexOf(d)+1];
-  document.getElementById('xp-label').textContent = (DARAJA.indexOf(d)+1)+'-daraja: '+d.nom;
-  document.getElementById('hero-xp-badge').textContent = '🏅 '+(DARAJA.indexOf(d)+1)+'-daraja';
-  if(next){
-    const pct = Math.min(((xp - d.min)/(next.min - d.min))*100, 100);
-    document.getElementById('xp-fill').style.width = pct+'%';
-    document.getElementById('xp-next').textContent = 'Keyingi: '+next.min+' XP';
-  } else {
-    document.getElementById('xp-fill').style.width = '100%';
-    document.getElementById('xp-next').textContent = 'Maksimal daraja!';
-  }
+  // ── XP DARAJA ──
+  const lv = getLevel(xp);
+  document.getElementById('xp-label').textContent = lv.lvl + '-daraja: ' + lv.title;
+  document.getElementById('hero-xp-badge').textContent = '🏅 ' + lv.lvl + '-daraja';
+  const prevMin = [0,0,80,200,400,800][lv.lvl - 1] || 0;
+  const pct = lv.next < 9999
+    ? Math.min(((xp - prevMin) / (lv.next - prevMin)) * 100, 100) : 100;
+  document.getElementById('xp-fill').style.width = pct + '%';
+  document.getElementById('xp-next').textContent =
+    lv.next < 9999 ? 'Keyingi: ' + lv.next + ' XP' : 'Maksimal daraja!';
 
-  // So'nggi testlar
+  // ── SO'NGGI TESTLAR ──
   const {data: tests} = await _sb.from('test_results')
     .select('*').eq('user_id', auth.user.id)
     .order('created_at', {ascending:false}).limit(5);
   if(tests && tests.length){
     const ul = document.getElementById('lastTests');
     ul.innerHTML = '';
-    tests.forEach(t=>{
+    tests.forEach(t => {
       const row = document.createElement('div');
       row.style = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
       const date = new Date(t.created_at).toLocaleDateString('uz-UZ');
@@ -266,19 +274,7 @@ window.addEventListener('load', async () => {
     });
   }
 });
-
-function openPro(nom){
-  document.getElementById('modalTitle').textContent = '"'+nom+'" bo\'limi';
-  document.getElementById('proModal').classList.add('show');
-}
-function closeModal(){ document.getElementById('proModal').classList.remove('show'); }
-document.getElementById('proModal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
 </script>
-
-<style>
-.pro-card { cursor:pointer; position:relative; }
-.pro-card .lock-badge { margin-top:8px; }
-</style>
 
 </body>
 </html>
