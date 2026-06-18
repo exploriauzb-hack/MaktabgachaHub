@@ -18,12 +18,8 @@
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
-
-/* OVERLAY */
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-
-/* SIDEBAR */
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -45,11 +41,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .user-info .plan{font-size:11px;color:var(--muted)}
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
-
-/* MAIN */
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
-
-/* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
 .btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
@@ -60,33 +52,37 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
 .level-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--bg);color:var(--muted);border:1px solid var(--border);white-space:nowrap}
-
 /* PREMIUM BANNER */
-.premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px}
-.premium-banner h3{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px}
+.premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#7c3aed 100%);border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;position:relative;overflow:hidden}
+.premium-banner::before{content:'';position:absolute;right:-20px;top:-20px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.premium-banner::after{content:'';position:absolute;right:60px;bottom:-30px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%}
+.premium-banner-left{display:flex;align-items:center;gap:14px;z-index:1}
+.premium-banner-icon{width:44px;height:44px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.premium-banner-icon i{font-size:22px;color:#fde68a}
+.premium-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
 .premium-banner p{font-size:12px;color:#bfdbfe}
-.btn-premium{background:#fff;color:var(--accent);font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.btn-premium:hover{background:#eff6ff}
-
-/* STAT CARDS */
+.premium-features{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.pf-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#e0e7ff}
+.pf-item i{font-size:13px;color:#a5f3fc}
+.btn-premium{background:#fff;color:var(--accent);font-size:12px;font-weight:700;padding:10px 20px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s}
+.btn-premium:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-premium i{font-size:14px;color:var(--pro)}
+/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
 .stat-card .val{font-size:22px;font-weight:600;color:var(--text);margin-bottom:2px}
 .stat-card .lbl{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
 .stat-card .lbl i{font-size:13px}
-
-/* XP BAR */
+/* XP */
 .xp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:24px}
 .xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
 .xp-header span{font-size:12px;color:var(--muted)}
 .xp-header strong{font-size:12px;color:var(--text)}
 .xp-bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden}
 .xp-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s ease}
-
 /* SECTION TITLE */
 .sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
-
 /* MODULE GRID */
 .mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
 .mod-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;transition:border-color .15s,box-shadow .15s;cursor:pointer;position:relative;overflow:hidden}
@@ -103,10 +99,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .mod-sub{font-size:11px;color:var(--muted);line-height:1.3}
 .lock-tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
 .lock-tag.soon{background:#f1f5f9;color:#94a3b8}
-
-/* RECENT TESTS */
-.tests-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
-.test-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+/* TESTS */
+.test-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .test-row .test-name{font-size:13px;font-weight:500}
 .test-row .test-date{font-size:11px;color:var(--muted);margin-top:2px}
 .test-score{font-size:16px;font-weight:600}
@@ -115,68 +109,59 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .test-score.low{color:var(--red)}
 .empty-state{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px}
 .empty-state a{color:var(--accent);text-decoration:none;font-weight:500}
-
-/* NOTIFICATION */
+/* PREMIUM MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:16px;padding:28px;max-width:480px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--border)}
+.modal-icon{width:56px;height:56px;background:var(--pro-soft);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.modal-icon i{font-size:28px;color:var(--pro)}
+.modal h2{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6}
+.modal-features{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.mf-item{display:flex;align-items:center;gap:10px;font-size:13px}
+.mf-item i{font-size:16px;color:var(--green);flex-shrink:0}
+.modal-price{background:var(--pro-soft);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-price .price{font-size:22px;font-weight:700;color:var(--pro)}
+.modal-price .price span{font-size:13px;font-weight:400;color:var(--muted)}
+.modal-price .old-price{font-size:12px;color:var(--muted);text-decoration:line-through}
+.btn-buy{width:100%;padding:13px;background:linear-gradient(135deg,var(--pro),#a855f7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,box-shadow .15s}
+.btn-buy:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.35)}
+.btn-buy i{font-size:18px}
 #notifPopup{display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px}
-
-/* ===== TABLET ===== */
-@media(max-width:900px){
-  .mod-grid{grid-template-columns:repeat(2,1fr)}
-}
-
-/* ===== MOBILE ===== */
+/* RESPONSIVE */
+@media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
   .btn-hamburger{display:flex}
-
   .main{margin-left:0;padding:14px 14px 40px}
-
-  /* topbar */
   .topbar{margin-bottom:14px}
   .topbar h1{font-size:15px;max-width:180px}
   .topbar-right .level-pill{display:none}
   .plan-pill{font-size:11px;padding:4px 10px}
-
-  /* premium banner */
-  .premium-banner{flex-direction:column;align-items:flex-start;gap:10px;padding:14px;border-radius:10px;margin-bottom:16px}
-  .premium-banner h3{font-size:13px}
-  .premium-banner p{font-size:11px}
-  .btn-premium{width:100%;text-align:center}
-
-  /* stats — majburiy 3 ustun */
+  .premium-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px;margin-bottom:16px}
+  .btn-premium{width:100%;justify-content:center}
+  .premium-features{display:none}
   .stats-grid{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
   .stat-card{padding:10px 8px}
   .stat-card .val{font-size:18px}
   .stat-card .lbl{font-size:10px;gap:3px}
-  .stat-card .lbl i{font-size:11px}
-
-  /* xp */
   .xp-card{padding:12px 14px;margin-bottom:16px}
-  .xp-header strong{font-size:11px}
-  .xp-header span{font-size:10px}
-
-  /* section title */
   .sec-title{font-size:11px;margin-bottom:8px}
-
-  /* mod grid — 2 ustun */
   .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
   .mod-card{padding:11px 10px;gap:2px}
   .mod-card .icon{width:28px;height:28px;font-size:13px;margin-bottom:4px;border-radius:7px}
   .mod-title{font-size:12px}
   .mod-sub{font-size:10px}
   .lock-tag{font-size:9px;padding:2px 5px;top:7px;right:7px}
-
-  /* tests */
   .test-row{padding:10px 12px}
   .test-row .test-name{font-size:12px}
-  .test-row .test-date{font-size:10px}
   .test-score{font-size:14px}
   .empty-state{padding:16px;font-size:12px}
 }
-
-/* ===== KICHIK EKRAN (≤400px) ===== */
 @media(max-width:400px){
   .main{padding:12px 12px 36px}
   .stats-grid{gap:6px}
@@ -191,7 +176,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
-
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
@@ -201,7 +185,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
-
   <div class="sidebar-section">Asosiy</div>
   <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
   <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
@@ -210,19 +193,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
   <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
-
   <div class="sidebar-section">Professional</div>
   <a class="nav-item locked"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a class="nav-item locked"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
   <a class="nav-item locked"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
   <a class="nav-item locked"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a class="nav-item locked"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-
   <div class="sidebar-section">Korporativ</div>
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
-
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -231,21 +211,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
         <div class="plan" id="sb-plan">Bepul tarif</div>
       </div>
     </div>
-    <button class="btn-logout" onclick="doLogout()">
-      <i class="ti ti-logout"></i> Chiqish
-    </button>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 
 <!-- MAIN -->
 <main class="main">
-
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
-      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()">
-        <i class="ti ti-menu-2"></i>
-      </button>
+      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
       <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
     </div>
     <div class="topbar-right">
@@ -256,11 +231,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
   <!-- PREMIUM BANNER -->
   <div class="premium-banner" id="premiumBanner" style="display:none">
-    <div>
-      <h3>Professional obunaga o'ting</h3>
-      <p>Attestatsiya testlari, portfolio va ko'plab qulayliklar — 49 000 so'm/oy</p>
+    <div class="premium-banner-left">
+      <div class="premium-banner-icon"><i class="ti ti-crown"></i></div>
+      <div>
+        <h3>Professional obunaga o'ting</h3>
+        <p>Attestatsiya testlari, portfolio va ko'plab qulayliklar</p>
+        <div class="premium-features">
+          <div class="pf-item"><i class="ti ti-check"></i> Qo'shiqlar</div>
+          <div class="pf-item"><i class="ti ti-check"></i> Mashg'ulotlar</div>
+          <div class="pf-item"><i class="ti ti-check"></i> Attestatsiya</div>
+          <div class="pf-item"><i class="ti ti-check"></i> Portfolio</div>
+        </div>
+      </div>
     </div>
-    <button class="btn-premium" onclick="window.location.href='premium.html'">Batafsil →</button>
+    <button class="btn-premium" onclick="openPremiumModal()">
+      <i class="ti ti-crown"></i> Premium olish
+    </button>
   </div>
 
   <!-- STATS -->
@@ -384,16 +370,41 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <!-- RECENT TESTS -->
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
   <div id="lastTests">
-    <div class="empty-state">
-      Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a>
-    </div>
+    <div class="empty-state">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a></div>
   </div>
-
 </main>
 
-<div id="notifPopup"></div>
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal" onclick="if(event.target===this)closePremiumModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closePremiumModal()"><i class="ti ti-x"></i></button>
+    <div class="modal-icon"><i class="ti ti-crown"></i></div>
+    <h2>Professional tarif</h2>
+    <p>Barcha PRO bo'limlarga to'liq kirish imkoniyati va cheksiz foydalanish.</p>
+    <div class="modal-features">
+      <div class="mf-item"><i class="ti ti-check"></i> Bolalar qo'shiqlari to'plami</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Ijodiy mashg'ulotlar kutubxonasi</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Attestatsiya tayyorgarlik testlari</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Professional portfolio yaratish</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Cheksiz test ishlash</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Didaktik o'yinlar</div>
+    </div>
+    <div class="modal-price">
+      <div>
+        <div class="price">49 000 so'm <span>/ oy</span></div>
+        <div class="old-price">Avval: 79 000 so'm</div>
+      </div>
+      <div style="background:var(--pro);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
+    </div>
+    <button class="btn-buy" onclick="window.location.href='pages/premium.html'">
+      <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
+    </button>
+  </div>
+</div>
 
-<!-- Animated background -->
+<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
+
+<!-- BG ANIMATION -->
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -404,7 +415,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   const shapes=[];
-  for(let i=0;i<28;i++){shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)})}
+  for(let i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
   function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
   function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
   function drawFlower(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.ellipse(cx+r*.6*Math.cos(a),cy+r*.6*Math.sin(a),r*.5,r*.25,a,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(cx,cy,r*.35,0,Math.PI*2);ctx.fill();ctx.restore()}
@@ -430,22 +441,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 </script>
 
 <script>
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal()}});
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
+
+function openPremiumModal(){
+  document.getElementById('premiumModal').classList.add('show');
   document.body.style.overflow='hidden';
 }
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
+function closePremiumModal(){
+  document.getElementById('premiumModal').classList.remove('show');
   document.body.style.overflow='';
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){
-  document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';
-}
-checkHamburger();
-window.addEventListener('resize',checkHamburger);
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -464,11 +473,11 @@ async function checkNotifications(){
     .or(`expires_at.is.null,expires_at.gt.${now}`)
     .order('created_at',{ascending:false}).limit(3);
   if(!data?.length)return;
-  const colors={info:'#1e40af',success:'#15803d',warning:'#b45309'};
+  const clrs={info:'#1e40af',success:'#15803d',warning:'#b45309'};
   const popup=document.getElementById('notifPopup');
   popup.style.display='flex';
   popup.innerHTML=data.map(n=>`
-    <div style="background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.1);border-left:3px solid ${colors[n.type]||'#1e40af'};max-width:320px">
+    <div style="background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.1);border-left:3px solid ${clrs[n.type]||'#1e40af'};max-width:320px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
         <b style="font-size:13px;color:#111">${n.title}</b>
         <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;line-height:1">×</button>
@@ -483,36 +492,27 @@ window.addEventListener('load',async()=>{
   const auth=await initAuth(true);
   if(!auth)return;
   if(typeof fillNav==='function')fillNav();
-
   const profile=auth.profile;
   const name=getUserName();
-
   document.getElementById('hero-name').textContent=name;
   document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
-
   const proUser=isPro();
   const corpUser=isCorporate();
   const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
-
-  document.getElementById('hero-plan').innerHTML=proUser
-    ?`<i class="ti ti-crown"></i> ${planLabel}`
-    :`<i class="ti ti-free-rights"></i> ${planLabel}`;
+  document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
   if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
   document.getElementById('sb-plan').textContent=planLabel+' tarif';
-
   const banner=document.getElementById('premiumBanner');
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}
   else{banner.style.display='none';}
-
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
-
   const proCards={
-    'card-games'      :{href:'pages/oyinlar.html',module:'games'},
-    'card-songs'      :{href:'pages/qoshiqlar.html',module:'songs'},
-    'card-activities' :{href:'pages/mashgulotlar.html',module:'activities'},
-    'card-attestation':{href:'pages/attestatsiya.html',module:'attestation'},
-    'card-portfolio'  :{href:'pages/portfolio.html',module:'portfolio'},
+    'card-games'      :{href:'pages/oyinlar.html'},
+    'card-songs'      :{href:'pages/qoshiqlar.html'},
+    'card-activities' :{href:'pages/mashgulotlar.html'},
+    'card-attestation':{href:'pages/attestatsiya.html'},
+    'card-portfolio'  :{href:'pages/portfolio.html'},
   };
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);
@@ -523,13 +523,11 @@ window.addEventListener('load',async()=>{
       el.classList.remove('locked');
       el.onclick=()=>window.location.href=cfg.href;
     } else {
-      el.onclick=()=>openPremiumModal(cfg.module);
+      el.onclick=openPremiumModal;
     }
   });
-
   const xp=profile?.xp||0;
   document.getElementById('stat-xp').textContent=xp;
-
   const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
   if(allTests&&allTests.length){
     const count=allTests.length;
@@ -537,7 +535,6 @@ window.addEventListener('load',async()=>{
     document.getElementById('stat-test').textContent=count;
     document.getElementById('stat-avg').textContent=avg+'%';
   }
-
   const lv=getLevel(xp);
   document.getElementById('xp-label').textContent=lv.lvl+'-daraja: '+lv.title;
   document.getElementById('hero-xp-badge').innerHTML=`<i class="ti ti-medal"></i> ${lv.lvl}-daraja`;
@@ -545,7 +542,6 @@ window.addEventListener('load',async()=>{
   const pct=lv.next<9999?Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100):100;
   document.getElementById('xp-fill').style.width=pct+'%';
   document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
-
   const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
   if(tests&&tests.length){
     const ul=document.getElementById('lastTests');
@@ -561,7 +557,6 @@ window.addEventListener('load',async()=>{
       ul.appendChild(row);
     });
   }
-
   await checkNotifications();
 });
 </script>
