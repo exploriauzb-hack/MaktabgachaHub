@@ -4,189 +4,477 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Dashboard</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;
+  --surface:#ffffff;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --accent:#1e40af;
+  --accent-soft:#eff6ff;
+  --accent-mid:#3b82f6;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --red:#b91c1c;
+  --pro:#7c3aed;
+  --pro-soft:#f5f3ff;
+  --sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+#bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+.sidebar{z-index:10;position:fixed}
+.main{position:relative;z-index:2}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.nav-item .badge.corp{background:#f1f5f9;color:#475569}
+.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.user-info{min-width:0}
+.user-info .name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-info .plan{font-size:11px;color:var(--muted)}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
+.btn-logout:hover{background:var(--bg);color:var(--red)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:900px}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.topbar h1{font-size:20px;font-weight:600}
+.topbar h1 span{color:var(--accent)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+.plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
+.level-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+
+/* PREMIUM BANNER */
+.premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px}
+.premium-banner h3{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px}
+.premium-banner p{font-size:12px;color:#bfdbfe}
+.btn-premium{background:#fff;color:var(--accent);font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.btn-premium:hover{background:#eff6ff}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.stat-card .val{font-size:22px;font-weight:600;color:var(--text);margin-bottom:2px}
+.stat-card .lbl{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.stat-card .lbl i{font-size:13px}
+
+/* XP BAR */
+.xp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:24px}
+.xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.xp-header span{font-size:12px;color:var(--muted)}
+.xp-header strong{font-size:12px;color:var(--text)}
+.xp-bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s ease}
+
+/* SECTION TITLE */
+.sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec-title i{font-size:14px}
+
+/* MODULE GRID */
+.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.mod-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;transition:border-color .15s,box-shadow .15s;cursor:pointer;position:relative;overflow:hidden}
+.mod-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1)}
+.mod-card.locked{opacity:.7}
+.mod-card.locked:hover{border-color:var(--border);box-shadow:none}
+.mod-card .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;font-size:16px}
+.mod-card .icon.blue{background:var(--accent-soft);color:var(--accent)}
+.mod-card .icon.green{background:var(--green-soft);color:var(--green)}
+.mod-card .icon.amber{background:var(--amber-soft);color:var(--amber)}
+.mod-card .icon.purple{background:var(--pro-soft);color:var(--pro)}
+.mod-card .icon.slate{background:#f1f5f9;color:#475569}
+.mod-title{font-size:13px;font-weight:600}
+.mod-sub{font-size:11px;color:var(--muted)}
+.lock-tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.lock-tag.corp{background:#f1f5f9;color:#475569}
+.lock-tag.soon{background:#f1f5f9;color:#94a3b8}
+
+/* RECENT TESTS */
+.tests-list{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.test-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.test-row .test-name{font-size:13px;font-weight:500}
+.test-row .test-date{font-size:11px;color:var(--muted);margin-top:2px}
+.test-score{font-size:16px;font-weight:600}
+.test-score.high{color:var(--green)}
+.test-score.mid{color:var(--amber)}
+.test-score.low{color:var(--red)}
+.empty-state{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px}
+.empty-state a{color:var(--accent);text-decoration:none;font-weight:500}
+.empty-state a:hover{text-decoration:underline}
+</style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
+<script>
+(function(){
+const c=document.getElementById('bg-canvas');
+const ctx=c.getContext('2d');
+let W,H,items=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+resize();
+window.addEventListener('resize',resize);
 
-<nav class="nav">
-  <a href="dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
-  <div class="nav-links">
-    <a href="dashboard.html" class="nav-btn active">🏠 Bosh sahifa</a>
-    <a href="premium.html" class="nav-btn">⭐ Premium</a>
-    <a href="pages/portfolio.html" class="nav-btn">👤 Portfolio</a>
-    <div class="nav-user">
-      <span id="nav-name">—</span>
-      <span class="nav-badge" id="nav-plan">Bepul</span>
-    </div>
-    <button class="nav-btn" onclick="doLogout()" style="background:rgba(255,100,100,.25)">Chiqish</button>
+// Animated child-friendly floating elements: stars, hearts, circles, abc, flowers
+const shapes=[
+  // type, color, size, x, y, vx, vy, rot, vrot, opacity
+];
+
+function rnd(a,b){return a+Math.random()*(b-a)}
+
+// Create floating items
+const types=['star','heart','circle','abc','flower','cloud','triangle'];
+const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+for(let i=0;i<28;i++){
+  shapes.push({
+    t:types[Math.floor(Math.random()*types.length)],
+    color:colors[Math.floor(Math.random()*colors.length)],
+    size:rnd(14,32),
+    x:rnd(0,1)*window.innerWidth,
+    y:rnd(0,1)*window.innerHeight,
+    vx:rnd(-0.3,0.3),
+    vy:rnd(-0.4,-0.1),
+    rot:rnd(0,Math.PI*2),
+    vrot:rnd(-0.008,0.008),
+    op:rnd(0.18,0.45)
+  });
+}
+
+function drawStar(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a=Math.PI/2+i*Math.PI*2/5;
+    const ia=a+Math.PI/5;
+    i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));
+    ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia));
+  }
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+function drawHeart(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  const s=r*.06;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy+r*.5);
+  ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);
+  ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+function drawFlower(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  for(let i=0;i<6;i++){
+    const a=i*Math.PI/3;
+    ctx.beginPath();
+    ctx.ellipse(cx+r*.6*Math.cos(a),cy+r*.6*Math.sin(a),r*.5,r*.25,a,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(cx,cy,r*.35,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+function drawCloud(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  ctx.beginPath();ctx.arc(cx,cy,r*.6,0,Math.PI*2);
+  ctx.arc(cx+r*.6,cy+r*.1,r*.45,0,Math.PI*2);
+  ctx.arc(cx-r*.5,cy+r*.15,r*.4,0,Math.PI*2);
+  ctx.arc(cx+r*.1,cy+r*.4,r*.5,0,Math.PI*2);
+  ctx.fill();ctx.restore();
+}
+function drawABC(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  ctx.font=`bold ${r*1.2}px Inter,sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  const letters=['A','B','C','1','2','3'];
+  ctx.fillText(letters[Math.floor(Math.abs(cx+cy))%letters.length],cx,cy);
+  ctx.restore();
+}
+function drawTriangle(ctx,cx,cy,r,color,op){
+  ctx.save();ctx.globalAlpha=op;ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy-r);ctx.lineTo(cx+r*.87,cy+r*.5);ctx.lineTo(cx-r*.87,cy+r*.5);
+  ctx.closePath();ctx.fill();ctx.restore();
+}
+
+function frame(){
+  ctx.clearRect(0,0,W,H);
+  shapes.forEach(s=>{
+    s.x+=s.vx; s.y+=s.vy; s.rot+=s.vrot;
+    if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
+    if(s.x<-60)s.x=W+40;
+    if(s.x>W+60)s.x=-40;
+    ctx.save();
+    ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+    const d=s.t;
+    if(d==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
+    else if(d==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
+    else if(d==='flower')drawFlower(ctx,0,0,s.size*.8,s.color,s.op);
+    else if(d==='cloud')drawCloud(ctx,0,0,s.size*.9,s.color,s.op);
+    else if(d==='abc')drawABC(ctx,0,0,s.size*.7,s.color,s.op);
+    else if(d==='triangle')drawTriangle(ctx,0,0,s.size*.8,s.color,s.op);
+    else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill();}
+    ctx.restore();
+  });
+  requestAnimationFrame(frame);
+}
+frame();
+})();
+</script>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-school" aria-hidden="true"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
   </div>
-</nav>
 
-<div class="container">
+  <div class="sidebar-section">Asosiy</div>
+  <a href="dashboard.html" class="nav-item active">
+    <i class="ti ti-layout-dashboard" aria-hidden="true"></i> Dashboard
+  </a>
+  <a href="pages/jadval.html" class="nav-item">
+    <i class="ti ti-calendar" aria-hidden="true"></i> Kunlik jadval
+  </a>
+  <a href="pages/haftalik.html" class="nav-item">
+    <i class="ti ti-books" aria-hidden="true"></i> Haftalik mavzular
+  </a>
+  <a href="pages/soha.html" class="nav-item">
+    <i class="ti ti-chart-dots-3" aria-hidden="true"></i> Rivojlanish sohalari
+  </a>
+  <a href="pages/tamoyil.html" class="nav-item">
+    <i class="ti ti-pin" aria-hidden="true"></i> Tamoyillar
+  </a>
+  <a href="pages/test.html" class="nav-item">
+    <i class="ti ti-flask" aria-hidden="true"></i> Testlar
+  </a>
+  <a href="pages/konspekt.html" class="nav-item">
+    <i class="ti ti-notebook" aria-hidden="true"></i> Konspektlar
+  </a>
 
-  <!-- HERO -->
-  <div class="hero">
+  <div class="sidebar-section">Professional</div>
+  <a class="nav-item locked" id="sn-games">
+    <i class="ti ti-puzzle" aria-hidden="true"></i> Oyinlar
+    <span class="badge">PRO</span>
+  </a>
+  <a class="nav-item locked" id="sn-songs">
+    <i class="ti ti-music" aria-hidden="true"></i> Qo'shiqlar
+    <span class="badge">PRO</span>
+  </a>
+  <a class="nav-item locked" id="sn-activities">
+    <i class="ti ti-brush" aria-hidden="true"></i> Mashg'ulotlar
+    <span class="badge">PRO</span>
+  </a>
+  <a class="nav-item locked" id="sn-attest">
+    <i class="ti ti-certificate" aria-hidden="true"></i> Attestatsiya
+    <span class="badge">PRO</span>
+  </a>
+  <a class="nav-item locked" id="sn-port">
+    <i class="ti ti-id-badge-2" aria-hidden="true"></i> Portfolio
+    <span class="badge">PRO</span>
+  </a>
+
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item">
+    <i class="ti ti-qrcode" aria-hidden="true"></i> Davomat
+    <span class="badge soon">Brzo</span>
+  </a>
+  <a class="nav-item">
+    <i class="ti ti-users-group" aria-hidden="true"></i> Ota-onalar
+    <span class="badge soon">Brzo</span>
+  </a>
+  <a class="nav-item">
+    <i class="ti ti-chart-line" aria-hidden="true"></i> Monitoring
+    <span class="badge soon">Brzo</span>
+  </a>
+
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar" id="sb-avatar">T</div>
+      <div class="user-info">
+        <div class="name" id="sb-name">Tarbiyachi</div>
+        <div class="plan" id="sb-plan">Bepul tarif</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()">
+      <i class="ti ti-logout" aria-hidden="true"></i> Chiqish
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
     <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
-    <p>Yurtimizning ilmga intilgan tarbiyachilari uchun yurakdan yaratilgan</p>
-    <div class="badges">
-      <span class="badge" id="hero-plan">🆓 Bepul</span>
-      <span class="badge" id="hero-xp-badge">🏅 1-daraja</span>
+    <div class="topbar-right">
+      <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights" aria-hidden="true"></i> Bepul</span>
+      <span class="level-pill" id="hero-xp-badge"><i class="ti ti-medal" aria-hidden="true"></i> 1-daraja</span>
     </div>
   </div>
 
   <!-- PREMIUM BANNER -->
   <div class="premium-banner" id="premiumBanner" style="display:none">
     <div>
-      <h3>⭐ Professional obunaga o'ting!</h3>
+      <h3>Professional obunaga o'ting</h3>
       <p>Attestatsiya testlari, portfolio va ko'plab qulayliklar — 49 000 so'm/oy</p>
     </div>
-    <button class="btn-white" onclick="window.location.href='premium.html'">Batafsil →</button>
+    <button class="btn-premium" onclick="window.location.href='premium.html'">Batafsil →</button>
   </div>
 
-  <!-- STATISTIKA -->
-  <div style="margin-bottom:20px">
-    <div class="sec-title">📈 Mening natijalarim</div>
-    <div class="grid-4">
-      <div class="card" style="text-align:center;cursor:default">
-        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-test">0</div>
-        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">🧪 Testlar</div>
-      </div>
-      <div class="card" style="text-align:center;cursor:default">
-        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-avg">0%</div>
-        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">✅ O'rtacha natija</div>
-      </div>
-      <div class="card" style="text-align:center;cursor:default">
-        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-xp">0</div>
-        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">⭐ Jami XP</div>
-      </div>
-      <div class="card" style="text-align:center;cursor:default">
-        <div style="font-size:2rem;font-weight:800;color:var(--p)" id="stat-konspekt">0</div>
-        <div style="font-size:.8rem;color:var(--mu);margin-top:4px">📝 Konspektlar</div>
-      </div>
+  <!-- STATS -->
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card">
+      <div class="val" id="stat-test">0</div>
+      <div class="lbl"><i class="ti ti-flask" aria-hidden="true"></i> Testlar</div>
     </div>
-    <div style="margin-top:14px;background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 12px rgba(108,71,255,.08)">
-      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:8px">
-        <span id="xp-label">1-daraja: Yangi Tarbiyachi</span>
-        <span id="xp-next">Keyingi: 80 XP</span>
-      </div>
-      <div class="pbar"><div class="pfill" id="xp-fill" style="width:0%"></div></div>
+    <div class="stat-card">
+      <div class="val" id="stat-avg">0%</div>
+      <div class="lbl"><i class="ti ti-target" aria-hidden="true"></i> O'rtacha natija</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="stat-xp">0</div>
+      <div class="lbl"><i class="ti ti-star" aria-hidden="true"></i> Jami XP</div>
     </div>
   </div>
 
-  <!-- BEPUL BO'LIMLAR -->
-  <div class="sec-title">📌 Bo'limlar</div>
-  <div class="grid-2" style="margin-bottom:20px">
-    <a href="pages/jadval.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">📅</div>
-      <div style="font-weight:700;margin-bottom:4px">Kunlik jadval</div>
-      <div style="font-size:.8rem;color:var(--mu)">Soatma-soat reja</div>
+  <!-- XP BAR -->
+  <div class="xp-card">
+    <div class="xp-header">
+      <strong id="xp-label">1-daraja: Yangi Tarbiyachi</strong>
+      <span id="xp-next">Keyingi: 80 XP</span>
+    </div>
+    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- FREE MODULES -->
+  <div class="sec-title"><i class="ti ti-grid-dots" aria-hidden="true"></i> Bo'limlar</div>
+  <div class="mod-grid">
+    <a href="pages/jadval.html" class="mod-card">
+      <div class="icon blue"><i class="ti ti-calendar" aria-hidden="true"></i></div>
+      <div class="mod-title">Kunlik jadval</div>
+      <div class="mod-sub">Soatma-soat reja</div>
     </a>
-    <a href="pages/haftalik.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">📚</div>
-      <div style="font-weight:700;margin-bottom:4px">Haftalik mavzular</div>
-      <div style="font-size:.8rem;color:var(--mu)">Yillik tematik reja</div>
+    <a href="pages/haftalik.html" class="mod-card">
+      <div class="icon blue"><i class="ti ti-books" aria-hidden="true"></i></div>
+      <div class="mod-title">Haftalik mavzular</div>
+      <div class="mod-sub">Yillik tematik reja</div>
     </a>
-    <a href="pages/soha.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">📊</div>
-      <div style="font-weight:700;margin-bottom:4px">Rivojlanish sohalari</div>
-      <div style="font-size:.8rem;color:var(--mu)">5 ta asosiy soha</div>
+    <a href="pages/soha.html" class="mod-card">
+      <div class="icon green"><i class="ti ti-chart-dots-3" aria-hidden="true"></i></div>
+      <div class="mod-title">Rivojlanish sohalari</div>
+      <div class="mod-sub">5 ta asosiy soha</div>
     </a>
-    <a href="pages/tamoyil.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">📌</div>
-      <div style="font-weight:700;margin-bottom:4px">Tamoyillar</div>
-      <div style="font-size:.8rem;color:var(--mu)">6 ta tamoyil</div>
+    <a href="pages/tamoyil.html" class="mod-card">
+      <div class="icon green"><i class="ti ti-pin" aria-hidden="true"></i></div>
+      <div class="mod-title">Tamoyillar</div>
+      <div class="mod-sub">6 ta tamoyil</div>
     </a>
-    <a href="pages/test.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">🧪</div>
-      <div style="font-weight:700;margin-bottom:4px">Testlar</div>
-      <div style="font-size:.8rem;color:var(--mu)" id="test-limit-txt">5 ta / oy</div>
+    <a href="pages/test.html" class="mod-card">
+      <div class="icon amber"><i class="ti ti-flask" aria-hidden="true"></i></div>
+      <div class="mod-title">Testlar</div>
+      <div class="mod-sub" id="test-limit-txt">5 ta / oy</div>
     </a>
-    <a href="pages/konspekt.html" class="card" style="text-decoration:none;color:inherit">
-      <div style="font-size:1.5rem;margin-bottom:8px">📝</div>
-      <div style="font-weight:700;margin-bottom:4px">Konspektlar</div>
-      <div style="font-size:.8rem;color:var(--mu)">3 ta ko'rish</div>
+    <a href="pages/konspekt.html" class="mod-card">
+      <div class="icon amber"><i class="ti ti-notebook" aria-hidden="true"></i></div>
+      <div class="mod-title">Konspektlar</div>
+      <div class="mod-sub">3 ta ko'rish</div>
     </a>
   </div>
 
-  <!-- PRO BO'LIMLAR -->
-  <div class="sec-title">⭐ Professional</div>
-  <div class="grid-4" style="margin-bottom:20px">
-    <div class="card" style="cursor:pointer" id="card-games">
-      <div style="font-size:1.5rem;margin-bottom:8px">🎮</div>
-      <div style="font-weight:700;margin-bottom:4px">Oyinlar</div>
-      <div style="font-size:.8rem;color:var(--mu)">Didaktik oyinlar</div>
-      <span class="lock-badge" id="badge-games">PRO</span>
+  <!-- PRO MODULES -->
+  <div class="sec-title"><i class="ti ti-crown" aria-hidden="true"></i> Professional</div>
+  <div class="mod-grid" style="margin-bottom:24px">
+    <div class="mod-card locked" id="card-games">
+      <div class="icon purple"><i class="ti ti-puzzle" aria-hidden="true"></i></div>
+      <div class="mod-title">Oyinlar</div>
+      <div class="mod-sub">Didaktik oyinlar</div>
+      <span class="lock-tag" id="badge-games">PRO</span>
     </div>
-    <div class="card" style="cursor:pointer" id="card-songs">
-      <div style="font-size:1.5rem;margin-bottom:8px">🎵</div>
-      <div style="font-weight:700;margin-bottom:4px">Qo'shiqlar</div>
-      <div style="font-size:.8rem;color:var(--mu)">Mavzuga mos</div>
-      <span class="lock-badge" id="badge-songs">PRO</span>
+    <div class="mod-card locked" id="card-songs">
+      <div class="icon purple"><i class="ti ti-music" aria-hidden="true"></i></div>
+      <div class="mod-title">Qo'shiqlar</div>
+      <div class="mod-sub">Mavzuga mos</div>
+      <span class="lock-tag" id="badge-songs">PRO</span>
     </div>
-    <div class="card" style="cursor:pointer" id="card-activities">
-      <div style="font-size:1.5rem;margin-bottom:8px">✏️</div>
-      <div style="font-weight:700;margin-bottom:4px">Mashg'ulotlar</div>
-      <div style="font-size:.8rem;color:var(--mu)">Ijodiy faoliyat</div>
-      <span class="lock-badge" id="badge-activities">PRO</span>
+    <div class="mod-card locked" id="card-activities">
+      <div class="icon purple"><i class="ti ti-brush" aria-hidden="true"></i></div>
+      <div class="mod-title">Mashg'ulotlar</div>
+      <div class="mod-sub">Ijodiy faoliyat</div>
+      <span class="lock-tag" id="badge-activities">PRO</span>
     </div>
-    <div class="card" style="cursor:pointer" id="card-attestation">
-      <div style="font-size:1.5rem;margin-bottom:8px">🎓</div>
-      <div style="font-weight:700;margin-bottom:4px">Attestatsiya</div>
-      <div style="font-size:.8rem;color:var(--mu)">Tayyorgarlik testlari</div>
-      <span class="lock-badge" id="badge-attestation">PRO</span>
+    <div class="mod-card locked" id="card-attestation">
+      <div class="icon purple"><i class="ti ti-certificate" aria-hidden="true"></i></div>
+      <div class="mod-title">Attestatsiya</div>
+      <div class="mod-sub">Tayyorgarlik testlari</div>
+      <span class="lock-tag" id="badge-attestation">PRO</span>
     </div>
-    <div class="card" style="cursor:pointer" id="card-portfolio">
-      <div style="font-size:1.5rem;margin-bottom:8px">👤</div>
-      <div style="font-weight:700;margin-bottom:4px">Portfolio</div>
-      <div style="font-size:.8rem;color:var(--mu)">Professional profil</div>
-      <span class="lock-badge" id="badge-portfolio">PRO</span>
-    </div>
-  </div>
-
-  <!-- KORPORATIV -->
-  <div class="sec-title">🏢 Korporativ</div>
-  <div class="grid-4" style="margin-bottom:20px">
-    <div class="card" style="cursor:pointer" id="card-attendance">
-      <div style="font-size:1.5rem;margin-bottom:8px">📋</div>
-      <div style="font-weight:700;margin-bottom:4px">Davomat</div>
-      <div style="font-size:.8rem;color:var(--mu)">QR bilan belgilash</div>
-      <span class="lock-badge" id="badge-attendance" style="background:#6c47ff">CORP</span>
-    </div>
-    <div class="card" style="cursor:pointer" id="card-parents">
-      <div style="font-size:1.5rem;margin-bottom:8px">👨‍👩‍👧</div>
-      <div style="font-weight:700;margin-bottom:4px">Ota-onalar</div>
-      <div style="font-size:.8rem;color:var(--mu)">Xabar va hisobot</div>
-      <span class="lock-badge" id="badge-parents" style="background:#6c47ff">CORP</span>
-    </div>
-    <div class="card" style="cursor:pointer" id="card-monitoring">
-      <div style="font-size:1.5rem;margin-bottom:8px">📈</div>
-      <div style="font-weight:700;margin-bottom:4px">Bola monitoringi</div>
-      <div style="font-size:.8rem;color:var(--mu)">Rivojlanish grafigi</div>
-      <span class="lock-badge" id="badge-monitoring" style="background:#6c47ff">CORP</span>
+    <div class="mod-card locked" id="card-portfolio">
+      <div class="icon purple"><i class="ti ti-id-badge-2" aria-hidden="true"></i></div>
+      <div class="mod-title">Portfolio</div>
+      <div class="mod-sub">Professional profil</div>
+      <span class="lock-tag" id="badge-portfolio">PRO</span>
     </div>
   </div>
 
-  <!-- SO'NGGI TESTLAR -->
-  <div class="sec-title">📊 So'nggi testlar</div>
+  <!-- CORP MODULES -->
+  <div class="sec-title"><i class="ti ti-building" aria-hidden="true"></i> Korporativ</div>
+  <div class="mod-grid" style="margin-bottom:24px">
+    <div class="mod-card locked" id="card-attendance" style="opacity:.5;cursor:default">
+      <div class="icon slate"><i class="ti ti-qrcode" aria-hidden="true"></i></div>
+      <div class="mod-title">Davomat</div>
+      <div class="mod-sub">QR bilan belgilash</div>
+      <span class="lock-tag soon">Tez kunda</span>
+    </div>
+    <div class="mod-card locked" id="card-parents" style="opacity:.5;cursor:default">
+      <div class="icon slate"><i class="ti ti-users-group" aria-hidden="true"></i></div>
+      <div class="mod-title">Ota-onalar</div>
+      <div class="mod-sub">Xabar va hisobot</div>
+      <span class="lock-tag soon">Tez kunda</span>
+    </div>
+    <div class="mod-card locked" id="card-monitoring" style="opacity:.5;cursor:default">
+      <div class="icon slate"><i class="ti ti-chart-line" aria-hidden="true"></i></div>
+      <div class="mod-title">Bola monitoringi</div>
+      <div class="mod-sub">Rivojlanish grafigi</div>
+      <span class="lock-tag soon">Tez kunda</span>
+    </div>
+  </div>
+
+  <!-- RECENT TESTS -->
+  <div class="sec-title"><i class="ti ti-history" aria-hidden="true"></i> So'nggi testlar</div>
   <div id="lastTests">
-    <div style="background:#fff;border-radius:14px;padding:20px;text-align:center;color:var(--mu);font-size:.9rem;box-shadow:0 2px 12px rgba(108,71,255,.08)">
+    <div class="empty-state">
       Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a>
     </div>
   </div>
 
-</div>
-
-<!-- Bildirishnomalar popup -->
-<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;max-width:340px;width:90%;display:flex;flex-direction:column;gap:10px"></div>
+</main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/premium.js"></script>
 <script>
-// ══════════════════════════════════════
-// BILDIRISHNOMALAR
-// ══════════════════════════════════════
 async function checkNotifications() {
   const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
@@ -200,44 +488,46 @@ async function checkNotifications() {
     .order('created_at', { ascending: false })
     .limit(3);
   if (!data?.length) return;
-  const colors = { info: '#6c47ff', success: '#16a34a', warning: '#d97706' };
-  const popup  = document.getElementById('notifPopup');
+  const colors = { info:'#1e40af', success:'#15803d', warning:'#b45309' };
+  const popup = document.getElementById('notifPopup');
   popup.style.display = 'flex';
   popup.innerHTML = data.map(n => `
-    <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.12);border-left:4px solid ${colors[n.type]||'#6c47ff'}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <b style="font-size:13px;color:#2d2d2d">${n.title}</b>
-        <button onclick="this.closest('[style]').remove()" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:16px">×</button>
+    <div style="background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.1);border-left:3px solid ${colors[n.type]||'#1e40af'};max-width:320px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <b style="font-size:13px;color:#111">${n.title}</b>
+        <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;line-height:1">×</button>
       </div>
-      <p style="font-size:12px;color:#555;margin:0">${n.message}</p>
+      <p style="font-size:12px;color:#6b7280;margin:0">${n.message}</p>
     </div>
   `).join('');
   setTimeout(() => { popup.style.display = 'none'; }, 6000);
 }
 
-// ══════════════════════════════════════
-// ASOSIY YUKLASH
-// ══════════════════════════════════════
 window.addEventListener('load', async () => {
   const auth = await initAuth(true);
   if (!auth) return;
-  fillNav();
+  fillNav && fillNav();
 
   const profile = auth.profile;
   const name = getUserName();
-  document.getElementById('hero-name').textContent = name;
 
-  // PLAN
+  document.getElementById('hero-name').textContent = name;
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+
   const proUser  = isPro();
   const corpUser = isCorporate();
 
-  document.getElementById('hero-plan').textContent =
-    corpUser ? '🏢 Korporativ' : proUser ? '⭐ Pro' : '🆓 Bepul';
+  const planLabel = corpUser ? 'Korporativ' : proUser ? 'Professional' : 'Bepul';
+  document.getElementById('hero-plan').innerHTML = proUser
+    ? `<i class="ti ti-crown" aria-hidden="true"></i> ${planLabel}`
+    : `<i class="ti ti-free-rights" aria-hidden="true"></i> ${planLabel}`;
+  if (proUser) document.getElementById('hero-plan').className = 'plan-pill pro';
+  document.getElementById('sb-plan').textContent = planLabel + ' tarif';
 
   if (!proUser) document.getElementById('premiumBanner').style.display = 'flex';
   if (proUser)  document.getElementById('test-limit-txt').textContent = 'Cheksiz';
 
-  // KARTALAR
   const proCards = {
     'card-games'      : { module:'games',       href:'pages/oyinlar.html'      },
     'card-songs'      : { module:'songs',        href:'pages/qoshiqlar.html'    },
@@ -249,89 +539,54 @@ window.addEventListener('load', async () => {
     const el = document.getElementById(id);
     if (!el) return;
     if (proUser) {
-      el.querySelector('.lock-badge').style.display = 'none';
+      el.querySelector('.lock-tag') && (el.querySelector('.lock-tag').style.display = 'none');
+      el.classList.remove('locked');
       el.onclick = () => window.location.href = cfg.href;
     } else {
       el.onclick = () => openPremiumModal(cfg.module);
     }
   });
 
-  ['card-attendance','card-parents','card-monitoring'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const badge = el.querySelector('.lock-badge');
-    if (badge) { badge.textContent = 'Tez kunda'; badge.style.background = '#94a3b8'; }
-    el.style.opacity = '0.6';
-    el.style.cursor = 'default';
-    el.onclick = () => showToast('🚀 Bu bo\'lim tez kunda ishga tushadi!', 'ok');
-  });
-
-  // XP
   const xp = profile?.xp || 0;
   document.getElementById('stat-xp').textContent = xp;
-
-  // KONSPEKT
   document.getElementById('stat-konspekt').textContent = profile?.konspekt_count || 0;
 
-  // TEST STATISTIKASI
-  const { data: allTests } = await _sb
-    .from('test_results')
-    .select('percentage')
-    .eq('user_id', auth.user.id);
-
-  if (allTests && allTests.length > 0) {
+  const { data: allTests } = await _sb.from('test_results').select('percentage').eq('user_id', auth.user.id);
+  if (allTests && allTests.length) {
     const count = allTests.length;
-    const avg   = Math.round(allTests.reduce((sum, t) => sum + (t.percentage || 0), 0) / count);
+    const avg = Math.round(allTests.reduce((s, t) => s + (t.percentage || 0), 0) / count);
     document.getElementById('stat-test').textContent = count;
-    document.getElementById('stat-avg').textContent  = avg + '%';
-  } else {
-    document.getElementById('stat-test').textContent = 0;
-    document.getElementById('stat-avg').textContent  = '0%';
+    document.getElementById('stat-avg').textContent = avg + '%';
   }
 
-  // XP DARAJA
   const lv = getLevel(xp);
   document.getElementById('xp-label').textContent = lv.lvl + '-daraja: ' + lv.title;
-  document.getElementById('hero-xp-badge').textContent = '🏅 ' + lv.lvl + '-daraja';
-  const prevMin = [0, 0, 80, 200, 400, 800][lv.lvl - 1] || 0;
-  const pct = lv.next < 9999
-    ? Math.min(((xp - prevMin) / (lv.next - prevMin)) * 100, 100) : 100;
+  document.getElementById('hero-xp-badge').innerHTML = `<i class="ti ti-medal" aria-hidden="true"></i> ${lv.lvl}-daraja`;
+  const prevMin = [0,0,80,200,400,800][lv.lvl-1] || 0;
+  const pct = lv.next < 9999 ? Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100) : 100;
   document.getElementById('xp-fill').style.width = pct + '%';
-  document.getElementById('xp-next').textContent =
-    lv.next < 9999 ? 'Keyingi: ' + lv.next + ' XP' : 'Maksimal daraja!';
+  document.getElementById('xp-next').textContent = lv.next < 9999 ? 'Keyingi: ' + lv.next + ' XP' : 'Maksimal daraja!';
 
-  // SO'NGGI TESTLAR
-  const { data: tests } = await _sb
-    .from('test_results')
-    .select('*')
-    .eq('user_id', auth.user.id)
-    .order('created_at', { ascending: false })
-    .limit(5);
-
+  const { data: tests } = await _sb.from('test_results').select('*').eq('user_id', auth.user.id).order('created_at',{ascending:false}).limit(5);
   if (tests && tests.length) {
     const ul = document.getElementById('lastTests');
     ul.innerHTML = '';
     tests.forEach(t => {
-      const row   = document.createElement('div');
-      row.style   = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
-      const date  = new Date(t.created_at).toLocaleDateString('uz-UZ');
-      const pct   = t.percentage ?? t.score ?? 0;
-      const color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#ef4444';
-      const testName = t.test_name || t.category || 'Test';
-      row.innerHTML = `
-        <div>
-          <div style="font-weight:600;font-size:.9rem">${testName}</div>
-          <div style="font-size:.75rem;color:var(--mu)">${date}</div>
-        </div>
-        <div style="font-size:1.2rem;font-weight:800;color:${color}">${pct}%</div>
-      `;
+      const pct = t.percentage ?? t.score ?? 0;
+      const cls = pct >= 80 ? 'high' : pct >= 60 ? 'mid' : 'low';
+      const date = new Date(t.created_at).toLocaleDateString('uz-UZ');
+      const name = t.test_name || t.category || 'Test';
+      const row = document.createElement('div');
+      row.className = 'test-row';
+      row.innerHTML = `<div><div class="test-name">${name}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;
       ul.appendChild(row);
     });
   }
 
-  // ✅ BILDIRISHNOMALARNI TEKSHIRISH
   await checkNotifications();
 });
 </script>
+
+<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px"></div>
 </body>
 </html>
