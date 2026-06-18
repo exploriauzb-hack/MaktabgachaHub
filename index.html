@@ -1,143 +1,193 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MaktabgachaHub — Kirish</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Kirish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --accent:#1e40af;--accent2:#3b82f6;--accent-soft:#eff6ff;
+  --text:#111827;--muted:#6b7280;--border:#e5e7eb;--surface:#fff;
+  --ok:#15803d;--ok-soft:#dcfce7;--err:#b91c1c;--err-soft:#fee2e2;
+}
+body{font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;position:relative;overflow:hidden;background:#e8f0fe}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+.auth-wrap{position:relative;z-index:2;width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:16px}
+
+.auth-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 32px;width:100%;box-shadow:0 8px 40px rgba(30,64,175,.1)}
+
+.auth-logo{width:52px;height:52px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px}
+.auth-title{font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:4px}
+.auth-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
+
+/* TABS */
+.auth-tabs{display:flex;background:#f1f5f9;border-radius:10px;padding:3px;gap:3px;margin-bottom:20px}
+.auth-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);font-family:'Inter',sans-serif;transition:all .2s}
+.auth-tab.active{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px rgba(30,64,175,.12)}
+
+/* INPUTS */
+.inp{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fafafa;outline:none;margin-bottom:10px;display:block;transition:border .2s,background .2s}
+.inp:focus{border-color:var(--accent2);background:var(--surface)}
+.inp::placeholder{color:#9ca3af}
+
+/* BUTTON */
+.btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:opacity .2s,transform .1s;margin-top:2px}
+.btn-primary:hover{opacity:.92}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+/* HINT */
+.auth-hint{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.auth-hint a{color:var(--accent);text-decoration:none;font-weight:500}
+.auth-hint a:hover{text-decoration:underline}
+
+/* MESSAGES */
+.msg{font-size:12px;padding:10px 13px;border-radius:8px;margin-bottom:12px;display:none;text-align:left;line-height:1.5}
+.msg-err{background:var(--err-soft);color:#7f1d1d;border-left:3px solid var(--err)}
+.msg-ok {background:var(--ok-soft);color:#14532d;border-left:3px solid var(--ok)}
+
+/* FOOTER */
+.auth-footer{position:relative;z-index:2;font-size:11px;color:var(--muted);text-align:center}
+
+@media(max-width:480px){
+  .auth-box{padding:28px 20px;border-radius:16px}
+  .auth-title{font-size:18px}
+}
+</style>
 </head>
-<body class="auth-page">
+<body>
+<canvas id="bg-canvas"></canvas>
 
-  <div class="auth-wrap">
-    <div class="auth-box">
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">🎓</div>
+    <h1 class="auth-title">MaktabgachaHub</h1>
+    <p class="auth-sub">MTT tarbiyachilari uchun metodic yordam markazi</p>
 
-      <!-- Logo -->
-      <div class="auth-logo">🎓</div>
-      <h1 class="auth-title">MaktabgachaHub</h1>
-      <p class="auth-sub">MTT tarbiyachilari uchun metodic yordam markazi</p>
-
-      <!-- Tablar -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login-btn" onclick="switchTab('login')">Kirish</button>
-        <button class="auth-tab" id="tab-register-btn" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
-      </div>
-
-      <!-- Xabarlar -->
-      <div class="msg msg-err" id="msg-err"></div>
-      <div class="msg msg-ok" id="msg-ok"></div>
-
-      <!-- Login formasi -->
-      <div id="form-login">
-        <input class="inp" type="email" id="login-email" placeholder="Email manzilingiz" autocomplete="email">
-        <input class="inp" type="password" id="login-pass" placeholder="Parolingiz" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter') doLogin()">
-        <button class="btn-primary" id="login-btn" onclick="doLogin()">Kirish</button>
-        <p class="auth-hint">Parolni unutdingizmi? <a href="#">Tiklash</a></p>
-      </div>
-
-      <!-- Register formasi -->
-      <div id="form-register" style="display:none">
-        <input class="inp" type="text" id="reg-name" placeholder="Ismingiz (ixtiyoriy)">
-        <input class="inp" type="email" id="reg-email" placeholder="Email manzilingiz" autocomplete="email">
-        <input class="inp" type="password" id="reg-pass" placeholder="Parol (kamida 6 belgi)"
-          onkeydown="if(event.key==='Enter') doRegister()">
-        <button class="btn-primary" id="reg-btn" onclick="doRegister()">Ro'yxatdan o'tish</button>
-        <p class="auth-hint">Ro'yxatdan o'tish orqali <a href="#">shartlarga</a> roziman</p>
-      </div>
-
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login-btn" onclick="switchTab('login')">Kirish</button>
+      <button class="auth-tab" id="tab-register-btn" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
     </div>
 
-    <p class="auth-footer">🎓 MaktabgachaHub · Ilk Qadam 2026 · O'zbekiston MTT</p>
+    <div class="msg msg-err" id="msg-err"></div>
+    <div class="msg msg-ok"  id="msg-ok"></div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <input class="inp" type="email" id="login-email" placeholder="Email manzilingiz" autocomplete="email"/>
+      <input class="inp" type="password" id="login-pass" placeholder="Parolingiz" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">Kirish</button>
+      <p class="auth-hint">Parolni unutdingizmi? <a href="#">Tiklash</a></p>
+    </div>
+
+    <!-- Register -->
+    <div id="form-register" style="display:none">
+      <input class="inp" type="text" id="reg-name" placeholder="Ismingiz (ixtiyoriy)"/>
+      <input class="inp" type="email" id="reg-email" placeholder="Email manzilingiz" autocomplete="email"/>
+      <input class="inp" type="password" id="reg-pass" placeholder="Parol (kamida 6 belgi)"
+        onkeydown="if(event.key==='Enter')doRegister()"/>
+      <button class="btn-primary" id="reg-btn" onclick="doRegister()">Ro'yxatdan o'tish</button>
+      <p class="auth-hint">Ro'yxatdan o'tish orqali <a href="#">shartlarga</a> roziman</p>
+    </div>
   </div>
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js"></script>
-  <script src="js/auth.js"></script>
+  <p class="auth-footer">🎓 MaktabgachaHub · Ilk Qadam 2026 · O'zbekiston MTT</p>
+</div>
 
-  <script>
-    // Agar foydalanuvchi allaqachon kirgan bo'lsa — dashboardga
-    window.addEventListener('load', async () => {
-      const { data: { session } } = await _sb.auth.getSession()
-      if (session) window.location.href = 'dashboard.html'
-    })
+<!-- Animated background -->
+<script>
+(function(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const types=['star','heart','circle','abc','flower'];
+  const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  const shapes=[];
+  for(let i=0;i<22;i++){shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(12,28),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.15,0.4)})}
+  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
+  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  function drawFlower(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.ellipse(cx+r*.6*Math.cos(a),cy+r*.6*Math.sin(a),r*.5,r*.25,a,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(cx,cy,r*.35,0,Math.PI*2);ctx.fill();ctx.restore()}
+  function drawABC(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.font=`bold ${r*1.2}px Inter,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';const l=['A','B','C','1','2','3'];ctx.fillText(l[Math.floor(Math.abs(cx+cy))%l.length],cx,cy);ctx.restore()}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    shapes.forEach(s=>{
+      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
+      if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
+      if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
+      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
+      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
+      else if(s.t==='flower')drawFlower(ctx,0,0,s.size*.8,s.color,s.op);
+      else if(s.t==='abc')drawABC(ctx,0,0,s.size*.7,s.color,s.op);
+      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 
-    function switchTab(tab) {
-      document.getElementById('form-login').style.display    = tab === 'login'    ? 'block' : 'none'
-      document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none'
-      document.getElementById('tab-login-btn').classList.toggle('active', tab === 'login')
-      document.getElementById('tab-register-btn').classList.toggle('active', tab === 'register')
-      clearMsgs()
-    }
+<script>
+function switchTab(tab){
+  document.getElementById('form-login').style.display   =tab==='login'   ?'block':'none';
+  document.getElementById('form-register').style.display=tab==='register'?'block':'none';
+  document.getElementById('tab-login-btn').classList.toggle('active',tab==='login');
+  document.getElementById('tab-register-btn').classList.toggle('active',tab==='register');
+  clearMsgs();
+}
+function showErr(m){const el=document.getElementById('msg-err');el.textContent=m;el.style.display='block';document.getElementById('msg-ok').style.display='none'}
+function showOk(m){const el=document.getElementById('msg-ok');el.textContent=m;el.style.display='block';document.getElementById('msg-err').style.display='none'}
+function clearMsgs(){document.getElementById('msg-err').style.display='none';document.getElementById('msg-ok').style.display='none'}
+</script>
 
-    function showErr(m) {
-      const el = document.getElementById('msg-err')
-      el.textContent = m; el.style.display = 'block'
-      document.getElementById('msg-ok').style.display = 'none'
-    }
-    function showOk(m) {
-      const el = document.getElementById('msg-ok')
-      el.textContent = m; el.style.display = 'block'
-      document.getElementById('msg-err').style.display = 'none'
-    }
-    function clearMsgs() {
-      document.getElementById('msg-err').style.display = 'none'
-      document.getElementById('msg-ok').style.display = 'none'
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
 
-    async function doLogin() {
-      const email = document.getElementById('login-email').value.trim()
-      const pass  = document.getElementById('login-pass').value
-      if (!email || !pass) { showErr('Email va parolni kiriting!'); return }
+<script>
+window.addEventListener('load',async()=>{
+  const{data:{session}}=await _sb.auth.getSession();
+  if(session)window.location.href='dashboard.html';
+});
 
-      const btn = document.getElementById('login-btn')
-      btn.textContent = 'Kirilmoqda...'; btn.disabled = true
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  if(!email||!pass){showErr('Email va parolni kiriting!');return}
+  const btn=document.getElementById('login-btn');
+  btn.textContent='Kirilmoqda...';btn.disabled=true;
+  const{error}=await _sb.auth.signInWithPassword({email,password:pass});
+  btn.textContent='Kirish';btn.disabled=false;
+  if(error){showErr(error.message==='Invalid login credentials'?"Email yoki parol noto'g'ri!":error.message)}
+  else{window.location.href='dashboard.html'}
+}
 
-      const { error } = await _sb.auth.signInWithPassword({ email, password: pass })
-
-      btn.textContent = 'Kirish'; btn.disabled = false
-
-      if (error) {
-        showErr(error.message === 'Invalid login credentials'
-          ? 'Email yoki parol noto\'g\'ri!' : error.message)
-      } else {
-        window.location.href = 'dashboard.html'
-      }
-    }
-
-    async function doRegister() {
-      const name  = document.getElementById('reg-name').value.trim()
-      const email = document.getElementById('reg-email').value.trim()
-      const pass  = document.getElementById('reg-pass').value
-      if (!email || !pass) { showErr('Email va parolni kiriting!'); return }
-      if (pass.length < 6) { showErr('Parol kamida 6 belgi bo\'lsin!'); return }
-
-      const btn = document.getElementById('reg-btn')
-      btn.textContent = 'Yuklanmoqda...'; btn.disabled = true
-
-      const { data, error } = await _sb.auth.signUp({
-        email, password: pass,
-        options: { data: { full_name: name || email.split('@')[0] } }
-      })
-
-      btn.textContent = 'Ro\'yxatdan o\'tish'; btn.disabled = false
-
-      if (error) {
-        showErr(error.message)
-      } else if (data.user) {
-        // Profiles jadvaliga qo'shish
-        await _sb.from('profiles').upsert({
-          id: data.user.id,
-          full_name: name || email.split('@')[0],
-          role: 'teacher',
-          subscription_tier: 'free',
-          xp: 0
-        })
-        showOk('Muvaffaqiyatli ro\'yxatdan o\'tdingiz! Endi kiring.')
-        switchTab('login')
-      }
-    }
-  </script>
-
+async function doRegister(){
+  const name=document.getElementById('reg-name').value.trim();
+  const email=document.getElementById('reg-email').value.trim();
+  const pass=document.getElementById('reg-pass').value;
+  if(!email||!pass){showErr('Email va parolni kiriting!');return}
+  if(pass.length<6){showErr("Parol kamida 6 belgi bo'lsin!");return}
+  const btn=document.getElementById('reg-btn');
+  btn.textContent='Yuklanmoqda...';btn.disabled=true;
+  const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{full_name:name||email.split('@')[0]}}});
+  btn.textContent="Ro'yxatdan o'tish";btn.disabled=false;
+  if(error){showErr(error.message)}
+  else if(data.user){
+    await _sb.from('profiles').upsert({id:data.user.id,full_name:name||email.split('@')[0],role:'teacher',subscription_tier:'free',xp:0});
+    showOk("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi kiring.");
+    switchTab('login');
+  }
+}
+</script>
 </body>
 </html>
