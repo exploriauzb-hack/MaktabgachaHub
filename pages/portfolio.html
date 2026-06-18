@@ -11,7 +11,7 @@
 .avatar-wrap{position:relative;flex-shrink:0}
 .avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#7c6fe0,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;overflow:hidden;border:3px solid #e8e4f8}
 .avatar img{width:100%;height:100%;object-fit:cover}
-.avatar-edit{position:absolute;bottom:2px;right:2px;background:#6c47ff;color:#fff;border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.avatar-edit{position:absolute;bottom:2px;right:2px;background:#6c47ff;color:#fff;border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center}
 .profile-info{flex:1;min-width:220px}
 .profile-name{font-size:22px;font-weight:700;color:#2d2d2d;margin-bottom:4px}
 .profile-role{font-size:14px;color:#6c47ff;font-weight:600;margin-bottom:12px}
@@ -69,11 +69,9 @@
 .reyting-rank{margin-left:auto;background:rgba(255,255,255,.2);border-radius:14px;padding:12px 18px;text-align:center}
 .reyting-rank .num{font-size:28px;font-weight:800}
 .reyting-rank .lbl{font-size:11px;opacity:.85}
-/* Toast */
 .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:opacity .4s;pointer-events:none}
 .toast.success{background:#16a34a;color:#fff}
 .toast.error{background:#dc2626;color:#fff}
-/* Yuklanmoqda overlay */
 .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;z-index:99999;font-size:16px;font-weight:600;color:#6c47ff}
 @media(max-width:600px){
 .form-grid,.loc-row,.stats-row{grid-template-columns:1fr}
@@ -84,7 +82,6 @@
 </head>
 <body>
 
-<!-- Yuklanmoqda overlay -->
 <div class="loading-overlay" id="loadingOverlay">⏳ Profil yuklanmoqda...</div>
 
 <nav class="nav">
@@ -111,7 +108,7 @@
       <p>Profil to'ldirilishi, yutuqlar va faollik asosida</p>
     </div>
     <div class="reyting-rank">
-      <div class="num">#—</div>
+      <div class="num" id="reytingRank">#—</div>
       <div class="lbl">Reyting</div>
     </div>
   </div>
@@ -122,7 +119,7 @@
       <div class="avatar" id="avatarEl">👩‍🏫
         <img id="avatarImg" src="" style="display:none"/>
       </div>
-      <button class="avatar-edit" id="avatarEditBtn" title="Rasm yuklash" style="display:none">✏️</button>
+      <button class="avatar-edit" id="avatarEditBtn" title="Rasm yuklash">✏️</button>
       <input type="file" id="avatarFile" accept="image/*" style="display:none"/>
     </div>
     <div class="profile-info">
@@ -238,31 +235,31 @@
     <button class="add-yutuq-btn" id="addYutuqBtn" onclick="showYutuqRow()">+ Yutuq qo'shish</button>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/premium.js"></script>
 <script>
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // TUMANLAR
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 const tumanlar = {
-  "Toshkent shahri": ["Chilonzor","Yunusobod","Mirzo Ulug'bek","Shayxontohur","Olmazor","Uchtepa","Yakkasaroy","Bektemir","Sergeli","Mirobod","Hamza"],
-  "Toshkent viloyati": ["Angren","Bekobod","Bo'ka","Bo'stonliq","Chinoz","Ohangaron","Oqqo'rg'on","Parkent","Piskent","Qibray","Toshkent","Yuqorichirchiq","Zangiota","Yangiyul"],
-  "Andijon": ["Andijon shahar","Asaka","Baliqchi","Bo'z","Buloqboshi","Izboskan","Jalaquduq","Marhamat","Oltinkul","Paxtaobod","Qo'rg'ontepa","Shahrixon","Ulug'nor","Xo'jaobod"],
-  "Farg'ona": ["Farg'ona shahar","Beshariq","Bog'dod","Buvayda","Dang'ara","Furqat","Qo'qon","Quva","Rishton","O'zbekiston","Oltiariq","Toshloq","Uchko'prik","Yozyovon"],
-  "Namangan": ["Namangan shahar","Chortoq","Chust","Kosonsoy","Mingbuloq","Norin","Pop","To'raqo'rg'on","Uychi","Yangiqo'rg'on"],
-  "Samarqand": ["Samarqand shahar","Bulungur","Ishtixon","Jomboy","Kattaqo'rg'on","Narpay","Nurobod","Oqdaryo","Paxtachi","Payariq","Pastdarg'om","Qo'shrabot","Tayloq","Urgut"],
-  "Buxoro": ["Buxoro shahar","G'ijduvon","Jondor","Kogon","Qorovulbozor","Romitan","Shofirkon","Vobkent","Olot","Peshku"],
-  "Navoiy": ["Navoiy shahar","Karmana","Konimex","Navbahor","Nurota","Qiziltepa","Tomdi","Uchquduq","Xatirchi","Zafarobod"],
-  "Qashqadaryo": ["Qarshi shahar","Chiroqchi","Dehqonobod","G'uzor","Kasbi","Kitob","Koson","Mirishkor","Muborak","Nishon","Qamashi","Shahrisabz","Yakkabog'"],
-  "Surxondaryo": ["Termiz shahar","Angor","Bandixon","Boysun","Denov","Jarqo'rg'on","Muzrabot","Oltinsoy","Qiziriq","Qumqo'rg'on","Sariosiyo","Sherobod","Sho'rchi","Uzun"],
-  "Jizzax": ["Jizzax shahar","Arnasoy","Baxmal","Do'stlik","Forish","G'allaorol","Mirzacho'l","Paxtakor","Yangiobod","Zarbdor","Zafarobod","Zomin"],
-  "Sirdaryo": ["Guliston shahar","Boyovut","Mirzaobod","Oqoltin","Sardoba","Sayxunobod","Shirin","Xovos"],
-  "Xorazm": ["Urganch shahar","Bog'ot","Gurlan","Hazorasp","Xiva","Xonqa","Shovot","Tuproqqal'a","Yangiariq","Yangibozor"],
-  "Qoraqalpog'iston": ["Nukus shahar","Amudaryo","Beruniy","Chimboy","Ellikqal'a","Kegeyli","Mo'ynoq","Nukus","Qonliko'l","Qorao'zak","Shumanay","Taxtako'pir","To'rtko'l","Xo'jayli"]
+  "Toshkent shahri":["Chilonzor","Yunusobod","Mirzo Ulug'bek","Shayxontohur","Olmazor","Uchtepa","Yakkasaroy","Bektemir","Sergeli","Mirobod","Hamza"],
+  "Toshkent viloyati":["Angren","Bekobod","Bo'ka","Bo'stonliq","Chinoz","Ohangaron","Oqqo'rg'on","Parkent","Piskent","Qibray","Toshkent","Yuqorichirchiq","Zangiota","Yangiyul"],
+  "Andijon":["Andijon shahar","Asaka","Baliqchi","Bo'z","Buloqboshi","Izboskan","Jalaquduq","Marhamat","Oltinkul","Paxtaobod","Qo'rg'ontepa","Shahrixon","Ulug'nor","Xo'jaobod"],
+  "Farg'ona":["Farg'ona shahar","Beshariq","Bog'dod","Buvayda","Dang'ara","Furqat","Qo'qon","Quva","Rishton","O'zbekiston","Oltiariq","Toshloq","Uchko'prik","Yozyovon"],
+  "Namangan":["Namangan shahar","Chortoq","Chust","Kosonsoy","Mingbuloq","Norin","Pop","To'raqo'rg'on","Uychi","Yangiqo'rg'on"],
+  "Samarqand":["Samarqand shahar","Bulungur","Ishtixon","Jomboy","Kattaqo'rg'on","Narpay","Nurobod","Oqdaryo","Paxtachi","Payariq","Pastdarg'om","Qo'shrabot","Tayloq","Urgut"],
+  "Buxoro":["Buxoro shahar","G'ijduvon","Jondor","Kogon","Qorovulbozor","Romitan","Shofirkon","Vobkent","Olot","Peshku"],
+  "Navoiy":["Navoiy shahar","Karmana","Konimex","Navbahor","Nurota","Qiziltepa","Tomdi","Uchquduq","Xatirchi","Zafarobod"],
+  "Qashqadaryo":["Qarshi shahar","Chiroqchi","Dehqonobod","G'uzor","Kasbi","Kitob","Koson","Mirishkor","Muborak","Nishon","Qamashi","Shahrisabz","Yakkabog'"],
+  "Surxondaryo":["Termiz shahar","Angor","Bandixon","Boysun","Denov","Jarqo'rg'on","Muzrabot","Oltinsoy","Qiziriq","Qumqo'rg'on","Sariosiyo","Sherobod","Sho'rchi","Uzun"],
+  "Jizzax":["Jizzax shahar","Arnasoy","Baxmal","Do'stlik","Forish","G'allaorol","Mirzacho'l","Paxtakor","Yangiobod","Zarbdor","Zafarobod","Zomin"],
+  "Sirdaryo":["Guliston shahar","Boyovut","Mirzaobod","Oqoltin","Sardoba","Sayxunobod","Shirin","Xovos"],
+  "Xorazm":["Urganch shahar","Bog'ot","Gurlan","Hazorasp","Xiva","Xonqa","Shovot","Tuproqqal'a","Yangiariq","Yangibozor"],
+  "Qoraqalpog'iston":["Nukus shahar","Amudaryo","Beruniy","Chimboy","Ellikqal'a","Kegeyli","Mo'ynoq","Nukus","Qonliko'l","Qorao'zak","Shumanay","Taxtako'pir","To'rtko'l","Xo'jayli"]
 };
 
 function loadTumanlar(tanlangan) {
@@ -276,20 +273,65 @@ function loadTumanlar(tanlangan) {
     sel.appendChild(o);
   });
 }
-loadTumanlar(); // boshlang'ich yuklash
+loadTumanlar();
 
-// ═══════════════════════════════════════════════════
-// DB DAN PROFIL YUKLASH
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
+// BALL HISOBLASH
+// ══════════════════════════════════════
+function calcScore() {
+  const skills   = document.querySelectorAll('.skill-tag').length;
+  const yutuqlar = document.querySelectorAll('.yutuq-item').length;
+  const staj     = parseInt(document.getElementById('i-staj')?.value) || 0;
+  const toifa    = document.getElementById('i-toifa')?.value || '';
+
+  let score = 40;
+  score += Math.min(staj * 2, 20);
+  score += Math.min(skills * 3, 15);
+  score += Math.min(yutuqlar * 5, 20);
+  if (toifa === 'Oliy toifa') score += 5;
+  else if (toifa === '1-toifa') score += 3;
+  else if (toifa === '2-toifa') score += 1;
+  return Math.min(score, 100);
+}
+
+function updateScoreUI(score) {
+  document.getElementById('reytingScore').textContent = score;
+  document.getElementById('stat-yutuq').textContent   = document.querySelectorAll('.yutuq-item').length;
+  document.getElementById('stat-skill').textContent   = document.querySelectorAll('.skill-tag').length;
+  document.getElementById('stat-staj').textContent    = document.getElementById('i-staj')?.value || 0;
+}
+
+// Ball ni Supabase ga yozish
+async function saveBallToDB(score) {
+  const { data: { user } } = await _sb.auth.getUser();
+  if (!user) return;
+  await _sb.from('profiles').update({ ball: score }).eq('id', user.id);
+}
+
+// Reytingdagi o'rinni olish
+async function loadMyRank() {
+  const { data: { user } } = await _sb.auth.getUser();
+  if (!user) return;
+  const { data } = await _sb
+    .from('profiles')
+    .select('id, ball')
+    .order('ball', { ascending: false });
+  if (!data) return;
+  const idx = data.findIndex(r => r.id === user.id);
+  if (idx !== -1) {
+    document.getElementById('reytingRank').textContent = '#' + (idx + 1);
+  }
+}
+
+// ══════════════════════════════════════
+// PROFIL YUKLASH
+// ══════════════════════════════════════
 async function loadProfile() {
   const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
 
   const { data, error } = await _sb
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+    .from('profiles').select('*').eq('id', user.id).single();
 
   if (error && error.code !== 'PGRST116') {
     console.error('Profil yuklanmadi:', error.message);
@@ -297,7 +339,6 @@ async function loadProfile() {
   }
   if (!data) return;
 
-  // Maydonlar
   const textFields = ['familiya','ism','sharif','telefon','jinsi','dmtt','bio'];
   textFields.forEach(f => {
     if (data[f] != null) {
@@ -308,32 +349,22 @@ async function loadProfile() {
     }
   });
 
-  // Sana
   if (data.tugilgan) {
     document.getElementById('i-tugilgan').value = data.tugilgan;
     document.getElementById('v-tugilgan').textContent = data.tugilgan;
   }
-
-  // Raqam
   if (data.staj != null) {
     document.getElementById('i-staj').value = data.staj;
     document.getElementById('v-staj').textContent = data.staj;
-    document.getElementById('stat-staj').textContent = data.staj;
   }
-
-  // Select — viloyat
   if (data.viloyat) {
     document.getElementById('i-viloyat').value = data.viloyat;
     document.getElementById('v-viloyat').textContent = data.viloyat;
     loadTumanlar(data.tuman);
   }
-
-  // Select — tuman
   if (data.tuman) {
     document.getElementById('v-tuman').textContent = data.tuman;
   }
-
-  // Select — lavozim, toifa, malumot
   ['lavozim','toifa','malumot'].forEach(f => {
     if (data[f]) {
       const el = document.getElementById('i-' + f);
@@ -376,12 +407,12 @@ async function loadProfile() {
   // Profil karta
   const fam     = data.familiya || '';
   const ism     = data.ism      || '';
+  const lavozim = data.lavozim  || '—';
   const dmtt    = data.dmtt     || '';
   const tuman   = data.tuman    || '';
   const toifa   = data.toifa    || '—';
   const staj    = data.staj     || 0;
   const malumot = data.malumot  || '—';
-  const lavozim = data.lavozim  || '—';
 
   document.getElementById('dispName').textContent    = (fam + ' ' + ism).trim() || '—';
   document.getElementById('dispRole').textContent    = lavozim + (dmtt ? ' — ' + dmtt : '') + (tuman ? ', ' + tuman : '');
@@ -389,19 +420,23 @@ async function loadProfile() {
   document.getElementById('dispStaj').textContent    = '📅 ' + staj + ' yil staj';
   document.getElementById('dispMalumot').textContent = '🎓 ' + malumot;
 
-  updateScore();
+  // ✅ Ball hisoblash va UI yangilash
+  const score = calcScore();
+  updateScoreUI(score);
+
+  // ✅ Reytingdagi o'rinni yuklash
+  await loadMyRank();
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // DB GA SAQLASH
-// ═══════════════════════════════════════════════════
-async function saveProfileToDB() {
+// ══════════════════════════════════════
+async function saveProfileToDB(score) {
   const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
 
   const skills = [...document.querySelectorAll('.skill-tag')]
-    .map(el => el.childNodes[0].textContent.trim())
-    .filter(Boolean);
+    .map(el => el.childNodes[0].textContent.trim()).filter(Boolean);
 
   const yutuqlar = [...document.querySelectorAll('.yutuq-item')].map(el => ({
     nomi: el.querySelector('.yutuq-name')?.textContent || '',
@@ -428,23 +463,22 @@ async function saveProfileToDB() {
     bio:        g('i-bio'),
     skills,
     yutuqlar,
+    ball:       score,           // ✅ ball ham saqlanadi
     updated_at: new Date().toISOString()
   };
 
-  const { error } = await _sb
-    .from('profiles')
-    .upsert(payload, { onConflict: 'id' });
+  const { error } = await _sb.from('profiles').upsert(payload, { onConflict: 'id' });
 
-  if (error) {
-    showToast('❌ Xato: ' + error.message, 'error');
-  } else {
+  if (error) showToast('❌ Xato: ' + error.message, 'error');
+  else {
     showToast('✅ Profil saqlandi!', 'success');
+    await loadMyRank(); // ✅ saqlangandan keyin o'rinni yangilash
   }
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 function showToast(msg, type) {
   const t = document.createElement('div');
   t.className = 'toast ' + (type || 'success');
@@ -453,9 +487,9 @@ function showToast(msg, type) {
   setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2500);
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // EDIT MODE
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 function toggleEdit() {
   document.querySelectorAll('.form-val').forEach(el => el.style.display = 'none');
   document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el => el.style.display = 'block');
@@ -469,7 +503,6 @@ function toggleEdit() {
 }
 
 async function saveProfile() {
-  // Maydonlar ko'rinishini yangilash
   const fields = ['familiya','ism','sharif','telefon','tugilgan','jinsi',
                   'viloyat','tuman','dmtt','lavozim','toifa','staj','malumot','bio'];
   fields.forEach(f => {
@@ -478,8 +511,8 @@ async function saveProfile() {
     if (inp && val) val.textContent = inp.value || '—';
   });
 
-  const ism     = document.getElementById('i-ism').value;
   const fam     = document.getElementById('i-familiya').value;
+  const ism     = document.getElementById('i-ism').value;
   const dmtt    = document.getElementById('i-dmtt').value;
   const tuman   = document.getElementById('i-tuman').value;
   const toifa   = document.getElementById('i-toifa').value;
@@ -488,11 +521,10 @@ async function saveProfile() {
   const lavozim = document.getElementById('i-lavozim').value;
 
   document.getElementById('dispName').textContent    = (fam + ' ' + ism).trim() || '—';
-  document.getElementById('dispRole').textContent    = lavozim + ' — ' + dmtt + ', ' + tuman;
+  document.getElementById('dispRole').textContent    = lavozim + (dmtt ? ' — ' + dmtt : '') + (tuman ? ', ' + tuman : '');
   document.getElementById('dispToifa').textContent   = '🏷️ ' + toifa;
   document.getElementById('dispStaj').textContent    = '📅 ' + staj + ' yil staj';
   document.getElementById('dispMalumot').textContent = '🎓 ' + malumot;
-  document.getElementById('stat-staj').textContent   = staj;
 
   // UI qaytarish
   document.querySelectorAll('.form-val').forEach(el => el.style.display = 'block');
@@ -506,15 +538,15 @@ async function saveProfile() {
   document.getElementById('yutuqAddRow').style.display  = 'none';
   document.getElementById('avatarEditBtn').style.display = 'none';
 
-  updateScore();
-
-  // DB ga saqlash
-  await saveProfileToDB();
+  // ✅ Ball hisoblash va saqlash
+  const score = calcScore();
+  updateScoreUI(score);
+  await saveProfileToDB(score);
 }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // KO'NIKMALAR
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 function addSkill() {
   const inp = document.getElementById('skillInput');
   if (!inp.value.trim()) return;
@@ -523,13 +555,12 @@ function addSkill() {
   tag.innerHTML = inp.value.trim() + ' <button class="skill-del" onclick="delSkill(this)" style="display:inline">×</button>';
   document.getElementById('skillsWrap').appendChild(tag);
   inp.value = '';
-  updateScore();
 }
-function delSkill(btn) { btn.closest('.skill-tag').remove(); updateScore(); }
+function delSkill(btn) { btn.closest('.skill-tag').remove(); }
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // YUTUQLAR
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 function showYutuqRow() { document.getElementById('yutuqAddRow').style.display = 'flex'; }
 function addYutuq() {
   const nomi = document.getElementById('y-nomi').value.trim();
@@ -549,36 +580,12 @@ function addYutuq() {
   document.getElementById('y-nomi').value = '';
   document.getElementById('y-yil').value  = '';
   document.getElementById('yutuqAddRow').style.display = 'none';
-  updateScore();
 }
-function delYutuq(btn) { btn.closest('.yutuq-item').remove(); updateScore(); }
+function delYutuq(btn) { btn.closest('.yutuq-item').remove(); }
 
-// ═══════════════════════════════════════════════════
-// BALL HISOBLASH
-// ═══════════════════════════════════════════════════
-function updateScore() {
-  const skills  = document.querySelectorAll('.skill-tag').length;
-  const yutuqlar = document.querySelectorAll('.yutuq-item').length;
-  const staj    = parseInt(document.getElementById('i-staj')?.value) || 0;
-  const toifa   = document.getElementById('i-toifa')?.value || '';
-
-  let score = 40;
-  score += Math.min(staj * 2, 20);
-  score += Math.min(skills * 3, 15);
-  score += Math.min(yutuqlar * 5, 20);
-  if (toifa === 'Oliy toifa') score += 5;
-  else if (toifa === '1-toifa') score += 3;
-  else if (toifa === '2-toifa') score += 1;
-  score = Math.min(score, 100);
-
-  document.getElementById('reytingScore').textContent = score;
-  document.getElementById('stat-yutuq').textContent   = yutuqlar;
-  document.getElementById('stat-skill').textContent   = skills;
-}
-
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // AVATAR
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 document.getElementById('avatarEditBtn').addEventListener('click', () => {
   document.getElementById('avatarFile').click();
 });
@@ -595,9 +602,9 @@ document.getElementById('avatarFile').addEventListener('change', function () {
   reader.readAsDataURL(file);
 });
 
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 // SAHIFA YUKLANISHI
-// ═══════════════════════════════════════════════════
+// ══════════════════════════════════════
 window.addEventListener('load', async () => {
   const auth = await initAuth(true);
   if (!auth) return;
