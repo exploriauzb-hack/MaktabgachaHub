@@ -27,7 +27,7 @@
   <!-- HERO -->
   <div class="hero">
     <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
-    <p>Ilk Qadam 2026 dasturi asosida professional ish yuritish vositalari</p>
+    <p>Yurtimiz fidoiy tarbiyachilari uchun yurakdan yaratilgan</p>
     <div class="badges">
       <span class="badge">👶 <span id="hero-group">Guruh —</span></span>
       <span class="badge" id="hero-plan">🆓 Bepul</span>
@@ -177,11 +177,48 @@
 
 </div>
 
+<!-- Bildirishnomalar popup -->
+<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;max-width:340px;width:90%;display:flex;flex-direction:column;gap:10px"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/premium.js"></script>
 <script>
+// ══════════════════════════════════════
+// BILDIRISHNOMALAR
+// ══════════════════════════════════════
+async function checkNotifications() {
+  const { data: { user } } = await _sb.auth.getUser();
+  if (!user) return;
+  const { data: prof } = await _sb.from('profiles').select('subscription_tier').eq('id', user.id).single();
+  const tier = prof?.subscription_tier || 'free';
+  const now  = new Date().toISOString();
+  const { data } = await _sb.from('notifications')
+    .select('*')
+    .or(`target.eq.all,target.eq.${tier}`)
+    .or(`expires_at.is.null,expires_at.gt.${now}`)
+    .order('created_at', { ascending: false })
+    .limit(3);
+  if (!data?.length) return;
+  const colors = { info: '#6c47ff', success: '#16a34a', warning: '#d97706' };
+  const popup  = document.getElementById('notifPopup');
+  popup.style.display = 'flex';
+  popup.innerHTML = data.map(n => `
+    <div style="background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.12);border-left:4px solid ${colors[n.type]||'#6c47ff'}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <b style="font-size:13px;color:#2d2d2d">${n.title}</b>
+        <button onclick="this.closest('[style]').remove()" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:16px">×</button>
+      </div>
+      <p style="font-size:12px;color:#555;margin:0">${n.message}</p>
+    </div>
+  `).join('');
+  setTimeout(() => { popup.style.display = 'none'; }, 6000);
+}
+
+// ══════════════════════════════════════
+// ASOSIY YUKLASH
+// ══════════════════════════════════════
 window.addEventListener('load', async () => {
   const auth = await initAuth(true);
   if (!auth) return;
@@ -191,7 +228,7 @@ window.addEventListener('load', async () => {
   const name = getUserName();
   document.getElementById('hero-name').textContent = name;
 
-  // ── PLAN ──
+  // PLAN
   const proUser  = isPro();
   const corpUser = isCorporate();
 
@@ -201,13 +238,13 @@ window.addEventListener('load', async () => {
   if (!proUser) document.getElementById('premiumBanner').style.display = 'flex';
   if (proUser)  document.getElementById('test-limit-txt').textContent = 'Cheksiz';
 
-  // ── KARTALAR ONCLICK ──
+  // KARTALAR
   const proCards = {
-    'card-games'      : { module:'games',      href:'pages/oyinlar.html'      },
-    'card-songs'      : { module:'songs',       href:'pages/qoshiqlar.html'    },
-    'card-activities' : { module:'activities',  href:'pages/mashgulotlar.html' },
-    'card-attestation': { module:'attestation', href:'pages/attestatsiya.html' },
-    'card-portfolio'  : { module:'portfolio',   href:'pages/portfolio.html'    },
+    'card-games'      : { module:'games',       href:'pages/oyinlar.html'      },
+    'card-songs'      : { module:'songs',        href:'pages/qoshiqlar.html'    },
+    'card-activities' : { module:'activities',   href:'pages/mashgulotlar.html' },
+    'card-attestation': { module:'attestation',  href:'pages/attestatsiya.html' },
+    'card-portfolio'  : { module:'portfolio',    href:'pages/portfolio.html'    },
   };
   Object.entries(proCards).forEach(([id, cfg]) => {
     const el = document.getElementById(id);
@@ -230,15 +267,14 @@ window.addEventListener('load', async () => {
     el.onclick = () => showToast('🚀 Bu bo\'lim tez kunda ishga tushadi!', 'ok');
   });
 
-  // ── XP (profile dan) ──
+  // XP
   const xp = profile?.xp || 0;
   document.getElementById('stat-xp').textContent = xp;
 
-  // ── KONSPEKT ──
+  // KONSPEKT
   document.getElementById('stat-konspekt').textContent = profile?.konspekt_count || 0;
 
-  // ── TEST STATISTIKASI — test_results jadvalidan to'g'ridan-to'g'ri o'qiymiz ──
-  // (Bu profiledagi eski/noto'g'ri keshni chetlab o'tadi)
+  // TEST STATISTIKASI
   const { data: allTests } = await _sb
     .from('test_results')
     .select('percentage')
@@ -246,17 +282,15 @@ window.addEventListener('load', async () => {
 
   if (allTests && allTests.length > 0) {
     const count = allTests.length;
-    const avg = Math.round(
-      allTests.reduce((sum, t) => sum + (t.percentage || 0), 0) / count
-    );
+    const avg   = Math.round(allTests.reduce((sum, t) => sum + (t.percentage || 0), 0) / count);
     document.getElementById('stat-test').textContent = count;
-    document.getElementById('stat-avg').textContent = avg + '%';
+    document.getElementById('stat-avg').textContent  = avg + '%';
   } else {
     document.getElementById('stat-test').textContent = 0;
-    document.getElementById('stat-avg').textContent = '0%';
+    document.getElementById('stat-avg').textContent  = '0%';
   }
 
-  // ── XP DARAJA ──
+  // XP DARAJA
   const lv = getLevel(xp);
   document.getElementById('xp-label').textContent = lv.lvl + '-daraja: ' + lv.title;
   document.getElementById('hero-xp-badge').textContent = '🏅 ' + lv.lvl + '-daraja';
@@ -267,7 +301,7 @@ window.addEventListener('load', async () => {
   document.getElementById('xp-next').textContent =
     lv.next < 9999 ? 'Keyingi: ' + lv.next + ' XP' : 'Maksimal daraja!';
 
-  // ── SO'NGGI TESTLAR ──
+  // SO'NGGI TESTLAR
   const { data: tests } = await _sb
     .from('test_results')
     .select('*')
@@ -279,12 +313,11 @@ window.addEventListener('load', async () => {
     const ul = document.getElementById('lastTests');
     ul.innerHTML = '';
     tests.forEach(t => {
-      const row = document.createElement('div');
-      row.style = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
-      const date = new Date(t.created_at).toLocaleDateString('uz-UZ');
-      const pct  = t.percentage ?? t.score ?? 0;
+      const row   = document.createElement('div');
+      row.style   = 'background:#fff;border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 12px rgba(108,71,255,.08)';
+      const date  = new Date(t.created_at).toLocaleDateString('uz-UZ');
+      const pct   = t.percentage ?? t.score ?? 0;
       const color = pct >= 80 ? '#16a34a' : pct >= 60 ? '#d97706' : '#ef4444';
-      // test.html 'category' ustuniga saqlaydi, 'test_name' emas
       const testName = t.test_name || t.category || 'Test';
       row.innerHTML = `
         <div>
@@ -296,8 +329,10 @@ window.addEventListener('load', async () => {
       ul.appendChild(row);
     });
   }
+
+  // ✅ BILDIRISHNOMALARNI TEKSHIRISH
+  await checkNotifications();
 });
 </script>
-
 </body>
 </html>
