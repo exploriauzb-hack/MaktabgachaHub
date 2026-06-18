@@ -282,10 +282,10 @@ loadTumanlar(); // boshlang'ich yuklash
 // DB DAN PROFIL YUKLASH
 // ═══════════════════════════════════════════════════
 async function loadProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
 
-  const { data, error } = await supabase
+  const { data, error } = await _sb
     .from('profiles')
     .select('*')
     .eq('id', user.id)
@@ -396,7 +396,7 @@ async function loadProfile() {
 // DB GA SAQLASH
 // ═══════════════════════════════════════════════════
 async function saveProfileToDB() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
 
   const skills = [...document.querySelectorAll('.skill-tag')]
@@ -431,7 +431,7 @@ async function saveProfileToDB() {
     updated_at: new Date().toISOString()
   };
 
-  const { error } = await supabase
+  const { error } = await _sb
     .from('profiles')
     .upsert(payload, { onConflict: 'id' });
 
