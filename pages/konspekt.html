@@ -44,6 +44,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
 
+/* FAB BACK — xuddi jadval.html dek */
+.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
+.fab-back i{font-size:18px}
+
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
 
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
@@ -104,21 +109,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
   .btn-hamburger{display:flex}
-  .main{margin-left:0;padding:14px 14px 40px}
+  .main{margin-left:0;padding:14px 14px 80px}
   .topbar{margin-bottom:14px}
   .topbar h1{font-size:15px}
   .plan-pill{font-size:11px;padding:4px 10px}
   .info-banner{font-size:11.5px;padding:9px 12px}
   .filter-card{padding:10px 12px;gap:6px}
   .filter-card select{font-size:11.5px;padding:6px 10px}
-  .btn-reset{font-size:11.5px;padding:6px 12px}
-  .sec-title{font-size:11px}
   .kn-hdr{padding:12px 14px}
   .kn-title{font-size:12.5px}
   .kb{font-size:10px;padding:2px 8px}
   .kn-body{padding:0 14px 14px}
   .kn-sec p,.kn-sec li{font-size:12px}
-  .lock-card{padding:18px}
+  .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
 }
 </style>
 </head>
@@ -132,7 +135,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
-
   <div class="sidebar-section">Asosiy</div>
   <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
   <a href="jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
@@ -141,19 +143,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
   <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="konspekt.html" class="nav-item active"><i class="ti ti-notebook"></i> Konspektlar</a>
-
   <div class="sidebar-section">Professional</div>
   <a href="oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a href="qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
   <a href="mashgulotlar.html" class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
   <a href="attestatsiya.html" class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a href="portfolio.html" class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-
   <div class="sidebar-section">Korporativ</div>
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
-
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -197,6 +196,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div id="kn-list"></div>
   <div id="lock-section" style="display:none"></div>
 </main>
+
+<!-- FAB BACK — jadval.html dek -->
+<a href="../dashboard.html" class="fab-back">
+  <i class="ti ti-arrow-left"></i> Dashboard
+</a>
 
 <div id="notifPopup"></div>
 
@@ -248,84 +252,51 @@ window.addEventListener('resize',checkHamburger);
 <script src="../js/supabase.js"></script>
 <script src="../js/auth.js"></script>
 <script>
+var knData=[
+  {hafta:1,kun:'Dushanba',soha:'Nutq va til',kod:'3.1.2.b',mavzu:"Oila - suhbat va hikoya tuzish",maqsad:"Oila a'zolari haqida lug'at boyligi va bog'lanish nutqni rivojlantirish.",jihozlar:"Oila surati, kartochkalar, qo'g'irchoqlar",borish:["Kirish (3 daq): Kayfiyat doirasi","Motivatsiya (4 daq): Qo'g'irchoq oilasi keldi","Asosiy qism (12 daq): Oila haqida suhbat","Jismoniy daqiqa (2 daq): Barmoq o'yini","Mustahkamlash (4 daq): Kartochkalar","Refleksiya (2 daq)"],natija:"Oila a'zolarini nomlaydi, 2-3 so'zdan gap tuzadi.",izoh:"Surat o'rniga bolalar o'z oila rasmini olib kelishi mumkin."},
+  {hafta:1,kun:'Seshanba',soha:'FEMP',kod:'4.2.3.b',mavzu:"Bir va ko'p. Katta va kichik",maqsad:"Bir, ko'p, katta, kichik tushunchalarini shakllantirish.",jihozlar:"Turli hajmdagi o'yinchoqlar, geometrik shakllar",borish:["Kirish (3 daq): Qo'shiq","Motivatsiya (4 daq): Qutidan narsalar","Asosiy qism (12 daq): Katta/kichik taqqoslash","Jismoniy daqiqa (2 daq): Harakatli o'yin","Mustahkamlash (4 daq): Mustaqil ishlash","Refleksiya (2 daq)"],natija:"Bir va ko'pni farqlaydi, katta-kichikni taqqoslaydi.",izoh:"Haqiqiy narsalar ishlatish samaraliroq."},
+  {hafta:1,kun:'Chorshanba',soha:'Tabiat bilan tanishuv',kod:'4.3.1.b',mavzu:"Kuz fasli - tabiat o'zgarishlari",maqsad:"Kuz belgilarini ajratish va tabiat o'zgarishlarini kuzatish.",jihozlar:"Kuz barglari, suratlar, kuz kiyimlari",borish:["Kirish (3 daq): Kuz haqida savol","Motivatsiya (4 daq): Barg ko'rsatiladi","Asosiy qism (12 daq): Kuz belgilari","Jismoniy daqiqa (2 daq): Barg kabi uchish","Mustahkamlash (4 daq): Barg yig'ish o'yini","Refleksiya (2 daq)"],natija:"Kuzning 3 ta belgisini aytadi.",izoh:"Sayr paytida haqiqiy barglar yig'ish samarali."},
+  {hafta:2,kun:'Dushanba',soha:'Nutq va til',kod:'3.2.1.b',mavzu:"Bog'cha - mening ikkinchi uyim",maqsad:"Bog'cha xonalari va qoidalar haqida nutqni rivojlantirish.",jihozlar:"Bog'cha xaritasi, fotosuratlar",borish:["Kirish (3 daq): Kayfiyat","Motivatsiya (4 daq): Bog'chamizni taniylik","Asosiy qism (12 daq): Xonalar haqida suhbat","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Chizish","Refleksiya (2 daq)"],natija:"Bog'cha xonalarini nomlaydi, qoidalarni aytadi.",izoh:"Xona bo'ylab ekskursiya o'tkazish mumkin."},
+  {hafta:2,kun:'Seshanba',soha:'FEMP',kod:'4.2.1.b',mavzu:"Geometrik shakllar: doira, kvadrat, uchburchak",maqsad:"Uchta asosiy geometrik shaklni farqlash va nomlash.",jihozlar:"Shakllar to'plami, flanel doskasi",borish:["Kirish (3 daq)","Motivatsiya (4 daq): Shakllar topshirig'i","Asosiy qism (12 daq): Shakllarni o'rganish","Jismoniy daqiqa (2 daq): Shakl bo'lib turaylik","Mustahkamlash (4 daq)","Refleksiya (2 daq)"],natija:"3 ta shaklni nomlab, farqlab ko'rsatadi.",izoh:""},
+  {hafta:3,kun:'Dushanba',soha:'Nutq va til',kod:'3.1.3.b',mavzu:"Meva va sabzavotlar - tasviriy suhbat",maqsad:"Meva-sabzavotlar nomini bilish va tasvirlash.",jihozlar:"Haqiqiy mevalar, sabzavotlar, suratlar",borish:["Kirish (3 daq): Hid bilish tajribasi","Motivatsiya (4 daq): Sehrli quti","Asosiy qism (12 daq): Nomlash, tasvirlash","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Tasnif","Refleksiya (2 daq)"],natija:"8 ta meva/sabzavot nomini biladi.",izoh:"Haqiqiy mevalar ishlatish eng samarali."},
+];
 
-var knData = [
-  { hafta:1, kun:'Dushanba', soha:'Nutq va til', kod:'3.1.2.b', mavzu:"Oila - suhbat va hikoya tuzish",
-    maqsad:"Oila a'zolari haqida lug'at boyligi va bog'lanish nutqni rivojlantirish.",
-    jihozlar:"Oila surati, kartochkalar, qo'g'irchoqlar",
-    borish:["Kirish (3 daq): Kayfiyat doirasi","Motivatsiya (4 daq): Qo'g'irchoq oilasi keldi","Asosiy qism (12 daq): Oila haqida suhbat","Jismoniy daqiqa (2 daq): Barmoq o'yini","Mustahkamlash (4 daq): Kartochkalar","Refleksiya (2 daq)"],
-    natija:"Oila a'zolarini nomlaydi, 2-3 so'zdan gap tuzadi.", izoh:"Surat o'rniga bolalar o'z oila rasmini olib kelishi mumkin." },
-  { hafta:1, kun:'Seshanba', soha:'FEMP', kod:'4.2.3.b', mavzu:"Bir va ko'p. Katta va kichik",
-    maqsad:"Bir, ko'p, katta, kichik tushunchalarini shakllantirish.",
-    jihozlar:"Turli hajmdagi o'yinchoqlar, geometrik shakllar",
-    borish:["Kirish (3 daq): Qo'shiq","Motivatsiya (4 daq): Qutidan narsalar","Asosiy qism (12 daq): Katta/kichik taqqoslash","Jismoniy daqiqa (2 daq): Harakatli o'yin","Mustahkamlash (4 daq): Mustaqil ishlash","Refleksiya (2 daq)"],
-    natija:"Bir va ko'pni farqlaydi, katta-kichikni taqqoslaydi.", izoh:"Haqiqiy narsalar ishlatish samaraliroq." },
-  { hafta:1, kun:'Chorshanba', soha:'Tabiat bilan tanishuv', kod:'4.3.1.b', mavzu:"Kuz fasli - tabiat o'zgarishlari",
-    maqsad:"Kuz belgilarini ajratish va tabiat o'zgarishlarini kuzatish.",
-    jihozlar:"Kuz barglari, suratlar, kuz kiyimlari",
-    borish:["Kirish (3 daq): Kuz haqida savol","Motivatsiya (4 daq): Barg ko'rsatiladi","Asosiy qism (12 daq): Kuz belgilari","Jismoniy daqiqa (2 daq): Barg kabi uchish","Mustahkamlash (4 daq): Barg yig'ish o'yini","Refleksiya (2 daq)"],
-    natija:"Kuzning 3 ta belgisini aytadi.", izoh:"Sayr paytida haqiqiy barglar yig'ish samarali." },
-  { hafta:2, kun:'Dushanba', soha:'Nutq va til', kod:'3.2.1.b', mavzu:"Bog'cha - mening ikkinchi uyim",
-    maqsad:"Bog'cha xonalari va qoidalar haqida nutqni rivojlantirish.",
-    jihozlar:"Bog'cha xaritasi, fotosuratlar",
-    borish:["Kirish (3 daq): Kayfiyat","Motivatsiya (4 daq): Bog'chamizni taniylik","Asosiy qism (12 daq): Xonalar haqida suhbat","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Chizish","Refleksiya (2 daq)"],
-    natija:"Bog'cha xonalarini nomlaydi, qoidalarni aytadi.", izoh:"Xona bo'ylab ekskursiya o'tkazish mumkin." },
-  { hafta:2, kun:'Seshanba', soha:'FEMP', kod:'4.2.1.b', mavzu:"Geometrik shakllar: doira, kvadrat, uchburchak",
-    maqsad:"Uchta asosiy geometrik shaklni farqlash va nomlash.",
-    jihozlar:"Shakllar to'plami, flanel doskasi",
-    borish:["Kirish (3 daq)","Motivatsiya (4 daq): Shakllar topshirig'i","Asosiy qism (12 daq): Shakllarni o'rganish","Jismoniy daqiqa (2 daq): Shakl bo'lib turaylik","Mustahkamlash (4 daq)","Refleksiya (2 daq)"],
-    natija:"3 ta shaklni nomlab, farqlab ko'rsatadi.", izoh:"" },
-  { hafta:3, kun:'Dushanba', soha:'Nutq va til', kod:'3.1.3.b', mavzu:"Meva va sabzavotlar - tasviriy suhbat",
-    maqsad:"Meva-sabzavotlar nomini bilish va tasvirlash.",
-    jihozlar:"Haqiqiy mevalar, sabzavotlar, suratlar",
-    borish:["Kirish (3 daq): Hid bilish tajribasi","Motivatsiya (4 daq): Sehrli quti","Asosiy qism (12 daq): Nomlash, tasvirlash","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Tasnif","Refleksiya (2 daq)"],
-    natija:"8 ta meva/sabzavot nomini biladi.", izoh:"Haqiqiy mevalar ishlatish eng samarali." },
-]
+var FREE_LIMIT=3;
 
-var FREE_LIMIT = 3
+window.addEventListener('load',async()=>{
+  const auth=await initAuth(true);
+  if(!auth)return;
+  if(typeof fillNav==='function')fillNav();
 
-window.addEventListener('load', async () => {
-  const auth = await initAuth(true)
-  if (!auth) return
-  if (typeof fillNav === 'function') fillNav()
+  const proUser=isPro();
+  document.getElementById('hero-plan').innerHTML=proUser
+    ?'<i class="ti ti-crown"></i> Professional'
+    :'<i class="ti ti-free-rights"></i> Bepul';
+  if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
 
-  const proUser = isPro()
-  document.getElementById('hero-plan').innerHTML = proUser
-    ? '<i class="ti ti-crown"></i> Professional'
-    : '<i class="ti ti-free-rights"></i> Bepul'
-  if (proUser) document.getElementById('hero-plan').className = 'plan-pill pro'
+  const banner=document.getElementById('access-note');
+  if(proUser){banner.classList.add('pro');document.getElementById('access-note-text').textContent="Cheksiz konspektlarga ega siz!";}
+  else{document.getElementById('access-note-text').textContent=`Bepul rejada ${FREE_LIMIT} ta konspekt ko'rishingiz mumkin.`;}
 
-  const banner = document.getElementById('access-note')
-  if (proUser) {
-    banner.classList.add('pro')
-    document.getElementById('access-note-text').textContent = "Cheksiz konspektlarga ega siz!"
-  } else {
-    document.getElementById('access-note-text').textContent = `Bepul rejada ${FREE_LIMIT} ta konspekt ko'rishingiz mumkin.`
+  const weeks=[...new Set(knData.map(k=>k.hafta))].sort((a,b)=>a-b);
+  const sel=document.getElementById('kn-hafta');
+  weeks.forEach(h=>{const o=document.createElement('option');o.value=h;o.textContent=h+'-hafta';sel.appendChild(o)});
+
+  renderKn(knData);
+});
+
+function renderKn(list){
+  const isLimited=!isPro();
+  const visibleList=isLimited?list.slice(0,FREE_LIMIT):list;
+  const lockedCount=isLimited?Math.max(0,list.length-FREE_LIMIT):0;
+
+  if(!visibleList.length){
+    document.getElementById('kn-list').innerHTML='<div class="empty-state">Konspekt topilmadi.</div>';
+    document.getElementById('lock-section').style.display='none';
+    return;
   }
 
-  const weeks = [...new Set(knData.map(k => k.hafta))].sort((a,b) => a-b)
-  const sel = document.getElementById('kn-hafta')
-  weeks.forEach(h => {
-    const o = document.createElement('option')
-    o.value = h; o.textContent = h + '-hafta'
-    sel.appendChild(o)
-  })
-
-  renderKn(knData)
-})
-
-function renderKn(list) {
-  const isLimited = !isPro()
-  const visibleList = isLimited ? list.slice(0, FREE_LIMIT) : list
-  const lockedCount = isLimited ? Math.max(0, list.length - FREE_LIMIT) : 0
-
-  if (!visibleList.length) {
-    document.getElementById('kn-list').innerHTML = '<div class="empty-state">Konspekt topilmadi.</div>'
-    document.getElementById('lock-section').style.display = 'none'
-    return
-  }
-
-  document.getElementById('kn-list').innerHTML = visibleList.map((k, i) => `
+  document.getElementById('kn-list').innerHTML=visibleList.map((k,i)=>`
     <div class="kn-card">
       <div class="kn-hdr" onclick="toggleKn(${i})">
         <div>
@@ -342,59 +313,53 @@ function renderKn(list) {
         <div class="kn-sec"><h5>Indikator kodi</h5><p>${k.kod}</p></div>
         <div class="kn-sec"><h5>Maqsad</h5><p>${k.maqsad}</p></div>
         <div class="kn-sec"><h5>Jihozlar</h5><p>${k.jihozlar}</p></div>
-        <div class="kn-sec"><h5>Darsning borishi</h5><ul>${k.borish.map(b => `<li>${b}</li>`).join('')}</ul></div>
+        <div class="kn-sec"><h5>Darsning borishi</h5><ul>${k.borish.map(b=>`<li>${b}</li>`).join('')}</ul></div>
         <div class="kn-sec"><h5>Kutilgan natija</h5><p>${k.natija}</p></div>
-        ${k.izoh ? `<div class="kn-sec"><h5>Tarbiyachi izohi</h5><p>${k.izoh}</p></div>` : ''}
+        ${k.izoh?`<div class="kn-sec"><h5>Tarbiyachi izohi</h5><p>${k.izoh}</p></div>`:''}
         <button class="btn-print" onclick="printKn(${i})"><i class="ti ti-printer"></i> Chop etish</button>
       </div>
     </div>
-  `).join('')
+  `).join('');
 
-  window._knVisible = visibleList
+  window._knVisible=visibleList;
 
-  if (lockedCount > 0) {
-    document.getElementById('lock-section').style.display = 'block'
-    document.getElementById('lock-section').innerHTML = `
+  if(lockedCount>0){
+    document.getElementById('lock-section').style.display='block';
+    document.getElementById('lock-section').innerHTML=`
       <div class="lock-card">
         <div class="ic"><i class="ti ti-lock"></i></div>
         <h3>Yana ${lockedCount} ta konspekt mavjud</h3>
         <p>Professional obuna bilan barcha 30+ konspektlarga ega bo'ling</p>
         <a href="../premium.html" class="btn-premium">Premium olish — 49 000 so'm/oy</a>
-      </div>
-    `
+      </div>`;
   } else {
-    document.getElementById('lock-section').style.display = 'none'
+    document.getElementById('lock-section').style.display='none';
   }
 }
 
-function toggleKn(i) {
-  const body = document.getElementById('kn-' + i)
-  const arr  = document.getElementById('arr-' + i)
-  body.classList.toggle('open')
-  arr.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)'
+function toggleKn(i){
+  const body=document.getElementById('kn-'+i),arr=document.getElementById('arr-'+i);
+  body.classList.toggle('open');
+  arr.style.transform=body.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
 }
 
-function filterKn() {
-  const h = document.getElementById('kn-hafta').value
-  const k = document.getElementById('kn-kun').value
-  const s = document.getElementById('kn-soha').value
-  renderKn(knData.filter(x =>
-    (!h || x.hafta == h) && (!k || x.kun === k) && (!s || x.soha === s)
-  ))
+function filterKn(){
+  const h=document.getElementById('kn-hafta').value;
+  const k=document.getElementById('kn-kun').value;
+  const s=document.getElementById('kn-soha').value;
+  renderKn(knData.filter(x=>(!h||x.hafta==h)&&(!k||x.kun===k)&&(!s||x.soha===s)));
 }
 
-function resetKn() {
-  ['kn-hafta','kn-kun','kn-soha'].forEach(id => document.getElementById(id).value = '')
-  renderKn(knData)
+function resetKn(){
+  ['kn-hafta','kn-kun','kn-soha'].forEach(id=>document.getElementById(id).value='');
+  renderKn(knData);
 }
 
-function printKn(i) {
-  const k = window._knVisible[i]
-  const w = window.open('', '_blank')
-  w.document.write(`
-    <html><head><title>KN Konspekt</title>
-    <style>body{font-family:sans-serif;padding:24px;max-width:700px;margin:auto}
-    h2{color:#1e40af}h4{border-bottom:1px solid #eee;padding-bottom:4px;margin-top:14px}li{margin:4px 0}</style>
+function printKn(i){
+  const k=window._knVisible[i];
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>KN Konspekt</title>
+    <style>body{font-family:sans-serif;padding:24px;max-width:700px;margin:auto}h2{color:#1e40af}h4{border-bottom:1px solid #eee;padding-bottom:4px;margin-top:14px}li{margin:4px 0}</style>
     </head><body>
     <h2>KN Konspekt — MaktabgachaHub</h2>
     <p>Hafta: ${k.hafta} | Kun: ${k.kun} | Soha: ${k.soha}</p>
@@ -402,13 +367,11 @@ function printKn(i) {
     <h4>Mavzu</h4><p>${k.mavzu}</p>
     <h4>Maqsad</h4><p>${k.maqsad}</p>
     <h4>Jihozlar</h4><p>${k.jihozlar}</p>
-    <h4>Darsning borishi</h4><ul>${k.borish.map(b => `<li>${b}</li>`).join('')}</ul>
+    <h4>Darsning borishi</h4><ul>${k.borish.map(b=>`<li>${b}</li>`).join('')}</ul>
     <h4>Kutilgan natija</h4><p>${k.natija}</p>
-    ${k.izoh ? `<h4>Izoh</h4><p>${k.izoh}</p>` : ''}
-    </body></html>
-  `)
-  w.document.close()
-  w.print()
+    ${k.izoh?`<h4>Izoh</h4><p>${k.izoh}</p>`:''}
+    </body></html>`);
+  w.document.close();w.print();
 }
 </script>
 </body>
