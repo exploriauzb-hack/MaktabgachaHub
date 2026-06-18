@@ -52,7 +52,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
 .level-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;background:var(--bg);color:var(--muted);border:1px solid var(--border);white-space:nowrap}
-/* PREMIUM BANNER */
 .premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#7c3aed 100%);border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;position:relative;overflow:hidden}
 .premium-banner::before{content:'';position:absolute;right:-20px;top:-20px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
 .premium-banner::after{content:'';position:absolute;right:60px;bottom:-30px;width:80px;height:80px;background:rgba(255,255,255,.04);border-radius:50%}
@@ -67,23 +66,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-premium{background:#fff;color:var(--accent);font-size:12px;font-weight:700;padding:10px 20px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s}
 .btn-premium:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .btn-premium i{font-size:14px;color:var(--pro)}
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
 .stat-card .val{font-size:22px;font-weight:600;color:var(--text);margin-bottom:2px}
 .stat-card .lbl{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:4px}
 .stat-card .lbl i{font-size:13px}
-/* XP */
 .xp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:24px}
 .xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
 .xp-header span{font-size:12px;color:var(--muted)}
 .xp-header strong{font-size:12px;color:var(--text)}
 .xp-bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden}
 .xp-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s ease}
-/* SECTION TITLE */
 .sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
-/* MODULE GRID */
 .mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
 .mod-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;transition:border-color .15s,box-shadow .15s;cursor:pointer;position:relative;overflow:hidden}
 .mod-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1)}
@@ -99,7 +94,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .mod-sub{font-size:11px;color:var(--muted);line-height:1.3}
 .lock-tag{position:absolute;top:10px;right:10px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
 .lock-tag.soon{background:#f1f5f9;color:#94a3b8}
-/* TESTS */
 .test-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .test-row .test-name{font-size:13px;font-weight:500}
 .test-row .test-date{font-size:11px;color:var(--muted);margin-top:2px}
@@ -109,7 +103,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .test-score.low{color:var(--red)}
 .empty-state{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px}
 .empty-state a{color:var(--accent);text-decoration:none;font-weight:500}
-/* PREMIUM MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
 .modal{background:var(--surface);border-radius:16px;padding:28px;max-width:480px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -130,7 +123,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-buy:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.35)}
 .btn-buy i{font-size:18px}
 #notifPopup{display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px}
-/* RESPONSIVE */
 @media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
@@ -145,15 +137,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .premium-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px;margin-bottom:16px}
   .btn-premium{width:100%;justify-content:center}
   .premium-features{display:none}
-  .stats-grid{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .stats-grid{gap:8px;margin-bottom:12px}
   .stat-card{padding:10px 8px}
   .stat-card .val{font-size:18px}
-  .stat-card .lbl{font-size:10px;gap:3px}
+  .stat-card .lbl{font-size:10px}
   .xp-card{padding:12px 14px;margin-bottom:16px}
   .sec-title{font-size:11px;margin-bottom:8px}
   .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
-  .mod-card{padding:11px 10px;gap:2px}
-  .mod-card .icon{width:28px;height:28px;font-size:13px;margin-bottom:4px;border-radius:7px}
+  .mod-card{padding:11px 10px}
+  .mod-card .icon{width:28px;height:28px;font-size:13px;margin-bottom:4px}
   .mod-title{font-size:12px}
   .mod-sub{font-size:10px}
   .lock-tag{font-size:9px;padding:2px 5px;top:7px;right:7px}
@@ -178,7 +170,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -215,9 +206,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
@@ -229,7 +218,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
   </div>
 
-  <!-- PREMIUM BANNER -->
   <div class="premium-banner" id="premiumBanner" style="display:none">
     <div class="premium-banner-left">
       <div class="premium-banner-icon"><i class="ti ti-crown"></i></div>
@@ -244,12 +232,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
         </div>
       </div>
     </div>
-    <button class="btn-premium" onclick="openPremiumModal()">
-      <i class="ti ti-crown"></i> Premium olish
-    </button>
+    <button class="btn-premium" onclick="openPremiumModal()"><i class="ti ti-crown"></i> Premium olish</button>
   </div>
 
-  <!-- STATS -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="val" id="stat-test">0</div>
@@ -265,7 +250,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
   </div>
 
-  <!-- XP BAR -->
   <div class="xp-card">
     <div class="xp-header">
       <strong id="xp-label">1-daraja: Yangi Tarbiyachi</strong>
@@ -274,7 +258,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
   </div>
 
-  <!-- FREE MODULES -->
   <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar</div>
   <div class="mod-grid">
     <a href="pages/jadval.html" class="mod-card">
@@ -309,7 +292,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </a>
   </div>
 
-  <!-- PRO MODULES -->
   <div class="sec-title"><i class="ti ti-crown"></i> Professional</div>
   <div class="mod-grid">
     <div class="mod-card locked" id="card-games">
@@ -344,7 +326,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
   </div>
 
-  <!-- CORP MODULES -->
   <div class="sec-title"><i class="ti ti-building"></i> Korporativ</div>
   <div class="mod-grid">
     <div class="mod-card locked" style="opacity:.5;cursor:default">
@@ -367,14 +348,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
   </div>
 
-  <!-- RECENT TESTS -->
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
   <div id="lastTests">
     <div class="empty-state">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a></div>
   </div>
 </main>
 
-<!-- PREMIUM MODAL -->
 <div class="modal-overlay" id="premiumModal" onclick="if(event.target===this)closePremiumModal()">
   <div class="modal">
     <button class="modal-close" onclick="closePremiumModal()"><i class="ti ti-x"></i></button>
@@ -404,7 +383,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 <div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
-<!-- BG ANIMATION -->
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -446,15 +424,8 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal()}});
 function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
 checkHamburger();window.addEventListener('resize',checkHamburger);
-
-function openPremiumModal(){
-  document.getElementById('premiumModal').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closePremiumModal(){
-  document.getElementById('premiumModal').classList.remove('show');
-  document.body.style.overflow='';
-}
+function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
+function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -487,7 +458,6 @@ async function checkNotifications(){
   `).join('');
   setTimeout(()=>{popup.style.display='none'},6000);
 }
-
 window.addEventListener('load',async()=>{
   const auth=await initAuth(true);
   if(!auth)return;
@@ -497,41 +467,25 @@ window.addEventListener('load',async()=>{
   document.getElementById('hero-name').textContent=name;
   document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
-  const proUser=isPro();
-  const corpUser=isCorporate();
+  const proUser=isPro(),corpUser=isCorporate();
   const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
   document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
   if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
   document.getElementById('sb-plan').textContent=planLabel+' tarif';
   const banner=document.getElementById('premiumBanner');
-  if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}
-  else{banner.style.display='none';}
+  if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
-  const proCards={
-    'card-games'      :{href:'pages/oyinlar.html'},
-    'card-songs'      :{href:'pages/qoshiqlar.html'},
-    'card-activities' :{href:'pages/mashgulotlar.html'},
-    'card-attestation':{href:'pages/attestatsiya.html'},
-    'card-portfolio'  :{href:'pages/portfolio.html'},
-  };
+  const proCards={'card-games':{href:'pages/oyinlar.html'},'card-songs':{href:'pages/qoshiqlar.html'},'card-activities':{href:'pages/mashgulotlar.html'},'card-attestation':{href:'pages/attestatsiya.html'},'card-portfolio':{href:'pages/portfolio.html'}};
   Object.entries(proCards).forEach(([id,cfg])=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    if(proUser){
-      const lt=el.querySelector('.lock-tag');
-      if(lt)lt.style.display='none';
-      el.classList.remove('locked');
-      el.onclick=()=>window.location.href=cfg.href;
-    } else {
-      el.onclick=openPremiumModal;
-    }
+    const el=document.getElementById(id);if(!el)return;
+    if(proUser){const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
+    else{el.onclick=openPremiumModal;}
   });
   const xp=profile?.xp||0;
   document.getElementById('stat-xp').textContent=xp;
   const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
   if(allTests&&allTests.length){
-    const count=allTests.length;
-    const avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);
+    const count=allTests.length,avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);
     document.getElementById('stat-test').textContent=count;
     document.getElementById('stat-avg').textContent=avg+'%';
   }
@@ -544,15 +498,11 @@ window.addEventListener('load',async()=>{
   document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
   const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
   if(tests&&tests.length){
-    const ul=document.getElementById('lastTests');
-    ul.innerHTML='';
+    const ul=document.getElementById('lastTests');ul.innerHTML='';
     tests.forEach(t=>{
-      const pct=t.percentage??t.score??0;
-      const cls=pct>=80?'high':pct>=60?'mid':'low';
-      const date=new Date(t.created_at).toLocaleDateString('uz-UZ');
-      const tname=t.test_name||t.category||'Test';
-      const row=document.createElement('div');
-      row.className='test-row';
+      const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';
+      const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';
+      const row=document.createElement('div');row.className='test-row';
       row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;
       ul.appendChild(row);
     });
