@@ -54,15 +54,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--pro-soft);color:var(--pro)}
 
-/* INFO BOX */
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
 
-/* SONG LIST */
 .song-list{display:flex;flex-direction:column;gap:9px;margin-bottom:80px}
 .song-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .song-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1)}
-.song-num{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.song-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .song-info{flex:1;min-width:0}
 .song-info h5{font-size:.9rem;font-weight:600;margin-bottom:2px;color:var(--text)}
 .song-info p{font-size:.76rem;color:var(--muted)}
@@ -71,7 +69,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .song-pre{background:var(--pro-soft);border-radius:10px;padding:12px 16px;margin-top:4px;display:none;border-left:3px solid var(--pro);font-size:.85rem;line-height:1.9;color:var(--text);white-space:pre-line}
 .song-pre.open{display:block}
 
-/* FLOATING BACK */
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
@@ -91,7 +88,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR — barcha linklar ../dashboard.html va pages/ ichidagi sahifalar to'g'ri -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -99,13 +96,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
   <div class="sidebar-section">Asosiy</div>
-  <a href="dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-  <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
-  <a href="pages/haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
-  <a href="pages/soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
-  <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
-  <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
-  <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
+  <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a href="jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
+  <a href="haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
+  <a href="soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
+  <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
+  <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
+  <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <div class="sidebar-section">Professional</div>
   <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a class="nav-item active"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
@@ -148,12 +145,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="song-list" id="song-list"></div>
 </main>
 
-<!-- FLOATING BACK -->
-<a href="dashboard.html" class="fab-back">
+<!-- FAB BACK — tuzatilgan path -->
+<a href="../dashboard.html" class="fab-back">
   <i class="ti ti-arrow-left"></i> Dashboard
 </a>
 
-<!-- ANIMATED BG -->
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -164,7 +160,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   const shapes=[];
-  for(let i=0;i<28;i++){shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)})}
+  for(let i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
   function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
   function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
   function drawFlower(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.ellipse(cx+r*.6*Math.cos(a),cy+r*.6*Math.sin(a),r*.5,r*.25,a,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(cx,cy,r*.35,0,Math.PI*2);ctx.fill();ctx.restore()}
@@ -190,57 +186,33 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 </script>
 
 <script>
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){
-  document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';
-}
-checkHamburger();
-window.addEventListener('resize',checkHamburger);
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
 </script>
 
 <script>
 var songsData=[
-  {title:"Bog'cha qo'shig'i",mavzu:"Bog'cha, do'stlik (2-soha)",lyrics:"Bog'chamiz go'zal,\nDo'stlarim bilan!\nKulgu to'la, o'yin to'la,\nBiz baxtli bolalar."},
-  {title:'Kuz keldi',mavzu:'Kuz fasli (4-soha)',lyrics:"Kuz keldi, kuz keldi,\nBarg to'kildi yellar esdi,\nSariq, qizil, yashil barg -\nKuz qanday go'zal fasl."},
-  {title:'Onam haqida',mavzu:'Oila (2-soha)',lyrics:"Onam borki menga baxt bor,\nUning ishi doim halol,\nQo'li mehribon, yuzi yorug' -\nOnam mening quyoshim."},
-  {title:'Hayvonlar ashulasi',mavzu:'Uy hayvonlari (4-soha)',lyrics:"Mushuk miyov, it vov-vov,\nSigir mo-mo, ot duv-duv,\nHammasi yaqin bizga -\nYoqimli hayvonlar."},
-  {title:"Qo'lchalarim",mavzu:'Jismoniy (1-soha)',lyrics:"Qo'lchalarim, qo'lchalarim,\nNimalar qila oladi?\nUshlaydi va ko'taradi,\nRasm chizib bera oladi."},
-  {title:'Bahor keldi',mavzu:'Bahor fasli (4-soha)',lyrics:"Bahor keldi shodlik bilan,\nGullar ochdi dalada,\nQushlar sayrar osmondan,\nBiz sevinamiz bahorda."},
-  {title:"Sonlar qo'shig'i",mavzu:'FEMP (4-soha)',lyrics:"Bir - bitta qo'shiq,\nIkki - ikki dost,\nUch - uchta olma,\nTo'rt - to'rtta yulduz,\nBesh - besh barmoq."},
-  {title:'Xayrli kun',mavzu:'Salomlashish (2-soha)',lyrics:"Xayrli kun, bog'chaginam,\nXayrli kun, do'stlarim,\nBugun ham birga o'qiymiz,\nBirga kulamiz, sevinamiz."},
-  {title:"Navro'z",mavzu:'Milliy bayram (5-soha)',lyrics:"Navro'z keldi, bahor keldi,\nQizil gullar ochildi,\nSumalakning isi keldi -\nO'zbekiston suyundi."},
-  {title:'Tabiat',mavzu:'Tabiat (4-soha)',lyrics:"Daryo oqar tog'lardan,\nBaliqlar suzar suvda,\nDaraxtlar o'sar dalada -\nTabiatni sevamiz."},
-];
-
-var songIcons=[
-  'ti-building-community','ti-leaf','ti-heart','ti-paw','ti-hand-finger',
-  'ti-flower','ti-123','ti-sun','ti-confetti','ti-ripple'
-];
-var songColors=[
-  '#1e40af','#15803d','#be185d','#b45309','#7c3aed',
-  '#0f766e','#0369a1','#b45309','#7c3aed','#15803d'
-];
-var songBgs=[
-  '#eff6ff','#f0fdf4','#fdf2f8','#fffbeb','#f5f3ff',
-  '#f0fdfa','#e0f2fe','#fffbeb','#f5f3ff','#f0fdf4'
+  {title:"Bog'cha qo'shig'i",mavzu:"Bog'cha, do'stlik (2-soha)",icon:'ti-building-community',color:'#1e40af',bg:'#eff6ff',lyrics:"Bog'chamiz go'zal,\nDo'stlarim bilan!\nKulgu to'la, o'yin to'la,\nBiz baxtli bolalar."},
+  {title:'Kuz keldi',mavzu:'Kuz fasli (4-soha)',icon:'ti-leaf',color:'#15803d',bg:'#f0fdf4',lyrics:"Kuz keldi, kuz keldi,\nBarg to'kildi yellar esdi,\nSariq, qizil, yashil barg -\nKuz qanday go'zal fasl."},
+  {title:'Onam haqida',mavzu:'Oila (2-soha)',icon:'ti-heart',color:'#be185d',bg:'#fdf2f8',lyrics:"Onam borki menga baxt bor,\nUning ishi doim halol,\nQo'li mehribon, yuzi yorug' -\nOnam mening quyoshim."},
+  {title:'Hayvonlar ashulasi',mavzu:'Uy hayvonlari (4-soha)',icon:'ti-paw',color:'#b45309',bg:'#fffbeb',lyrics:"Mushuk miyov, it vov-vov,\nSigir mo-mo, ot duv-duv,\nHammasi yaqin bizga -\nYoqimli hayvonlar."},
+  {title:"Qo'lchalarim",mavzu:'Jismoniy (1-soha)',icon:'ti-hand-finger',color:'#7c3aed',bg:'#f5f3ff',lyrics:"Qo'lchalarim, qo'lchalarim,\nNimalar qila oladi?\nUshlaydi va ko'taradi,\nRasm chizib bera oladi."},
+  {title:'Bahor keldi',mavzu:'Bahor fasli (4-soha)',icon:'ti-flower',color:'#0f766e',bg:'#f0fdfa',lyrics:"Bahor keldi shodlik bilan,\nGullar ochdi dalada,\nQushlar sayrar osmondan,\nBiz sevinamiz bahorda."},
+  {title:"Sonlar qo'shig'i",mavzu:'FEMP (4-soha)',icon:'ti-123',color:'#0369a1',bg:'#e0f2fe',lyrics:"Bir - bitta qo'shiq,\nIkki - ikki dost,\nUch - uchta olma,\nTo'rt - to'rtta yulduz,\nBesh - besh barmoq."},
+  {title:'Xayrli kun',mavzu:'Salomlashish (2-soha)',icon:'ti-sun',color:'#b45309',bg:'#fffbeb',lyrics:"Xayrli kun, bog'chaginam,\nXayrli kun, do'stlarim,\nBugun ham birga o'qiymiz,\nBirga kulamiz, sevinamiz."},
+  {title:"Navro'z",mavzu:'Milliy bayram (5-soha)',icon:'ti-confetti',color:'#7c3aed',bg:'#f5f3ff',lyrics:"Navro'z keldi, bahor keldi,\nQizil gullar ochildi,\nSumalakning isi keldi -\nO'zbekiston suyundi."},
+  {title:'Tabiat',mavzu:'Tabiat (4-soha)',icon:'ti-ripple',color:'#15803d',bg:'#f0fdf4',lyrics:"Daryo oqar tog'lardan,\nBaliqlar suzar suvda,\nDaraxtlar o'sar dalada -\nTabiatni sevamiz."},
 ];
 
 function renderSongs(){
   document.getElementById('song-list').innerHTML=songsData.map((s,i)=>`
     <div>
       <div class="song-card" onclick="toggleSong(${i})">
-        <div class="song-num" style="background:${songBgs[i]};width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <i class="ti ${songIcons[i]}" style="font-size:20px;color:${songColors[i]}"></i>
+        <div class="song-icon" style="background:${s.bg}">
+          <i class="ti ${s.icon}" style="font-size:20px;color:${s.color}"></i>
         </div>
         <div class="song-info">
           <h5>${s.title}</h5>
@@ -252,12 +224,10 @@ function renderSongs(){
     </div>
   `).join('');
 }
-
 function toggleSong(i){
   document.getElementById('sq-'+i).classList.toggle('open');
   document.getElementById('arr-'+i).classList.toggle('open');
 }
-
 renderSongs();
 </script>
 </body>
