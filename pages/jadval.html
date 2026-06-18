@@ -1,68 +1,185 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MaktabgachaHub — Kunlik jadval</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <style>
-    .day-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
-    .day-tab {
-      background: #e8e4ff; border: none; border-radius: 12px;
-      padding: 8px 16px; cursor: pointer; font-size: .85rem;
-      color: var(--p); font-weight: 600; transition: all .2s;
-    }
-    .day-tab:hover { background: #d8d0ff; }
-    .day-tab.active { background: var(--p); color: #fff; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Kunlik jadval</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;
+  --surface:#ffffff;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --accent:#1e40af;
+  --accent-soft:#eff6ff;
+  --accent-mid:#3b82f6;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --red:#b91c1c;
+  --pro:#7c3aed;
+  --pro-soft:#f5f3ff;
+  --sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+#bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 
-    .sched-list { display: flex; flex-direction: column; gap: 8px; }
-    .sched-item {
-      background: #fff; border-radius: 12px; padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      transition: transform .15s;
-    }
-    .sched-item:hover { transform: translateX(4px); }
-    .time-b {
-      background: linear-gradient(135deg, var(--p), var(--p2));
-      color: #fff; border-radius: 10px; padding: 5px 10px;
-      font-size: .72rem; font-weight: 700; white-space: nowrap;
-      min-width: 92px; text-align: center;
-    }
-    .sched-icon { font-size: 1.3rem; }
-    .sched-name { font-size: .87rem; font-weight: 600; }
-    .sched-desc { font-size: .76rem; color: var(--mu); margin-top: 2px; }
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
+.sidebar-overlay.show{display:block}
 
-    .day-summary {
-      display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap;
-    }
-    .summary-chip {
-      background: #fff; border-radius: 10px; padding: 8px 14px;
-      font-size: .78rem; box-shadow: 0 2px 8px rgba(0,0,0,.05);
-      display: flex; align-items: center; gap: 6px;
-    }
-  </style>
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px}
+.sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.user-info .name{font-size:12px;font-weight:600}
+.user-info .plan{font-size:11px;color:var(--muted)}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
+.btn-logout:hover{background:var(--bg);color:var(--red)}
+
+/* FLOATING BACK BUTTON */
+.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
+.fab-back i{font-size:18px}
+
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
+.btn-hamburger:hover{background:var(--bg)}
+.topbar h1{font-size:20px;font-weight:600}
+.topbar h1 span{color:var(--accent)}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
+
+/* INFO BOX */
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.info-box i{font-size:16px;flex-shrink:0}
+
+/* DAY TABS */
+.day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.day-tab{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
+.day-tab:hover{background:var(--bg);color:var(--text);border-color:#93c5fd}
+.day-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* SUMMARY CHIPS */
+.day-summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.summary-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px}
+.summary-chip i{font-size:13px;color:var(--accent)}
+.summary-chip b{color:var(--text)}
+
+/* SEC TITLE */
+.sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec-title i{font-size:14px}
+
+/* SCHEDULE LIST */
+.sched-list{display:flex;flex-direction:column;gap:8px}
+.sched-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.sched-item:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1);transform:translateX(3px)}
+
+.time-badge{display:flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;white-space:nowrap;min-width:96px;background:var(--accent-soft);color:var(--accent)}
+.time-badge.rest{background:var(--green-soft);color:var(--green)}
+.time-badge.meal{background:var(--amber-soft);color:var(--amber)}
+
+.sched-icon-wrap{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--bg)}
+.sched-body{flex:1;min-width:0}
+.sched-name{font-size:13px;font-weight:600;color:var(--text)}
+.sched-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.sched-tag{flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.sched-tag.main{background:var(--accent-soft);color:var(--accent)}
+.sched-tag.rest{background:var(--green-soft);color:var(--green)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .main{margin-left:0;padding:16px}
+  .btn-hamburger{display:flex}
+  .topbar h1{font-size:16px}
+  .time-badge{min-width:80px;font-size:10px}
+  .sched-item{gap:8px;padding:10px 12px}
+}
+</style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<nav class="nav">
-  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
-  <div class="nav-links">
-    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
-    <div class="nav-user">
-      <span id="nav-name">—</span>
-      <span class="nav-badge" id="nav-plan">Bepul</span>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-school"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
+    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="sidebar-section">Asosiy</div>
+  <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a href="jadval.html" class="nav-item active"><i class="ti ti-calendar"></i> Kunlik jadval</a>
+  <a href="haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
+  <a href="soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
+  <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
+  <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
+  <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
+  <div class="sidebar-section">Professional</div>
+  <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">T</div>
+      <div class="user-info">
+        <div class="name">Tarbiyachi</div>
+        <div class="plan">Bepul tarif</div>
+      </div>
+    </div>
+    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+      <h1><span>Kunlik jadval</span> — 4-5 yosh</h1>
+    </div>
+    <div class="topbar-right">
+      <span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
     </div>
   </div>
-</nav>
 
-<div class="container">
-
-  <div class="sec-title">📅 Kunlik Jadval — 4-5 yosh</div>
   <div class="info-box">
-    Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan.
+    <i class="ti ti-info-circle"></i>
+    Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan tarzda tuzilgan.
   </div>
 
+  <!-- DAY TABS -->
   <div class="day-tabs" id="day-tabs">
     <button class="day-tab active" data-day="dush">Dushanba</button>
     <button class="day-tab" data-day="sesh">Seshanba</button>
@@ -71,119 +188,178 @@
     <button class="day-tab" data-day="juma">Juma</button>
   </div>
 
+  <!-- SUMMARY -->
   <div class="day-summary" id="day-summary"></div>
 
+  <!-- SEC TITLE -->
+  <div class="sec-title"><i class="ti ti-calendar-event"></i> <span id="day-label">Dushanba</span> dasturi</div>
+
+  <!-- SCHEDULE -->
   <div id="day-content" class="sched-list"></div>
+</main>
 
-</div>
+<!-- FLOATING BACK BUTTON -->
+<a href="../dashboard.html" class="fab-back">
+  <i class="ti ti-arrow-left"></i> Dashboard
+</a>
 
-<div id="toast" class="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.js"></script>
-<script src="../js/auth.js"></script>
+<!-- ANIMATED BG -->
 <script>
+(function(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const types=['star','heart','circle','abc','flower','triangle'];
+  const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  const shapes=[];
+  for(let i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
+  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
+  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    shapes.forEach(s=>{
+      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
+      if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
+      if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
+      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
+      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
+      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 
-var dailyData = {
-  dush: [
-    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Salomlashish, Kayfiyat doirasi' },
-    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Jismoniy mashqlar (1-soha)' },
-    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqil ovqatlanish' },
-    { time:'09:00-09:25', icon:'💬', name:'1-mashg\'ulot: Nutq ostirish', desc:"Mening oilam - suhbat (3-soha)" },
-    { time:'09:35-10:00', icon:'🎨', name:"2-mashg'ulot: Tasviriy sanat", desc:'Oila rasmini chizish (5-soha)' },
-    { time:'10:05-10:30', icon:'🚶', name:'Ertalabki sayr',          desc:'Tabiat kuzatuvi (1-soha)' },
-    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
-    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
-    { time:'15:30-16:00', icon:'🎮', name:'Didaktik o\'yin',          desc:'Kim yashaydi (4-soha)' },
-    { time:'16:00-16:30', icon:'🎵', name:"Qo'shiq va raqs",         desc:'Mavzuga mos (5-soha)' },
-  ],
-  sesh: [
-    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Kayfiyat aniqlash' },
-    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Harakatli mashqlar' },
-    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqil ovqatlanish' },
-    { time:'09:00-09:25', icon:'🔢', name:"1-mashg'ulot: FEMP",      desc:'Sonlar 1 dan 5 gacha (4-soha)' },
-    { time:'09:35-10:00', icon:'🎵', name:"2-mashg'ulot: Musiqa",    desc:'Qo\'shiq, ritm, raqs (5-soha)' },
-    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Tabiat kuzatuvi' },
-    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
-    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
-    { time:'15:30-16:00', icon:'🧩', name:'Qurilish o\'yini',         desc:'Kubiklar, konstruktor (4-soha)' },
-    { time:'16:00-16:30', icon:'📚', name:'Kitob o\'qish',           desc:'Ertak tinglash' },
-  ],
-  chor: [
-    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Kayfiyat aniqlash' },
-    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Musiqa bilan' },
-    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Ovqat madaniyati' },
-    { time:'09:00-09:25', icon:'🌿', name:'1-mashg\'ulot: Tabiat',   desc:'Kuz fasli, o\'simliklar (4-soha)' },
-    { time:'09:35-10:00', icon:'✂️', name:"2-mashg'ulot: Applikatsiya", desc:'Kuz bargi (1+5-soha)' },
-    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Barg yig\'ish, tabiat' },
-    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Mustaqillik' },
-    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
-    { time:'15:30-16:00', icon:'🎭', name:'Rolli o\'yin',            desc:'Do\'kon o\'yini (2-soha)' },
-    { time:'16:00-16:30', icon:'🖍️', name:'Erkin ijod',              desc:'Chizish, plastilin (5-soha)' },
-  ],
-  pay: [
-    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Salomlashish' },
-    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Sport mashqlari' },
-    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Mustaqillik' },
-    { time:'09:00-09:25', icon:'🏃', name:"1-mashg'ulot: Jismoniy tarbiya", desc:'Harakat, koordinatsiya (1-soha)' },
-    { time:'09:35-10:00', icon:'📖', name:"2-mashg'ulot: Savodxonlik", desc:'Tovush, harf, bo\'g\'im (3-soha)' },
-    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Harakatli o\'yinlar' },
-    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
-    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
-    { time:'15:30-16:00', icon:'🎨', name:'Tasviriy sanat',          desc:'Plastilin (5-soha)' },
-    { time:'16:00-16:30', icon:'🎲', name:'Didaktik o\'yin',         desc:'Mantiqiy o\'yin (4-soha)' },
-  ],
-  juma: [
-    { time:'07:30-08:00', icon:'🌅', name:"Bolalarni qabul qilish", desc:'Hafta yakunini eslash' },
-    { time:'08:00-08:20', icon:'🤸', name:'Ertalabki gimnastika',    desc:'Qiziqarli mashqlar' },
-    { time:'08:20-08:45', icon:'🍽️', name:'Nonushta',                desc:'Ovqatlanish' },
-    { time:'09:00-09:25', icon:'🎭', name:"1-mashg'ulot: Teatr faoliyati", desc:'Ertak sahnalashtirish (2+5-soha)' },
-    { time:'09:35-10:00', icon:'🎵', name:"2-mashg'ulot: Musiqa",    desc:'Qo\'shiq va raqs (5-soha)' },
-    { time:'10:05-10:30', icon:'🚶', name:'Sayr',                    desc:'Erkin o\'yinlar' },
-    { time:'12:00-12:30', icon:'🍱', name:'Tushlik',                 desc:'Ovqat madaniyati' },
-    { time:'12:30-15:00', icon:'😴', name:'Kunduzgi uyqu',           desc:'Dam olish' },
-    { time:'15:30-16:30', icon:'🎉', name:'Haftalik refleksiya',     desc:'Biz nimani o\'rgandik' },
-  ]
+<!-- SIDEBAR JS -->
+<script>
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow='hidden';
 }
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
+function checkHamburger(){
+  document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';
+}
+checkHamburger();
+window.addEventListener('resize',checkHamburger);
+</script>
 
-var dayNames = { dush:'Dushanba', sesh:'Seshanba', chor:'Chorshanba', pay:'Payshanba', juma:'Juma' }
+<!-- JADVAL DATA + LOGIC -->
+<script>
+var dailyData={
+  dush:[
+    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Salomlashish, Kayfiyat doirasi',type:'main'},
+    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Jismoniy mashqlar (1-soha)',type:'main'},
+    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'💬',name:"1-mashg'ulot: Nutq o'stirish",desc:"Mening oilam — suhbat (3-soha)",type:'lesson'},
+    {time:'09:35–10:00',icon:'🎨',name:"2-mashg'ulot: Tasviriy san'at",desc:"Oila rasmini chizish (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'🌿',name:'Ertalabki sayr',desc:'Tabiat kuzatuvi (1-soha)',type:'main'},
+    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'🎮',name:"Didaktik o'yin",desc:"Kim yashaydi (4-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'🎵',name:"Qo'shiq va raqs",desc:'Mavzuga mos (5-soha)',type:'main'},
+  ],
+  sesh:[
+    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
+    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Harakatli mashqlar',type:'main'},
+    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'🔢',name:"1-mashg'ulot: FEMP",desc:'Sonlar 1 dan 5 gacha (4-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'🎵',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq, ritm, raqs (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'🌿',name:'Sayr',desc:'Tabiat kuzatuvi',type:'main'},
+    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'🧩',name:"Qurilish o'yini",desc:"Kubiklar, konstruktor (4-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'📚',name:"Kitob o'qish",desc:'Ertak tinglash',type:'main'},
+  ],
+  chor:[
+    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
+    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Musiqa bilan',type:'main'},
+    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'09:00–09:25',icon:'🌿',name:"1-mashg'ulot: Tabiat",desc:"Kuz fasli, o'simliklar (4-soha)",type:'lesson'},
+    {time:'09:35–10:00',icon:'✂️',name:"2-mashg'ulot: Applikatsiya",desc:'Kuz bargi (1+5-soha)',type:'lesson'},
+    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Barg yig'ish, tabiat",type:'main'},
+    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Mustaqillik',type:'meal'},
+    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'🎭',name:"Rolli o'yin",desc:"Do'kon o'yini (2-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'🖍️',name:'Erkin ijod',desc:'Chizish, plastilin (5-soha)',type:'main'},
+  ],
+  pay:[
+    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Salomlashish',type:'main'},
+    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Sport mashqlari',type:'main'},
+    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqillik',type:'meal'},
+    {time:'09:00–09:25',icon:'🏃',name:"1-mashg'ulot: Jismoniy tarbiya",desc:'Harakat, koordinatsiya (1-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'📖',name:"2-mashg'ulot: Savodxonlik",desc:"Tovush, harf, bo'g'im (3-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Harakatli o'yinlar",type:'main'},
+    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'🎨',name:"Tasviriy san'at",desc:'Plastilin (5-soha)',type:'main'},
+    {time:'16:00–16:30',icon:'🎲',name:"Didaktik o'yin",desc:"Mantiqiy o'yin (4-soha)",type:'main'},
+  ],
+  juma:[
+    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Hafta yakunini eslash',type:'main'},
+    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Qiziqarli mashqlar',type:'main'},
+    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'🎭',name:"1-mashg'ulot: Teatr faoliyati",desc:'Ertak sahnalashtirish (2+5-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'🎵',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq va raqs (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Erkin o'yinlar",type:'main'},
+    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:30',icon:'🎉',name:'Haftalik refleksiya',desc:"Biz nimani o'rgandik",type:'main'},
+  ]
+};
 
-window.addEventListener('load', async () => {
-  const auth = await initAuth(true)
-  if (!auth) return
-  fillNav()
-  showDay('dush')
+var dayNames={dush:'Dushanba',sesh:'Seshanba',chor:'Chorshanba',pay:'Payshanba',juma:'Juma'};
 
-  document.querySelectorAll('.day-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'))
-      btn.classList.add('active')
-      showDay(btn.dataset.day)
-    })
-  })
-})
+function showDay(day){
+  var items=dailyData[day];
+  var lessons=items.filter(i=>i.type==='lesson').length;
+  var start=items[0].time.split('–')[0];
+  var end=items[items.length-1].time.split('–')[1];
 
-function showDay(day) {
-  const items = dailyData[day]
-  const mashgulotCount = items.filter(i => i.name.includes('mashg\'ulot')).length
-  document.getElementById('day-summary').innerHTML = `
-    <div class="summary-chip">📌 <b>${dayNames[day]}</b></div>
-    <div class="summary-chip">⏰ ${items[0].time.split('-')[0]} — ${items[items.length-1].time.split('-')[1]}</div>
-    <div class="summary-chip">📝 ${mashgulotCount} ta mashg'ulot</div>
-    <div class="summary-chip">🎯 ${items.length} ta faoliyat</div>
-  `
-  document.getElementById('day-content').innerHTML = items.map(i => `
+  document.getElementById('day-label').textContent=dayNames[day];
+  document.getElementById('day-summary').innerHTML=`
+    <div class="summary-chip"><i class="ti ti-map-pin"></i><b>${dayNames[day]}</b></div>
+    <div class="summary-chip"><i class="ti ti-clock"></i>${start} — ${end}</div>
+    <div class="summary-chip"><i class="ti ti-school"></i>${lessons} ta mashg'ulot</div>
+    <div class="summary-chip"><i class="ti ti-list-check"></i>${items.length} ta faoliyat</div>
+  `;
+
+  var timeCls={meal:'meal',rest:'rest'};
+  var tagMap={lesson:'<span class="sched-tag main">Mashg\'ulot</span>',rest:'<span class="sched-tag rest">Dam olish</span>'};
+
+  document.getElementById('day-content').innerHTML=items.map(i=>`
     <div class="sched-item">
-      <div class="time-b">${i.time}</div>
-      <div class="sched-icon">${i.icon}</div>
-      <div>
+      <div class="time-badge ${timeCls[i.type]||''}">${i.time}</div>
+      <div class="sched-icon-wrap">${i.icon}</div>
+      <div class="sched-body">
         <div class="sched-name">${i.name}</div>
         <div class="sched-desc">${i.desc}</div>
       </div>
+      ${tagMap[i.type]||''}
     </div>
-  `).join('')
+  `).join('');
 }
-</script>
 
+document.querySelectorAll('.day-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.day-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    showDay(btn.dataset.day);
+  });
+});
+
+showDay('dush');
+</script>
 </body>
 </html>
