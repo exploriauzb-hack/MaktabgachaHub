@@ -1,424 +1,361 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MaktabgachaHub — Didaktik O'yinlar</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <style>
-    .game-filters {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-    .gf-btn {
-      padding: 8px 16px; border-radius: 20px; border: 2px solid var(--br);
-      background: #fff; color: var(--mu); cursor: pointer;
-      font-size: .82rem; font-weight: 600; transition: all .2s;
-    }
-    .gf-btn:hover { border-color: var(--p); color: var(--p); }
-    .gf-btn.active { background: var(--p); color: #fff; border-color: var(--p); }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Didaktik O'yinlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+#bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 
-    .game-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .game-card {
-      background: #fff;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,.06);
-      border-top: 4px solid #22c55e;
-      transition: transform .2s, box-shadow .2s;
-      cursor: pointer;
-    }
-    .game-card:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(34,197,94,.15); }
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
+.sidebar-overlay.show{display:block}
 
-    .game-card-hdr {
-      padding: 18px 18px 0;
-    }
-    .gi { font-size: 2rem; margin-bottom: 8px; }
-    .game-card h4 { font-size: .95rem; font-weight: 800; margin-bottom: 6px; }
-    .game-card .gdesc { font-size: .82rem; color: var(--mu); line-height: 1.6; margin-bottom: 10px; }
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px}
+.sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.user-info .name{font-size:12px;font-weight:600}
+.user-info .plan{font-size:11px;color:var(--muted)}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s;font-family:'Inter',sans-serif}
+.btn-logout:hover{background:var(--bg);color:var(--red)}
 
-    .game-tags { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 18px; margin-bottom: 12px; }
-    .gs { display: inline-block; background: #f0fff4; color: #166534; border-radius: 8px; padding: 3px 10px; font-size: .7rem; font-weight: 700; }
-    .gs.age { background: #fff7ed; color: #92400e; }
-    .gs.players { background: #eff6ff; color: #1e40af; }
-    .gs.time { background: #fdf2f8; color: #9d174d; }
+.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
+.fab-back i{font-size:18px}
 
-    .game-footer {
-      background: #f8f6ff; padding: 10px 18px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: .78rem; color: var(--p); font-weight: 700;
-    }
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
 
-    /* Modal full detail */
-    .gd-section { margin-bottom: 16px; }
-    .gd-section h5 {
-      font-size: .76rem; text-transform: uppercase; letter-spacing: .05em;
-      color: var(--p); margin-bottom: 6px; font-weight: 800;
-    }
-    .gd-section p, .gd-section li { font-size: .87rem; color: var(--tx); line-height: 1.7; }
-    .gd-section ol, .gd-section ul { padding-left: 18px; }
-    .gd-meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-    .gd-meta-chip {
-      background: #f8f6ff; border-radius: 10px; padding: 8px 14px;
-      font-size: .8rem; display: flex; align-items: center; gap: 6px;
-    }
-    .gd-goal-box {
-      background: #f0fdf4; border-left: 3px solid #22c55e;
-      border-radius: 10px; padding: 12px 16px; margin-bottom: 16px;
-      font-size: .85rem; color: #166534; line-height: 1.6;
-    }
-    .gd-variant {
-      background: #fff7ed; border-left: 3px solid #f59e0b;
-      border-radius: 10px; padding: 12px 16px; font-size: .85rem;
-      color: #92400e; line-height: 1.6;
-    }
-  </style>
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
+.btn-hamburger:hover{background:var(--bg)}
+.topbar h1{font-size:20px;font-weight:600}
+.topbar h1 span{color:var(--accent)}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--pro-soft);color:var(--pro)}
+
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.info-box i{font-size:16px;flex-shrink:0}
+
+/* FILTERS */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
+.filter-btn:hover{background:var(--bg);color:var(--text);border-color:#93c5fd}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec-title i{font-size:14px}
+
+/* GAME GRID */
+.game-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+.game-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;display:flex;flex-direction:column}
+.game-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
+
+.game-card-body{padding:14px 16px;flex:1}
+.game-emoji{font-size:26px;margin-bottom:8px;display:block}
+.game-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.game-desc{font-size:11px;color:var(--muted);line-height:1.5}
+
+.game-tags{display:flex;flex-wrap:wrap;gap:5px;padding:0 16px 12px}
+.gtag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.gtag.age{background:var(--amber-soft);color:var(--amber)}
+.gtag.players{background:var(--accent-soft);color:var(--accent)}
+.gtag.time{background:var(--pro-soft);color:var(--pro)}
+
+.game-footer{padding:10px 16px;background:var(--bg);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.game-soha{font-size:10px;font-weight:600;color:var(--muted)}
+.game-more{font-size:11px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:4px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface);border-radius:14px;width:100%;max-width:540px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.modal-hdr h3{font-size:15px;font-weight:600}
+.modal-cls{background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:2px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:background .15s}
+.modal-cls:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+
+.gd-meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.gd-chip{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:5px}
+.gd-chip i{font-size:13px;color:var(--accent)}
+
+.gd-goal{background:var(--green-soft);border:1px solid #bbf7d0;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--green);line-height:1.6;margin-bottom:14px}
+.gd-goal b{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+
+.gd-sec{margin-bottom:14px}
+.gd-sec-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.gd-sec-title i{font-size:13px}
+.gd-sec p,.gd-sec li{font-size:12px;color:var(--text);line-height:1.7}
+.gd-sec ol{padding-left:16px}
+
+.gd-variant{background:var(--amber-soft);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--amber);line-height:1.6;margin-bottom:14px}
+.gd-variant b{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+
+.gd-result{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--accent);line-height:1.6}
+.gd-result b{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+
+/* MOBILE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .main{margin-left:0;padding:16px 16px 80px}
+  .btn-hamburger{display:flex}
+  .topbar h1{font-size:16px}
+  .game-grid{grid-template-columns:1fr}
+  .fab-back{bottom:16px;right:16px;padding:10px 14px;font-size:12px}
+}
+</style>
 </head>
 <body>
+<canvas id="bg-canvas"></canvas>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<nav class="nav">
-  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
-  <div class="nav-links">
-    <a href="../dashboard.html" class="nav-btn">← Dashboard</a>
-    <div class="nav-user">
-      <span id="nav-name">—</span>
-      <span class="nav-badge" id="nav-plan">Bepul</span>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-school"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
+    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="sidebar-section">Asosiy</div>
+  <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a href="jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
+  <a href="haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
+  <a href="soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
+  <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
+  <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
+  <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
+  <div class="sidebar-section">Professional</div>
+  <a class="nav-item active"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">T</div>
+      <div class="user-info">
+        <div class="name">Tarbiyachi</div>
+        <div class="plan">Professional tarif</div>
+      </div>
+    </div>
+    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+      <h1><span>Didaktik O'yinlar</span> — 4-5 yosh</h1>
+    </div>
+    <div class="topbar-right">
+      <span class="plan-pill"><i class="ti ti-crown"></i> PRO</span>
     </div>
   </div>
-</nav>
 
-<div class="container">
-
-  <div class="sec-title">🎮 Didaktik O'yinlar To'plami</div>
   <div class="info-box">
-    Har bir o'yin <b>aniq pedagogik maqsad</b>, qadam-baqadam o'tkazish yo'riqnomasi va
-    rivojlanish sohasiga bog'liqlik bilan tasvirlangan. O'yinni bosing — to'liq metodikani ko'rasiz.
+    <i class="ti ti-info-circle"></i>
+    Har bir o'yin aniq pedagogik maqsad, qadam-baqadam yo'riqnoma va rivojlanish sohasiga bog'liqlik bilan tasvirlangan.
   </div>
 
-  <div class="game-filters" id="game-filters"></div>
+  <!-- FILTERS -->
+  <div class="filter-row" id="filter-row"></div>
 
+  <!-- SEC TITLE -->
+  <div class="sec-title"><i class="ti ti-puzzle"></i> <span id="game-count">12</span> ta o'yin</div>
+
+  <!-- GAME GRID -->
   <div class="game-grid" id="game-grid"></div>
+</main>
 
-</div>
+<!-- FLOATING BACK -->
+<a href="../dashboard.html" class="fab-back">
+  <i class="ti ti-arrow-left"></i> Dashboard
+</a>
 
-<!-- GAME DETAIL MODAL -->
-<div class="modal-overlay" id="game-modal">
-  <div class="modal-box" style="max-width:560px">
+<!-- MODAL -->
+<div class="modal-overlay" id="game-modal" onclick="handleModalClick(event)">
+  <div class="modal-box">
     <div class="modal-hdr">
       <h3 id="gm-title">O'yin</h3>
-      <button class="modal-cls" onclick="closeGameModal()">✕</button>
+      <button class="modal-cls" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-body" id="gm-body"></div>
   </div>
 </div>
 
-<div id="toast" class="toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.js"></script>
-<script src="../js/auth.js"></script>
+<!-- ANIMATED BG -->
 <script>
-
-var gamesData = [
-  {
-    icon: '🃏', name: "Kim qayerda yashaydi?", soha: '4-soha: Bilish jarayonlari',
-    category: 'Tabiat', age: '4-5 yosh', players: '4-8 bola', time: '12-15 daq',
-    goal: "Bolalarda hayvonlar va ularning yashash makonlari haqida tasavvurni shakllantirish, mantiqiy bog'lash ko'nikmasini rivojlantirish.",
-    materials: "Hayvon suratlari (12 ta), yashash joyi kartochkalari (o'rmon, suv, cho'l, uy), flanel doska",
-    rules: [
-      "Bolalar doira bo'lib o'tiradi, o'rtaga 4 ta yashash joyi kartochkasi qo'yiladi",
-      "Tarbiyachi hayvon suratini ko'rsatadi va savol beradi: \"Bu hayvon qayerda yashaydi?\"",
-      "Bola to'g'ri javobni tanlab, suratni mos kartochka yoniga qo'yadi",
-      "Har to'g'ri javob uchun bola olqishlanadi",
-      "O'yin barcha suratlar tarqatilguncha davom etadi"
-    ],
-    variant: "Murakkablashtirish: bitta hayvon bir nechta joyda yashashi mumkinligini muhokama qilish (masalan, qush ham daraxtda, ham uyda yashashi mumkin).",
-    result: "Bola kamida 8 ta hayvonning yashash joyini to'g'ri ko'rsata oladi."
-  },
-  {
-    icon: '🔢', name: "1 dan 5 gacha sayohat", soha: '4-soha: FEMP',
-    category: 'Matematik', age: '4-5 yosh', players: '1-6 bola', time: '10-12 daq',
-    goal: "Sonlarni real predmetlar bilan bog'lash, miqdor va raqam orasidagi aloqani tushunish.",
-    materials: "1 dan 5 gacha raqam kartochkalari, har xil mayda o'yinchoqlar (30 dona)",
-    rules: [
-      "Raqam kartochkalari stol ustiga tartibsiz qo'yiladi",
-      "Tarbiyachi bir raqamni ko'tarib ko'rsatadi",
-      "Bola shu raqamga teng miqdordagi o'yinchoqni sanab oladi",
-      "To'g'ri sanalgan bo'lsa, raqam va o'yinchoqlar yonma-yon qo'yiladi",
-      "Barcha raqamlar (1-5) tugaguncha davom etadi"
-    ],
-    variant: "Yengillashtirish: 1-3 oralig'idan boshlash. Murakkablashtirish: 6-10 gacha kengaytirish.",
-    result: "Bola 1 dan 5 gacha sonlarni to'g'ri sanaydi va miqdorga moslaydi."
-  },
-  {
-    icon: '🎨', name: "Sehrli rang qutisi", soha: "5-soha: Ijodiy rivojlanish",
-    category: 'Sensor', age: '4-5 yosh', players: '4-10 bola', time: '10 daq',
-    goal: "Asosiy va qo'shimcha ranglarni farqlash, rang nomlarini bilish va kundalik buyumlar bilan bog'lash.",
-    materials: "Rangli kartochkalar (qizil, sariq, ko'k, yashil, oq, qora), xona ichidagi rangli buyumlar",
-    rules: [
-      "Tarbiyachi rangli kartochkani ko'rsatadi",
-      "Bolalar xonada shu rangdagi biror buyumni topishi kerak",
-      "Topgan bola buyumni ko'rsatib, rang nomini aytadi",
-      "Har bir rang uchun kamida 2-3 bola javob beradi",
-      "Barcha asosiy ranglar o'tilguncha davom etadi"
-    ],
-    variant: "Guruh musobaqasi shaklida: kim tezroq topadi.",
-    result: "Bola 6 ta asosiy rangni to'g'ri nomlaydi va kundalik buyumlarda farqlay oladi."
-  },
-  {
-    icon: '🧩', name: "Shakllar mozaikasi", soha: "4-soha: FEMP",
-    category: 'Matematik', age: '4-5 yosh', players: '1-4 bola', time: '15 daq',
-    goal: "Geometrik shakllarni (doira, kvadrat, uchburchak, to'rtburchak) farqlash va ulardan naqsh yaratish ko'nikmasini shakllantirish.",
-    materials: "Turli rangdagi geometrik shakllar (kartondan), namuna kartochkalari",
-    rules: [
-      "Bolalarga turli geometrik shakllar tarqatiladi",
-      "Tarbiyachi namuna naqshni ko'rsatadi",
-      "Bolalar shakllardan namunaga o'xshash naqsh yasashga harakat qiladi",
-      "Har bir bola o'z ishini guruhga ko'rsatadi",
-      "Eng ijodiy va to'g'ri natijalar maqtaladi"
-    ],
-    variant: "Murakkablashtirish: o'z mustaqil naqshini yaratish topshirig'i berish.",
-    result: "Bola 4 ta asosiy geometrik shaklni farqlaydi va ulardan oddiy naqsh yaratadi."
-  },
-  {
-    icon: '👃', name: "Hidini top, mevasini ayt", soha: '1-soha: Jismoniy rivojlanish (sezgi)',
-    category: 'Sensor', age: '4-5 yosh', players: '1-6 bola', time: '10 daq',
-    goal: "Hid sezgi organlarini rivojlantirish, meva-sabzavotlarni hidi orqali tanish ko'nikmasini shakllantirish.",
-    materials: "Limon, olma, sarimsoq, apelsin, yog' qog'ozi, ko'z bog'lovchi mato",
-    rules: [
-      "Bolaning ko'zi mato bilan yumuq holda yopiladi (ixtiyoriy ravishda)",
-      "Tarbiyachi mevani bolaning burni yaqiniga olib boradi",
-      "Bola hidlab, mevani taxmin qiladi",
-      "To'g'ri topilsa, ko'z ochiladi va mukofotlanadi",
-      "Har bir bola kamida 2 marta sinab ko'radi"
-    ],
-    variant: "Agar bola ko'zini yopishdan qo'rqsa — mevani qutida yashirib hidlatish mumkin.",
-    result: "Bola kamida 3 ta mevani hidi orqali to'g'ri taniydi."
-  },
-  {
-    icon: '🎯', name: "Nima o'zgardi?", soha: '4-soha: Bilish jarayonlari (xotira)',
-    category: 'Mantiq', age: '4-5 yosh', players: '4-8 bola', time: '10-12 daq',
-    goal: "Diqqat va qisqa muddatli xotirani rivojlantirish, kuzatuvchanlikni oshirish.",
-    materials: "5-6 ta turli o'yinchoq yoki buyum, stol",
-    rules: [
-      "Stol ustiga 5 ta buyum tartib bilan qo'yiladi",
-      "Bolalar 10 soniya davomida buyumlarni diqqat bilan kuzatadi",
-      "Bolalar ko'zini yumadi, tarbiyachi bir buyumni olib qo'yadi yoki o'rnini almashtiradi",
-      "Bolalar ko'zini ochib, nima o'zgarganini topishi kerak",
-      "To'g'ri topgan bola olqishlanadi, o'yin davom etadi"
-    ],
-    variant: "Murakkablashtirish: buyumlar sonini 7-8 taga oshirish yoki ikkita buyumni almashtirish.",
-    result: "Bola 5 buyum ichidan o'zgarishni mustaqil topa oladi."
-  },
-  {
-    icon: '🏪', name: "Do'kon o'yini", soha: '2-soha: Ijtimoiy-hissiy rivojlanish',
-    category: 'Rolli o\'yin', age: '4-5 yosh', players: '4-10 bola', time: '20 daq',
-    goal: "Ijtimoiy rollarni o'rganish (sotuvchi-xaridor), muloqot va navbat kutish ko'nikmalarini shakllantirish.",
-    materials: "O'yinchoq mahsulotlar, soxta pul yoki tokenlar, savat, kassa o'yinchog'i",
-    rules: [
-      "Bolalar ikki guruhga bo'linadi: sotuvchilar va xaridorlar",
-      "Sotuvchilar \"do'kon\" tashkil qiladi, mahsulotlarni joylashtiradi",
-      "Xaridorlar navbat bilan kelib, kerakli narsani so'raydi va 'pul' to'laydi",
-      "Sotuvchi mahsulotni beradi va \"qaytim\" hisoblaydi (oddiy son bilan)",
-      "Rollar almashtiriladi — har bir bola ikki rolni ham sinab ko'radi"
-    ],
-    variant: "Mavzuni almashtirish mumkin: do'kон, dorixona, kitob do'koni, gul do'koni.",
-    result: "Bola muloqot odobini namoyon qiladi, navbat kutadi, oddiy hisob-kitob qiladi."
-  },
-  {
-    icon: '🌡️', name: "Issiq yoki sovuq?", soha: '1-soha: Jismoniy rivojlanish (sezgi)',
-    category: 'Sensor', age: '4-5 yosh', players: '1-6 bola', time: '8-10 daq',
-    goal: "Harorat farqini sezish va tasvirlash, sensor tajriba orqali bilim olish.",
-    materials: "Issiq (lekin xavfsiz, iliq) va sovuq suv solingan idishlar, sochiq",
-    rules: [
-      "Ikki idish tayyorlanadi: biri iliq, biri sovuq suv bilan",
-      "Bola navbat bilan har ikki idishga qo'lini tegizadi",
-      "Tarbiyachi savol beradi: \"Qaysi biri issiqroq? Qaysi biri sovuqroq?\"",
-      "Bola o'z his-tuyg'ularini so'z bilan ifodalaydi",
-      "Xavfsizlik: suv hech qachon juda issiq bo'lmasligi kerak"
-    ],
-    variant: "Uchinchi idish — xona haroratidagi suvni qo'shib, taqqoslash murakkablashtiriladi.",
-    result: "Bola issiq, sovuq va iliq tushunchalarini farqlab, so'z bilan ifodalaydi."
-  },
-  {
-    icon: '🐾', name: "Hayvon ovozini top", soha: "3-soha + 4-soha integratsiyasi",
-    category: 'Nutq', age: '4-5 yosh', players: '4-10 bola', time: '10 daq',
-    goal: "Eshitish diqqatini rivojlantirish, hayvon nomlari va ovozlarini bog'lash, nutqni faollashtirish.",
-    materials: "Hayvon ovozlari yozilgan audio (yoki tarbiyachi taqlidi), hayvon suratlari",
-    rules: [
-      "Tarbiyachi hayvon ovozini chiqaradi (mushuk, it, sigir, ot va h.k.)",
-      "Bolalar ovozni eshitib, qaysi hayvon ekanini taxmin qiladi",
-      "To'g'ri javob bergan bola hayvon suratini ko'rsatadi",
-      "Bola hayvon nomi va ovozini birgalikda takrorlaydi",
-      "Barcha hayvonlar o'tilguncha davom etadi"
-    ],
-    variant: "Bolalar o'zlari hayvon ovozini taqlid qilib, boshqalar topadigan qilib o'ynashlari mumkin.",
-    result: "Bola kamida 6 ta hayvonning ovozi va nomini bog'lay oladi."
-  },
-  {
-    icon: '✂️', name: "Katta-kichik safi", soha: '4-soha: FEMP',
-    category: 'Matematik', age: '4-5 yosh', players: '1-6 bola', time: '10 daq',
-    goal: "Hajm bo'yicha taqqoslash va tartiblash ko'nikmasini (kichikdan kattaga) shakllantirish.",
-    materials: "Turli o'lchamdagi 5 ta halqa yoki quticha (matryoshka tipida)",
-    rules: [
-      "Turli o'lchamdagi buyumlar bolalar oldiga tartibsiz qo'yiladi",
-      "Tarbiyachi: \"Eng kichigini topib bering\" deb so'raydi",
-      "Bola topib, qatorning boshiga qo'yadi",
-      "Shu tartibda eng kattagacha barcha buyumlar tartiblanadi",
-      "Yakunda butun qator birgalikda ko'rib chiqiladi"
-    ],
-    variant: "Teskari tartibda (kattadan kichikka) ham bajarish so'raladi.",
-    result: "Bola 5 ta buyumni hajmi bo'yicha mustaqil tartiblay oladi."
-  },
-  {
-    icon: '🎭', name: "Kim qanday his qiladi?", soha: '2-soha: Ijtimoiy-hissiy rivojlanish',
-    category: 'Hissiyot', age: '4-5 yosh', players: '4-8 bola', time: '12 daq',
-    goal: "Asosiy his-tuyg'ularni (xursandlik, xafalik, qo'rquv, g'azab) tanish va ularni so'z bilan ifodalash.",
-    materials: "Turli yuz ifodalarini ko'rsatuvchi kartochkalar yoki oyna",
-    rules: [
-      "Tarbiyachi his-tuyg'u kartochkasini ko'rsatadi (masalan, xursand yuz)",
-      "Bolalar shu his-tuyg'uni o'z yuzlarida aks ettiradi",
-      "Tarbiyachi so'raydi: \"Qachon sen shunday his qilasan?\"",
-      "Bolalar o'z misollarini aytadi (masalan: \"O'yinchoq sovga olganimda xursand bo'laman\")",
-      "Barcha asosiy 4 his-tuyg'u muhokama qilinadi"
-    ],
-    variant: "Rolli o'yin shaklida: bir bola his-tuyg'uni ko'rsatadi, boshqalar topadi.",
-    result: "Bola 4 ta asosiy his-tuyg'uni nomlaydi va o'z holatini so'z bilan tasvirlay oladi."
-  },
-  {
-    icon: '🌿', name: "O'simlik shifokori", soha: "4-soha: Tabiat bilan tanishuv",
-    category: 'Tabiat', age: '4-5 yosh', players: '1-6 bola', time: '15 daq',
-    goal: "O'simliklarning yashash uchun zarur shartlarini (suv, yorug'lik) tushunish va g'amxorlik ko'nikmasini shakllantirish.",
-    materials: "2 ta bir xil o'simlik (gul), suv idishi, kuzatuv jadvali (rasm bilan)",
-    rules: [
-      "Bolalarga ikkita bir xil o'simlik ko'rsatiladi",
-      "Tarbiyachi tushuntiradi: bittasiga suv beriladi, ikkinchisiga berilmaydi",
-      "Har kuni bolalar o'simliklarni kuzatadi va rasm chizib boradi",
-      "Bir hafta davomida natija kuzatiladi va muhokama qilinadi",
-      "Yakunda nima uchun farq borligi haqida suhbat o'tkaziladi"
-    ],
-    variant: "Yorug'lik bilan ham xuddi shunday tajriba o'tkazish mumkin (soyada va yorug'da).",
-    result: "Bola o'simlik suv va yorug'liksiz so'lib qolishini tushunadi va sababini izohlay oladi."
-  },
-]
-
-var currentFilter = 'all'
-
-window.addEventListener('load', async () => {
-  const auth = await initAuth(true)
-  if (!auth) return
-  fillNav()
-
-  if (!hasAccess('games')) {
-    document.querySelector('.container').innerHTML = `
-      <div style="text-align:center;padding:60px 20px">
-        <div style="font-size:3rem;margin-bottom:14px">🔒</div>
-        <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:8px">Bu bo'lim Premium uchun</h2>
-        <p style="color:var(--mu);margin-bottom:24px">12+ professional didaktik o'yin to'plamiga ega bo'lish uchun Premium oling</p>
-        <a href="../premium.html" style="background:linear-gradient(135deg,#6c47ff,#9b7cff);
-          color:#fff;padding:13px 30px;border-radius:12px;font-weight:700;display:inline-block">
-          ⭐ Premium olish — 49 000 so'm/oy
-        </a>
-      </div>`
-    return
+(function(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const types=['star','heart','circle','abc'];
+  const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  const shapes=[];
+  for(let i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
+  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
+  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    shapes.forEach(s=>{
+      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
+      if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
+      if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
+      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
+      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
+      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
   }
-
-  renderFilters()
-  renderGames()
-})
-
-function renderFilters() {
-  const cats = ['all', ...new Set(gamesData.map(g => g.category))]
-  document.getElementById('game-filters').innerHTML = cats.map(c => `
-    <button class="gf-btn ${c === 'all' ? 'active' : ''}" data-cat="${c}">
-      ${c === 'all' ? "Barchasi" : c}
-    </button>
-  `).join('')
-
-  document.querySelectorAll('.gf-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('active'))
-      btn.classList.add('active')
-      currentFilter = btn.dataset.cat
-      renderGames()
-    })
-  })
-}
-
-function renderGames() {
-  const filtered = currentFilter === 'all'
-    ? gamesData
-    : gamesData.filter(g => g.category === currentFilter)
-
-  document.getElementById('game-grid').innerHTML = filtered.map((g, i) => {
-    const realIdx = gamesData.indexOf(g)
-    return `
-    <div class="game-card" onclick="openGameModal(${realIdx})">
-      <div class="game-card-hdr">
-        <div class="gi">${g.icon}</div>
-        <h4>${g.name}</h4>
-        <p class="gdesc">${g.goal.slice(0, 80)}...</p>
-      </div>
-      <div class="game-tags">
-        <span class="gs age">👶 ${g.age}</span>
-        <span class="gs players">👥 ${g.players}</span>
-        <span class="gs time">⏱️ ${g.time}</span>
-      </div>
-      <div class="game-footer">
-        <span>${g.soha}</span>
-        <span>Batafsil →</span>
-      </div>
-    </div>`
-  }).join('')
-}
-
-function openGameModal(idx) {
-  const g = gamesData[idx]
-  document.getElementById('gm-title').textContent = g.icon + ' ' + g.name
-
-  document.getElementById('gm-body').innerHTML = `
-    <div class="gd-meta-row">
-      <div class="gd-meta-chip">👶 ${g.age}</div>
-      <div class="gd-meta-chip">👥 ${g.players}</div>
-      <div class="gd-meta-chip">⏱️ ${g.time}</div>
-      <div class="gd-meta-chip">📊 ${g.soha}</div>
-    </div>
-
-    <div class="gd-goal-box">
-      <b>🎯 Maqsad:</b> ${g.goal}
-    </div>
-
-    <div class="gd-section">
-      <h5>🧰 Kerakli jihozlar</h5>
-      <p>${g.materials}</p>
-    </div>
-
-    <div class="gd-section">
-      <h5>📋 O'tkazish tartibi</h5>
-      <ol>${g.rules.map(r => `<li>${r}</li>`).join('')}</ol>
-    </div>
-
-    <div class="gd-variant">
-      <b>💡 Variatsiya:</b> ${g.variant}
-    </div>
-
-    <div class="gd-section" style="margin-top:16px">
-      <h5>✅ Kutilgan natija</h5>
-      <p>${g.result}</p>
-    </div>
-  `
-
-  document.getElementById('game-modal').classList.add('show')
-}
-
-function closeGameModal() {
-  document.getElementById('game-modal').classList.remove('show')
-}
+  frame();
+})();
 </script>
 
+<!-- SIDEBAR JS -->
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closeModal()}});
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
+</script>
+
+<!-- GAMES DATA + LOGIC -->
+<script>
+var games=[
+  {icon:'🃏',name:"Kim qayerda yashaydi?",cat:'Tabiat',age:'4-5 yosh',players:'4-8 bola',time:'12-15 daq',soha:'4-soha: Bilish jarayonlari',goal:"Bolalarda hayvonlar va ularning yashash makonlari haqida tasavvurni shakllantirish, mantiqiy bog'lash ko'nikmasini rivojlantirish.",materials:"Hayvon suratlari (12 ta), yashash joyi kartochkalari (o'rmon, suv, cho'l, uy), flanel doska",rules:["Bolalar doira bo'lib o'tiradi, o'rtaga 4 ta yashash joyi kartochkasi qo'yiladi","Tarbiyachi hayvon suratini ko'rsatadi va savol beradi: \"Bu hayvon qayerda yashaydi?\"","Bola to'g'ri javobni tanlab, suratni mos kartochka yoniga qo'yadi","Har to'g'ri javob uchun bola olqishlanadi","O'yin barcha suratlar tarqatilguncha davom etadi"],variant:"Murakkablashtirish: bitta hayvon bir nechta joyda yashashi mumkinligini muhokama qilish.",result:"Bola kamida 8 ta hayvonning yashash joyini to'g'ri ko'rsata oladi."},
+  {icon:'🔢',name:"1 dan 5 gacha sayohat",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10-12 daq',soha:'4-soha: FEMP',goal:"Sonlarni real predmetlar bilan bog'lash, miqdor va raqam orasidagi aloqani tushunish.",materials:"1 dan 5 gacha raqam kartochkalari, har xil mayda o'yinchoqlar (30 dona)",rules:["Raqam kartochkalari stol ustiga tartibsiz qo'yiladi","Tarbiyachi bir raqamni ko'tarib ko'rsatadi","Bola shu raqamga teng miqdordagi o'yinchoqni sanab oladi","To'g'ri sanalgan bo'lsa, raqam va o'yinchoqlar yonma-yon qo'yiladi","Barcha raqamlar (1-5) tugaguncha davom etadi"],variant:"Yengillashtirish: 1-3 oralig'idan boshlash. Murakkablashtirish: 6-10 gacha kengaytirish.",result:"Bola 1 dan 5 gacha sonlarni to'g'ri sanaydi va miqdorga moslaydi."},
+  {icon:'🎨',name:"Sehrli rang qutisi",cat:'Sensor',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"5-soha: Ijodiy rivojlanish",goal:"Asosiy va qo'shimcha ranglarni farqlash, rang nomlarini bilish va kundalik buyumlar bilan bog'lash.",materials:"Rangli kartochkalar (qizil, sariq, ko'k, yashil, oq, qora), xona ichidagi rangli buyumlar",rules:["Tarbiyachi rangli kartochkani ko'rsatadi","Bolalar xonada shu rangdagi biror buyumni topishi kerak","Topgan bola buyumni ko'rsatib, rang nomini aytadi","Har bir rang uchun kamida 2-3 bola javob beradi","Barcha asosiy ranglar o'tilguncha davom etadi"],variant:"Guruh musobaqasi shaklida: kim tezroq topadi.",result:"Bola 6 ta asosiy rangni to'g'ri nomlaydi va kundalik buyumlarda farqlay oladi."},
+  {icon:'🧩',name:"Shakllar mozaikasi",cat:'Matematik',age:'4-5 yosh',players:'1-4 bola',time:'15 daq',soha:"4-soha: FEMP",goal:"Geometrik shakllarni farqlash va ulardan naqsh yaratish ko'nikmasini shakllantirish.",materials:"Turli rangdagi geometrik shakllar (kartondan), namuna kartochkalari",rules:["Bolalarga turli geometrik shakllar tarqatiladi","Tarbiyachi namuna naqshni ko'rsatadi","Bolalar shakllardan namunaga o'xshash naqsh yasashga harakat qiladi","Har bir bola o'z ishini guruhga ko'rsatadi","Eng ijodiy va to'g'ri natijalar maqtaladi"],variant:"Murakkablashtirish: o'z mustaqil naqshini yaratish topshirig'i berish.",result:"Bola 4 ta asosiy geometrik shaklni farqlaydi va ulardan oddiy naqsh yaratadi."},
+  {icon:'👃',name:"Hidini top, mevasini ayt",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Hid sezgi organlarini rivojlantirish, meva-sabzavotlarni hidi orqali tanish ko'nikmasini shakllantirish.",materials:"Limon, olma, sarimsoq, apelsin, yog' qog'ozi, ko'z bog'lovchi mato",rules:["Bolaning ko'zi mato bilan yumuq holda yopiladi (ixtiyoriy)","Tarbiyachi mevani bolaning burni yaqiniga olib boradi","Bola hidlab, mevani taxmin qiladi","To'g'ri topilsa, ko'z ochiladi va mukofotlanadi","Har bir bola kamida 2 marta sinab ko'radi"],variant:"Agar bola ko'zini yopishdan qo'rqsa — mevani qutida yashirib hidlatish mumkin.",result:"Bola kamida 3 ta mevani hidi orqali to'g'ri taniydi."},
+  {icon:'🎯',name:"Nima o'zgardi?",cat:'Mantiq',age:'4-5 yosh',players:'4-8 bola',time:'10-12 daq',soha:'4-soha: Xotira va diqqat',goal:"Diqqat va qisqa muddatli xotirani rivojlantirish, kuzatuvchanlikni oshirish.",materials:"5-6 ta turli o'yinchoq yoki buyum, stol",rules:["Stol ustiga 5 ta buyum tartib bilan qo'yiladi","Bolalar 10 soniya davomida buyumlarni diqqat bilan kuzatadi","Bolalar ko'zini yumadi, tarbiyachi bir buyumni olib qo'yadi","Bolalar ko'zini ochib, nima o'zgarganini topishi kerak","To'g'ri topgan bola olqishlanadi, o'yin davom etadi"],variant:"Murakkablashtirish: buyumlar sonini 7-8 taga oshirish yoki ikkita buyumni almashtirish.",result:"Bola 5 buyum ichidan o'zgarishni mustaqil topa oladi."},
+  {icon:'🏪',name:"Do'kon o'yini",cat:"Rolli o'yin",age:'4-5 yosh',players:'4-10 bola',time:'20 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Ijtimoiy rollarni o'rganish, muloqot va navbat kutish ko'nikmalarini shakllantirish.",materials:"O'yinchoq mahsulotlar, soxta pul yoki tokenlar, savat, kassa o'yinchog'i",rules:["Bolalar ikki guruhga bo'linadi: sotuvchilar va xaridorlar","Sotuvchilar \"do'kon\" tashkil qiladi, mahsulotlarni joylashtiradi","Xaridorlar navbat bilan kelib, kerakli narsani so'raydi va 'pul' to'laydi","Sotuvchi mahsulotni beradi va \"qaytim\" hisoblaydi","Rollar almashtiriladi — har bir bola ikki rolni ham sinab ko'radi"],variant:"Mavzuni almashtirish mumkin: dorixona, kitob do'koni, gul do'koni.",result:"Bola muloqot odobini namoyon qiladi, navbat kutadi, oddiy hisob-kitob qiladi."},
+  {icon:'🌡️',name:"Issiq yoki sovuq?",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'8-10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Harorat farqini sezish va tasvirlash, sensor tajriba orqali bilim olish.",materials:"Issiq (iliq) va sovuq suv solingan idishlar, sochiq",rules:["Ikki idish tayyorlanadi: biri iliq, biri sovuq suv bilan","Bola navbat bilan har ikki idishga qo'lini tegizadi","Tarbiyachi savol beradi: \"Qaysi biri issiqroq?\"","Bola o'z his-tuyg'ularini so'z bilan ifodalaydi","Xavfsizlik: suv hech qachon juda issiq bo'lmasligi kerak"],variant:"Uchinchi idish — xona haroratidagi suvni qo'shib, taqqoslash murakkablashtiriladi.",result:"Bola issiq, sovuq va iliq tushunchalarini farqlab, so'z bilan ifodalaydi."},
+  {icon:'🐾',name:"Hayvon ovozini top",cat:'Nutq',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"3-soha + 4-soha integratsiyasi",goal:"Eshitish diqqatini rivojlantirish, hayvon nomlari va ovozlarini bog'lash, nutqni faollashtirish.",materials:"Hayvon ovozlari yozilgan audio (yoki tarbiyachi taqlidi), hayvon suratlari",rules:["Tarbiyachi hayvon ovozini chiqaradi (mushuk, it, sigir, ot va h.k.)","Bolalar ovozni eshitib, qaysi hayvon ekanini taxmin qiladi","To'g'ri javob bergan bola hayvon suratini ko'rsatadi","Bola hayvon nomi va ovozini birgalikda takrorlaydi","Barcha hayvonlar o'tilguncha davom etadi"],variant:"Bolalar o'zlari hayvon ovozini taqlid qilib, boshqalar topadigan qilib o'ynashlari mumkin.",result:"Bola kamida 6 ta hayvonning ovozi va nomini bog'lay oladi."},
+  {icon:'✂️',name:"Katta-kichik safi",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'4-soha: FEMP',goal:"Hajm bo'yicha taqqoslash va tartiblash ko'nikmasini shakllantirish.",materials:"Turli o'lchamdagi 5 ta halqa yoki quticha",rules:["Turli o'lchamdagi buyumlar bolalar oldiga tartibsiz qo'yiladi","Tarbiyachi: \"Eng kichigini topib bering\" deb so'raydi","Bola topib, qatorning boshiga qo'yadi","Shu tartibda eng kattagacha barcha buyumlar tartiblanadi","Yakunda butun qator birgalikda ko'rib chiqiladi"],variant:"Teskari tartibda (kattadan kichikka) ham bajarish so'raladi.",result:"Bola 5 ta buyumni hajmi bo'yicha mustaqil tartiblay oladi."},
+  {icon:'🎭',name:"Kim qanday his qiladi?",cat:'Hissiyot',age:'4-5 yosh',players:'4-8 bola',time:'12 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Asosiy his-tuyg'ularni tanish va ularni so'z bilan ifodalash.",materials:"Turli yuz ifodalarini ko'rsatuvchi kartochkalar yoki oyna",rules:["Tarbiyachi his-tuyg'u kartochkasini ko'rsatadi (masalan, xursand yuz)","Bolalar shu his-tuyg'uni o'z yuzlarida aks ettiradi","Tarbiyachi so'raydi: \"Qachon sen shunday his qilasan?\"","Bolalar o'z misollarini aytadi","Barcha asosiy 4 his-tuyg'u muhokama qilinadi"],variant:"Rolli o'yin shaklida: bir bola his-tuyg'uni ko'rsatadi, boshqalar topadi.",result:"Bola 4 ta asosiy his-tuyg'uni nomlaydi va o'z holatini so'z bilan tasvirlay oladi."},
+  {icon:'🌿',name:"O'simlik shifokori",cat:'Tabiat',age:'4-5 yosh',players:'1-6 bola',time:'15 daq',soha:"4-soha: Tabiat bilan tanishuv",goal:"O'simliklarning yashash uchun zarur shartlarini tushunish va g'amxorlik ko'nikmasini shakllantirish.",materials:"2 ta bir xil o'simlik (gul), suv idishi, kuzatuv jadvali",rules:["Bolalarga ikkita bir xil o'simlik ko'rsatiladi","Bittasiga suv beriladi, ikkinchisiga berilmaydi","Har kuni bolalar o'simliklarni kuzatadi va rasm chizib boradi","Bir hafta davomida natija kuzatiladi va muhokama qilinadi","Yakunda nima uchun farq borligi haqida suhbat o'tkaziladi"],variant:"Yorug'lik bilan ham xuddi shunday tajriba o'tkazish mumkin.",result:"Bola o'simlik suv va yorug'liksiz so'lib qolishini tushunadi va sababini izohlay oladi."},
+];
+
+var activeFilter='all';
+
+function getCategories(){
+  return['all',...new Set(games.map(g=>g.cat))];
+}
+
+function renderFilters(){
+  var cats=getCategories();
+  document.getElementById('filter-row').innerHTML=cats.map(c=>`
+    <button class="filter-btn ${c===activeFilter?'active':''}" data-cat="${c}">${c==='all'?'Barchasi':c}</button>
+  `).join('');
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      activeFilter=btn.dataset.cat;
+      renderFilters();
+      renderGames();
+    });
+  });
+}
+
+function renderGames(){
+  var list=activeFilter==='all'?games:games.filter(g=>g.cat===activeFilter);
+  document.getElementById('game-count').textContent=list.length;
+  document.getElementById('game-grid').innerHTML=list.map((g,i)=>{
+    var idx=games.indexOf(g);
+    return`<div class="game-card" onclick="openModal(${idx})">
+      <div class="game-card-body">
+        <span class="game-emoji">${g.icon}</span>
+        <div class="game-name">${g.name}</div>
+        <div class="game-desc">${g.goal.slice(0,90)}...</div>
+      </div>
+      <div class="game-tags">
+        <span class="gtag age"><i class="ti ti-baby-carriage"></i> ${g.age}</span>
+        <span class="gtag players"><i class="ti ti-users"></i> ${g.players}</span>
+        <span class="gtag time"><i class="ti ti-clock"></i> ${g.time}</span>
+      </div>
+      <div class="game-footer">
+        <span class="game-soha">${g.soha}</span>
+        <span class="game-more"><i class="ti ti-arrow-right"></i></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(idx){
+  var g=games[idx];
+  document.getElementById('gm-title').textContent=g.icon+' '+g.name;
+  document.getElementById('gm-body').innerHTML=`
+    <div class="gd-meta-row">
+      <div class="gd-chip"><i class="ti ti-baby-carriage"></i>${g.age}</div>
+      <div class="gd-chip"><i class="ti ti-users"></i>${g.players}</div>
+      <div class="gd-chip"><i class="ti ti-clock"></i>${g.time}</div>
+      <div class="gd-chip"><i class="ti ti-chart-dots-3"></i>${g.soha}</div>
+    </div>
+    <div class="gd-goal"><b><i class="ti ti-target"></i> Maqsad</b>${g.goal}</div>
+    <div class="gd-sec">
+      <div class="gd-sec-title"><i class="ti ti-tool"></i> Kerakli jihozlar</div>
+      <p>${g.materials}</p>
+    </div>
+    <div class="gd-sec">
+      <div class="gd-sec-title"><i class="ti ti-list-numbers"></i> O'tkazish tartibi</div>
+      <ol>${g.rules.map(r=>`<li>${r}</li>`).join('')}</ol>
+    </div>
+    <div class="gd-variant"><b><i class="ti ti-bulb"></i> Variatsiya</b>${g.variant}</div>
+    <div class="gd-result"><b><i class="ti ti-circle-check"></i> Kutilgan natija</b>${g.result}</div>
+  `;
+  document.getElementById('game-modal').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  document.getElementById('game-modal').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+function handleModalClick(e){
+  if(e.target===document.getElementById('game-modal'))closeModal();
+}
+
+renderFilters();
+renderGames();
+</script>
 </body>
 </html>
