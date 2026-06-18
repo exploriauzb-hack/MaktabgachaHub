@@ -10,22 +10,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f0f4ff;
-  --surface:#ffffff;
-  --border:#e5e7eb;
-  --text:#111827;
-  --muted:#6b7280;
-  --accent:#1e40af;
-  --accent-soft:#eff6ff;
-  --accent-mid:#3b82f6;
-  --green:#15803d;
-  --green-soft:#f0fdf4;
-  --amber:#b45309;
-  --amber-soft:#fffbeb;
-  --red:#b91c1c;
-  --pro:#7c3aed;
-  --pro-soft:#f5f3ff;
-  --sidebar:240px;
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
@@ -41,7 +29,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
 .sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px}
 .sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s}
 .nav-item:hover{background:var(--bg);color:var(--text)}
 .nav-item.active{background:var(--accent-soft);color:var(--accent)}
 .nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
@@ -55,7 +43,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
 
-/* FLOATING BACK BUTTON */
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
@@ -71,27 +58,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
 
-/* INFO BOX */
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
 
-/* DAY TABS */
 .day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .day-tab{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
 .day-tab:hover{background:var(--bg);color:var(--text);border-color:#93c5fd}
 .day-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* SUMMARY CHIPS */
 .day-summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .summary-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px}
 .summary-chip i{font-size:13px;color:var(--accent)}
 .summary-chip b{color:var(--text)}
 
-/* SEC TITLE */
 .sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
 
-/* SCHEDULE LIST */
 .sched-list{display:flex;flex-direction:column;gap:8px}
 .sched-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s,box-shadow .15s,transform .15s}
 .sched-item:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1);transform:translateX(3px)}
@@ -100,7 +82,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .time-badge.rest{background:var(--green-soft);color:var(--green)}
 .time-badge.meal{background:var(--amber-soft);color:var(--amber)}
 
-.sched-icon-wrap{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--bg)}
+/* Icon wrapper — emoji o'rniga tabler icon */
+.sched-icon-wrap{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--accent-soft);color:var(--accent)}
+.sched-icon-wrap.green{background:var(--green-soft);color:var(--green)}
+.sched-icon-wrap.amber{background:var(--amber-soft);color:var(--amber)}
+.sched-icon-wrap.rest{background:var(--green-soft);color:var(--green)}
+.sched-icon-wrap.purple{background:var(--pro-soft);color:var(--pro)}
+.sched-icon-wrap.slate{background:#f1f5f9;color:#475569}
+
 .sched-body{flex:1;min-width:0}
 .sched-name{font-size:13px;font-weight:600;color:var(--text)}
 .sched-desc{font-size:11px;color:var(--muted);margin-top:2px}
@@ -108,16 +97,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .sched-tag.main{background:var(--accent-soft);color:var(--accent)}
 .sched-tag.rest{background:var(--green-soft);color:var(--green)}
 
-/* MOBILE */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
-  .main{margin-left:0;padding:16px}
+  .main{margin-left:0;padding:16px 16px 80px}
   .btn-hamburger{display:flex}
   .topbar h1{font-size:16px}
   .time-badge{min-width:80px;font-size:10px}
   .sched-item{gap:8px;padding:10px 12px}
+  .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
 }
 </style>
 </head>
@@ -125,7 +114,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -162,7 +150,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -179,7 +166,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan tarzda tuzilgan.
   </div>
 
-  <!-- DAY TABS -->
   <div class="day-tabs" id="day-tabs">
     <button class="day-tab active" data-day="dush">Dushanba</button>
     <button class="day-tab" data-day="sesh">Seshanba</button>
@@ -188,29 +174,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <button class="day-tab" data-day="juma">Juma</button>
   </div>
 
-  <!-- SUMMARY -->
   <div class="day-summary" id="day-summary"></div>
-
-  <!-- SEC TITLE -->
   <div class="sec-title"><i class="ti ti-calendar-event"></i> <span id="day-label">Dushanba</span> dasturi</div>
-
-  <!-- SCHEDULE -->
   <div id="day-content" class="sched-list"></div>
 </main>
 
-<!-- FLOATING BACK BUTTON -->
 <a href="../dashboard.html" class="fab-back">
   <i class="ti ti-arrow-left"></i> Dashboard
 </a>
 
-<!-- ANIMATED BG -->
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
   let W,H;
   function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
   resize();window.addEventListener('resize',resize);
-  const types=['star','heart','circle','abc','flower','triangle'];
+  const types=['star','heart','circle','abc','flower'];
   const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   const shapes=[];
@@ -235,87 +214,75 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 })();
 </script>
 
-<!-- SIDEBAR JS -->
 <script>
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden';}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){
-  document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';
-}
-checkHamburger();
-window.addEventListener('resize',checkHamburger);
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';}
+checkHamburger();window.addEventListener('resize',checkHamburger);
 </script>
 
-<!-- JADVAL DATA + LOGIC -->
 <script>
+// icon: [tabler class, color class]
 var dailyData={
   dush:[
-    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Salomlashish, Kayfiyat doirasi',type:'main'},
-    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Jismoniy mashqlar (1-soha)',type:'main'},
-    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'💬',name:"1-mashg'ulot: Nutq o'stirish",desc:"Mening oilam — suhbat (3-soha)",type:'lesson'},
-    {time:'09:35–10:00',icon:'🎨',name:"2-mashg'ulot: Tasviriy san'at",desc:"Oila rasmini chizish (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'🌿',name:'Ertalabki sayr',desc:'Tabiat kuzatuvi (1-soha)',type:'main'},
-    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'🎮',name:"Didaktik o'yin",desc:"Kim yashaydi (4-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'🎵',name:"Qo'shiq va raqs",desc:'Mavzuga mos (5-soha)',type:'main'},
+    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Salomlashish, Kayfiyat doirasi',type:'main'},
+    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Jismoniy mashqlar (1-soha)',type:'main'},
+    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'ti-message-circle',ic:'',name:"1-mashg'ulot: Nutq o'stirish",desc:"Mening oilam — suhbat (3-soha)",type:'lesson'},
+    {time:'09:35–10:00',icon:'ti-brush',ic:'purple',name:"2-mashg'ulot: Tasviriy san'at",desc:"Oila rasmini chizish (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'ti-tree',ic:'green',name:'Ertalabki sayr',desc:'Tabiat kuzatuvi (1-soha)',type:'main'},
+    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'ti-puzzle',ic:'',name:"Didaktik o'yin",desc:"Kim yashaydi (4-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'ti-music',ic:'purple',name:"Qo'shiq va raqs",desc:'Mavzuga mos (5-soha)',type:'main'},
   ],
   sesh:[
-    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
-    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Harakatli mashqlar',type:'main'},
-    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'🔢',name:"1-mashg'ulot: FEMP",desc:'Sonlar 1 dan 5 gacha (4-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'🎵',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq, ritm, raqs (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'🌿',name:'Sayr',desc:'Tabiat kuzatuvi',type:'main'},
-    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'🧩',name:"Qurilish o'yini",desc:"Kubiklar, konstruktor (4-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'📚',name:"Kitob o'qish",desc:'Ertak tinglash',type:'main'},
+    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
+    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Harakatli mashqlar',type:'main'},
+    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'ti-math-symbols',ic:'',name:"1-mashg'ulot: FEMP",desc:'Sonlar 1 dan 5 gacha (4-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'ti-music',ic:'purple',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq, ritm, raqs (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'ti-tree',ic:'green',name:'Sayr',desc:'Tabiat kuzatuvi',type:'main'},
+    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'ti-building-factory',ic:'slate',name:"Qurilish o'yini",desc:"Kubiklar, konstruktor (4-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'ti-book-2',ic:'',name:"Kitob o'qish",desc:'Ertak tinglash',type:'main'},
   ],
   chor:[
-    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
-    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Musiqa bilan',type:'main'},
-    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'09:00–09:25',icon:'🌿',name:"1-mashg'ulot: Tabiat",desc:"Kuz fasli, o'simliklar (4-soha)",type:'lesson'},
-    {time:'09:35–10:00',icon:'✂️',name:"2-mashg'ulot: Applikatsiya",desc:'Kuz bargi (1+5-soha)',type:'lesson'},
-    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Barg yig'ish, tabiat",type:'main'},
-    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Mustaqillik',type:'meal'},
-    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'🎭',name:"Rolli o'yin",desc:"Do'kon o'yini (2-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'🖍️',name:'Erkin ijod',desc:'Chizish, plastilin (5-soha)',type:'main'},
+    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
+    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Musiqa bilan',type:'main'},
+    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'09:00–09:25',icon:'ti-leaf',ic:'green',name:"1-mashg'ulot: Tabiat",desc:"Kuz fasli, o'simliklar (4-soha)",type:'lesson'},
+    {time:'09:35–10:00',icon:'ti-cut',ic:'purple',name:"2-mashg'ulot: Applikatsiya",desc:'Kuz bargi (1+5-soha)',type:'lesson'},
+    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Barg yig'ish, tabiat",type:'main'},
+    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Mustaqillik',type:'meal'},
+    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'ti-masks-theater',ic:'purple',name:"Rolli o'yin",desc:"Do'kon o'yini (2-soha)",type:'main'},
+    {time:'16:00–16:30',icon:'ti-pencil',ic:'',name:'Erkin ijod',desc:'Chizish, plastilin (5-soha)',type:'main'},
   ],
   pay:[
-    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Salomlashish',type:'main'},
-    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Sport mashqlari',type:'main'},
-    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Mustaqillik',type:'meal'},
-    {time:'09:00–09:25',icon:'🏃',name:"1-mashg'ulot: Jismoniy tarbiya",desc:'Harakat, koordinatsiya (1-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'📖',name:"2-mashg'ulot: Savodxonlik",desc:"Tovush, harf, bo'g'im (3-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Harakatli o'yinlar",type:'main'},
-    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'🎨',name:"Tasviriy san'at",desc:'Plastilin (5-soha)',type:'main'},
-    {time:'16:00–16:30',icon:'🎲',name:"Didaktik o'yin",desc:"Mantiqiy o'yin (4-soha)",type:'main'},
+    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Salomlashish',type:'main'},
+    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Sport mashqlari',type:'main'},
+    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqillik',type:'meal'},
+    {time:'09:00–09:25',icon:'ti-ball-football',ic:'green',name:"1-mashg'ulot: Jismoniy tarbiya",desc:'Harakat, koordinatsiya (1-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'ti-abc',ic:'',name:"2-mashg'ulot: Savodxonlik",desc:"Tovush, harf, bo'g'im (3-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Harakatli o'yinlar",type:'main'},
+    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:00',icon:'ti-brush',ic:'purple',name:"Tasviriy san'at",desc:'Plastilin (5-soha)',type:'main'},
+    {time:'16:00–16:30',icon:'ti-chess',ic:'slate',name:"Didaktik o'yin",desc:"Mantiqiy o'yin (4-soha)",type:'main'},
   ],
   juma:[
-    {time:'07:30–08:00',icon:'🌅',name:'Bolalarni qabul qilish',desc:'Hafta yakunini eslash',type:'main'},
-    {time:'08:00–08:20',icon:'🤸',name:'Ertalabki gimnastika',desc:'Qiziqarli mashqlar',type:'main'},
-    {time:'08:20–08:45',icon:'🍽️',name:'Nonushta',desc:'Ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'🎭',name:"1-mashg'ulot: Teatr faoliyati",desc:'Ertak sahnalashtirish (2+5-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'🎵',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq va raqs (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'🚶',name:'Sayr',desc:"Erkin o'yinlar",type:'main'},
-    {time:'12:00–12:30',icon:'🍱',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'😴',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:30',icon:'🎉',name:'Haftalik refleksiya',desc:"Biz nimani o'rgandik",type:'main'},
+    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Hafta yakunini eslash',type:'main'},
+    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Qiziqarli mashqlar',type:'main'},
+    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Ovqatlanish',type:'meal'},
+    {time:'09:00–09:25',icon:'ti-masks-theater',ic:'purple',name:"1-mashg'ulot: Teatr faoliyati",desc:'Ertak sahnalashtirish (2+5-soha)',type:'lesson'},
+    {time:'09:35–10:00',icon:'ti-music',ic:'purple',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq va raqs (5-soha)",type:'lesson'},
+    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Erkin o'yinlar",type:'main'},
+    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
+    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
+    {time:'15:30–16:30',icon:'ti-star',ic:'amber',name:'Haftalik refleksiya',desc:"Biz nimani o'rgandik",type:'main'},
   ]
 };
 
@@ -336,12 +303,15 @@ function showDay(day){
   `;
 
   var timeCls={meal:'meal',rest:'rest'};
-  var tagMap={lesson:'<span class="sched-tag main">Mashg\'ulot</span>',rest:'<span class="sched-tag rest">Dam olish</span>'};
+  var tagMap={
+    lesson:'<span class="sched-tag main">Mashg\'ulot</span>',
+    rest:'<span class="sched-tag rest">Dam olish</span>'
+  };
 
   document.getElementById('day-content').innerHTML=items.map(i=>`
     <div class="sched-item">
       <div class="time-badge ${timeCls[i.type]||''}">${i.time}</div>
-      <div class="sched-icon-wrap">${i.icon}</div>
+      <div class="sched-icon-wrap ${i.ic}"><i class="ti ${i.icon}"></i></div>
       <div class="sched-body">
         <div class="sched-name">${i.name}</div>
         <div class="sched-desc">${i.desc}</div>
