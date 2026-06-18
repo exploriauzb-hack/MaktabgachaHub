@@ -23,8 +23,7 @@
 .filter-row select, .filter-row input {
   border: 1.5px solid #e8e4f8; border-radius: 10px;
   padding: 8px 12px; font-size: 13px; font-family: inherit;
-  background: #f8f7ff; outline: none; color: #2d2d2d;
-  transition: .2s;
+  background: #f8f7ff; outline: none; color: #2d2d2d; transition: .2s;
 }
 .filter-row select:focus, .filter-row input:focus { border-color: #6c47ff; background: #fff; }
 
@@ -95,7 +94,6 @@
 .bt-2     { background: #dcfce7; color: #16a34a; }
 .bt-no    { background: #f3f4f6; color: #6b7280; }
 
-/* Statistika kartalar */
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
 .stat-card {
   background: #fff; border-radius: 16px; padding: 16px;
@@ -116,7 +114,6 @@
 
 .empty { text-align: center; padding: 40px; color: #888; font-size: 14px; }
 
-/* Mobil */
 @media(max-width: 600px) {
   .table-head, .table-row { grid-template-columns: 36px 1fr 60px 50px; }
   .table-head .h-test, .table-head .h-foiz,
@@ -148,8 +145,8 @@
   <div class="reyting-header">
     <div class="reyting-icon">🏆</div>
     <div>
-      <h1>Top 100 Tarbiyachilar</h1>
-      <p>Profil to'ldirilishi, test natijalari va faollik asosida ball hisoblanadi</p>
+      <h1>Top 20 Tarbiyachilar</h1>
+      <p>Profil to'ldirilishi, yutuqlar va faollik asosida ball hisoblanadi</p>
     </div>
   </div>
 
@@ -170,8 +167,8 @@
       <div class="stat-label">Jami foydalanuvchi</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" id="statTestlar">—</div>
-      <div class="stat-label">Jami testlar</div>
+      <div class="stat-num" id="statTop">20</div>
+      <div class="stat-label">Top o'rinlar</div>
     </div>
     <div class="stat-card">
       <div class="stat-num" id="statOrtacha">—</div>
@@ -206,8 +203,8 @@
       <div>#</div>
       <div>Tarbiyachi</div>
       <div>Viloyat</div>
-      <div class="h-test" style="text-align:center">Testlar</div>
-      <div class="h-foiz" style="text-align:center">O'rtacha</div>
+      <div class="h-test" style="text-align:center">Toifa</div>
+      <div class="h-foiz" style="text-align:center">Staj</div>
       <div style="text-align:center">Ball</div>
     </div>
     <div id="reytingList"><div class="loading">⏳ Yuklanmoqda...</div></div>
@@ -220,6 +217,7 @@
 <script src="../js/auth.js"></script>
 <script src="../js/premium.js"></script>
 <script>
+const TOP_LIMIT = 20; // ← faqat shu raqamni o'zgartirish kifoya
 let allData = [];
 let currentUserId = null;
 
@@ -227,17 +225,17 @@ window.addEventListener('load', async () => {
   const auth = await initAuth(true);
   if (!auth) return;
   fillNav();
-
   const { data: { user } } = await _sb.auth.getUser();
   if (user) currentUserId = user.id;
-
   await loadReyting();
 });
 
 async function loadReyting() {
   const { data, error } = await _sb
-    .from('reyting_view')
-    .select('*');
+    .from('profiles')
+    .select('id, full_name, familiya, ism, viloyat, tuman, lavozim, toifa, staj, ball')
+    .order('ball', { ascending: false })
+    .not('ball', 'is', null);
 
   if (error) {
     document.getElementById('reytingList').innerHTML =
@@ -249,25 +247,33 @@ async function loadReyting() {
 
   // Statistika
   document.getElementById('statJami').textContent = allData.length;
-  const jami_test = allData.reduce((s, r) => s + (r.test_soni || 0), 0);
-  document.getElementById('statTestlar').textContent = jami_test;
   const ortacha = allData.length
     ? Math.round(allData.reduce((s, r) => s + (r.ball || 0), 0) / allData.length)
     : 0;
   document.getElementById('statOrtacha').textContent = ortacha;
 
-  // Mening o'rnim
+  // Mening o'rnim (barcha foydalanuvchilar ichida)
   const myIdx = allData.findIndex(r => r.id === currentUserId);
   if (myIdx !== -1) {
     const me = allData[myIdx];
+    const name = getName(me);
     document.getElementById('myPos').style.display = 'flex';
-    document.getElementById('myRank').textContent = '#' + (myIdx + 1);
-    document.getElementById('myName').textContent = (me.full_name || '').trim() || 'Siz';
-    document.getElementById('myBall').textContent = Math.round(me.ball || 0) + ' ball';
+    document.getElementById('myRank').textContent  = '#' + (myIdx + 1);
+    document.getElementById('myName').textContent  = name || 'Siz';
+    document.getElementById('myBall').textContent  = (me.ball || 0) + ' ball';
   }
 
-  renderPodium(allData.slice(0, 3));
-  renderTable(allData);
+  // Faqat Top-20 ni ko'rsatish
+  const top20 = allData.slice(0, TOP_LIMIT);
+  renderPodium(top20.slice(0, 3));
+  renderTable(top20);
+}
+
+function getName(u) {
+  const fam = (u.familiya || '').trim();
+  const ism = (u.ism || '').trim();
+  if (fam || ism) return (fam + ' ' + ism).trim();
+  return (u.full_name || '').trim() || '—';
 }
 
 function applyFilter() {
@@ -275,21 +281,23 @@ function applyFilter() {
   const toifa  = document.getElementById('filterToifa').value;
   const search = document.getElementById('filterSearch').value.toLowerCase();
 
-  const filtered = allData.filter(r => {
-    if (vil    && r.viloyat !== vil) return false;
-    if (toifa  && r.toifa  !== toifa) return false;
-    if (search && !(r.full_name || '').toLowerCase().includes(search)) return false;
+  // Filterlashda ham faqat Top-20 dan
+  const top20 = allData.slice(0, TOP_LIMIT);
+  const filtered = top20.filter(r => {
+    if (vil   && r.viloyat !== vil) return false;
+    if (toifa && r.toifa   !== toifa) return false;
+    if (search && !getName(r).toLowerCase().includes(search)) return false;
     return true;
   });
 
   renderTable(filtered);
-  if (!vil && !toifa && !search) renderPodium(allData.slice(0, 3));
+  if (!vil && !toifa && !search) renderPodium(top20.slice(0, 3));
   else document.getElementById('podium').innerHTML = '';
 }
 
 function renderPodium(top) {
   if (top.length < 2) { document.getElementById('podium').innerHTML = ''; return; }
-  const order = top.length >= 3 ? [top[1], top[0], top[2]] : [top[0], top[1]];
+  const order   = top.length >= 3 ? [top[1], top[0], top[2]] : [top[0], top[1]];
   const heights = top.length >= 3 ? [60, 80, 44] : [60, 80];
   const labels  = top.length >= 3 ? ['🥈', '🥇', '🥉'] : ['🥈', '🥇'];
   const classes = top.length >= 3 ? ['podium-2','podium-1','podium-3'] : ['podium-2','podium-1'];
@@ -300,8 +308,8 @@ function renderPodium(top) {
   document.getElementById('podium').innerHTML = order.map((u, i) => `
     <div class="podium-item ${classes[i]}">
       <div class="podium-avatar">👩‍🏫</div>
-      <div class="podium-name">${(u.full_name || '—').trim()}</div>
-      <div class="podium-ball">${Math.round(u.ball || 0)} ball</div>
+      <div class="podium-name">${getName(u)}</div>
+      <div class="podium-ball">${u.ball || 0} ball</div>
       <div class="podium-block" style="background:${colors[i]};height:${heights[i]}px">${labels[i]}</div>
     </div>
   `).join('');
@@ -321,14 +329,14 @@ function renderTable(data) {
     return `<span class="badge-toifa bt-no">—</span>`;
   };
 
-  // Global reyting o'rinlarini saqlab, filter qilganda ham to'g'ri ko'rsatish
+  // Global o'rinlar (barcha allData ichidan)
   const globalRanks = {};
   allData.forEach((r, i) => { globalRanks[r.id] = i + 1; });
 
   list.innerHTML = data.map(u => {
-    const rank = globalRanks[u.id] || '—';
-    const isMe = u.id === currentUserId;
-    const isTop = rank <= 3;
+    const rank    = globalRanks[u.id] || '—';
+    const isMe    = u.id === currentUserId;
+    const isTop   = rank <= 3;
     const rankCls = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
     const medal   = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
     const rowCls  = isMe ? 'me' : isTop ? 'top3' : '';
@@ -338,15 +346,15 @@ function renderTable(data) {
       <div class="user-info">
         <div class="user-avatar">👩‍🏫</div>
         <div>
-          <div class="user-name">${(u.full_name || '—').trim()}${isMe ? ' <span style="color:#6c47ff;font-size:10px">(siz)</span>' : ''}</div>
+          <div class="user-name">${getName(u)}${isMe ? ' <span style="color:#6c47ff;font-size:10px">(siz)</span>' : ''}</div>
           <div class="user-meta">${u.lavozim || '—'} · ${u.viloyat || '—'}</div>
           ${toifaBadge(u.toifa)}
         </div>
       </div>
       <div class="cell">${u.viloyat || '—'}</div>
-      <div class="cell c-test">${u.test_soni || 0} ta</div>
-      <div class="cell c-foiz">${u.ortacha_foiz || 0}%</div>
-      <div class="cell-ball">${Math.round(u.ball || 0)}</div>
+      <div class="cell c-test">${toifaBadge(u.toifa)}</div>
+      <div class="cell c-foiz">${u.staj || 0} yil</div>
+      <div class="cell-ball">${u.ball || 0}</div>
     </div>`;
   }).join('');
 }
