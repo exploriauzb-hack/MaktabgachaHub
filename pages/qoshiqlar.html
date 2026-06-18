@@ -222,11 +222,26 @@ var songsData=[
   {title:'Tabiat',mavzu:'Tabiat (4-soha)',lyrics:"Daryo oqar tog'lardan,\nBaliqlar suzar suvda,\nDaraxtlar o'sar dalada -\nTabiatni sevamiz."},
 ];
 
+var songIcons=[
+  'ti-building-community','ti-leaf','ti-heart','ti-paw','ti-hand-finger',
+  'ti-flower','ti-123','ti-sun','ti-confetti','ti-ripple'
+];
+var songColors=[
+  '#1e40af','#15803d','#be185d','#b45309','#7c3aed',
+  '#0f766e','#0369a1','#b45309','#7c3aed','#15803d'
+];
+var songBgs=[
+  '#eff6ff','#f0fdf4','#fdf2f8','#fffbeb','#f5f3ff',
+  '#f0fdfa','#e0f2fe','#fffbeb','#f5f3ff','#f0fdf4'
+];
+
 function renderSongs(){
   document.getElementById('song-list').innerHTML=songsData.map((s,i)=>`
     <div>
       <div class="song-card" onclick="toggleSong(${i})">
-        <div class="song-num">${i+1}</div>
+        <div class="song-num" style="background:${songBgs[i]};width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="ti ${songIcons[i]}" style="font-size:20px;color:${songColors[i]}"></i>
+        </div>
         <div class="song-info">
           <h5>${s.title}</h5>
           <p>${s.mavzu}</p>
