@@ -8,7 +8,7 @@ const PLANS = {
     name     : 'Professional ⭐',
     price    : 49000,
     priceText: '49 000',
-    color    : '#6c47ff',
+    color    : '#7c3aed',
     features : [
       'Cheksiz testlar (6 toifa)',
       'Barcha konspektlar (30+)',
@@ -23,7 +23,7 @@ const PLANS = {
     name     : 'MTT Korporativ 🏢',
     price    : 299000,
     priceText: '299 000',
-    color    : '#f59e0b',
+    color    : '#b45309',
     features : [
       'Professional + hamma narsa',
       '20+ tarbiyachi uchun',
@@ -57,53 +57,139 @@ function openPremiumModal(module) {
   const name = moduleNames[module] || 'Bu bo\'lim'
   document.getElementById('premium-module-name').textContent = name
   modal.classList.add('show')
+  document.body.style.overflow = 'hidden'
 }
 
 function closePremiumModal() {
   const modal = document.getElementById('premium-modal')
   if (modal) modal.classList.remove('show')
+  document.body.style.overflow = ''
 }
 
-// ── Premium modal HTML ──
+// ── Premium modal HTML (yangi dizayn bilan mos) ──
 function injectPremiumModal() {
   if (document.getElementById('premium-modal')) return
 
+  // CSS inject — agar sahifada premium modal style yo'q bo'lsa
+  if (!document.getElementById('premium-modal-style')) {
+    const style = document.createElement('style')
+    style.id = 'premium-modal-style'
+    style.textContent = `
+      #premium-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.5);
+        z-index: 9000;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        backdrop-filter: blur(4px);
+      }
+      #premium-modal.show { display: flex; }
+      #premium-modal .pm-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 28px;
+        max-width: 460px;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,.2);
+      }
+      #premium-modal .pm-close {
+        position: absolute;
+        top: 14px; right: 14px;
+        background: #f4f5f7;
+        border: none;
+        border-radius: 8px;
+        width: 30px; height: 30px;
+        cursor: pointer;
+        color: #6b7280;
+        font-size: 16px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      #premium-modal .pm-close:hover { background: #e5e7eb; }
+      #premium-modal .pm-icon {
+        width: 56px; height: 56px;
+        background: #f5f3ff;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 16px;
+        color: #7c3aed;
+        font-size: 28px;
+      }
+      #premium-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #111827; }
+      #premium-modal .pm-desc { font-size: 13px; color: #6b7280; margin-bottom: 20px; line-height: 1.6; }
+      #premium-modal .pm-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      #premium-modal .pm-feat {
+        display: flex; align-items: center; gap: 10px;
+        font-size: 13px; color: #111827;
+      }
+      #premium-modal .pm-feat-icon { font-size: 16px; color: #15803d; flex-shrink: 0; }
+      #premium-modal .pm-price-box {
+        background: #f5f3ff;
+        border-radius: 10px;
+        padding: 14px 16px;
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      #premium-modal .pm-price { font-size: 22px; font-weight: 700; color: #7c3aed; }
+      #premium-modal .pm-price span { font-size: 13px; font-weight: 400; color: #6b7280; }
+      #premium-modal .pm-old { font-size: 12px; color: #9ca3af; text-decoration: line-through; margin-top: 2px; }
+      #premium-modal .pm-discount {
+        background: #7c3aed; color: #fff;
+        padding: 4px 10px; border-radius: 20px;
+        font-size: 11px; font-weight: 700;
+      }
+      #premium-modal .pm-btn-buy {
+        width: 100%; padding: 13px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: #fff; border: none; border-radius: 10px;
+        font-size: 14px; font-weight: 700; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        transition: transform .15s, box-shadow .15s;
+        font-family: inherit;
+      }
+      #premium-modal .pm-btn-buy:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,.35); }
+      #premium-modal .pm-btn-skip {
+        width: 100%; padding: 10px; margin-top: 8px;
+        background: none; border: none;
+        color: #9ca3af; font-size: 13px; cursor: pointer;
+        font-family: inherit;
+      }
+      #premium-modal .pm-btn-skip:hover { color: #6b7280; }
+    `
+    document.head.appendChild(style)
+  }
+
   document.body.insertAdjacentHTML('beforeend', `
-    <div class="modal-overlay" id="premium-modal">
-      <div class="modal-box" style="max-width:460px">
-        <div class="modal-hdr" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
-          <h3>🔒 Premium kerak</h3>
-          <button class="modal-cls" onclick="closePremiumModal()">✕</button>
-        </div>
-        <div class="modal-body" style="text-align:center;padding:28px 24px">
-          <div style="font-size:2.5rem;margin-bottom:10px">⭐</div>
-          <h3 style="margin-bottom:6px;font-size:1.1rem">
-            "<span id="premium-module-name"></span>" bo'limi
-          </h3>
-          <p style="color:#6b7280;font-size:.88rem;margin-bottom:24px">
-            Bu bo'lim faqat Professional obuna uchun mavjud
-          </p>
-
-          <div style="background:#f8f6ff;border-radius:14px;padding:16px;margin-bottom:20px;text-align:left">
-            <div style="font-weight:700;font-size:.9rem;color:#6c47ff;margin-bottom:10px">
-              ⭐ Professional — 49 000 so'm/oy
+    <div id="premium-modal" onclick="if(event.target===this)closePremiumModal()">
+      <div class="pm-box">
+        <button class="pm-close" onclick="closePremiumModal()">✕</button>
+        <div class="pm-icon"><i class="ti ti-crown"></i></div>
+        <h2>Professional tarif</h2>
+        <p class="pm-desc">
+          "<span id="premium-module-name"></span>" bo'limi faqat Professional obuna uchun mavjud.
+          Barcha PRO imkoniyatlarga to'liq kirish oling.
+        </p>
+        <div class="pm-features">
+          ${PLANS.pro.features.map(f => `
+            <div class="pm-feat">
+              <i class="ti ti-circle-check pm-feat-icon"></i> ${f}
             </div>
-            ${PLANS.pro.features.map(f =>
-              `<div style="font-size:.83rem;padding:3px 0">✅ ${f}</div>`
-            ).join('')}
-          </div>
-
-          <button onclick="window.location.href='premium.html'"
-            style="width:100%;padding:13px;background:linear-gradient(135deg,#6c47ff,#9b7cff);
-            color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:700;cursor:pointer">
-            Premium olish — 49 000 so'm/oy
-          </button>
-          <button onclick="closePremiumModal()"
-            style="width:100%;padding:10px;margin-top:10px;background:none;
-            border:none;color:#6b7280;font-size:.85rem;cursor:pointer">
-            Keyinroq
-          </button>
+          `).join('')}
         </div>
+        <div class="pm-price-box">
+          <div>
+            <div class="pm-price">49 000 so'm <span>/ oy</span></div>
+            <div class="pm-old">Avval: 79 000 so'm</div>
+          </div>
+          <div class="pm-discount">−38%</div>
+        </div>
+        <button class="pm-btn-buy" onclick="window.location.href='premium.html'">
+          <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
+        </button>
+        <button class="pm-btn-skip" onclick="closePremiumModal()">Keyinroq</button>
       </div>
     </div>
   `)
@@ -119,14 +205,12 @@ async function startPayment(planId) {
     return
   }
 
-  // Telegram orqali to'lov (hozircha)
   const msg = encodeURIComponent(
     `Salom! Men MaktabgachaHub ${plan.name} obunasini olmoqchiman.\n` +
     `Email: ${_currentUser.email}\n` +
     `Summa: ${plan.priceText} so'm/oy`
   )
 
-  // Pending log yozish
   await _sb.from('payment_logs').insert({
     user_id : _currentUser.id,
     amount  : plan.price,
@@ -135,9 +219,7 @@ async function startPayment(planId) {
     status  : 'pending'
   })
 
-  // Telegram ga yo'naltirish
   window.open(`https://t.me/maktabgachahub_bot?start=payment_${planId}_${_currentUser.id}`, '_blank')
-
   showToast('Telegram bot orqali to\'lov amalga oshiriladi', 'ok')
 }
 
@@ -177,19 +259,17 @@ async function checkSubscriptionExpiry() {
 
   if (!data) return
 
-  const end     = new Date(data.current_period_end)
-  const now     = new Date()
+  const end      = new Date(data.current_period_end)
+  const now      = new Date()
   const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24))
 
   if (daysLeft <= 0) {
-    // Muddati o'tgan — free ga qaytarish
     await _sb.from('profiles')
       .update({ subscription_tier: 'free' })
       .eq('id', _currentUser.id)
     await _sb.from('subscriptions')
       .update({ status: 'expired' })
       .eq('user_id', _currentUser.id)
-
     showToast('Obuna muddati tugadi. Yangilang!', 'err')
   } else if (daysLeft <= 3) {
     showToast(`⚠️ Obuna ${daysLeft} kundan keyin tugaydi!`, 'err')
