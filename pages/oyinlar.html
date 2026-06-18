@@ -61,7 +61,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
 
-/* FILTERS */
 .filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .filter-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
 .filter-btn:hover{background:var(--bg);color:var(--text);border-color:#93c5fd}
@@ -76,13 +75,22 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .game-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;display:flex;flex-direction:column}
 .game-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
 
-.game-card-body{padding:14px 16px;flex:1}
-.game-emoji{font-size:26px;margin-bottom:8px;display:block}
-.game-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.game-card-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:6px}
+
+/* Icon wrapper */
+.game-icon-wrap{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:4px;flex-shrink:0}
+.game-icon-wrap.blue{background:var(--accent-soft);color:var(--accent)}
+.game-icon-wrap.green{background:var(--green-soft);color:var(--green)}
+.game-icon-wrap.amber{background:var(--amber-soft);color:var(--amber)}
+.game-icon-wrap.purple{background:var(--pro-soft);color:var(--pro)}
+.game-icon-wrap.slate{background:#f1f5f9;color:#475569}
+.game-icon-wrap.pink{background:#fdf2f8;color:#9d174d}
+
+.game-name{font-size:13px;font-weight:600;color:var(--text)}
 .game-desc{font-size:11px;color:var(--muted);line-height:1.5}
 
 .game-tags{display:flex;flex-wrap:wrap;gap:5px;padding:0 16px 12px}
-.gtag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+.gtag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
 .gtag.age{background:var(--amber-soft);color:var(--amber)}
 .gtag.players{background:var(--accent-soft);color:var(--accent)}
 .gtag.time{background:var(--pro-soft);color:var(--pro)}
@@ -96,6 +104,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .modal-overlay.show{display:flex}
 .modal-box{background:var(--surface);border-radius:14px;width:100%;max-width:540px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
 .modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0}
+.modal-hdr-left{display:flex;align-items:center;gap:10px}
+.modal-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .modal-hdr h3{font-size:15px;font-weight:600}
 .modal-cls{background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:2px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:background .15s}
 .modal-cls:hover{background:var(--bg);color:var(--text)}
@@ -120,7 +130,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .gd-result{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--accent);line-height:1.6}
 .gd-result b{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
 
-/* MOBILE */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -137,7 +146,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -174,7 +182,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="topbar">
     <div class="topbar-left">
@@ -191,33 +198,26 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     Har bir o'yin aniq pedagogik maqsad, qadam-baqadam yo'riqnoma va rivojlanish sohasiga bog'liqlik bilan tasvirlangan.
   </div>
 
-  <!-- FILTERS -->
   <div class="filter-row" id="filter-row"></div>
-
-  <!-- SEC TITLE -->
   <div class="sec-title"><i class="ti ti-puzzle"></i> <span id="game-count">12</span> ta o'yin</div>
-
-  <!-- GAME GRID -->
   <div class="game-grid" id="game-grid"></div>
 </main>
 
-<!-- FLOATING BACK -->
-<a href="../dashboard.html" class="fab-back">
-  <i class="ti ti-arrow-left"></i> Dashboard
-</a>
+<a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="game-modal" onclick="handleModalClick(event)">
   <div class="modal-box">
     <div class="modal-hdr">
-      <h3 id="gm-title">O'yin</h3>
+      <div class="modal-hdr-left">
+        <div class="modal-icon" id="gm-icon-wrap"><i id="gm-icon" class="ti ti-puzzle"></i></div>
+        <h3 id="gm-title">O'yin</h3>
+      </div>
       <button class="modal-cls" onclick="closeModal()"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-body" id="gm-body"></div>
   </div>
 </div>
 
-<!-- ANIMATED BG -->
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -249,7 +249,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 })();
 </script>
 
-<!-- SIDEBAR JS -->
 <script>
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
@@ -258,28 +257,33 @@ function checkHamburger(){document.getElementById('hamburger').style.display=win
 checkHamburger();window.addEventListener('resize',checkHamburger);
 </script>
 
-<!-- GAMES DATA + LOGIC -->
 <script>
+// icon, iconColor, name, cat, age, players, time, soha, goal, materials, rules, variant, result
 var games=[
-  {icon:'🃏',name:"Kim qayerda yashaydi?",cat:'Tabiat',age:'4-5 yosh',players:'4-8 bola',time:'12-15 daq',soha:'4-soha: Bilish jarayonlari',goal:"Bolalarda hayvonlar va ularning yashash makonlari haqida tasavvurni shakllantirish, mantiqiy bog'lash ko'nikmasini rivojlantirish.",materials:"Hayvon suratlari (12 ta), yashash joyi kartochkalari (o'rmon, suv, cho'l, uy), flanel doska",rules:["Bolalar doira bo'lib o'tiradi, o'rtaga 4 ta yashash joyi kartochkasi qo'yiladi","Tarbiyachi hayvon suratini ko'rsatadi va savol beradi: \"Bu hayvon qayerda yashaydi?\"","Bola to'g'ri javobni tanlab, suratni mos kartochka yoniga qo'yadi","Har to'g'ri javob uchun bola olqishlanadi","O'yin barcha suratlar tarqatilguncha davom etadi"],variant:"Murakkablashtirish: bitta hayvon bir nechta joyda yashashi mumkinligini muhokama qilish.",result:"Bola kamida 8 ta hayvonning yashash joyini to'g'ri ko'rsata oladi."},
-  {icon:'🔢',name:"1 dan 5 gacha sayohat",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10-12 daq',soha:'4-soha: FEMP',goal:"Sonlarni real predmetlar bilan bog'lash, miqdor va raqam orasidagi aloqani tushunish.",materials:"1 dan 5 gacha raqam kartochkalari, har xil mayda o'yinchoqlar (30 dona)",rules:["Raqam kartochkalari stol ustiga tartibsiz qo'yiladi","Tarbiyachi bir raqamni ko'tarib ko'rsatadi","Bola shu raqamga teng miqdordagi o'yinchoqni sanab oladi","To'g'ri sanalgan bo'lsa, raqam va o'yinchoqlar yonma-yon qo'yiladi","Barcha raqamlar (1-5) tugaguncha davom etadi"],variant:"Yengillashtirish: 1-3 oralig'idan boshlash. Murakkablashtirish: 6-10 gacha kengaytirish.",result:"Bola 1 dan 5 gacha sonlarni to'g'ri sanaydi va miqdorga moslaydi."},
-  {icon:'🎨',name:"Sehrli rang qutisi",cat:'Sensor',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"5-soha: Ijodiy rivojlanish",goal:"Asosiy va qo'shimcha ranglarni farqlash, rang nomlarini bilish va kundalik buyumlar bilan bog'lash.",materials:"Rangli kartochkalar (qizil, sariq, ko'k, yashil, oq, qora), xona ichidagi rangli buyumlar",rules:["Tarbiyachi rangli kartochkani ko'rsatadi","Bolalar xonada shu rangdagi biror buyumni topishi kerak","Topgan bola buyumni ko'rsatib, rang nomini aytadi","Har bir rang uchun kamida 2-3 bola javob beradi","Barcha asosiy ranglar o'tilguncha davom etadi"],variant:"Guruh musobaqasi shaklida: kim tezroq topadi.",result:"Bola 6 ta asosiy rangni to'g'ri nomlaydi va kundalik buyumlarda farqlay oladi."},
-  {icon:'🧩',name:"Shakllar mozaikasi",cat:'Matematik',age:'4-5 yosh',players:'1-4 bola',time:'15 daq',soha:"4-soha: FEMP",goal:"Geometrik shakllarni farqlash va ulardan naqsh yaratish ko'nikmasini shakllantirish.",materials:"Turli rangdagi geometrik shakllar (kartondan), namuna kartochkalari",rules:["Bolalarga turli geometrik shakllar tarqatiladi","Tarbiyachi namuna naqshni ko'rsatadi","Bolalar shakllardan namunaga o'xshash naqsh yasashga harakat qiladi","Har bir bola o'z ishini guruhga ko'rsatadi","Eng ijodiy va to'g'ri natijalar maqtaladi"],variant:"Murakkablashtirish: o'z mustaqil naqshini yaratish topshirig'i berish.",result:"Bola 4 ta asosiy geometrik shaklni farqlaydi va ulardan oddiy naqsh yaratadi."},
-  {icon:'👃',name:"Hidini top, mevasini ayt",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Hid sezgi organlarini rivojlantirish, meva-sabzavotlarni hidi orqali tanish ko'nikmasini shakllantirish.",materials:"Limon, olma, sarimsoq, apelsin, yog' qog'ozi, ko'z bog'lovchi mato",rules:["Bolaning ko'zi mato bilan yumuq holda yopiladi (ixtiyoriy)","Tarbiyachi mevani bolaning burni yaqiniga olib boradi","Bola hidlab, mevani taxmin qiladi","To'g'ri topilsa, ko'z ochiladi va mukofotlanadi","Har bir bola kamida 2 marta sinab ko'radi"],variant:"Agar bola ko'zini yopishdan qo'rqsa — mevani qutida yashirib hidlatish mumkin.",result:"Bola kamida 3 ta mevani hidi orqali to'g'ri taniydi."},
-  {icon:'🎯',name:"Nima o'zgardi?",cat:'Mantiq',age:'4-5 yosh',players:'4-8 bola',time:'10-12 daq',soha:'4-soha: Xotira va diqqat',goal:"Diqqat va qisqa muddatli xotirani rivojlantirish, kuzatuvchanlikni oshirish.",materials:"5-6 ta turli o'yinchoq yoki buyum, stol",rules:["Stol ustiga 5 ta buyum tartib bilan qo'yiladi","Bolalar 10 soniya davomida buyumlarni diqqat bilan kuzatadi","Bolalar ko'zini yumadi, tarbiyachi bir buyumni olib qo'yadi","Bolalar ko'zini ochib, nima o'zgarganini topishi kerak","To'g'ri topgan bola olqishlanadi, o'yin davom etadi"],variant:"Murakkablashtirish: buyumlar sonini 7-8 taga oshirish yoki ikkita buyumni almashtirish.",result:"Bola 5 buyum ichidan o'zgarishni mustaqil topa oladi."},
-  {icon:'🏪',name:"Do'kon o'yini",cat:"Rolli o'yin",age:'4-5 yosh',players:'4-10 bola',time:'20 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Ijtimoiy rollarni o'rganish, muloqot va navbat kutish ko'nikmalarini shakllantirish.",materials:"O'yinchoq mahsulotlar, soxta pul yoki tokenlar, savat, kassa o'yinchog'i",rules:["Bolalar ikki guruhga bo'linadi: sotuvchilar va xaridorlar","Sotuvchilar \"do'kon\" tashkil qiladi, mahsulotlarni joylashtiradi","Xaridorlar navbat bilan kelib, kerakli narsani so'raydi va 'pul' to'laydi","Sotuvchi mahsulotni beradi va \"qaytim\" hisoblaydi","Rollar almashtiriladi — har bir bola ikki rolni ham sinab ko'radi"],variant:"Mavzuni almashtirish mumkin: dorixona, kitob do'koni, gul do'koni.",result:"Bola muloqot odobini namoyon qiladi, navbat kutadi, oddiy hisob-kitob qiladi."},
-  {icon:'🌡️',name:"Issiq yoki sovuq?",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'8-10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Harorat farqini sezish va tasvirlash, sensor tajriba orqali bilim olish.",materials:"Issiq (iliq) va sovuq suv solingan idishlar, sochiq",rules:["Ikki idish tayyorlanadi: biri iliq, biri sovuq suv bilan","Bola navbat bilan har ikki idishga qo'lini tegizadi","Tarbiyachi savol beradi: \"Qaysi biri issiqroq?\"","Bola o'z his-tuyg'ularini so'z bilan ifodalaydi","Xavfsizlik: suv hech qachon juda issiq bo'lmasligi kerak"],variant:"Uchinchi idish — xona haroratidagi suvni qo'shib, taqqoslash murakkablashtiriladi.",result:"Bola issiq, sovuq va iliq tushunchalarini farqlab, so'z bilan ifodalaydi."},
-  {icon:'🐾',name:"Hayvon ovozini top",cat:'Nutq',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"3-soha + 4-soha integratsiyasi",goal:"Eshitish diqqatini rivojlantirish, hayvon nomlari va ovozlarini bog'lash, nutqni faollashtirish.",materials:"Hayvon ovozlari yozilgan audio (yoki tarbiyachi taqlidi), hayvon suratlari",rules:["Tarbiyachi hayvon ovozini chiqaradi (mushuk, it, sigir, ot va h.k.)","Bolalar ovozni eshitib, qaysi hayvon ekanini taxmin qiladi","To'g'ri javob bergan bola hayvon suratini ko'rsatadi","Bola hayvon nomi va ovozini birgalikda takrorlaydi","Barcha hayvonlar o'tilguncha davom etadi"],variant:"Bolalar o'zlari hayvon ovozini taqlid qilib, boshqalar topadigan qilib o'ynashlari mumkin.",result:"Bola kamida 6 ta hayvonning ovozi va nomini bog'lay oladi."},
-  {icon:'✂️',name:"Katta-kichik safi",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'4-soha: FEMP',goal:"Hajm bo'yicha taqqoslash va tartiblash ko'nikmasini shakllantirish.",materials:"Turli o'lchamdagi 5 ta halqa yoki quticha",rules:["Turli o'lchamdagi buyumlar bolalar oldiga tartibsiz qo'yiladi","Tarbiyachi: \"Eng kichigini topib bering\" deb so'raydi","Bola topib, qatorning boshiga qo'yadi","Shu tartibda eng kattagacha barcha buyumlar tartiblanadi","Yakunda butun qator birgalikda ko'rib chiqiladi"],variant:"Teskari tartibda (kattadan kichikka) ham bajarish so'raladi.",result:"Bola 5 ta buyumni hajmi bo'yicha mustaqil tartiblay oladi."},
-  {icon:'🎭',name:"Kim qanday his qiladi?",cat:'Hissiyot',age:'4-5 yosh',players:'4-8 bola',time:'12 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Asosiy his-tuyg'ularni tanish va ularni so'z bilan ifodalash.",materials:"Turli yuz ifodalarini ko'rsatuvchi kartochkalar yoki oyna",rules:["Tarbiyachi his-tuyg'u kartochkasini ko'rsatadi (masalan, xursand yuz)","Bolalar shu his-tuyg'uni o'z yuzlarida aks ettiradi","Tarbiyachi so'raydi: \"Qachon sen shunday his qilasan?\"","Bolalar o'z misollarini aytadi","Barcha asosiy 4 his-tuyg'u muhokama qilinadi"],variant:"Rolli o'yin shaklida: bir bola his-tuyg'uni ko'rsatadi, boshqalar topadi.",result:"Bola 4 ta asosiy his-tuyg'uni nomlaydi va o'z holatini so'z bilan tasvirlay oladi."},
-  {icon:'🌿',name:"O'simlik shifokori",cat:'Tabiat',age:'4-5 yosh',players:'1-6 bola',time:'15 daq',soha:"4-soha: Tabiat bilan tanishuv",goal:"O'simliklarning yashash uchun zarur shartlarini tushunish va g'amxorlik ko'nikmasini shakllantirish.",materials:"2 ta bir xil o'simlik (gul), suv idishi, kuzatuv jadvali",rules:["Bolalarga ikkita bir xil o'simlik ko'rsatiladi","Bittasiga suv beriladi, ikkinchisiga berilmaydi","Har kuni bolalar o'simliklarni kuzatadi va rasm chizib boradi","Bir hafta davomida natija kuzatiladi va muhokama qilinadi","Yakunda nima uchun farq borligi haqida suhbat o'tkaziladi"],variant:"Yorug'lik bilan ham xuddi shunday tajriba o'tkazish mumkin.",result:"Bola o'simlik suv va yorug'liksiz so'lib qolishini tushunadi va sababini izohlay oladi."},
+  {icon:'ti-cards',ic:'blue',name:"Kim qayerda yashaydi?",cat:'Tabiat',age:'4-5 yosh',players:'4-8 bola',time:'12-15 daq',soha:'4-soha: Bilish jarayonlari',goal:"Bolalarda hayvonlar va ularning yashash makonlari haqida tasavvurni shakllantirish, mantiqiy bog'lash ko'nikmasini rivojlantirish.",materials:"Hayvon suratlari (12 ta), yashash joyi kartochkalari (o'rmon, suv, cho'l, uy), flanel doska",rules:["Bolalar doira bo'lib o'tiradi, o'rtaga 4 ta yashash joyi kartochkasi qo'yiladi","Tarbiyachi hayvon suratini ko'rsatadi va savol beradi: \"Bu hayvon qayerda yashaydi?\"","Bola to'g'ri javobni tanlab, suratni mos kartochka yoniga qo'yadi","Har to'g'ri javob uchun bola olqishlanadi","O'yin barcha suratlar tarqatilguncha davom etadi"],variant:"Murakkablashtirish: bitta hayvon bir nechta joyda yashashi mumkinligini muhokama qilish.",result:"Bola kamida 8 ta hayvonning yashash joyini to'g'ri ko'rsata oladi."},
+  {icon:'ti-math-symbols',ic:'blue',name:"1 dan 5 gacha sayohat",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10-12 daq',soha:'4-soha: FEMP',goal:"Sonlarni real predmetlar bilan bog'lash, miqdor va raqam orasidagi aloqani tushunish.",materials:"1 dan 5 gacha raqam kartochkalari, har xil mayda o'yinchoqlar (30 dona)",rules:["Raqam kartochkalari stol ustiga tartibsiz qo'yiladi","Tarbiyachi bir raqamni ko'tarib ko'rsatadi","Bola shu raqamga teng miqdordagi o'yinchoqni sanab oladi","To'g'ri sanalgan bo'lsa, raqam va o'yinchoqlar yonma-yon qo'yiladi","Barcha raqamlar (1-5) tugaguncha davom etadi"],variant:"Yengillashtirish: 1-3 oralig'idan boshlash. Murakkablashtirish: 6-10 gacha kengaytirish.",result:"Bola 1 dan 5 gacha sonlarni to'g'ri sanaydi va miqdorga moslaydi."},
+  {icon:'ti-palette',ic:'purple',name:"Sehrli rang qutisi",cat:'Sensor',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"5-soha: Ijodiy rivojlanish",goal:"Asosiy va qo'shimcha ranglarni farqlash, rang nomlarini bilish va kundalik buyumlar bilan bog'lash.",materials:"Rangli kartochkalar (qizil, sariq, ko'k, yashil, oq, qora), xona ichidagi rangli buyumlar",rules:["Tarbiyachi rangli kartochkani ko'rsatadi","Bolalar xonada shu rangdagi biror buyumni topishi kerak","Topgan bola buyumni ko'rsatib, rang nomini aytadi","Har bir rang uchun kamida 2-3 bola javob beradi","Barcha asosiy ranglar o'tilguncha davom etadi"],variant:"Guruh musobaqasi shaklida: kim tezroq topadi.",result:"Bola 6 ta asosiy rangni to'g'ri nomlaydi va kundalik buyumlarda farqlay oladi."},
+  {icon:'ti-shape',ic:'blue',name:"Shakllar mozaikasi",cat:'Matematik',age:'4-5 yosh',players:'1-4 bola',time:'15 daq',soha:"4-soha: FEMP",goal:"Geometrik shakllarni farqlash va ulardan naqsh yaratish ko'nikmasini shakllantirish.",materials:"Turli rangdagi geometrik shakllar (kartondan), namuna kartochkalari",rules:["Bolalarga turli geometrik shakllar tarqatiladi","Tarbiyachi namuna naqshni ko'rsatadi","Bolalar shakllardan namunaga o'xshash naqsh yasashga harakat qiladi","Har bir bola o'z ishini guruhga ko'rsatadi","Eng ijodiy va to'g'ri natijalar maqtaladi"],variant:"Murakkablashtirish: o'z mustaqil naqshini yaratish topshirig'i berish.",result:"Bola 4 ta asosiy geometrik shaklni farqlaydi va ulardan oddiy naqsh yaratadi."},
+  {icon:'ti-leaf',ic:'green',name:"Hidini top, mevasini ayt",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Hid sezgi organlarini rivojlantirish, meva-sabzavotlarni hidi orqali tanish ko'nikmasini shakllantirish.",materials:"Limon, olma, sarimsoq, apelsin, yog' qog'ozi, ko'z bog'lovchi mato",rules:["Bolaning ko'zi mato bilan yumuq holda yopiladi (ixtiyoriy)","Tarbiyachi mevani bolaning burni yaqiniga olib boradi","Bola hidlab, mevani taxmin qiladi","To'g'ri topilsa, ko'z ochiladi va mukofotlanadi","Har bir bola kamida 2 marta sinab ko'radi"],variant:"Agar bola ko'zini yopishdan qo'rqsa — mevani qutida yashirib hidlatish mumkin.",result:"Bola kamida 3 ta mevani hidi orqali to'g'ri taniydi."},
+  {icon:'ti-focus-2',ic:'amber',name:"Nima o'zgardi?",cat:'Mantiq',age:'4-5 yosh',players:'4-8 bola',time:'10-12 daq',soha:'4-soha: Xotira va diqqat',goal:"Diqqat va qisqa muddatli xotirani rivojlantirish, kuzatuvchanlikni oshirish.",materials:"5-6 ta turli o'yinchoq yoki buyum, stol",rules:["Stol ustiga 5 ta buyum tartib bilan qo'yiladi","Bolalar 10 soniya davomida buyumlarni diqqat bilan kuzatadi","Bolalar ko'zini yumadi, tarbiyachi bir buyumni olib qo'yadi","Bolalar ko'zini ochib, nima o'zgarganini topishi kerak","To'g'ri topgan bola olqishlanadi, o'yin davom etadi"],variant:"Murakkablashtirish: buyumlar sonini 7-8 taga oshirish yoki ikkita buyumni almashtirish.",result:"Bola 5 buyum ichidan o'zgarishni mustaqil topa oladi."},
+  {icon:'ti-building-store',ic:'amber',name:"Do'kon o'yini",cat:"Rolli o'yin",age:'4-5 yosh',players:'4-10 bola',time:'20 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Ijtimoiy rollarni o'rganish, muloqot va navbat kutish ko'nikmalarini shakllantirish.",materials:"O'yinchoq mahsulotlar, soxta pul yoki tokenlar, savat, kassa o'yinchog'i",rules:["Bolalar ikki guruhga bo'linadi: sotuvchilar va xaridorlar","Sotuvchilar \"do'kon\" tashkil qiladi, mahsulotlarni joylashtiradi","Xaridorlar navbat bilan kelib, kerakli narsani so'raydi va 'pul' to'laydi","Sotuvchi mahsulotni beradi va \"qaytim\" hisoblaydi","Rollar almashtiriladi — har bir bola ikki rolni ham sinab ko'radi"],variant:"Mavzuni almashtirish mumkin: dorixona, kitob do'koni, gul do'koni.",result:"Bola muloqot odobini namoyon qiladi, navbat kutadi, oddiy hisob-kitob qiladi."},
+  {icon:'ti-temperature',ic:'blue',name:"Issiq yoki sovuq?",cat:'Sensor',age:'4-5 yosh',players:'1-6 bola',time:'8-10 daq',soha:'1-soha: Jismoniy rivojlanish',goal:"Harorat farqini sezish va tasvirlash, sensor tajriba orqali bilim olish.",materials:"Issiq (iliq) va sovuq suv solingan idishlar, sochiq",rules:["Ikki idish tayyorlanadi: biri iliq, biri sovuq suv bilan","Bola navbat bilan har ikki idishga qo'lini tegizadi","Tarbiyachi savol beradi: \"Qaysi biri issiqroq?\"","Bola o'z his-tuyg'ularini so'z bilan ifodalaydi","Xavfsizlik: suv hech qachon juda issiq bo'lmasligi kerak"],variant:"Uchinchi idish — xona haroratidagi suvni qo'shib, taqqoslash murakkablashtiriladi.",result:"Bola issiq, sovuq va iliq tushunchalarini farqlab, so'z bilan ifodalaydi."},
+  {icon:'ti-paw',ic:'green',name:"Hayvon ovozini top",cat:'Nutq',age:'4-5 yosh',players:'4-10 bola',time:'10 daq',soha:"3-soha + 4-soha integratsiyasi",goal:"Eshitish diqqatini rivojlantirish, hayvon nomlari va ovozlarini bog'lash, nutqni faollashtirish.",materials:"Hayvon ovozlari yozilgan audio (yoki tarbiyachi taqlidi), hayvon suratlari",rules:["Tarbiyachi hayvon ovozini chiqaradi (mushuk, it, sigir, ot va h.k.)","Bolalar ovozni eshitib, qaysi hayvon ekanini taxmin qiladi","To'g'ri javob bergan bola hayvon suratini ko'rsatadi","Bola hayvon nomi va ovozini birgalikda takrorlaydi","Barcha hayvonlar o'tilguncha davom etadi"],variant:"Bolalar o'zlari hayvon ovozini taqlid qilib, boshqalar topadigan qilib o'ynashlari mumkin.",result:"Bola kamida 6 ta hayvonning ovozi va nomini bog'lay oladi."},
+  {icon:'ti-arrows-sort',ic:'slate',name:"Katta-kichik safi",cat:'Matematik',age:'4-5 yosh',players:'1-6 bola',time:'10 daq',soha:'4-soha: FEMP',goal:"Hajm bo'yicha taqqoslash va tartiblash ko'nikmasini shakllantirish.",materials:"Turli o'lchamdagi 5 ta halqa yoki quticha",rules:["Turli o'lchamdagi buyumlar bolalar oldiga tartibsiz qo'yiladi","Tarbiyachi: \"Eng kichigini topib bering\" deb so'raydi","Bola topib, qatorning boshiga qo'yadi","Shu tartibda eng kattagacha barcha buyumlar tartiblanadi","Yakunda butun qator birgalikda ko'rib chiqiladi"],variant:"Teskari tartibda (kattadan kichikka) ham bajarish so'raladi.",result:"Bola 5 ta buyumni hajmi bo'yicha mustaqil tartiblay oladi."},
+  {icon:'ti-mood-smile',ic:'pink',name:"Kim qanday his qiladi?",cat:'Hissiyot',age:'4-5 yosh',players:'4-8 bola',time:'12 daq',soha:'2-soha: Ijtimoiy-hissiy rivojlanish',goal:"Asosiy his-tuyg'ularni tanish va ularni so'z bilan ifodalash.",materials:"Turli yuz ifodalarini ko'rsatuvchi kartochkalar yoki oyna",rules:["Tarbiyachi his-tuyg'u kartochkasini ko'rsatadi (masalan, xursand yuz)","Bolalar shu his-tuyg'uni o'z yuzlarida aks ettiradi","Tarbiyachi so'raydi: \"Qachon sen shunday his qilasan?\"","Bolalar o'z misollarini aytadi","Barcha asosiy 4 his-tuyg'u muhokama qilinadi"],variant:"Rolli o'yin shaklida: bir bola his-tuyg'uni ko'rsatadi, boshqalar topadi.",result:"Bola 4 ta asosiy his-tuyg'uni nomlaydi va o'z holatini so'z bilan tasvirlay oladi."},
+  {icon:'ti-plant',ic:'green',name:"O'simlik shifokori",cat:'Tabiat',age:'4-5 yosh',players:'1-6 bola',time:'15 daq',soha:"4-soha: Tabiat bilan tanishuv",goal:"O'simliklarning yashash uchun zarur shartlarini tushunish va g'amxorlik ko'nikmasini shakllantirish.",materials:"2 ta bir xil o'simlik (gul), suv idishi, kuzatuv jadvali",rules:["Bolalarga ikkita bir xil o'simlik ko'rsatiladi","Bittasiga suv beriladi, ikkinchisiga berilmaydi","Har kuni bolalar o'simliklarni kuzatadi va rasm chizib boradi","Bir hafta davomida natija kuzatiladi va muhokama qilinadi","Yakunda nima uchun farq borligi haqida suhbat o'tkaziladi"],variant:"Yorug'lik bilan ham xuddi shunday tajriba o'tkazish mumkin.",result:"Bola o'simlik suv va yorug'liksiz so'lib qolishini tushunadi va sababini izohlay oladi."},
 ];
 
 var activeFilter='all';
 
-function getCategories(){
-  return['all',...new Set(games.map(g=>g.cat))];
-}
+// Color classes for icon backgrounds
+var catColors={
+  'Tabiat':'green','Matematik':'blue','Sensor':'amber',
+  "Rolli o'yin":'amber','Mantiq':'amber','Nutq':'blue',
+  'Hissiyot':'pink'
+};
+
+function getCategories(){return['all',...new Set(games.map(g=>g.cat))]}
 
 function renderFilters(){
   var cats=getCategories();
@@ -287,22 +291,18 @@ function renderFilters(){
     <button class="filter-btn ${c===activeFilter?'active':''}" data-cat="${c}">${c==='all'?'Barchasi':c}</button>
   `).join('');
   document.querySelectorAll('.filter-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      activeFilter=btn.dataset.cat;
-      renderFilters();
-      renderGames();
-    });
+    btn.addEventListener('click',()=>{activeFilter=btn.dataset.cat;renderFilters();renderGames()});
   });
 }
 
 function renderGames(){
   var list=activeFilter==='all'?games:games.filter(g=>g.cat===activeFilter);
   document.getElementById('game-count').textContent=list.length;
-  document.getElementById('game-grid').innerHTML=list.map((g,i)=>{
+  document.getElementById('game-grid').innerHTML=list.map(g=>{
     var idx=games.indexOf(g);
     return`<div class="game-card" onclick="openModal(${idx})">
       <div class="game-card-body">
-        <span class="game-emoji">${g.icon}</span>
+        <div class="game-icon-wrap ${g.ic}"><i class="ti ${g.icon}"></i></div>
         <div class="game-name">${g.name}</div>
         <div class="game-desc">${g.goal.slice(0,90)}...</div>
       </div>
@@ -321,7 +321,10 @@ function renderGames(){
 
 function openModal(idx){
   var g=games[idx];
-  document.getElementById('gm-title').textContent=g.icon+' '+g.name;
+  var iw=document.getElementById('gm-icon-wrap');
+  iw.className='modal-icon '+g.ic;
+  document.getElementById('gm-icon').className='ti '+g.icon;
+  document.getElementById('gm-title').textContent=g.name;
   document.getElementById('gm-body').innerHTML=`
     <div class="gd-meta-row">
       <div class="gd-chip"><i class="ti ti-baby-carriage"></i>${g.age}</div>
@@ -350,9 +353,7 @@ function closeModal(){
   document.body.style.overflow='';
 }
 
-function handleModalClick(e){
-  if(e.target===document.getElementById('game-modal'))closeModal();
-}
+function handleModalClick(e){if(e.target===document.getElementById('game-modal'))closeModal()}
 
 renderFilters();
 renderGames();
