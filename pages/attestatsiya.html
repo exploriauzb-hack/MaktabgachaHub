@@ -16,7 +16,7 @@
     .mode-card p { font-size:.82rem; color:var(--mu); }
     .mode-badge { display:inline-block; background:var(--p); color:#fff; font-size:.7rem; padding:2px 8px; border-radius:20px; margin-top:6px; font-weight:600; }
 
-    .variant-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px; }
+    .variant-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
     @media(max-width:560px){ .variant-grid{grid-template-columns:1fr;} }
     .variant-card { border:2px solid var(--br); border-radius:14px; padding:16px; cursor:pointer; background:#fff; text-align:center; transition:.2s; }
     .variant-card:hover { border-color:var(--p); }
@@ -113,8 +113,7 @@
     <div class="card" style="text-align:left;margin-bottom:18px;">
       <div style="font-weight:600;margin-bottom:10px;">✅ Pro rejimda nima bor:</div>
       <div style="display:flex;flex-direction:column;gap:7px;font-size:.88rem;color:var(--mu);">
-        <span>📋 3 ta variant — har biri 40 ta savol</span>
-        <span>📖 Maktabgacha pedagogika (2019) kitob asosida</span>
+        <span>📋 4 ta variant — har biri 40 ta savol</span>
         <span>⏱️ 90 daqiqalik taymer</span>
         <span>📊 Batafsil natija va xatolarni ko'rish</span>
         <span>🏆 Sertifikat (75%+ natijada)</span>
@@ -173,6 +172,12 @@
           <div class="variant-num">3️⃣</div>
           <h4>3-Variant</h4>
           <p>40 ta savol</p>
+          </div>
+        <div class="variant-card" id="vc-4" onclick="selectVariant(4)">
+          <div class="variant-num">4️⃣</div>
+          <h4>4-Variant</h4>
+          <p>40 ta savol</p>
+        </div>
         </div>
       </div>
     </div>
@@ -184,6 +189,7 @@
         <button class="cat-btn" onclick="selectCat('v1')">📘 1-Variant savollar<div class="cat-num">40 savol</div></button>
         <button class="cat-btn" onclick="selectCat('v2')">📗 2-Variant savollar<div class="cat-num">40 savol</div></button>
         <button class="cat-btn" onclick="selectCat('v3')">📙 3-Variant savollar<div class="cat-num">40 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('v3')">📒 4-Variant savollar<div class="cat-num">40 savol</div></button>
       </div>
     </div>
 
@@ -273,7 +279,7 @@
       <div style="font-size:.83rem;color:var(--mu);margin:10px 0;" id="cert-variant"></div>
       <div class="cert-date" id="cert-date"></div>
       <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--br);font-size:.78rem;color:var(--mu);">
-        Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting.
+        Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting. Biz sizga ishonamaiz
       </div>
     </div>
     <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;" class="no-print">
@@ -288,7 +294,7 @@
 <script src="../js/auth.js"></script>
 <script>
 // ════════════════════════════════════════════════════════════════
-// SAVOL BAZASI — 3 ta variant, har biri 40 ta
+// SAVOL BAZASI — 4 ta variant, har biri 40 ta
 // Maktabgacha pedagogika (2019) kitob asosida
 // ════════════════════════════════════════════════════════════════
 const VARIANTS = {
@@ -411,7 +417,450 @@ const VARIANTS = {
     { q:"Tarbiyachining o'z kasbiy rivojlanishiga javobgarligi nimani anglatadi?", opts:["Faqat kurs o'tish","Uzluksiz o'z ustida ishlash, yangi bilimlar olish, tajriba almashish va o'z faoliyatini tahlil qilish","Faqat diplomni yangilash","Faqat majlislarga qatnashish"], ans:1, exp:"Tarbiyachining kasbiy rivojlanishi uzluksiz jarayon: kitob o'qish, kurslar, hamkasblar bilan tajriba almashish va o'z faoliyatini doimiy tahlil qilish." },
     { q:"Bolalarda vatanparvarlik tarbiyasini maktabgacha yoshda qanday amalga oshirish mumkin?", opts:["Faqat qo'shiq yodlatish","Milliy an'analar, bayramlar, tabiiy go'zallik va xalq ijodi bilan tanishtirish orqali","Faqat bayroq ko'rsatish","Faqat tarix o'rgatish"], ans:1, exp:"Maktabgacha yoshda vatanparvarlik milliy an'analar, xalq ertaklari va qo'shiqlari, milliy bayramlar, tabiat va ona zaminni sevish orqali tarbiyalanadi." },
     { q:"Maktabgacha ta'limda o'qitish shakllari qaysilar?", opts:["Faqat frontal dars","Frontal (butun guruh), kichik guruh va individual shakllar", "Faqat individual ish","Faqat mustaqil ish"], ans:1, exp:"Maktabgacha ta'limda o'qitish shakllari: frontal (butun guruh bilan), kichik guruhda va individual — har biri turli maqsad va vazifalar uchun qo'llaniladi." },
-  ]
+  ],
+
+  variant_4: [
+
+    // ═══════════════════════════════════════════════
+    // III BOB: Tarbiyachi shaxsi, nutq madaniyati, tarbiya tamoyillari
+    // ═══════════════════════════════════════════════
+
+    {
+      q: "Maktabgacha ta'lim muassasasida tarbiyachi Nilufar xonim bolalar bilan doim past ovozda, aniq va ohangdor gapiradi, so'zlarni to'g'ri talaffuz qiladi. Bu uning qaysi kasbiy sifatini ko'rsatadi?",
+      opts: [
+        "Tashqi ko'rinishga e'tibor berishini",
+        "Nutq madaniyati va pedagogik muloqot mahoratini",
+        "Faqat intizomga qat'iy ekanligini",
+        "Ko'p tajribaga ega ekanligini"
+      ],
+      ans: 1,
+      exp: "Tarbiyachining nutq madaniyati — to'g'ri talaffuz, aniqlik, ifodalilik, ohangdorlik va past ovozda muloqot qilishni o'z ichiga oladi. Bu kasbiy kompetentlikning muhim qismi."
+    },
+
+    {
+      q: "Tarbiyachi Sarvinoz xonim bolalar oldida o'zini nazorat qila olmay, asabiylashib qoldi. Pedagogik etika nuqtai nazaridan bu qanday baholanadi?",
+      opts: [
+        "Tabiiiy holat, bolalar sabr-toqatni sinaydi",
+        "Tarbiyachi kasbiy me'yorni buzdi — emotsional nazorat tarbiyachi uchun majburiy",
+        "Faqat ota-onalar oldida nazorat qilish shart",
+        "Bu tarbiyachi shaxsiy ishi"
+      ],
+      ans: 1,
+      exp: "Pedagogik etika tarbiyachidan bolalar oldida emotsional o'zini tutishni, sabr-toqatlilikni va kasbiy vazminlikni talab qiladi. Asabiylashish kasbiy me'yorni buzish hisoblanadi."
+    },
+
+    {
+      q: "Yangi kelgan tarbiyachi Dilnoza bolalarga dars o'tish paytida ko'p 'um', 'ya'ni', 'qanday qilib aytsamikan' kabi to'ldiruvchi so'zlarni ishlatadi. Bu muammoning asosiy sababi nima?",
+      opts: [
+        "Darsni yaxshi rejalashtirmaganligi",
+        "Nutq madaniyatining yetarli rivojlanmaganligi va pedagogik mahorat kamligining belgisi",
+        "Bolalar diqqatsiz bo'lganligi",
+        "Darslik yaxshi emasligi"
+      ],
+      ans: 1,
+      exp: "Nutq madaniyatida parazit so'zlar ishlatish — nutqning aniqligi va tozaligiga putur yetkazadi. Bu tarbiyachining kasbiy nutqni takomillashtirishi zarurligini ko'rsatadi."
+    },
+
+    {
+      q: "Tarbiyachi Hamida xonim bolani jamoat oldida kamsitib, 'sen hech narsani bilmaysan' dedi. Pedagogik etika tamoyillariga ko'ra bu:",
+      opts: [
+        "Ba'zan ruxsat etiladi — intizom uchun",
+        "Bolaning qadr-qimmatini kamsitish bo'lib, qat'iyan ta'qiqlangan",
+        "Faqat ota-onalarga xabar berish kerak",
+        "Tarbiyachining o'z usuli"
+      ],
+      ans: 1,
+      exp: "Pedagogik etikaning 'zararmaslik' va 'hurmat' tamoyillari bolaning qadr-qimmatini jamoat oldida kamsitishni qat'iyan ta'qiqlaydi. Bu tarbiyaviy ta'sir sifatida hech qachon qo'llanilmasligi kerak."
+    },
+
+    {
+      q: "MTT tarbiyachisiga qo'yiladigan asosiy kasbiy talablar ichida eng muhimi nima?",
+      opts: [
+        "Ko'p yillik ish tajribasi",
+        "Kasbiy bilim, bolalarni sevish, muloqot madaniyati va uzluksiz o'z ustida ishlash",
+        "Faqat oliy ma'lumot",
+        "Yaxshi kiyinish"
+      ],
+      ans: 1,
+      exp: "Tarbiyachiga qo'yiladigan talablar: chuqur kasbiy bilim, bolalarga mehr va hurmat, muloqot madaniyati, ijodkorlik va uzluksiz kasbiy rivojlanish."
+    },
+
+    {
+      q: "Tarbiyachi Zulfiya xonim har hafta o'z o'tkazgan mashg'ulotlarini tahlil qilib, nimalar yaxshi, nimalar yaxshi chiqmaganini daftariga yozib boradi. Bu qanday faoliyat?",
+      opts: [
+        "Keraksiz qog'ozbozlik",
+        "Pedagogik refleksiya — kasbiy o'sish uchun zarur faoliyat",
+        "Faqat yangi tarbiyachilarga kerak",
+        "Ma'muriy talab"
+      ],
+      ans: 1,
+      exp: "Pedagogik refleksiya — tarbiyachining o'z faoliyatini ongli tahlil qilishi, samarali va samarasiz tomonlarini aniqlashi va keyingi ish uchun xulosa chiqarishi. Bu kasbiy o'sishning asosi."
+    },
+
+    {
+      q: "Tarbiyachining jamiyatdagi o'rni haqida quyidagilardan qaysi biri to'g'ri?",
+      opts: [
+        "Tarbiyachi faqat bolani saqlash uchun kerak",
+        "Tarbiyachi kelgusi avlod shaxsini shakllantiruvchi, jamiyat taraqqiyotiga bevosita ta'sir qiluvchi kasbiy mutaxassis",
+        "Tarbiyachi maktab o'qituvchisidan past lavozim",
+        "Tarbiyachi faqat ota-onalarning yordamchisi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi jamiyatda muhim o'rin tutadi — u bolaning ilk yillarida shaxsini shakllantiradi, bu esa butun hayotiga ta'sir qiladi. Maktabgacha ta'lim — insonning poydevori."
+    },
+
+    {
+      q: "Tarbiyachi Nodira xonim bir bolaga ko'p e'tibor qaratib, qolganlarini e'tiborsiz qoldirmoqda. Qaysi tamoyil buzilmoqda?",
+      opts: [
+        "Ko'rgazmalilik tamoyili",
+        "Individual yondashuv tamoyili to'g'ri qo'llanilmayapti — u guruhning barchasi bilan muvozanatni talab qiladi",
+        "Mustahkamlash tamoyili",
+        "Onglilik tamoyili"
+      ],
+      ans: 1,
+      exp: "Individual yondashuv — har bir bolaning xususiyatlarini hisobga olgan holda ishlamoq, ammo bu guruhning boshqa bolalarini e'tiborsiz qoldirish demak emas. Muvozanat saqlash zarur."
+    },
+
+    {
+      q: "Tarbiya tamoyillaridan 'insonparvarlik' tamoyili MTT da qanday namoyon bo'ladi?",
+      opts: [
+        "Bolaga hamma narsaga ruxsat berish",
+        "Bolaga hurmat, mehr, uning qadr-qimmatini tan olish va manfaatlarini ustuvor qo'yish",
+        "Faqat iqtidorli bolalarga e'tibor berish",
+        "Intizomga qat'iy rioya qilish"
+      ],
+      ans: 1,
+      exp: "Insonparvarlik tamoyili bolaning shaxsini, qadr-qimmatini, huquqlarini tan olishni va uning manfaatlarini ustuvor qo'yishni talab qiladi."
+    },
+
+    {
+      q: "Tarbiyachi Malika xonim barcha bolalarga bir xil topshiriq berdi, lekin Ahmadjon topshiriqni bajarolmadi, chunki u rivojlanish jihatidan qolgan bolalardan farq qiladi. Qaysi tamoyil hisobga olinmadi?",
+      opts: [
+        "Ko'rgazmalilik",
+        "Individual yondashuv — har bir bolaning rivojlanish xususiyatlarini hisobga olish zarur edi",
+        "Tizimlilik",
+        "Mustahkamlash"
+      ],
+      ans: 1,
+      exp: "Individual yondashuv tamoyili har bir bolaning yoshi, rivojlanish darajasi, xususiyatlarini hisobga olgan holda ta'lim va tarbiya berishni talab qiladi."
+    },
+
+    {
+      q: "Tarbiyachi nutqida 'empatiya' qanday namoyon bo'ladi?",
+      opts: [
+        "Ko'p gapirish orqali",
+        "Bolaning his-tuyg'ularini tushunib, o'rin bosib, unga mos ohang va so'zlar bilan muloqot qilish orqali",
+        "Faqat yig'layotgan bolani ovutish",
+        "Ota-onalar bilan suhbatda"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi nutqida empatiya — bolaning emotsional holatini his etib, shunga mos tarzda muloqot qilish: yumshoq ohang, tushunarli so'zlar, bolaning yonida bo'lish."
+    },
+
+    {
+      q: "Tarbiya tamoyillarida 'tabiiylik' tamoyili nimani anglatadi?",
+      opts: [
+        "Faqat tabiatda o'rgatish",
+        "Tarbiya bolaning tabiiy rivojlanish qonuniyatlariga, yosh va individual xususiyatlariga mos bo'lishi kerak",
+        "Sun'iy sharoit yaratmaslik",
+        "Faqat tabiiy materiallardan foydalanish"
+      ],
+      ans: 1,
+      exp: "Tabiiylik tamoyili — tarbiyaviy ta'sir bolaning yosh, biologik va psixologik rivojlanish qonuniyatlariga mos kelishi, zo'rlab erta rivojlantirmaslikni talab qiladi."
+    },
+
+    {
+      q: "Tarbiyachi Barno xonim 5 yoshli Ziyodga 'Sen yomon bola!' dedi. Bu iboraning pedagogik jihatdan noto'g'riligi nimada?",
+      opts: [
+        "Juda qisqa ibora",
+        "Bolaning shaxsini emas, xulq-atvorini tanqid qilish kerak — 'Sen yomon bola' emas, 'Bu xatti-harakat noto'g'ri edi'",
+        "Faqat ota-onalar oldida aytish kerak edi",
+        "Ovoz baland edi"
+      ],
+      ans: 1,
+      exp: "Pedagogik etikada bolaning shaxsiga emas, aniq xatti-harakatiga baho berish talab qilinadi. 'Sen yomon' — shaxsni qoralash, bu psixologik zarar yetkazadi."
+    },
+
+    {
+      q: "MTT da tarbiyachining kasbiy rivojlanishi uchun qaysi faoliyat eng muhim?",
+      opts: [
+        "Ko'proq ish staji to'plash",
+        "Uzluksiz o'qish, ilg'or tajribalarni o'rganish, seminar va kurslarda qatnashish, o'z faoliyatini tahlil qilish",
+        "Faqat attestatsiyadan o'tish",
+        "Ko'proq ota-onalar bilan ishlash"
+      ],
+      ans: 1,
+      exp: "Tarbiyachining kasbiy rivojlanishi — uzluksiz jarayon: yangi bilimlar olish, ilg'or pedagoglardagi tajribalarni o'rganish, o'z faoliyatini refleksiya qilish va hamkasblar bilan tajriba almashish."
+    },
+
+    {
+      q: "Tarbiya tamoyillarida 'munosabatlar birligi' nimani talab qiladi?",
+      opts: [
+        "Barcha tarbiyachilar bir xil kiyinishini",
+        "MTT tarbiyachilari, ma'muriyat va ota-onalarning bola tarbiyasida yagona talablar va yondashuvni saqlasin",
+        "Faqat tarbiyachilar o'zaro kelishishini",
+        "Faqat ota-onalar o'zaro kelishishini"
+      ],
+      ans: 1,
+      exp: "Munosabatlar birligi tamoyili — barcha tarbiyalovchi kuchlar (oila, MTT, jamiyat) bola tarbiyasida yagona talablar va izchil yondashuv qo'llashini talab qiladi."
+    },
+
+    // ═══════════════════════════════════════════════
+    // IV BOB: Shaxs rivojlanishi, yosh xususiyatlari
+    // ═══════════════════════════════════════════════
+
+    {
+      q: "2 yoshli Laylo hali deyarli gap gapirmaydi, ammo hamma narsani ushlab ko'radi, og'ziga soladi, tashlaydi. Bu qanday rivojlanish bosqichiga xos?",
+      opts: [
+        "Rivojlanishdan orqada qolish belgisi",
+        "Sensormotor rivojlanish bosqichi — bola olam bilan harakatlar orqali tanishadi",
+        "Nutq buzilishi",
+        "Ijtimoiy rivojlanish muammosi"
+      ],
+      ans: 1,
+      exp: "2 yoshgacha bo'lgan davrda bolaning asosiy bilish usuli — sensormotor faoliyat: ushlab ko'rish, tashlash, og'izga solish orqali predmetlar xossalarini o'rganish."
+    },
+
+    {
+      q: "3 yoshli Bobur hamma narsani o'zi qilmoqchi, 'men o'zim!' deydi, ota-onasi yordamlashtirsa jahl qiladi. Bu qanday hodisa?",
+      opts: [
+        "Bolaning tarbiyasizligi",
+        "3 yosh inqirozi — mustaqillikka intilish, bu normal rivojlanish ko'rsatkichi",
+        "Psixologik kasallik",
+        "Tarbiya usulining noto'g'riligi"
+      ],
+      ans: 1,
+      exp: "3 yosh inqirozi — bolada 'Men o'zim' hissi paydo bo'ladi, mustaqillikka intilish kuchayadi. Bu shaxs rivojlanishida muhim bosqich. Tarbiyachi va ota-onalar mustaqillikni qo'llab-quvvatlashi kerak."
+    },
+
+    {
+      q: "4-5 yoshli Shahlo rolli o'yinda doim 'shifokor' bo'lmoqchi, o'yinchoq stetoskop bilan 'bemorlarni davolaydi'. Bu o'yin qaysi rivojlanish jarayonini aks ettiradi?",
+      opts: [
+        "Faqat vaqt o'tkazishni",
+        "Ijtimoiy rollarni o'zlashtirish va kattalar dunyosini tushunishga intilishni",
+        "Tibbiyotga qiziqishni — kelajakda shifokor bo'ladi",
+        "Xayoliy fikrlash muammosini"
+      ],
+      ans: 1,
+      exp: "4-5 yoshda rolli o'yin — bolaning ijtimoiy rollarni (shifokor, o'qituvchi, ota-ona) o'zlashtiradigan, kattalar hayotini tushunishga intilgan faoliyati. Bu ijtimoiy rivojlanishning asosiy mexanizmi."
+    },
+
+    {
+      q: "5-6 yoshli Jasur katta konstruktordan mustaqil ravishda uy qurib, uni tomini alohida qo'yib, derazalar ham ochib qo'ydi. Bu qanday rivojlanish ko'rsatkichi?",
+      opts: [
+        "Oddiy o'yin",
+        "Fazoviy tafakkur, rejalashtirish va muammoni hal qilish ko'nikmalarining rivojlanganligini ko'rsatadi",
+        "Faqat qo'l motorikasi rivojlanganligi",
+        "Tasodifiy harakat"
+      ],
+      ans: 1,
+      exp: "5-6 yoshda bola konstruktiv o'yinda maqsadni oldindan rejalashtira oladi, fazoviy tasavvuridan foydalanadi va muammolarni ijodiy hal qiladi. Bu kognitiv rivojlanishning muhim belgisi."
+    },
+
+    {
+      q: "6-7 yoshli Mohira rasmga qaramasdan, o'zi to'qib, uzun ertak aytib berdi, personajlarning his-tuyg'ularini ham tasvirlab ketdi. Bu qanday rivojlanish darajasini ko'rsatadi?",
+      opts: [
+        "Oddiy nutq rivojlanishi",
+        "Bog'lanishli nutq, xayoliy tafakkur va emotsional tushunchaning yuqori darajada rivojlanganini",
+        "Faqat yaxshi xotira",
+        "Ko'p ertak eshitganligini"
+      ],
+      ans: 1,
+      exp: "6-7 yoshda rivojlangan bola mustaqil ravishda bog'lanishli monolog nutq qurib, xayolida obrazlar yaratib, personajlarning ichki dunyosini tasvirlay oladi — bu nutq, tafakkur va emotsional rivojlanishning yuqori ko'rsatkichi."
+    },
+
+    {
+      q: "Shaxs rivojlanishiga ta'sir etuvchi omillar orasida 'irsiyat' nimani belgilaydi?",
+      opts: [
+        "Bolaning kelajakdagi kasbi",
+        "Biologik xususiyatlar — anatomik tuzilish, nerv tizimi xususiyatlari, moyilliklar va ba'zi qobiliyatlar",
+        "Bolaning xarakteri to'liq",
+        "Aql-idrok darajasi to'liq"
+      ],
+      ans: 1,
+      exp: "Irsiyat bolaga biologik xususiyatlarni beradi: anatomik tuzilish, nerv tizimining xususiyatlari, ba'zi qobiliyatlarga moyillik. Ammo irsiyat shaxsni to'liq belgilamaydi — muhit va tarbiya ham hal qiluvchi rol o'ynaydi."
+    },
+
+    {
+      q: "2-3 yoshli bolalar guruhida tarbiyachi Gulnora xonim har safar bir xil tartibda: birinchi qo'l yuvish, keyin ovqat, keyin dam olish — tartibni saqlaydi. Buning ahamiyati nima?",
+      opts: [
+        "Tarbiyachiga qulay bo'lishi uchun",
+        "Kun tartibining izchilligi bolada xavfsizlik hissi, kutish qobiliyati va tartibga ko'nikishni shakllantiradi",
+        "Faqat gigiyena uchun",
+        "MTT qoidasi shunaqa"
+      ],
+      ans: 1,
+      exp: "2-3 yoshli bolalar uchun kun tartibining izchilligi juda muhim: bola nima bo'lishini bilib oladi, bu xavfsizlik hissini mustahkamlaydi, intizom va tartibga ko'nikishga asos soladi."
+    },
+
+    {
+      q: "3-4 yoshli bolalar uchun rivojlanishning qaysi xususiyati xarakterli?",
+      opts: [
+        "Abstract fikrlash kuchli bo'ladi",
+        "Ko'rgazmali-amaliy tafakkur ustunlik qiladi, bola predmetlar bilan amallar orqali o'rganadi",
+        "Mantiqiy fikrlash to'liq shakllangan",
+        "Mustaqil o'qiy oladi"
+      ],
+      ans: 1,
+      exp: "3-4 yoshda ko'rgazmali-amaliy tafakkur ustunlik qiladi: bola haqiqiy predmetlar bilan harakatlar orqali o'rganadi, ramziy fikrlash endi boshlanmoqda."
+    },
+
+    {
+      q: "5-6 yoshli bolalarda shaxsning qaysi xususiyati faol shakllanadi?",
+      opts: [
+        "Abstrakt matematik tafakkur",
+        "O'zini baholash (o'z-o'zini baho), ijtimoiy me'yorlarni anglash va iroda elementlari",
+        "Professional qobiliyatlar",
+        "Faqat jismoniy kuch"
+      ],
+      ans: 1,
+      exp: "5-6 yoshda bolada o'z-o'zini baholash qobiliyati, boshqalar fikriga e'tibor berish, ijtimoiy me'yorlarni anglash va irodaviy xatti-harakatning dastlabki ko'rinishlari paydo bo'ladi."
+    },
+
+    {
+      q: "Bolani tarbiyalashda 'faoliyat' omilining roli nima? (IV bob asosida)",
+      opts: [
+        "Muhim emas, irsiyat hamma narsani belgilaydi",
+        "Bola o'z faoliyati — o'yin, muloqot, mehnat — orqali shaxs sifatida shakllanadi, passiv bola rivojlanmaydi",
+        "Faqat sport faoliyati muhim",
+        "Faqat o'quv faoliyati muhim"
+      ],
+      ans: 1,
+      exp: "Shaxs faoliyat jarayonida shakllanadi. Bola o'ynab, muloqot qilib, mehnat qilib, muammolarni hal qilish orqali o'z shaxsini qurib boradi. Passiv holat rivojlanishni to'xtatadi."
+    },
+
+    {
+      q: "Tarbiyachi 4 yoshli Alisherni o'z tengdoshlari oldida doim maqtab, boshqalarini past ko'rsatmoqda. Bu bolaning rivojlanishiga qanday ta'sir qiladi?",
+      opts: [
+        "Alisherni rivojlantiradi",
+        "Alisherni boshqalardan ajratib, guruhda ijobiy munosabatlarni buzadi, boshqa bolalarda past o'zini baholash xavfini tug'diradi",
+        "Raqobat muhiti yaratadi — bu foydali",
+        "Hech qanday ta'sir qilmaydi"
+      ],
+      ans: 1,
+      exp: "Bir bolani doim maqtab boshqalarini past ko'rsatish guruhda sog'lom ijtimoiy muhitni buzadi, boshqa bolalarda o'ziga ishonch pasayishi va hasad tuyg'ularini keltirib chiqarishi mumkin."
+    },
+
+    {
+      q: "6-7 yoshli bolalarda maktabga psixologik tayyorgarlikning motivatsion jihatdan qaysi belgi muhim?",
+      opts: [
+        "Ko'p harf bilishi",
+        "O'qishga ishtiyoq, yangi bilim olishga qiziqish va 'o'quvchi' roliga tayyor ekanlik",
+        "Faqat hisob bilishi",
+        "Tinch o'tirish qobiliyati"
+      ],
+      ans: 1,
+      exp: "Maktabga motivatsion tayyorlik — bola maktabga bormoqchi, o'rganmoqchi, 'o'quvchi' bo'lishni xohlaydi. Bu bilimga ichki qiziqish va yangi ijtimoiy rolni qabul qilishga tayyorlikni anglatadi."
+    },
+
+    {
+      q: "Bolaning rivojlanishida 'senzitiv davr' nima?",
+      opts: [
+        "Bola kasal bo'lgan davr",
+        "Ma'lum ko'nikma yoki qobiliyatning eng tez va oson shakllanadigan optimal yosh davri",
+        "Faqat 0-1 yosh davri",
+        "Imtihon davri"
+      ],
+      ans: 1,
+      exp: "Senzitiv davr — ma'lum ko'nikma, qobiliyat yoki xususiyatning shakllanishi uchun eng qulay yosh davri. Bu davrda to'g'ri tarbiyaviy ta'sir o'tkazsa, natija maksimal bo'ladi."
+    },
+
+    {
+      q: "4-5 yoshli bolada 'egosentrizm' (o'zini markazga qo'yish) qanday namoyon bo'ladi?",
+      opts: [
+        "Bola o'z o'yinchoqlarini begonalarga bermaydi — bu xasislik",
+        "Bola boshqalarning nuqtai nazarini tushunish qiyinroq, hamma narsani o'z ko'zi bilan ko'radi — bu rivojlanish bosqichi",
+        "Bola doim birinchi bo'lmoqchi — bu tarbiyasizlik",
+        "Bola ko'p yig'laydi"
+      ],
+      ans: 1,
+      exp: "Egosentrizm (Piaje) — maktabgacha yoshdagi bola hali boshqalarning nuqtai nazarini to'liq tushuna olmaydi, olam uning ko'zidan ko'rinadi. Bu rivojlanish bosqichi, tarbiyasizlik emas."
+    },
+
+    {
+      q: "Tarbiyachi 3 yoshli bolalarga juda abstrakt tushuntirishlar bermoqda. Rivojlanish psixologiyasi nuqtai nazaridan bu nima?",
+      opts: [
+        "Bolalar aqlli — tushunishadi",
+        "Yosh xususiyatiga mos emas — 3 yoshda ko'rgazmali-amaliy tafakkur ustunlik qiladi, abstrakt tushunchalar o'rinli emas",
+        "Uni tezroq rivojlantiradi",
+        "Muammo yo'q"
+      ],
+      ans: 1,
+      exp: "3 yoshli bola ko'rgazmali-amaliy tafakkur bosqichida — abstraktsiyalarni tushuna olmaydi. Tarbiyachi ta'limni bolaning haqiqiy rivojlanish bosqichiga moslashtirishi shart."
+    },
+
+    {
+      q: "Ijtimoiy muhitning bola shaxsiga ta'siri haqida quyidagilardan qaysi biri to'g'ri?",
+      opts: [
+        "Muhit ta'siri unchalik katta emas",
+        "Ijtimoiy muhit — oila, bog'cha, tengdoshlar, media — bolaning til, qadriyat, xulq-atvor va dunyoqarashini shakllantiradi",
+        "Faqat oila muhimi",
+        "Faqat bog'cha muhimi"
+      ],
+      ans: 1,
+      exp: "Ijtimoiy muhit (oila, MTT, tengdoshlar, keng ijtimoiy muhit) bolaning til, qadriyatlar, xulq-atvor me'yorlari va dunyoqarashini shakllantirishda irsiyat bilan bir qatorda hal qiluvchi omil."
+    },
+
+    {
+      q: "5 yoshli Nodira tengdoshlari bilan o'yinda kelishmovchilik chiqsa, o'zi murosaga kelishga harakat qiladi. Bu qanday rivojlanish ko'rsatkichi?",
+      opts: [
+        "Bolaning qo'rqoqligi",
+        "Ijtimoiy-hissiy rivojlanishning yuqori darajasi — muammoni muloqot orqali hal qila olish",
+        "O'zini o'ynata olmasligi",
+        "Passivlik"
+      ],
+      ans: 1,
+      exp: "Tengdoshlar bilan kelishmovchilikni muloqot orqali hal qila olish — ijtimoiy-hissiy rivojlanishning yuqori darajasi. Bu ko'nikma maktabgacha yoshda shakllanishi kerak."
+    },
+
+    {
+      q: "Tarbiyachi Lobar xonim 6 yoshli bolalarga maktabga tayyorgarlik sifatida faqat harf va raqam yodlatdi. Bu yondashuv to'liqmi?",
+      opts: [
+        "Ha, bu yetarli",
+        "Yo'q — maktabga tayyorlik faqat akademik bilim emas, ijtimoiy, hissiy-irodaviy, motivatsion tayyorlikni ham qamrashi kerak",
+        "Ha, chunki maktabda shu kerak",
+        "Faqat raqamlar kerak edi"
+      ],
+      ans: 1,
+      exp: "Maktabga tayyorlik ko'p qirrali: akademik bilimlar, ijtimoiy ko'nikmalar, hissiy-irodaviy boshqaruv, o'qishga motivatsiya va mustaqillik. Faqat harf-raqam yodlatish yetarli emas."
+    },
+
+    {
+      q: "2-3 yoshli bola birinchi marta bog'chaga keldi va kuchli yig'lab, onasini qidirdi. Tarbiyachi nima qilishi kerak?",
+      opts: [
+        "Bola yig'lashini to'xtatish uchun qo'rqitish",
+        "Bolani tinchlantirish, xavfsizlik hissi berish, qiziqarli o'yin orqali e'tiborini jalb qilish va moslashishga yordam berish",
+        "Bola onasini o'zi unutadi, kutish kerak",
+        "Ota-onani chaqirib qaytarish"
+      ],
+      ans: 1,
+      exp: "Bog'chaga moslashish davri 2-3 yoshda qiyin bo'lishi tabiiy. Tarbiyachi iliq munosabat, xavfsizlik muhiti, qiziqarli faoliyat va sabr bilan bolaning moslashishiga ko'maklashadi."
+    },
+
+    {
+      q: "Bolaning shaxsini rivojlantirishda tarbiyaning roli nima? (IV bob asosida)",
+      opts: [
+        "Tarbiya irsiyatdan kuchli, hamma narsani o'zgartira oladi",
+        "Tarbiya maqsadli, tizimli ta'sir orqali bolaning tabiiy imkoniyatlarini yo'naltiradi, ijtimoiy xislatlarini shakllantiradi",
+        "Tarbiyaning ta'siri minimal",
+        "Faqat ota-ona tarbiyasi muhim"
+      ],
+      ans: 1,
+      exp: "Tarbiya — maqsadli va tizimli ta'sir orqali bolaning tabiiy moyilliklarini rivojlantirish, ijtimoiy me'yorlar, qadriyatlar va xulq-atvorni shakllantirishga yo'naltirilgan jarayon."
+    },
+
+    {
+      q: "6-7 yoshli bolaning ixtiyoriy (irodaviy) diqqatining rivojlanishi maktabga tayyorlikda nima uchun muhim?",
+      opts: [
+        "Muhim emas",
+        "Maktabda o'rganish uchun bola qiziq bo'lmasa ham vazifaga diqqatini qaratib, oxiriga yetkazish qobiliyati kerak",
+        "Faqat sport uchun kerak",
+        "Faqat imtihonda kerak"
+      ],
+      ans: 1,
+      exp: "Ixtiyoriy diqqat — bolaning qiziq bo'lmagan vazifaga ham diqqatini qaratib, maqsadga erishish qobiliyati. Bu maktabdagi o'quv faoliyatining asosi va maktabga tayyorlikning muhim ko'rsatkichi."
+    },
+  ],
 };
 
 // ════════════════════════════════════════════════════════════════
@@ -479,7 +928,7 @@ function selectMode(m) {
 
 function selectVariant(n) {
   selectedVariant = n;
-  [1, 2, 3].forEach(i => {
+  [1, 2, 3, 4].forEach(i => {
     document.getElementById('vc-' + i).classList.toggle('selected', i === n);
   });
 }
@@ -496,7 +945,7 @@ function selectCat(cat) {
 function startExam() {
   if (mode === 'mashq') {
     if (!selectedCat) { showToast('Toifani tanlang', 'err'); return; }
-    const key = selectedCat === 'v1' ? 'variant_1' : selectedCat === 'v2' ? 'variant_2' : 'variant_3';
+    const key = selectedCat === 'v1' ? 'variant_1' : selectedCat === 'v2' ? 'variant_2' : selectedCat === 'v3' ? 'variant_3' : 'variant_4';
     examQuestions = shuffle(VARIANTS[key]);
     timeLeft = 0;
   } else {
@@ -616,7 +1065,7 @@ function nextQ() {
 function confirmFinish() {
   const answered = userAnswers.filter(a => a !== null).length;
   if (mode === 'imtihon' && answered < 10) {
-    showToast(`Kamida 10 ta savolga javob bering (hozir: ${answered})`, 'err');
+    showToast(`Kamida 10 ta savolga javob bering. Siz uddalaysiz. (hozir: ${answered})`, 'err');
     return;
   }
   if (mode === 'imtihon') {
