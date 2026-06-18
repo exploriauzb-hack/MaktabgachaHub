@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reyting — MaktabgachaHub</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.container { max-width: 860px; margin: 0 auto; padding: 24px 16px 60px; }
+
+.reyting-header {
+  background: linear-gradient(135deg, #6c47ff, #9b7cff);
+  border-radius: 20px; padding: 28px; margin-bottom: 24px;
+  color: #fff; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.reyting-header h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.reyting-header p  { font-size: 13px; opacity: .85; }
+.reyting-icon { font-size: 48px; }
+
+.filter-row {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.filter-row select, .filter-row input {
+  border: 1.5px solid #e8e4f8; border-radius: 10px;
+  padding: 8px 12px; font-size: 13px; font-family: inherit;
+  background: #f8f7ff; outline: none; color: #2d2d2d;
+  transition: .2s;
+}
+.filter-row select:focus, .filter-row input:focus { border-color: #6c47ff; background: #fff; }
+
+/* Podium */
+.podium { display: flex; justify-content: center; align-items: flex-end; gap: 16px; margin-bottom: 28px; }
+.podium-item { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.podium-avatar {
+  width: 60px; height: 60px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 6px; border: 3px solid;
+}
+.podium-1 .podium-avatar { border-color: #f59e0b; background: #fef3c7; }
+.podium-2 .podium-avatar { border-color: #9ca3af; background: #f3f4f6; }
+.podium-3 .podium-avatar { border-color: #b45309; background: #fef9ee; }
+.podium-name  { font-size: 12px; font-weight: 700; color: #2d2d2d; max-width: 80px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.podium-ball  { font-size: 13px; font-weight: 800; color: #6c47ff; }
+.podium-block {
+  border-radius: 12px 12px 0 0; width: 70px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 800; color: #fff;
+}
+.podium-1 .podium-block { background: linear-gradient(135deg,#f59e0b,#d97706); height: 80px; }
+.podium-2 .podium-block { background: linear-gradient(135deg,#9ca3af,#6b7280); height: 60px; }
+.podium-3 .podium-block { background: linear-gradient(135deg,#b45309,#92400e); height: 44px; }
+
+/* Jadval */
+.table-wrap { background: #fff; border-radius: 20px; box-shadow: 0 2px 12px rgba(108,71,255,.08); overflow: hidden; }
+.table-head {
+  display: grid; grid-template-columns: 44px 1fr 110px 70px 70px 70px;
+  padding: 12px 16px; background: #f8f7ff;
+  font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase;
+  border-bottom: 1px solid #e8e4f8;
+}
+.table-row {
+  display: grid; grid-template-columns: 44px 1fr 110px 70px 70px 70px;
+  padding: 14px 16px; border-bottom: 1px solid #f0eef9;
+  align-items: center; transition: background .15s;
+}
+.table-row:last-child { border-bottom: none; }
+.table-row:hover { background: #faf9ff; }
+.table-row.me { background: #f0eeff; }
+.table-row.top3 { background: #fffbeb; }
+
+.rank { font-size: 15px; font-weight: 800; color: #6c47ff; text-align: center; }
+.rank.r1 { color: #f59e0b; }
+.rank.r2 { color: #9ca3af; }
+.rank.r3 { color: #b45309; }
+
+.user-info { display: flex; align-items: center; gap: 10px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #7c6fe0, #a78bfa);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.user-name  { font-size: 13px; font-weight: 700; color: #2d2d2d; }
+.user-meta  { font-size: 11px; color: #888; margin-top: 1px; }
+
+.cell { font-size: 13px; text-align: center; color: #555; }
+.cell-ball { font-size: 15px; font-weight: 800; color: #6c47ff; text-align: center; }
+
+.badge-toifa {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; display: inline-block; margin-top: 2px;
+}
+.bt-oliy  { background: #fef3c7; color: #d97706; }
+.bt-1     { background: #dbeafe; color: #1d4ed8; }
+.bt-2     { background: #dcfce7; color: #16a34a; }
+.bt-no    { background: #f3f4f6; color: #6b7280; }
+
+/* Statistika kartalar */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: #fff; border-radius: 16px; padding: 16px;
+  box-shadow: 0 2px 8px rgba(108,71,255,.06); text-align: center;
+}
+.stat-num   { font-size: 28px; font-weight: 800; color: #6c47ff; }
+.stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+
+.loading { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+.my-pos {
+  background: #f0eeff; border-radius: 14px; padding: 14px 16px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.my-pos-rank { font-size: 28px; font-weight: 800; color: #6c47ff; min-width: 44px; text-align: center; }
+.my-pos-info { flex: 1; }
+.my-pos-name { font-size: 14px; font-weight: 700; }
+.my-pos-ball { font-size: 13px; color: #6c47ff; font-weight: 600; }
+
+.empty { text-align: center; padding: 40px; color: #888; font-size: 14px; }
+
+/* Mobil */
+@media(max-width: 600px) {
+  .table-head, .table-row { grid-template-columns: 36px 1fr 60px 50px; }
+  .table-head .h-test, .table-head .h-foiz,
+  .table-row  .c-test, .table-row  .c-foiz { display: none; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .podium-block { width: 56px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../dashboard.html" class="nav-logo">🎓 MaktabgachaHub</a>
+  <div class="nav-links">
+    <a href="../dashboard.html" class="nav-btn">🏠 Bosh sahifa</a>
+    <a href="portfolio.html"   class="nav-btn">👤 Portfolio</a>
+    <a href="reyting.html"     class="nav-btn active">🏆 Reyting</a>
+    <div class="nav-user">
+      <span id="nav-name">—</span>
+      <span class="nav-badge" id="nav-plan">Bepul</span>
+    </div>
+    <button class="nav-btn" onclick="doLogout()" style="background:rgba(255,100,100,.25)">Chiqish</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="reyting-header">
+    <div class="reyting-icon">🏆</div>
+    <div>
+      <h1>Top 100 Tarbiyachilar</h1>
+      <p>Profil to'ldirilishi, test natijalari va faollik asosida ball hisoblanadi</p>
+    </div>
+  </div>
+
+  <!-- Mening o'rnim -->
+  <div class="my-pos" id="myPos" style="display:none">
+    <div class="my-pos-rank" id="myRank">—</div>
+    <div class="my-pos-info">
+      <div class="my-pos-name" id="myName">—</div>
+      <div class="my-pos-ball" id="myBall">— ball</div>
+    </div>
+    <div style="font-size:12px;color:#888;">Sizning o'rningiz</div>
+  </div>
+
+  <!-- Statistika -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="statJami">—</div>
+      <div class="stat-label">Jami foydalanuvchi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statTestlar">—</div>
+      <div class="stat-label">Jami testlar</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statOrtacha">—</div>
+      <div class="stat-label">O'rtacha ball</div>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-row">
+    <select id="filterViloyat" onchange="applyFilter()">
+      <option value="">Barcha viloyatlar</option>
+      <option>Toshkent shahri</option><option>Toshkent viloyati</option>
+      <option>Andijon</option><option>Farg'ona</option><option>Namangan</option>
+      <option>Samarqand</option><option>Buxoro</option><option>Navoiy</option>
+      <option>Qashqadaryo</option><option>Surxondaryo</option><option>Jizzax</option>
+      <option>Sirdaryo</option><option>Xorazm</option><option>Qoraqalpog'iston</option>
+    </select>
+    <select id="filterToifa" onchange="applyFilter()">
+      <option value="">Barcha toifalar</option>
+      <option>Oliy toifa</option><option>1-toifa</option>
+      <option>2-toifa</option><option>Toifasiz</option>
+    </select>
+    <input type="text" id="filterSearch" placeholder="🔍 Ism qidirish..." oninput="applyFilter()" style="flex:1;min-width:160px"/>
+  </div>
+
+  <!-- Podium (top 3) -->
+  <div class="podium" id="podium"></div>
+
+  <!-- Jadval -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <div>#</div>
+      <div>Tarbiyachi</div>
+      <div>Viloyat</div>
+      <div class="h-test" style="text-align:center">Testlar</div>
+      <div class="h-foiz" style="text-align:center">O'rtacha</div>
+      <div style="text-align:center">Ball</div>
+    </div>
+    <div id="reytingList"><div class="loading">⏳ Yuklanmoqda...</div></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+let allData = [];
+let currentUserId = null;
+
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true);
+  if (!auth) return;
+  fillNav();
+
+  const { data: { user } } = await _sb.auth.getUser();
+  if (user) currentUserId = user.id;
+
+  await loadReyting();
+});
+
+async function loadReyting() {
+  const { data, error } = await _sb
+    .from('reyting_view')
+    .select('*');
+
+  if (error) {
+    document.getElementById('reytingList').innerHTML =
+      '<div class="empty">❌ Ma\'lumot yuklanmadi: ' + error.message + '</div>';
+    return;
+  }
+
+  allData = data || [];
+
+  // Statistika
+  document.getElementById('statJami').textContent = allData.length;
+  const jami_test = allData.reduce((s, r) => s + (r.test_soni || 0), 0);
+  document.getElementById('statTestlar').textContent = jami_test;
+  const ortacha = allData.length
+    ? Math.round(allData.reduce((s, r) => s + (r.ball || 0), 0) / allData.length)
+    : 0;
+  document.getElementById('statOrtacha').textContent = ortacha;
+
+  // Mening o'rnim
+  const myIdx = allData.findIndex(r => r.id === currentUserId);
+  if (myIdx !== -1) {
+    const me = allData[myIdx];
+    document.getElementById('myPos').style.display = 'flex';
+    document.getElementById('myRank').textContent = '#' + (myIdx + 1);
+    document.getElementById('myName').textContent = (me.full_name || '').trim() || 'Siz';
+    document.getElementById('myBall').textContent = Math.round(me.ball || 0) + ' ball';
+  }
+
+  renderPodium(allData.slice(0, 3));
+  renderTable(allData);
+}
+
+function applyFilter() {
+  const vil    = document.getElementById('filterViloyat').value;
+  const toifa  = document.getElementById('filterToifa').value;
+  const search = document.getElementById('filterSearch').value.toLowerCase();
+
+  const filtered = allData.filter(r => {
+    if (vil    && r.viloyat !== vil) return false;
+    if (toifa  && r.toifa  !== toifa) return false;
+    if (search && !(r.full_name || '').toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  renderTable(filtered);
+  if (!vil && !toifa && !search) renderPodium(allData.slice(0, 3));
+  else document.getElementById('podium').innerHTML = '';
+}
+
+function renderPodium(top) {
+  if (top.length < 2) { document.getElementById('podium').innerHTML = ''; return; }
+  const order = top.length >= 3 ? [top[1], top[0], top[2]] : [top[0], top[1]];
+  const heights = top.length >= 3 ? [60, 80, 44] : [60, 80];
+  const labels  = top.length >= 3 ? ['🥈', '🥇', '🥉'] : ['🥈', '🥇'];
+  const classes = top.length >= 3 ? ['podium-2','podium-1','podium-3'] : ['podium-2','podium-1'];
+  const colors  = top.length >= 3
+    ? ['linear-gradient(135deg,#9ca3af,#6b7280)','linear-gradient(135deg,#f59e0b,#d97706)','linear-gradient(135deg,#b45309,#92400e)']
+    : ['linear-gradient(135deg,#9ca3af,#6b7280)','linear-gradient(135deg,#f59e0b,#d97706)'];
+
+  document.getElementById('podium').innerHTML = order.map((u, i) => `
+    <div class="podium-item ${classes[i]}">
+      <div class="podium-avatar">👩‍🏫</div>
+      <div class="podium-name">${(u.full_name || '—').trim()}</div>
+      <div class="podium-ball">${Math.round(u.ball || 0)} ball</div>
+      <div class="podium-block" style="background:${colors[i]};height:${heights[i]}px">${labels[i]}</div>
+    </div>
+  `).join('');
+}
+
+function renderTable(data) {
+  const list = document.getElementById('reytingList');
+  if (!data.length) {
+    list.innerHTML = '<div class="empty">😕 Hech kim topilmadi</div>';
+    return;
+  }
+
+  const toifaBadge = t => {
+    if (t === 'Oliy toifa') return `<span class="badge-toifa bt-oliy">Oliy</span>`;
+    if (t === '1-toifa')    return `<span class="badge-toifa bt-1">1-toifa</span>`;
+    if (t === '2-toifa')    return `<span class="badge-toifa bt-2">2-toifa</span>`;
+    return `<span class="badge-toifa bt-no">—</span>`;
+  };
+
+  // Global reyting o'rinlarini saqlab, filter qilganda ham to'g'ri ko'rsatish
+  const globalRanks = {};
+  allData.forEach((r, i) => { globalRanks[r.id] = i + 1; });
+
+  list.innerHTML = data.map(u => {
+    const rank = globalRanks[u.id] || '—';
+    const isMe = u.id === currentUserId;
+    const isTop = rank <= 3;
+    const rankCls = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+    const medal   = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+    const rowCls  = isMe ? 'me' : isTop ? 'top3' : '';
+
+    return `<div class="table-row ${rowCls}">
+      <div class="rank ${rankCls}">${medal}</div>
+      <div class="user-info">
+        <div class="user-avatar">👩‍🏫</div>
+        <div>
+          <div class="user-name">${(u.full_name || '—').trim()}${isMe ? ' <span style="color:#6c47ff;font-size:10px">(siz)</span>' : ''}</div>
+          <div class="user-meta">${u.lavozim || '—'} · ${u.viloyat || '—'}</div>
+          ${toifaBadge(u.toifa)}
+        </div>
+      </div>
+      <div class="cell">${u.viloyat || '—'}</div>
+      <div class="cell c-test">${u.test_soni || 0} ta</div>
+      <div class="cell c-foiz">${u.ortacha_foiz || 0}%</div>
+      <div class="cell-ball">${Math.round(u.ball || 0)}</div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
