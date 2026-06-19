@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Vaziyatlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+#bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
+.sidebar-overlay.show{display:block}
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
+.sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px}
+.sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item:hover{background:var(--bg);color:var(--text)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
+.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
+.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
+.user-info .name{font-size:12px;font-weight:600}
+.user-info .plan{font-size:11px;color:var(--muted)}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
+.btn-logout:hover{background:var(--bg);color:var(--red)}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:860px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
+.btn-back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:background .15s;white-space:nowrap}
+.btn-back:hover{background:var(--bg);color:var(--text)}
+.page-title{font-size:20px;font-weight:600}
+.page-title span{color:var(--accent)}
+
+/* INFO */
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.info-box i{font-size:16px;flex-shrink:0}
+
+/* QUIZ STATE */
+.quiz-start{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center;margin-bottom:20px}
+.quiz-start-icon{width:64px;height:64px;background:var(--accent-soft);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--accent);font-size:30px}
+.quiz-start h2{font-size:18px;font-weight:700;margin-bottom:8px}
+.quiz-start p{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.quiz-meta{display:flex;gap:16px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.quiz-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);background:var(--bg);padding:6px 12px;border-radius:8px;border:1px solid var(--border)}
+.quiz-meta-item i{font-size:15px;color:var(--accent)}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s}
+.btn-start:hover{transform:translateY(-1px)}
+
+/* QUIZ ACTIVE */
+.quiz-active{display:none}
+.quiz-progress-bar{height:5px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.quiz-progress-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .3s}
+.quiz-counter{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-bottom:16px}
+.quiz-counter strong{color:var(--text);font-size:14px}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.question-num{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.question-text{font-size:15px;font-weight:600;line-height:1.6;color:var(--text)}
+.options-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.option-btn{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-family:inherit;color:var(--text);text-align:left;transition:border-color .15s,background .15s;width:100%}
+.option-btn:hover:not(:disabled){border-color:#93c5fd;background:var(--accent-soft)}
+.option-btn .opt-letter{width:24px;height:24px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:var(--muted);flex-shrink:0;transition:background .15s,color .15s}
+.option-btn.correct{border-color:var(--green);background:var(--green-soft)}
+.option-btn.correct .opt-letter{background:var(--green);color:#fff}
+.option-btn.wrong{border-color:var(--red);background:#fef2f2}
+.option-btn.wrong .opt-letter{background:var(--red);color:#fff}
+.option-btn.disabled{cursor:default;opacity:.7}
+.feedback-box{padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;display:none;align-items:center;gap:8px;margin-bottom:16px}
+.feedback-box.show{display:flex}
+.feedback-box.ok{background:var(--green-soft);color:var(--green);border:1px solid #bbf7d0}
+.feedback-box.err{background:#fef2f2;color:var(--red);border:1px solid #fecaca}
+.feedback-box i{font-size:18px;flex-shrink:0}
+.btn-next{display:flex;align-items:center;gap:7px;padding:11px 24px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s}
+.btn-next:hover{transform:translateY(-1px)}
+
+/* RESULT */
+.quiz-result{display:none;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center}
+.result-icon{width:72px;height:72px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:32px}
+.result-score{font-size:48px;font-weight:700;margin-bottom:4px}
+.result-label{font-size:14px;color:var(--muted);margin-bottom:24px}
+.result-stats{display:flex;gap:12px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.result-stat{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 20px;text-align:center}
+.result-stat .sv{font-size:20px;font-weight:700}
+.result-stat .sl{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-retry{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-right:8px}
+.btn-dash{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;background:var(--surface);color:var(--muted);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none}
+
+.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s;text-decoration:none}
+.fab-back:hover{transform:translateY(-3px)}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-close{display:flex}
+  .btn-hamburger{display:flex}
+  .main{margin-left:0;padding:14px 14px 80px}
+  .page-title{font-size:16px}
+  .question-text{font-size:14px}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-school"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan</span></div>
+    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="sidebar-section">Asosiy</div>
+  <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a href="jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
+  <a href="haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
+  <a href="soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
+  <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
+  <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
+  <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
+  <a href="vaziyat.html" class="nav-item active"><i class="ti ti-bulb"></i> Vaziyatlar</a>
+  <div class="sidebar-section">Professional</div>
+  <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar" id="sb-avatar">T</div>
+      <div class="user-info">
+        <div class="name" id="sb-name">Tarbiyachi</div>
+        <div class="plan" id="sb-plan">Bepul tarif</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+    <a href="../dashboard.html" class="btn-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
+    <div class="page-title"><span>Vaziyatli</span> testlar</div>
+  </div>
+
+  <div class="info-box">
+    <i class="ti ti-info-circle"></i>
+    Kasbiy mahorat — real pedagogik vaziyatlarda to'g'ri qaror qabul qilishni tekshiradi. 30 ta savol, har biriga 4 ta variant.
+  </div>
+
+  <!-- START -->
+  <div class="quiz-start" id="quizStart">
+    <div class="quiz-start-icon"><i class="ti ti-bulb"></i></div>
+    <h2>Vaziyatli kasbiy mahorat testi</h2>
+    <p>MTT tarbiyachilari uchun real pedagogik vaziyatlarga asoslangan 30 ta savol. Har bir savolda to'g'ri 1 ta javob bor.</p>
+    <div class="quiz-meta">
+      <div class="quiz-meta-item"><i class="ti ti-help-circle"></i> 30 ta savol</div>
+      <div class="quiz-meta-item"><i class="ti ti-clock"></i> ~15 daqiqa</div>
+      <div class="quiz-meta-item"><i class="ti ti-star"></i> +10 XP har bir to'g'ri javob</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()"><i class="ti ti-player-play"></i> Testni boshlash</button>
+  </div>
+
+  <!-- ACTIVE -->
+  <div class="quiz-active" id="quizActive">
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="quiz-counter">
+      <span id="qCounter">1 / 30</span>
+      <strong id="qScore">0 to'g'ri</strong>
+    </div>
+    <div class="question-card">
+      <div class="question-num" id="qNum">Savol 1</div>
+      <div class="question-text" id="qText"></div>
+    </div>
+    <div class="options-list" id="optionsList"></div>
+    <div class="feedback-box" id="feedbackBox"><i class="ti ti-circle-check" id="feedbackIcon"></i><span id="feedbackText"></span></div>
+    <button class="btn-next" id="btnNext" style="display:none" onclick="nextQuestion()">
+      <span id="btnNextLabel">Keyingi savol</span> <i class="ti ti-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="quiz-result" id="quizResult">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-score" id="resultScore"></div>
+    <div class="result-label" id="resultLabel"></div>
+    <div class="result-stats">
+      <div class="result-stat"><div class="sv" id="rCorrect" style="color:var(--green)"></div><div class="sl">To'g'ri</div></div>
+      <div class="result-stat"><div class="sv" id="rWrong" style="color:var(--red)"></div><div class="sl">Noto'g'ri</div></div>
+      <div class="result-stat"><div class="sv" id="rXP" style="color:var(--pro)"></div><div class="sl">XP qo'shildi</div></div>
+    </div>
+    <button class="btn-retry" onclick="restartQuiz()"><i class="ti ti-refresh"></i> Qayta ishlash</button>
+    <a href="../dashboard.html" class="btn-dash"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  </div>
+</main>
+
+<a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
+
+<script>
+(function(){
+  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  let W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const types=['star','heart','circle','flower'];
+  const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#fde68a'];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  const shapes=[];
+  for(let i=0;i<22;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(12,28),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.35,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.12,0.32)});
+  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
+  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    shapes.forEach(s=>{
+      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
+      if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
+      if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
+      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
+      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
+      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
+      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+
+<script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
+</script>
+
+<script>
+const QUESTIONS=[
+  {q:"Guruhga yangi kelgan 3 yoshli bola yig'lab, onasini chaqiradi. Siz nima qilasiz?",opts:["Onasiga bolani olib ketishni taklif qilaman","Bolani majburlab onasidan ajratib olaman","Quchoqlab, onasi tez kelishini aytib, o'yinga band qilaman","E'tibor bermay, o'zi ko'nikadi deb kutaman"],ans:2},
+  {q:"4 yoshli bola bog'chaga birinchi kun kelgan, doim yig'laydi. Sizning harakatingiz?",opts:["Onasiga bolani bir hafta uyda saqlashni tavsiya qilaman","Majburlab guruhga olib kiraman va qoldiraman","Sevimli o'yinchog'ini olib kelishni onasiga aytaman","Yig'isiga umuman qaramay, boshqa ishimni davom ettiraman"],ans:2},
+  {q:"Tushki uyqudan keyin 5 yoshli bola onasini so'rab yig'laydi. Nima qilasiz?",opts:["Onasiga darhol qo'ng'iroq qilib, vaziyatni aytaman","Bolani tinchlantirmay, o'zi to'xtashini kutaman","Yoniga borib, erkalab, sevimli o'yinini taklif qilaman","Bolani boshqa xonaga olib chiqib, yolg'iz qoldiraman"],ans:2},
+  {q:"Sayrda ikki bola o'yinchoq uchun janjallashib qolishdi. Qanday hal qilasiz?",opts:["O'yinchoqni olib qo'yib, hech kimga bermayman","Ikkala bolani ham bir xil tarzda jazolayman","Ikkalasini tinglab, navbatma-navbat o'ynashni taklif qilaman","O'yinchoqni biriga berib, boshqasiga boshqa o'yinchoq beraman"],ans:2},
+  {q:"Guruhdagi ikki bola doim bir-biri bilan janjallashib turadi. Siz qanday usul qo'llaysiz?",opts:["Har doim ularni bir-biridan uzoqroq o'tqazib qo'yaman","Har bir janjaldan keyin ikkalasini ham jazolayman","Kuzatib, hamkorlikdagi qiziqarli faoliyatga yo'naltiraman","Ota-onalariga muntazam shikoyat qilib boraman"],ans:2},
+  {q:"6 yoshli bola boshqa bolaning rasmini buzib tashladi. Sizning harakatingiz?",opts:["Rasmini buzgan bolani qattiq tanbeh qilib qo'yaman","Yig'layotgan bolani yupatib, buzgan bolaga sababini so'rayman","Ikkala bolani ham teng darajada aybdor deb hisoblayman","Aralashmayman, o'zlari o'rtasida hal qilishsin"],ans:1},
+  {q:"Mashg'ulotda bir bola doim o'rnidan turib, boshqalarga aralashadi. Qanday qilasiz?",opts:["Qattiq ohangda joyiga o'tirishni buyuraman","Mashg'ulotdan chiqarib, koridorga olib chiqaman","Unga alohida faol topshiriq berib, e'tiborini qarataman","E'tibor bermayman, o'zi zerikib tinchlanadi"],ans:2},
+  {q:"Katta guruh bolasi darsda boshqalarga qarab qo'yadi, diqqati chalinadi. Siz nima qilasiz?",opts:["Oldingi qatorga o'tqazib, doim nazorat qilaman","«Diqqatli bo'l» deb qayta-qayta aytib turaman","Qiziqarli savol berib, uni faol ishtirokchiga aylantiraman","Darsdan keyin alohida suhbat o'tkazaman"],ans:2},
+  {q:"Bola chizgan rasmini ko'rsatib: «Yaxshi chiqdimi?» deb so'raydi. Javobingiz?",opts:["«Yaxshi» deb qisqa javob berib, keyingi ishga o'taman","«Yaxshimas, qayta chiz» deb aytaman","«Nimani chizding? Qanday ranglar ishlatding?» deb baholayman","Boshqa bolalarnikiga qaraganda yomonroq deyman"],ans:2},
+  {q:"3 yoshli bola doim boshqa bolalarni turtib yoki urib yuradi. Siz qanday ish tutasiz?",opts:["Har safar qattiq jazolab, burchakka qo'yaman","Ota-onasiga chaqirib, bolani olib ketishlarini talab qilaman","Sababini aniqlab, ijobiy muloqot usullarini o'rgataman","E'tibor bermayman, katta bo'lgach tushunar"],ans:2},
+  {q:"Guruhda 5 yoshli bola o'ziga ishonchsiz, hech qanday topshiriqni bajarishdan qochadi. Sizning uslubingiz?",opts:["Majburlab bajarishga undayman, boshqa iloji yo'q","O'zini tutib, boshqa bolalar oldida maqtayman","Unga engil topshiriq berib, muvaffaqiyat qozonishiga yordam beraman","Unga umuman topshiriq bermay qo'yaman"],ans:2},
+  {q:"Kichik guruhda bir bola jamoa o'yiniga qo'shilmay, chetda o'tiradi. Siz nima qilasiz?",opts:["Majburlab o'yinga qo'shaman, qolmasin deb","Chetda o'tirganiga e'tibor qilmayman","Yoniga borib, birgalikda o'yinni boshlashni taklif qilaman","Boshqa bolalarga uning ustidan kulishga ruxsat beraman"],ans:2},
+  {q:"O'yin vaqtida bola doim yutqizsa, asabiylashib, o'yinni tashlab ketadi. Sizning harakatingiz?",opts:["Undan keyin o'yinni umuman tashkil qilmayman","«Yutqizish ham odatiy» deb tushuntirib, bardoshli bo'lishga o'rgataman","Har doim uning yutishiga sharoit yarataman","Boshqa bolalarni ayblab, o'yinni to'xtataman"],ans:1},
+  {q:"Mashg'ulot vaqtida bola qo'lini ko'tarmasdan javob aytib qo'yadi. Siz qanday munosabat bildirasiz?",opts:["Qattiq tanbeh berib, qoidani eslataman","Javobini eshitib, keyin qo'l ko'tarish kerakligini aytaman","Javobiga e'tibor bermay, boshqa bolani so'rayman","Darsni to'xtatib, bu haqda uzoq gapirib o'tiraman"],ans:1},
+  {q:"Siz yangi uslubni joriy qilmoqchisiz, lekin ba'zi bolalar qarshilik qiladi. Qanday yo'l tutasiz?",opts:["O'z uslubimni majburlab o'tkazaman, ular ko'nikadi","Qarshilik qilganlarni jazolab, boshqalarga ibrat qilaman","Bolalarni tushuntirib, qiziqish uyg'otib, asta-sekin joriy qilaman","Butunlay bekor qilib, eski usulda davom etaman"],ans:2},
+  {q:"Guruhda bola doim yolg'on gapiradi, boshqalarni ayblaydi. Siz qanday ish ko'rasiz?",opts:["Har safar yolg'onini fosh qilib, hamma oldida uyalaman","Ota-onasini chaqirib, qattiq gapirishlarini so'rayman","Ijobiy xatti-harakatlarini maqtab, rostgo'ylikni rag'batlantiraman","Bu yoshga xos deb e'tibor bermay qo'yaman"],ans:2},
+  {q:"6 yoshli bola mustaqil ravishda murakkab vazifani bajara olmay, yordam so'raydi. Siz nima qilasiz?",opts:["Bajarib berib, faqat natijasini ko'rsataman","«O'zing o'ylab ko'r» deb rad javobini beraman","Yo'l-yo'riq ko'rsatib, o'zi bajarishiga imkon yarataman","Boshqa bolalarga o'rgatishini buyuraman"],ans:2},
+  {q:"Guruhda bir bola juda qo'zg'aluvchan, doim yugurib, xavfli harakatlar qiladi. Tarbiyachi sifatida?",opts:["Jazolab, butun kun stulda o'tqazaman","Faoliyatini cheklab, tinch o'yinlar o'ynataman","Harakatchan o'yinlar va sport mashqlari bilan band qilaman","Ota-onasiga murojaat qilib, davolanishini tavsiya qilaman"],ans:2},
+  {q:"Bola ovqatlanish vaqtida injiq, yeyishni istamaydi. Sizning uslubingiz?",opts:["Majburlab ovqatlantiraman, bolani ovqat oldida qoldirmayman","E'tibor bermay, o'zi och qolsin deb kutaman","Qiziqarli usulda (ertak, o'yin) ovqatlanishga undayman","Ota-onasiga chaqirib, uyda ovqatlantirishni so'rayman"],ans:2},
+  {q:"Kecha-kunduz guruhida 4 yoshli bola kechasi uxlamay, boshqalarni uyg'otadi. Qanday ish qilasiz?",opts:["Qattiq jazolab, yotog'idan ajratib qo'yaman","Onasiga qo'ng'iroq qilib, olib ketishini so'rayman","Yotishdan oldin tinchlantiruvchi ertak aytib, qulay muhit yarataman","E'tibor bermay, o'zi charchab uxlab qoladi"],ans:2},
+  {q:"Guruhda bola qaychi bilan xavfli o'ynab yuribdi. Sizning darhol harakatingiz?",opts:["Qaychini tortib olib, bolani qattiq tanbeh qilaman","Xavfsizlik qoidasini tushuntirib, qaychini to'g'ri ishlatishni ko'rsataman","Qaychini olib qo'yib, boshqa faoliyatga o'taman","Boshqa bolalarga ham ko'rsatib, ibrat qilaman"],ans:1},
+  {q:"5 yoshli bola doim o'z xatolarini tan olmaydi, boshqalarni ayblaydi. Siz qanday yo'l tutasiz?",opts:["Xatosi isbotlaganda, uni hamma oldida tan olishga majburlayman","«Xato qilish odatiy» deb, o'z xatolarimni tan olishga misol ko'rsataman","Bu xususiyatiga e'tibor bermay, o'tib ketaman","Ota-onasiga aytib, ular tarbiyalasin"],ans:1},
+  {q:"Guruhda bola biror narsani yasashda qiynalib, yig'lay boshladi. Sizning harakatingiz?",opts:["«Yig'lama, qayta boshlaymiz» deb yupatib, yana bajarishga undayman","O'zi yasab berib, bolaga tayyor holatda beraman","Yoniga borib, «Nima bo'ldi?» deb so'rab, birgalikda yechim topaman","Boshqa bola yasasin, bu esa tomosha qilsin"],ans:2},
+  {q:"O'yin davomida bola o'rtog'ining ismini noto'g'ri aytib, uni xafa qiladi. Siz nima qilasiz?",opts:["Noto'g'ri aytgan bolani jazolab, nomni to'g'ri aytishga majburlayman","Xafa bo'lgan bolani yupatib, boshqasiga «To'g'ri ayting» deb tushuntiraman","Ikkalasiga ham «Bu katta muammo emas» deyman","Bu holatga aralashmayman"],ans:1},
+  {q:"Ekskursiya vaqtida bir bola guruhdan ajralib qolib, yo'qoladi. Sizning birinchi harakatingiz?",opts:["Barcha bolalarni joyida qoldirib, o'zim qidirib boraman","Qolgan bolalarni xavfsiz joyga to'plab, boshqa kattalardan yordam so'rab qidiraman","Vahimaga tushib, barcha bolalarni orqaga qaytaraman","Qolgan bolalarni qo'riqchiga topshirib, o'zim qidirishga ketaman"],ans:1},
+  {q:"Guruhda bolalardan biri ota-onasining ajrashganini aytib, yig'laydi. Siz qanday munosabat bildirasiz?",opts:["«Bu kattalarning ishi, senga aloqasi yo'q» deb rad javob beraman","Quchoqlab, yupatib, «Men seni tushunaman» deb, qiziqarli faoliyatga yo'naltiraman","Bu haqida boshqa bolalar oldida gapirmaslikni aytaman","Psixologga yuborib, o'zim aralashmayman"],ans:1},
+  {q:"Bola mashg'ulotda noto'g'ri javob berganida boshqa bolalar kulishadi. Siz nima qilasiz?",opts:["Kulgan bolalarni jazolab, noto'g'ri javob berganni himoya qilaman","«Xatolarni tuzatamiz» deb, bolalarni birgalikda to'g'ri javob topishga undayman","Javob bergan bola xijolat bo'lsa ham, davom etaman","Boshqa savolga o'tib, shu mavzuni unutaman"],ans:1},
+  {q:"Guruhda bolalar mustaqil faoliyatda tartibsizlik qilishadi. Siz qanday yo'l qo'llaysiz?",opts:["Har bir topshiriqni bajarish tartibini aniq ko'rsatib, nazorat qilaman","Tartibsizlikka e'tibor bermay, o'zlari tushunishlarini kutaman","Bolalar bilan birgalikda tartib qoidalarini ishlab chiqaman","Jazolar tizimini joriy qilib, intizomni o'rnataman"],ans:2},
+  {q:"6 yoshli bola maktabga borishdan qo'rqishini aytadi. Sizning ishingiz?",opts:["«Qo'rqma, hamma boradi» deb qisqa javob beraman","Ota-onasiga murojaat qilib, ular hal qilishini so'rayman","Bolani maktab hayoti bilan ijobiy misollar orqali tanishtirib, qiziqish uyg'otaman","«Hali vaqt bor» deb, mavzuni kechiktiraman"],ans:2},
+  {q:"Tarbiyachi sifatida siz o'zingizning kasbiy xatongizni sezib qoldingiz. Bolalar oldida qanday ish qilasiz?",opts:["Xatoni yashirib, boshqa mavzuga o'tib ketaman","Xatoni tan olib, to'g'rilayman va bolalardan kechirim so'rayman","Boshqa tarbiyachini ayblab, o'zimni oqlayman","Xatoni tuzataman, lekin tan olmayman"],ans:1},
+];
+
+const LETTERS=['A','B','C','D'];
+let cur=0,correct=0,answered=false;
+
+function startQuiz(){
+  cur=0;correct=0;answered=false;
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  document.getElementById('quizActive').style.display='block';
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q=QUESTIONS[cur];
+  answered=false;
+  document.getElementById('progressFill').style.width=((cur/30)*100)+'%';
+  document.getElementById('qCounter').textContent=(cur+1)+' / 30';
+  document.getElementById('qScore').textContent=correct+' to\'g\'ri';
+  document.getElementById('qNum').textContent='Savol '+(cur+1);
+  document.getElementById('qText').textContent=q.q;
+  const fb=document.getElementById('feedbackBox');
+  fb.className='feedback-box';fb.style.display='';
+  document.getElementById('btnNext').style.display='none';
+  const list=document.getElementById('optionsList');
+  list.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='option-btn';
+    btn.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span><span>${o}</span>`;
+    btn.onclick=()=>selectAnswer(i);
+    list.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx){
+  if(answered)return;
+  answered=true;
+  const q=QUESTIONS[cur];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedbackBox');
+  if(idx===q.ans){
+    correct++;
+    btns[idx].classList.add('correct');
+    fb.className='feedback-box ok show';
+    document.getElementById('feedbackIcon').className='ti ti-circle-check';
+    document.getElementById('feedbackText').textContent='To\'g\'ri javob!';
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    fb.className='feedback-box err show';
+    document.getElementById('feedbackIcon').className='ti ti-circle-x';
+    document.getElementById('feedbackText').textContent='Noto\'g\'ri. To\'g\'ri javob: '+LETTERS[q.ans];
+  }
+  document.getElementById('qScore').textContent=correct+' to\'g\'ri';
+  const btn=document.getElementById('btnNext');
+  btn.style.display='flex';
+  document.getElementById('btnNextLabel').textContent=cur<29?'Keyingi savol':'Natijani ko\'rish';
+}
+
+function nextQuestion(){
+  cur++;
+  if(cur>=30){showResult();return;}
+  renderQuestion();
+}
+
+function showResult(){
+  document.getElementById('quizActive').style.display='none';
+  const pct=Math.round((correct/30)*100);
+  const xp=correct*10;
+  const res=document.getElementById('quizResult');
+  res.style.display='block';
+  let icon,color,label;
+  if(pct>=80){icon='ti-trophy';color='var(--green)';label='Ajoyib natija! Siz professional tarbiyachisiz.'}
+  else if(pct>=60){icon='ti-thumb-up';color='var(--amber)';label='Yaxshi natija! Yana biroz mashq qiling.'}
+  else{icon='ti-refresh';color='var(--red)';label='Ko\'proq mashq qilish kerak. Qayta ishlab ko\'ring.'}
+  document.getElementById('resultIcon').innerHTML=`<i class="ti ${icon}" style="font-size:32px;color:${color}"></i>`;
+  document.getElementById('resultIcon').style.background=color==='var(--green)'?'var(--green-soft)':color==='var(--amber)'?'var(--amber-soft)':'#fef2f2';
+  document.getElementById('resultScore').textContent=pct+'%';
+  document.getElementById('resultScore').style.color=color;
+  document.getElementById('resultLabel').textContent=label;
+  document.getElementById('rCorrect').textContent=correct;
+  document.getElementById('rWrong').textContent=30-correct;
+  document.getElementById('rXP').textContent='+'+xp;
+  // XP saqlash
+  if(typeof _sb!=='undefined'&&typeof _currentUser!=='undefined'&&_currentUser){
+    _sb.from('profiles').select('xp').eq('id',_currentUser.id).single().then(({data})=>{
+      const newXp=(data?.xp||0)+xp;
+      _sb.from('profiles').update({xp:newXp}).eq('id',_currentUser.id);
+    });
+    _sb.from('test_results').insert({user_id:_currentUser.id,test_name:'Vaziyatli test',category:'vaziyat',score:correct,total:30,percentage:pct});
+  }
+}
+
+function restartQuiz(){
+  document.getElementById('quizResult').style.display='none';
+  startQuiz();
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+window.addEventListener('load',async()=>{
+  const auth=await initAuth(true);
+  if(!auth)return;
+  const name=getUserName();
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
+  const planLabel=isCorporate()?'Korporativ':isPro()?'Professional':'Bepul';
+  document.getElementById('sb-plan').textContent=planLabel+' tarif';
+});
+</script>
+</body>
+</html>
