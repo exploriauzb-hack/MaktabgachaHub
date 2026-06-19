@@ -475,7 +475,7 @@ window.addEventListener('load',async()=>{
   const banner=document.getElementById('premiumBanner');
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
-  const proCards={'card-games':{href:'pages/oyinlar.html'},'card-songs':{href:'pages/qoshiqlar.html'},'card-activities':{href:'pages/mashgulotlar.html'},'card-attestation':{href:'pages/attestatsiya.html'},'card-portfolio':{href:'pages/portfolio.html'}};
+  const proCards={'card-games':{href:'pages/oyinlar.html'},'card-songs':{href:'pages/qoshiqlar.html'},'card-activities':{href:'pages/mashgulot.html'},'card-attestation':{href:'pages/attestatsiya.html'},'card-portfolio':{href:'pages/portfolio.html'}};
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);if(!el)return;
     if(proUser){const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
