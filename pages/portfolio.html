@@ -80,6 +80,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .edit-btn:hover{background:#6d28d9}
 .save-btn{background:var(--green);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;display:none;align-items:center;gap:6px;transition:background .15s}
 .save-btn:hover{background:#166534}
+.save-btn:disabled{opacity:.6;cursor:not-allowed}
 /* FORM */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .form-group{display:flex;flex-direction:column;gap:4px}
@@ -124,10 +125,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
-/* TOAST */
-.toast-msg{position:fixed;bottom:80px;right:28px;padding:11px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:opacity .4s}
-.toast-msg.success{background:var(--green);color:#fff}
-.toast-msg.error{background:var(--red);color:#fff}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -162,7 +159,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="sidebar-section">Professional</div>
   <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a class="nav-item active"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
   <div class="sidebar-section">Korporativ</div>
@@ -171,10 +168,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
-      <div class="sb-avatar">T</div>
-      <div class="user-info"><div class="name">Tarbiyachi</div><div class="plan">Professional tarif</div></div>
+      <div class="sb-avatar" id="sb-avatar">T</div>
+      <div class="user-info"><div class="name" id="sb-name">Tarbiyachi</div><div class="plan" id="sb-plan">Professional tarif</div></div>
     </div>
-    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 <main class="main">
@@ -221,7 +218,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       </div>
       <div class="btn-row">
         <button class="edit-btn" id="editBtn" onclick="toggleEdit()"><i class="ti ti-pencil"></i> Tahrirlash</button>
-        <button class="save-btn" id="saveBtn" onclick="saveProfile()"><i class="ti ti-device-floppy"></i> Saqlash</button>
+        <button class="save-btn" id="saveBtn" onclick="handleSave()"><i class="ti ti-device-floppy"></i> Saqlash</button>
       </div>
     </div>
   </div>
@@ -356,16 +353,13 @@ function calcScore(){
   if(toifa==='Oliy toifa')s+=5;else if(toifa==='1-toifa')s+=3;else if(toifa==='2-toifa')s+=1;
   return Math.min(s,100);
 }
-function updateScoreUI(score){
+function updateScore(){
+  const score=calcScore();
   document.getElementById('reytingScore').textContent=score;
   document.getElementById('stat-yutuq').textContent=document.querySelectorAll('.yutuq-item').length;
   document.getElementById('stat-skill').textContent=document.querySelectorAll('.skill-tag').length;
   document.getElementById('stat-staj').textContent=document.getElementById('i-staj')?.value||0;
-}
-
-function showToast(msg,type){
-  const t=document.createElement('div');t.className='toast-msg '+(type||'success');t.textContent=msg;
-  document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400)},2500);
+  document.getElementById('reytingRank').textContent='#1';
 }
 
 function toggleEdit(){
@@ -380,9 +374,24 @@ function toggleEdit(){
   document.getElementById('avatarEditBtn').style.display='flex';
 }
 
-function saveProfile(){
+function exitEditUI(){
+  document.querySelectorAll('.form-val').forEach(el=>el.style.display='block');
+  document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el=>el.style.display='none');
+  document.getElementById('editBtn').style.display='flex';
+  document.getElementById('saveBtn').style.display='none';
+  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='none');
+  document.getElementById('skillAddRow').style.display='none';
+  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='none');
+  document.getElementById('addYutuqBtn').style.display='none';
+  document.getElementById('yutuqAddRow').style.display='none';
+  document.getElementById('avatarEditBtn').style.display='none';
+}
+
+// Saqlash tugmasi bosilganda — Supabase'ga yozadi (profile.js dagi funksiya)
+async function handleSave(){
   const fields=['familiya','ism','sharif','telefon','tugilgan','jinsi','viloyat','tuman','dmtt','lavozim','toifa','staj','malumot','bio'];
   fields.forEach(f=>{const inp=document.getElementById('i-'+f);const val=document.getElementById('v-'+f);if(inp&&val)val.textContent=inp.value||'—'});
+
   const fam=document.getElementById('i-familiya').value;
   const ism=document.getElementById('i-ism').value;
   const dmtt=document.getElementById('i-dmtt').value;
@@ -396,19 +405,14 @@ function saveProfile(){
   document.getElementById('dispToifa').innerHTML='<i class="ti ti-award" style="font-size:11px"></i> '+toifa;
   document.getElementById('dispStaj').innerHTML='<i class="ti ti-calendar-stats" style="font-size:11px"></i> '+staj+' yil staj';
   document.getElementById('dispMalumot').innerHTML='<i class="ti ti-school" style="font-size:11px"></i> '+malumot;
-  document.querySelectorAll('.form-val').forEach(el=>el.style.display='block');
-  document.querySelectorAll('input[id^="i-"],select[id^="i-"],textarea[id^="i-"]').forEach(el=>el.style.display='none');
-  document.getElementById('editBtn').style.display='flex';
-  document.getElementById('saveBtn').style.display='none';
-  document.querySelectorAll('.skill-del').forEach(el=>el.style.display='none');
-  document.getElementById('skillAddRow').style.display='none';
-  document.querySelectorAll('.yutuq-del').forEach(el=>el.style.display='none');
-  document.getElementById('addYutuqBtn').style.display='none';
-  document.getElementById('yutuqAddRow').style.display='none';
-  document.getElementById('avatarEditBtn').style.display='none';
-  const score=calcScore();updateScoreUI(score);
-  document.getElementById('reytingRank').textContent='#1';
-  showToast('✅ Profil saqlandi!','success');
+
+  exitEditUI();
+  updateScore();
+
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true;
+  await saveProfileToDB();   // ← haqiqiy Supabase saqlash (js/profile.js dan)
+  btn.disabled=false;
 }
 
 function addSkill(){const inp=document.getElementById('skillInput');if(!inp.value.trim())return;const tag=document.createElement('span');tag.className='skill-tag';tag.innerHTML=inp.value.trim()+' <button class="skill-del" onclick="delSkill(this)" style="display:inline">×</button>';document.getElementById('skillsWrap').appendChild(tag);inp.value=''}
@@ -434,15 +438,30 @@ document.getElementById('avatarFile').addEventListener('change',function(){
   reader.onload=e=>{const img=document.getElementById('avatarImg');img.src=e.target.result;img.style.display='block';document.getElementById('avatarEl').childNodes[0].textContent=''};
   reader.readAsDataURL(file);
 });
+</script>
 
-// Demo data
-document.getElementById('dispName').textContent='Tarbiyachi';
-document.getElementById('dispRole').textContent='Tarbiyachi';
-document.getElementById('dispToifa').textContent='🏷️ Toifasiz';
-document.getElementById('dispStaj').textContent='📅 0 yil staj';
-document.getElementById('dispMalumot').textContent='🎓 —';
-const score=calcScore();updateScoreUI(score);
-document.getElementById('reytingRank').textContent='#1';
+<!-- Supabase ulanishi va profil yuklash/saqlash -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/profile.js"></script>
+<script>
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true);
+  if (!auth) return;
+  if (typeof fillNav === 'function') fillNav();
+
+  const name = getUserName();
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+
+  const proUser = isPro();
+  const corpUser = isCorporate();
+  const planLabel = corpUser ? 'Korporativ' : proUser ? 'Professional' : 'Bepul';
+  document.getElementById('sb-plan').textContent = planLabel + ' tarif';
+
+  await loadProfile();   // ← Supabase'dan saqlangan ma'lumotlarni tortib, formani to'ldiradi
+});
 </script>
 </body>
 </html>
