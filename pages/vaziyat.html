@@ -596,8 +596,80 @@ function goVariants(){
   document.getElementById('variantScreen').style.display='block';
 }
 
-// INIT
-buildVariantGrid();
+window.addEventListener('load', async () => {
+  // Supabase auth
+  if (typeof initAuth !== 'undefined') {
+    const auth = await initAuth(true);
+    if (!auth) return;
+    const name = getUserName();
+    document.querySelector('.sidebar-bottom .avatar').textContent = name.charAt(0).toUpperCase();
+    document.querySelector('.sidebar-bottom .name').textContent = name;
+    const planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
+    document.querySelector('.sidebar-bottom .plan').textContent = planLabel + ' tarif';
+    document.querySelector('.plan-pill').innerHTML =
+      (isPro() ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
+  }
+
+  // Pro tekshiruvi bilan grid
+  buildVariantGrid();
+});
+
+function buildVariantGrid() {
+  var proUser = (typeof isPro === 'function') ? isPro() : false;
+  var g = document.getElementById('variantGrid');
+  g.innerHTML = VARIANTS.map(function(v, i) {
+    var locked = !v.free && !proUser;
+    return '<div class="variant-card' + (locked ? ' locked' : '') + '" onclick="' +
+      (locked ? 'openProModal()' : 'startVariant(' + i + ')') + '">' +
+      '<div class="vc-icon ' + v.color + '"><i class="ti ' + v.icon + '"></i></div>' +
+      '<div class="vc-name">' + v.name + '</div>' +
+      '<div class="vc-sub">' + v.sub + '</div>' +
+      '<div class="vc-badge ' + (locked ? 'pro' : 'free') + '">' +
+        (locked ? '<i class="ti ti-crown"></i> PRO' : '<i class="ti ti-lock-open"></i> ' + (v.free ? 'Bepul' : 'PRO — Ochiq')) +
+      '</div>' +
+      (locked ? '<div class="lock-overlay"><i class="ti ti-lock"></i></div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// Faylning eng pastiga, barcha <script> lardan keyin qo'shing:
+// Avvalgi "buildVariantGrid();" ni o'chirib, mana shuni qo'ying:
+
+window.addEventListener('load', async () => {
+  // Supabase auth
+  if (typeof initAuth !== 'undefined') {
+    const auth = await initAuth(true);
+    if (!auth) return;
+    const name = getUserName();
+    document.querySelector('.sidebar-bottom .avatar').textContent = name.charAt(0).toUpperCase();
+    document.querySelector('.sidebar-bottom .name').textContent = name;
+    const planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
+    document.querySelector('.sidebar-bottom .plan').textContent = planLabel + ' tarif';
+    document.querySelector('.plan-pill').innerHTML =
+      (isPro() ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
+  }
+
+  // Pro tekshiruvi bilan grid
+  buildVariantGrid();
+});
+
+function buildVariantGrid() {
+  var proUser = (typeof isPro === 'function') ? isPro() : false;
+  var g = document.getElementById('variantGrid');
+  g.innerHTML = VARIANTS.map(function(v, i) {
+    var locked = !v.free && !proUser;
+    return '<div class="variant-card' + (locked ? ' locked' : '') + '" onclick="' +
+      (locked ? 'openProModal()' : 'startVariant(' + i + ')') + '">' +
+      '<div class="vc-icon ' + v.color + '"><i class="ti ' + v.icon + '"></i></div>' +
+      '<div class="vc-name">' + v.name + '</div>' +
+      '<div class="vc-sub">' + v.sub + '</div>' +
+      '<div class="vc-badge ' + (locked ? 'pro' : 'free') + '">' +
+        (locked ? '<i class="ti ti-crown"></i> PRO' : '<i class="ti ti-lock-open"></i> ' + (v.free ? 'Bepul' : 'PRO — Ochiq')) +
+      '</div>' +
+      (locked ? '<div class="lock-overlay"><i class="ti ti-lock"></i></div>' : '') +
+    '</div>';
+  }).join('');
+}
 </script>
 </body>
 </html>
