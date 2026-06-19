@@ -65,10 +65,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .age-tab .age-desc{font-size:11px;color:var(--muted);margin-top:2px}
 .age-tab.active .age-num{color:var(--accent)}
 
-.stats-row{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.stats-row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:500}
 .stat-chip i{font-size:15px;color:var(--accent)}
 .stat-chip b{color:var(--text);font-size:13px}
+
+.comp-row{display:none;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.comp-chip{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--pro-soft);color:var(--pro);border:1px solid #ddd6fe}
 
 /* DOMAIN LEGEND */
 .legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
@@ -99,7 +102,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:50;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
 .modal-overlay.show{display:flex}
-.modal-box{background:var(--surface);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-box{background:var(--surface);border-radius:16px;max-width:580px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
 .modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:16px;color:var(--muted)}
 .modal-close:hover{background:#e2e8f0}
 .modal-week-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:var(--accent);padding:4px 12px;border-radius:20px;margin-bottom:10px}
@@ -108,9 +111,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .modal-sec-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
 .modal-domain-list{display:flex;flex-direction:column;gap:8px}
 .domain-row{display:flex;align-items:flex-start;gap:10px;background:var(--bg);border-radius:10px;padding:9px 12px;font-size:12px}
-.domain-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.domain-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .domain-row b{display:block;font-size:12px;margin-bottom:2px}
 .domain-row span{color:var(--muted);font-size:11.5px}
+.sub-label{display:block !important;font-size:10px;font-weight:700;color:var(--accent) !important;margin:3px 0 3px !important;text-transform:uppercase;letter-spacing:.03em}
+.domain-code{display:inline-block;margin-left:6px;font-size:9px;font-weight:700;color:#fff;padding:1px 6px;border-radius:6px;vertical-align:middle}
 
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
@@ -136,7 +141,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
-    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
+    <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan platforma</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
   <div class="sidebar-section">Asosiy</div>
@@ -177,7 +182,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
   <div class="info-box">
     <i class="ti ti-info-circle"></i>
-    <div>"Ilk qadam" milliy o'quv dasturi (3-nashr) asosida. Har bir hafta mavzusi <b>5 rivojlanish sohasi</b> (Jismoniy, Ijtimoiy-hissiy, Nutq, Bilish, Ijodiy) bilan integratsiyalashgan. Yil davomida <b>30 hafta</b>, har bir yosh guruhi uchun chuqurlik darajasi moslashtirilgan. Quyida o'z yosh guruhingizni tanlang — mavzular shu guruhga mos kengaytirilgan holda ko'rinadi.</div>
+    <div id="info-text"></div>
   </div>
 
   <div class="age-section">
@@ -191,6 +196,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   </div>
 
   <div class="stats-row" id="stats-row"></div>
+  <div class="comp-row" id="comp-row"></div>
 
   <div class="legend">
     <span class="legend-item"><span class="legend-dot" style="background:#1e40af"></span>1. Jismoniy</span>
@@ -242,16 +248,73 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();clos
 function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';}
 checkHamburger();window.addEventListener('resize',checkHamburger);
 
-// ---------- DOMAIN COLORS ----------
+// ====================================================================
+// "ILK QADAM" 3-NASHR (2026) ASOSIDAGI MAZMUN MODELI
+// 5 ta rivojlanish sohasi + har birining 2026-yilgi yangilangan kichik
+// sohalari + har bir yosh guruhi (a=3-4, b=4-5, c=5-6, d=6-7) uchun
+// HAQIQIY farqlangan rivojlanish yo'nalishlari.
+// ====================================================================
+
 const DOMAIN = {
-  1:{name:"Jismoniy rivojlanish va sog'lom turmush tarzi", color:'#1e40af'},
-  2:{name:"Ijtimoiy-hissiy rivojlanish", color:'#be185d'},
-  3:{name:"Nutq, muloqot, o'qish-yozish ko'nikmalari", color:'#15803d'},
-  4:{name:"Bilish jarayonlarini rivojlantirish", color:'#b45309'},
-  5:{name:"Ijodiy rivojlanish", color:'#7c3aed'}
+  1:{name:"Jismoniy rivojlanish va sog'lom turmush tarzi", color:'#1e40af',
+     sub:["Yirik motorika","Mayda motorika","Sog'lom turmush tarzi va xavfsizlik"]},
+  2:{name:"Ijtimoiy-hissiy rivojlanish", color:'#be185d',
+     sub:["Men konsepsiyasi","Hissiy rivojlanish","Ijtimoiy rivojlanish"]},
+  3:{name:"Nutq, muloqot, o'qish va yozish ko'nikmalari", color:'#15803d',
+     sub:["Nutq va til","O'qishga tayyorgarlik","Yozuvga tayyorgarlik"]},
+  4:{name:"Bilish jarayonini rivojlantirish", color:'#b45309',
+     sub:["Mantiqiy fikrlash va muammolarni hal qilish","Elementar matematika","Dunyoni anglash"]},
+  5:{name:"Ijodiy rivojlanish", color:'#7c3aed',
+     sub:["Dunyoni badiiy tasavvur qilish","Badiiy va ijodiy qobiliyatlar"]}
 };
 
-// ---------- BASE 30 WEEKS (umumiy mavzular asosi - Ilk qadam tartibi) ----------
+// Har bir soha x har bir yosh uchun haqiqiy farqlangan rivojlanish yo'nalishi
+const AGE_FOCUS = {
+  1:{
+    a:"Yirik harakatlarni (yurish, yugurish, sakrash) muvofiqlashtiradi, sezgi organlari orqali atrofni tanib, sodda gigiyenik ko'nikmalarni shakllantiradi.",
+    b:"Harakat turlarini ongli tarzda bajaradi, qaychi va plastilin bilan ishlab mayda motorikani rivojlantiradi, sog'lom ovqatlanish haqida sodda tasavvur hosil qiladi.",
+    c:"Harakatlarni maqsadga yo'naltirilgan holda bajaradi, chaqqonlik va muvozanatni mustahkamlaydi, xavfsizlik qoidalariga ongli rioya qiladi.",
+    d:"O'z imkoniyatlariga mos jismoniy faollikni mustaqil namoyon etadi, mayda motorikani yozuvga tayyorgarlik darajasida qo'llaydi, sog'lom turmush tarzi odatlarini ongli amalga oshiradi."
+  },
+  2:{
+    a:"O'zini alohida shaxs sifatida sezish boshlanadi, kattalarga taqlid qilib sodda his-tuyg'ularini ifodalaydi.",
+    b:"Tengdoshlari bilan rolli o'yinlarda ishtirok etadi, his-tuyg'ularini so'z bilan nomlashga harakat qiladi.",
+    c:"Guruh qoidalariga rioya qiladi, boshqalarning kayfiyatini sezadi va hamdardlik bildiradi, kichik nizolarni muloqot orqali hal qilishga urinadi.",
+    d:"O'z 'Men'i va jamiyatdagi o'rni haqida tasavvurga ega bo'ladi, his-tuyg'ularini vaziyatga mos boshqaradi, murakkab muloqot vaziyatlarida mustaqil yechim izlaydi."
+  },
+  3:{
+    a:"Tinglagan ertak yoki she'rga taqlid qilib so'z va tovushlarni takrorlaydi, sodda so'z birikmalari bilan ehtiyojini ifodalaydi.",
+    b:"Faol lug'atni kengaytiradi, kichik hikoyani qayta so'zlab berishga urinadi, savol-javobda faol ishtirok etadi.",
+    c:"Bog'langan monolog nutqni shakllantiradi, harf va tovushlarga qiziqish bildiradi, mustaqil ravishda kichik hikoya tuzadi.",
+    d:"Ona tilida to'g'ri talaffuz va grammatik shakllardan foydalanadi, harflarni taniydi, yozuvga tayyorgarlik mashqlarini bajaradi, matnni mustaqil tuzib qayta hikoya qiladi."
+  },
+  4:{
+    a:"Rang, shakl va o'lchamlarni taqqoslaydi, sodda sabab-oqibatni sezgi tajribasi orqali kuzatadi.",
+    b:"Narsalarni belgilariga ko'ra guruhlaydi, sanashning boshlang'ich ko'nikmalarini egallaydi, oddiy savollarga taxminiy javob izlaydi.",
+    c:"Kichik tajribalar o'tkazib taxmin (gipoteza) quradi, 10 ichida sanash va taqqoslashni bajaradi, kuzatuv natijalarini sharhlaydi.",
+    d:"Elementar matematik amallarni bajaradi, fazo va vaqt tushunchalarida yo'nalishni aniqlaydi, mustaqil xulosa chiqarib tanqidiy fikr bildiradi."
+  },
+  5:{
+    a:"Bo'yoq va plastilin kabi materiallar bilan erkin tanishadi, sodda taassurotlarni rang va shakl orqali ifodalaydi.",
+    b:"Mavzu asosida oddiy kompozisiya yaratadi, milliy naqsh va ohanglarga qiziqish bildiradi.",
+    c:"O'z g'oyasini mustaqil ravishda turli san'at vositalarida ifodalaydi, jamoaviy ijodiy loyihalarda ishtirok etadi.",
+    d:"Egallagan bilim va ko'nikmalarini ijodiy g'oyalarni amalga oshirishda qo'llaydi, milliy an'analarni qadrlagan holda original ish yaratadi."
+  }
+};
+
+const ageMeta = {
+  a:{label:"3–4 yosh", stage:"Sensor-amaliy bosqich", desc:"Kichik guruh: bola dunyoni sezgi organlari va taqlid orqali kashf etadi, kichik buyumlar bilan amaliy ish bajaradi."},
+  b:{label:"4–5 yosh", stage:"So'z va harakat bosqichi", desc:"O'rta guruh: so'z boyligi kengayadi, oddiy guruhlash va taqqoslash orqali sabab-oqibat bog'lanishi anglana boshlaydi."},
+  c:{label:"5–6 yosh", stage:"Tadqiqotchilik bosqichi", desc:"Katta guruh: bola mustaqil kuzatuv, kichik tajriba va loyihaviy faoliyat orqali dunyoni tadqiq etadi."},
+  d:{label:"6–7 yosh", stage:"Maktabga tayyorgarlik bosqichi", desc:"Tayyorlov guruh: tanqidiy fikrlash, elementar matematika va yozuvga tayyorgarlik orqali besh tayanch kompetensiya shakllanadi."}
+};
+
+const COMPETENCIES_D = ["Kommunikativ","Ijtimoiy","Shaxsiy (Men konsepsiyasi)","Bilish","Tanqidiy fikrlash"];
+
+document.getElementById('info-text').innerHTML =
+  "\"Ilk qadam\" milliy o'quv dasturi (3-nashr, 2026) asosida. Har bir hafta mavzusi <b>5 ta rivojlanish sohasi</b> (Jismoniy, Ijtimoiy-hissiy, Nutq, Bilish, Ijodiy) va ularning <b>kichik sohalari</b> bilan integratsiyalashgan. Yosh guruhini tanlasangiz, har bir hafta mazmuni shu guruh uchun dasturda belgilangan rivojlanish bosqichiga (3–4: sensor-amaliy, 4–5: so'z+harakat, 5–6: tadqiqotchilik, 6–7: tanqidiy fikrlash) mos ravishda qayta shakllanadi. <b>1.2.5.d</b> kabi kodlar dasturning indikatsiya tizimi formatiga moslashtirilgan shartli yo'nalish belgisidir.";
+
+// ---------- BASE 30 WEEKS (umumiy mavzular asosi) ----------
 const baseWeeks=[
   {n:1, t:'Men va mening oilam', soha:[2,3]},
   {n:2, t:"Mening bog'cham va do'stlarim", soha:[2,3]},
@@ -285,40 +348,50 @@ const baseWeeks=[
   {n:30,t:'Yoz fasli va dam olish', soha:[4,1]}
 ];
 
-// ---------- AGE-SPECIFIC GOAL & ACTIVITY GENERATORS ----------
-const ageMeta = {
-  a:{ label:'3–4 yosh', desc:"Sensor-amaliy o'rganish, kichik buyumlar bilan ishlash, taqlid orqali bilim olish.",
-      goalPrefix:"Bola sensor tajriba va o'yin orqali", actType:"Ko'rgazmali o'yin, kub/qum bilan ishlash, taqlid harakatlari"},
-  b:{ label:'4–5 yosh', desc:"So'z boyligini kengaytirish, oddiy guruhlash va sabab-oqibat bog'lanishlarini anglash.",
-      goalPrefix:"Bola so'z va harakatni bog'lab", actType:"Didaktik o'yin, rolli o'yin, oddiy taqqoslash topshiriqlari"},
-  c:{ label:'5–6 yosh', desc:"Tadqiqotchilik faolligi, kichik tajribalar, mantiqiy bog'lanishlarni mustaqil topish.",
-      goalPrefix:"Bola mustaqil kuzatish va tadqiq orqali", actType:"Kichik tajriba, loyihaviy faoliyat, guruh muhokamasi"},
-  d:{ label:'6–7 yosh', desc:"Maktabga tayyorgarlik: tanqidiy fikrlash, elementar matematika, yozuvga tayyorgarlik.",
-      goalPrefix:"Bola tanqidiy fikrlash va mustaqil xulosa orqali", actType:"Muammoli topshiriq, loyiha taqdimoti, yozuv elementlari mashqi"}
-};
+function qOf(n){return n<=8?'':n<=16?'q2':n<=23?'q3':'q4'}
+
+function truncate(str,n){return str.length>n ? str.slice(0,n-1)+"…" : str;}
+
+function subFor(domainId, weekN){
+  const subs = DOMAIN[domainId].sub;
+  return subs[(weekN-1) % subs.length];
+}
+
+function codeFor(domainId, weekN, ageKey){
+  const subs = DOMAIN[domainId].sub;
+  const subIdx = ((weekN-1) % subs.length) + 1;
+  return domainId+"."+subIdx+"."+weekN+"."+ageKey;
+}
 
 function buildActivitiesForWeek(week, ageKey){
-  // generate 3 short activity lines per domain referenced in week.soha, adapted by age
-  const meta = ageMeta[ageKey];
   return week.soha.map(d=>{
     const dom = DOMAIN[d];
-    let txt = '';
-    if(ageKey==='a') txt = `"${week.t}" mavzusida sodda ko'rgazmali material va sezgi organlari orqali tanishtirish.`;
-    if(ageKey==='b') txt = `"${week.t}" mavzusida suhbat, rolli o'yin va taqqoslash topshiriqlari orqali mustahkamlash.`;
-    if(ageKey==='c') txt = `"${week.t}" mavzusida kichik tajriba/kuzatuv, savol-javob va guruh loyihasi orqali chuqurlashtirish.`;
-    if(ageKey==='d') txt = `"${week.t}" mavzusida muammoli vaziyat, elementar hisob-kitob va taqdimot orqali maktabga tayyorlash.`;
-    return {domainId:d, domain:dom, text:txt};
+    const sub = subFor(d, week.n);
+    const focus = AGE_FOCUS[d][ageKey];
+    const code = codeFor(d, week.n, ageKey);
+    const text = `"${week.t}" mavzusi doirasida — ${focus}`;
+    return {domainId:d, domain:dom, sub:sub, text:text, code:code};
   });
 }
 
-function qOf(n){return n<=8?'':n<=16?'q2':n<=23?'q3':'q4'}
+function cardGoalPreview(week, ageKey){
+  const d = week.soha[0];
+  const sub = subFor(d, week.n);
+  const focus = AGE_FOCUS[d][ageKey];
+  return `${sub}: ${truncate(focus, 78)}`;
+}
+
+function compRowHtml(ageKey){
+  if(ageKey !== "d") return "";
+  return COMPETENCIES_D.map(c=>`<span class="comp-chip"><i class="ti ti-star"></i> ${c}</span>`).join("");
+}
 
 function statsHtml(ageKey){
   const meta=ageMeta[ageKey];
   return `
     <div class="stat-chip"><i class="ti ti-calendar-stats"></i><span>Jami: <b>30 hafta</b></span></div>
     <div class="stat-chip"><i class="ti ti-users"></i><span>Guruh: <b>${meta.label}</b></span></div>
-    <div class="stat-chip"><i class="ti ti-bulb"></i><span>${meta.desc}</span></div>
+    <div class="stat-chip"><i class="ti ti-bulb"></i><span><b>${meta.stage}</b> — ${meta.desc}</span></div>
   `;
 }
 
@@ -326,14 +399,14 @@ function cardHtml(week, ageKey){
   const q=qOf(week.n);
   const tags = week.soha.map(d=>{
     const dom=DOMAIN[d];
-    return `<span class="stag"><span class="stag-dot" style="background:${dom.color}"></span>${dom.name.split(' ')[0]}</span>`;
-  }).join('');
+    return `<span class="stag"><span class="stag-dot" style="background:${dom.color}"></span>${dom.name.split(" ")[0]}</span>`;
+  }).join("");
   return `<div class="week-card" data-n="${week.n}" data-age="${ageKey}">
     <div class="week-card-top">
       <div class="week-num ${q}">${week.n}</div>
       <div class="week-title">${week.t}</div>
     </div>
-    <div class="week-goal">${ageMeta[ageKey].goalPrefix} mavzuni o'zlashtiradi.</div>
+    <div class="week-goal">${cardGoalPreview(week, ageKey)}</div>
     <div class="stags">${tags}</div>
   </div>`;
 }
@@ -341,6 +414,10 @@ function cardHtml(week, ageKey){
 function renderWeeks(ageKey){
   const container=document.getElementById('weeks-container');
   document.getElementById('stats-row').innerHTML = statsHtml(ageKey);
+  const compRow = document.getElementById('comp-row');
+  compRow.innerHTML = compRowHtml(ageKey);
+  compRow.style.display = ageKey==="d" ? "flex" : "none";
+
   let html='';
   const quarters=[
     {label:'I-CHORAK · 1–8 hafta', cls:'', slice:[0,8]},
@@ -363,14 +440,16 @@ function openModal(n, ageKey){
   const acts = buildActivitiesForWeek(week, ageKey);
   const q=qOf(n);
   const qLabel = q==='' ? 'I-chorak' : q==='q2'?'II-chorak':q==='q3'?'III-chorak':'IV-chorak';
+  const meta = ageMeta[ageKey];
   let html = `
-    <span class="modal-week-badge"><i class="ti ti-calendar-event"></i> ${n}-hafta · ${qLabel} · ${ageMeta[ageKey].label}</span>
+    <span class="modal-week-badge"><i class="ti ti-calendar-event"></i> ${n}-hafta · ${qLabel} · ${meta.label}</span>
     <div class="modal-title">${week.t}</div>
-    <div class="modal-goal">${ageMeta[ageKey].goalPrefix} "${week.t}" mavzusini o'zlashtiradi. Faoliyat turi: ${ageMeta[ageKey].actType}.</div>
+    <div class="modal-goal"><b>${meta.stage}.</b> ${meta.desc}</div>
     <div class="modal-sec-title"><i class="ti ti-chart-dots-3"></i> Integratsiyalashgan rivojlanish sohalari</div>
     <div class="modal-domain-list">
-      ${acts.map(a=>`<div class="domain-row"><span class="domain-dot" style="background:${a.domain.color}"></span><div><b>${a.domain.name}</b><span>${a.text}</span></div></div>`).join('')}
+      ${acts.map(a=>`<div class="domain-row"><span class="domain-dot" style="background:${a.domain.color}"></span><div><b>${a.domain.name}<span class="domain-code" style="background:${a.domain.color}">${a.code}</span></b><span class="sub-label">${a.sub}</span><span>${a.text}</span></div></div>`).join('')}
     </div>
+    ${ageKey==="d" ? `<div class="modal-sec-title"><i class="ti ti-award"></i> Tayanch kompetensiyalar (6–7 yosh)</div><div class="comp-row" style="display:flex">${compRowHtml(ageKey)}</div>` : ""}
   `;
   document.getElementById('modal-content').innerHTML=html;
   document.getElementById('modalOverlay').classList.add('show');
