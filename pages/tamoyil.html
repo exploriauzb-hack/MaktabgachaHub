@@ -19,11 +19,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 
-/* OVERLAY */
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
 
-/* SIDEBAR */
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -46,10 +44,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
 
-/* MAIN */
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:980px}
 
-/* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
 .btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
@@ -59,30 +55,30 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 
-/* INFO BOX */
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
 
-/* STATS ROW */
 .stats-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
 .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
 .stat-chip i{font-size:16px;color:var(--accent)}
 .stat-chip b{color:var(--text);font-size:14px}
 
-/* SECTION TITLE */
 .sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
 
-/* TAMOYIL CARDS */
+/* TAMOYIL CARDS - expandable */
 .tamoyil-list{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
-.tamoyil-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden}
-.tamoyil-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
-.tamoyil-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent-mid)}
-.tamoyil-card.c2::before{background:var(--green)}
-.tamoyil-card.c3::before{background:var(--amber)}
-.tamoyil-card.c4::before{background:var(--pro)}
-.tamoyil-card.c5::before{background:#0891b2}
-.tamoyil-card.c6::before{background:#db2777}
+.tamoyil-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.tamoyil-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.10)}
+.tamoyil-card.open{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.10)}
+
+.tamoyil-head{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;cursor:pointer;position:relative}
+.tamoyil-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent-mid)}
+.tamoyil-card.c2 .tamoyil-head::before{background:var(--green)}
+.tamoyil-card.c3 .tamoyil-head::before{background:var(--amber)}
+.tamoyil-card.c4 .tamoyil-head::before{background:var(--pro)}
+.tamoyil-card.c5 .tamoyil-head::before{background:#0891b2}
+.tamoyil-card.c6 .tamoyil-head::before{background:#db2777}
 
 .tamoyil-num{flex-shrink:0;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;background:var(--accent-mid)}
 .tamoyil-card.c2 .tamoyil-num{background:var(--green)}
@@ -91,14 +87,63 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .tamoyil-card.c5 .tamoyil-num{background:#0891b2}
 .tamoyil-card.c6 .tamoyil-num{background:#db2777}
 
-.tamoyil-title{font-size:13.5px;font-weight:600;margin-bottom:5px;line-height:1.35}
+.tamoyil-head-text{flex:1;min-width:0}
+.tamoyil-title{font-size:13.5px;font-weight:600;margin-bottom:4px;line-height:1.35}
 .tamoyil-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
+.tamoyil-chevron{flex-shrink:0;font-size:18px;color:var(--muted);transition:transform .2s ease;margin-top:8px}
+.tamoyil-card.open .tamoyil-chevron{transform:rotate(180deg);color:var(--accent)}
+
+.tamoyil-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.tamoyil-card.open .tamoyil-body{max-height:2000px}
+.tamoyil-body-inner{padding:0 18px 18px 72px;display:flex;flex-direction:column;gap:12px}
+
+.tb-block{background:var(--bg);border-radius:10px;padding:12px 14px}
+.tb-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.tamoyil-card.c2 .tb-label{color:var(--green)}
+.tamoyil-card.c3 .tb-label{color:var(--amber)}
+.tamoyil-card.c4 .tb-label{color:var(--pro)}
+.tamoyil-card.c5 .tb-label{color:#0891b2}
+.tamoyil-card.c6 .tb-label{color:#db2777}
+.tb-text{font-size:12.5px;color:var(--text);line-height:1.7}
+.tb-text + .tb-text{margin-top:6px}
+
+.tb-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.tb-list li{font-size:12.5px;color:var(--text);line-height:1.6;padding-left:18px;position:relative}
+.tb-list li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--accent-mid)}
+.tamoyil-card.c2 .tb-list li::before{background:var(--green)}
+.tamoyil-card.c3 .tb-list li::before{background:var(--amber)}
+.tamoyil-card.c4 .tb-list li::before{background:var(--pro)}
+.tamoyil-card.c5 .tb-list li::before{background:#0891b2}
+.tamoyil-card.c6 .tb-list li::before{background:#db2777}
+
+.tb-practice{background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:8px;padding:10px 12px;font-size:12px;color:#92400e;line-height:1.6}
+.tb-practice b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;color:var(--amber)}
 
 /* QUOTE BOX */
 .quote-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:26px 24px;text-align:center;margin-bottom:26px;position:relative;overflow:hidden}
 .quote-box .qicon{font-size:22px;color:#bfdbfe;margin-bottom:10px}
 .quote-box .qtext{font-size:15px;font-weight:600;color:#fff;font-style:italic;margin-bottom:8px;line-height:1.5}
 .quote-box .qauth{font-size:12px;color:#bfdbfe}
+
+/* KOMPETENSIYA GRID */
+.komp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:26px}
+.komp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:4px;transition:border-color .15s,box-shadow .15s}
+.komp-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1)}
+.komp-card .icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;font-size:16px;flex-shrink:0}
+.komp-card .icon.blue{background:var(--accent-soft);color:var(--accent)}
+.komp-card .icon.green{background:var(--green-soft);color:var(--green)}
+.komp-card .icon.amber{background:var(--amber-soft);color:var(--amber)}
+.komp-card .icon.purple{background:var(--pro-soft);color:var(--pro)}
+.komp-card .icon.cyan{background:#ecfeff;color:#0891b2}
+.komp-title{font-size:13px;font-weight:600;line-height:1.3}
+.komp-sub{font-size:11.5px;color:var(--muted);line-height:1.4}
+
+/* SOHA GRID */
+.soha-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-bottom:26px}
+.soha-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.soha-card h5{font-size:13px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.soha-card h5 .n{width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.soha-card p{font-size:12px;color:var(--muted);line-height:1.6}
 
 /* PRACTICE GRID */
 .mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
@@ -112,17 +157,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .mod-title{font-size:13px;font-weight:600;line-height:1.3}
 .mod-sub{font-size:11.5px;color:var(--muted);line-height:1.4}
 
+/* SOURCE NOTE */
+.source-note{font-size:11px;color:var(--muted);text-align:center;padding:14px;margin-bottom:90px;line-height:1.6}
+
 /* FLOATING BACK */
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
 
-/* ===== TABLET ===== */
 @media(max-width:900px){
-  .mod-grid{grid-template-columns:repeat(2,1fr)}
+  .komp-grid{grid-template-columns:1fr 1fr}
+  .mod-grid{grid-template-columns:1fr 1fr}
 }
 
-/* ===== MOBILE ===== */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -142,16 +189,20 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .sec-title{font-size:11px;margin-bottom:8px}
 
   .tamoyil-list{gap:8px;margin-bottom:18px}
-  .tamoyil-card{padding:12px 14px;gap:10px}
+  .tamoyil-head{padding:12px 14px;gap:10px}
   .tamoyil-num{width:32px;height:32px;font-size:13px;border-radius:8px}
   .tamoyil-title{font-size:12.5px}
   .tamoyil-desc{font-size:11.5px}
+  .tamoyil-body-inner{padding:0 14px 14px 50px}
+  .tb-text,.tb-list li{font-size:11.5px}
 
   .quote-box{padding:18px 16px;margin-bottom:18px;border-radius:12px}
   .quote-box .qtext{font-size:13px}
   .quote-box .qauth{font-size:11px}
 
-  .mod-grid{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+  .komp-grid{grid-template-columns:1fr;gap:8px;margin-bottom:18px}
+  .soha-grid{grid-template-columns:1fr}
+  .mod-grid{grid-template-columns:1fr;gap:8px;margin-bottom:18px}
   .mod-card{padding:11px 10px;gap:2px}
   .mod-card .icon{width:28px;height:28px;font-size:13px;margin-bottom:4px;border-radius:7px}
   .mod-title{font-size:12px}
@@ -162,7 +213,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 @media(max-width:400px){
   .main{padding:12px 12px 90px}
-  .mod-grid{grid-template-columns:1fr}
   .topbar h1{font-size:13px;max-width:150px}
 }
 </style>
@@ -191,7 +241,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="sidebar-section">Professional</div>
   <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
 
@@ -226,72 +276,76 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
   <div class="info-box">
     <i class="ti ti-info-circle"></i>
-    Bu <b>6 ta tamoyil</b> — Ilk Qadam dasturining falsafiy asosi. Har bir mashg'ulot va metodika shu tamoyillarga tayanadi.
+    Bu <b>6 ta tamoyil</b> — "Ilk qadam" milliy o'quv dasturining (uchinchi nashr, 2026-yil) falsafiy asosi. Har bir mashg'ulot, metodika va kunlik pedagogik qaror shu tamoyillarga tayanadi. Kartaga bosib, to'liq tushuntirish va amaliyotni ko'ring.
   </div>
 
   <div class="stats-row">
     <div class="stat-chip"><i class="ti ti-pin"></i><span>Jami: <b>6 tamoyil</b></span></div>
-    <div class="stat-chip"><i class="ti ti-puzzle"></i><span>Amaliyot: <b>4 misol</b></span></div>
-    <div class="stat-chip"><i class="ti ti-quote"></i><span>Falsafa: <b>Ilk Qadam</b></span></div>
+    <div class="stat-chip"><i class="ti ti-puzzle"></i><span>Tayanch kompetensiya: <b>5 ta</b></span></div>
+    <div class="stat-chip"><i class="ti ti-chart-dots-3"></i><span>Rivojlanish sohasi: <b>5 ta</b></span></div>
+    <div class="stat-chip"><i class="ti ti-quote"></i><span>Falsafa: <b>Ilk Qadam, 3-nashr</b></span></div>
   </div>
 
-  <div class="sec-title"><i class="ti ti-list-numbers"></i> 6 ta asosiy tamoyil</div>
-  <div class="tamoyil-list">
-
-    <div class="tamoyil-card c1">
-      <div class="tamoyil-num">1</div>
-      <div>
-        <div class="tamoyil-title">Bolalikning o'ziga xos qadriyat ekanligini tan olish</div>
-        <div class="tamoyil-desc">Bola o'yin va muloqot orqali tezroq o'rganadi. Bolalik — kelajakka tayyorgarlik davri emas, o'z qadriga ega hayot bosqichi.</div>
-      </div>
-    </div>
-
-    <div class="tamoyil-card c2">
-      <div class="tamoyil-num">2</div>
-      <div>
-        <div class="tamoyil-title">Har tomonlama rivojlanish va farovonlik</div>
-        <div class="tamoyil-desc">5 ta sohani integratsiyalash. Xavfsiz, inklyuziv muhit yaratish bolaning to'liq rivojlanishi uchun zarur.</div>
-      </div>
-    </div>
-
-    <div class="tamoyil-card c3">
-      <div class="tamoyil-num">3</div>
-      <div>
-        <div class="tamoyil-title">Bola shaxsiga yo'naltirilgan va o'yinga asoslangan ta'lim</div>
-        <div class="tamoyil-desc">O'yin eng samarali o'qitish usuli. Tizimli va erkin o'yin har ikkisi ham qo'llab-quvvatlanadi.</div>
-      </div>
-    </div>
-
-    <div class="tamoyil-card c4">
-      <div class="tamoyil-num">4</div>
-      <div>
-        <div class="tamoyil-title">Inklyuziv va teng huquqli ta'lim</div>
-        <div class="tamoyil-desc">Barcha bolalar, jismoniy yoki boshqa imkoniyatlaridan qat'i nazar, sifatli ta'limdan foydalanish huquqiga ega.</div>
-      </div>
-    </div>
-
-    <div class="tamoyil-card c5">
-      <div class="tamoyil-num">5</div>
-      <div>
-        <div class="tamoyil-title">Ota-onalar va jamoatchilik bilan hamkorlik</div>
-        <div class="tamoyil-desc">Ota-onalar va mahallani ta'lim jarayoniga faol jalb qilish — bolaning rivojlanishi uchun muhim omil.</div>
-      </div>
-    </div>
-
-    <div class="tamoyil-card c6">
-      <div class="tamoyil-num">6</div>
-      <div>
-        <div class="tamoyil-title">Hayoti davomida ta'lim olishga tayyorgarlik</div>
-        <div class="tamoyil-desc">Tanqidiy fikrlash, mustaqillik va o'z-o'zini rivojlantirish ko'nikmalarini erta yoshdan shakllantirish.</div>
-      </div>
-    </div>
-
-  </div>
+  <div class="sec-title"><i class="ti ti-list-numbers"></i> 6 ta asosiy tamoyil — bosing va to'liq o'qing</div>
+  <div class="tamoyil-list" id="tamoyil-list"></div>
 
   <div class="quote-box">
     <div class="qicon"><i class="ti ti-quote"></i></div>
-    <div class="qtext">"O'yin — bolaning ishi, uning rivojlanishi uchun eng samarali yo'l"</div>
-    <div class="qauth">— Ilk Qadam dasturi falsafasi</div>
+    <div class="qtext">"Bolalik — kelajakka tayyorgarlik davri emas, o'z qadriga ega hayot bosqichidir"</div>
+    <div class="qauth">— "Ilk qadam" milliy o'quv dasturi falsafasi, 3-nashr</div>
+  </div>
+
+  <div class="sec-title"><i class="ti ti-stars"></i> 5 ta tayanch kompetensiya (6-7 yosh)</div>
+  <div class="komp-grid">
+    <div class="komp-card">
+      <div class="icon blue"><i class="ti ti-message-circle"></i></div>
+      <div class="komp-title">Kommunikativ</div>
+      <div class="komp-sub">Atrofdagilar bilan konstruktiv muloqot o'rnatish, nutq orqali o'z fikrini ifoda etish, tinglash va savol-javob qila olish</div>
+    </div>
+    <div class="komp-card">
+      <div class="icon green"><i class="ti ti-users-group"></i></div>
+      <div class="komp-title">Ijtimoiy</div>
+      <div class="komp-sub">Tengdoshlar va kattalar bilan hamkorlikda faoliyat yuritish, qoidalarga rioya qilish, hamdardlik va madaniy xilma-xillikni qadrlash</div>
+    </div>
+    <div class="komp-card">
+      <div class="icon amber"><i class="ti ti-user-circle"></i></div>
+      <div class="komp-title">Shaxsiy ("Men" konsepsiyasi)</div>
+      <div class="komp-sub">O'zini-o'zi anglash, mustaqil qaror qabul qilish, shaxsiy javobgarlikni his etish va o'z ehtiyojlarini boshqarish</div>
+    </div>
+    <div class="komp-card">
+      <div class="icon purple"><i class="ti ti-bulb"></i></div>
+      <div class="komp-title">Bilish (kognitiv)</div>
+      <div class="komp-sub">Kuzatish, taxmin qilish, gipoteza tuzish, ma'lumotni mustaqil izlash va muammoga yangi yechim topish</div>
+    </div>
+    <div class="komp-card">
+      <div class="icon cyan"><i class="ti ti-brain"></i></div>
+      <div class="komp-title">Tanqidiy fikrlash</div>
+      <div class="komp-sub">Voqelikni tahlil qilish, turli nuqtai nazarlarni muhokama qilish, o'z fikrlash jarayonini anglash (metakognitsiya)</div>
+    </div>
+  </div>
+
+  <div class="sec-title"><i class="ti ti-chart-dots-3"></i> 5 ta rivojlanish sohasi</div>
+  <div class="soha-grid">
+    <div class="soha-card">
+      <h5><span class="n">1</span> Jismoniy rivojlanish va sog'lom turmush tarzi</h5>
+      <p>Yirik va mayda motorika, sensomotorika, gigiyena ko'nikmalari, sog'lom ovqatlanish va hayot xavfsizligi asoslari.</p>
+    </div>
+    <div class="soha-card">
+      <h5><span class="n">2</span> Ijtimoiy-hissiy rivojlanish</h5>
+      <p>"Men" konsepsiyasi, his-tuyg'ularni boshqarish, kattalar va tengdoshlar bilan muloqot, murakkab vaziyatlarda yechim topish.</p>
+    </div>
+    <div class="soha-card">
+      <h5><span class="n">3</span> Nutq, muloqot, o'qish va yozish ko'nikmalari</h5>
+      <p>Tinglab tushunish, to'g'ri talaffuz, matn tuzish va qayta so'zlash, o'qish-yozishga boshlang'ich tayyorgarlik.</p>
+    </div>
+    <div class="soha-card">
+      <h5><span class="n">4</span> Bilish jarayonlarini rivojlantirish</h5>
+      <p>Mustaqil ma'lumot izlash, sabab-oqibat bog'lanishlarini anglash, elementar matematika, raqamli savodxonlik asoslari.</p>
+    </div>
+    <div class="soha-card">
+      <h5><span class="n">5</span> Ijodiy rivojlanish</h5>
+      <p>San'at va madaniyatga qiziqish, milliy an'analarni qadrlash, o'z g'oyalarini erkin va ijodiy ifoda etish.</p>
+    </div>
   </div>
 
   <div class="sec-title"><i class="ti ti-target-arrow"></i> Tamoyillar amaliyotda qanday ko'rinadi?</div>
@@ -299,24 +353,36 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="mod-card">
       <div class="icon blue"><i class="ti ti-puzzle"></i></div>
       <div class="mod-title">Erkin o'yin vaqti</div>
-      <div class="mod-sub">Har kuni bolalarga mustaqil tanlov va ijodkorlik uchun vaqt ajratiladi</div>
+      <div class="mod-sub">Har kuni bolalarga mustaqil tanlov va ijodkorlik uchun vaqt ajratiladi — tizimlashtirilgan va erkin o'yinlar baravar qo'llab-quvvatlanadi</div>
     </div>
     <div class="mod-card">
       <div class="icon green"><i class="ti ti-users-group"></i></div>
       <div class="mod-title">Ota-ona uchrashuvlari</div>
-      <div class="mod-sub">Muntazam suhbat va bola rivojlanishi haqida fikr almashish</div>
+      <div class="mod-sub">Muntazam suhbat va bola rivojlanishi haqida fikr almashish, oilani ta'lim jarayoniga faol jalb etish</div>
     </div>
     <div class="mod-card">
       <div class="icon amber"><i class="ti ti-rainbow"></i></div>
       <div class="mod-title">Individual yondashuv</div>
-      <div class="mod-sub">Har bir bolaning o'ziga xos ehtiyojlari va qiziqishlari hisobga olinadi</div>
+      <div class="mod-sub">Har bir bolaning o'ziga xos ehtiyojlari, rivojlanish sur'ati va qiziqishlari hisobga olinadi</div>
     </div>
     <div class="mod-card">
       <div class="icon purple"><i class="ti ti-heart-handshake"></i></div>
       <div class="mod-title">Inklyuziv muhit</div>
-      <div class="mod-sub">Barcha bolalar uchun teng imkoniyat va qo'llab-quvvatlash</div>
+      <div class="mod-sub">Alohida ta'lim ehtiyojiga ega bolalar uchun ham barcha bolalar uchun ham teng imkoniyat va qo'llab-quvvatlash</div>
+    </div>
+    <div class="mod-card">
+      <div class="icon blue"><i class="ti ti-message-circle-2"></i></div>
+      <div class="mod-title">Ochiq savollar berish</div>
+      <div class="mod-sub">"Nega?", "Qanday?", "Sen nima deb o'ylaysan?" — tanqidiy fikrlashni rivojlantiruvchi muloqot uslubi</div>
+    </div>
+    <div class="mod-card">
+      <div class="icon green"><i class="ti ti-map-2"></i></div>
+      <div class="mod-title">Hududiy tarkibiy qism</div>
+      <div class="mod-sub">Mahalliy tabiat, urf-odat va kasblar orqali Vatanga muhabbat va milliy o'ziga xoslik tarbiyalanadi</div>
     </div>
   </div>
+
+  <p class="source-note">Manba: "Ilk qadam" milliy o'quv dasturi, uchinchi nashr (Toshkent, 2026) — Maktabgacha ta'lim tashkilotlari direktor va mutaxassislarini qayta tayyorlash institute o'quv qo'llanmasi asosida</p>
 </main>
 
 <!-- FLOATING BACK -->
@@ -370,6 +436,103 @@ function checkHamburger(){
 }
 checkHamburger();
 window.addEventListener('resize',checkHamburger);
+</script>
+
+<!-- TAMOYIL DATA + RENDER -->
+<script>
+const tamoyillar = [
+  {
+    cls:'c1', num:1,
+    title:"Bolalikning o'ziga xos qadriyat ekanligini tan olish",
+    desc:"Bolalik — kelajakka tayyorgarlik davri emas, o'z qadriga ega hayot bosqichi.",
+    tushuntirish:[
+      "Bolalik hayotning o'ziga xos va shakllantiruvchi bosqichi hisoblanadi. Bu davrni shunchaki \"katta bo'lishga tayyorgarlik\" sifatida emas, balki o'z qadr-qimmatiga ega, betakror davr sifatida qadrlash lozim.",
+      "Bolaning passiv ta'limdan ko'ra, faol izlanish va tadqiqot, o'yin va ijtimoiy muloqot o'rnatish orqali o'rganishi ancha tezroq va samaraliroq usul hisoblanadi."
+    ],
+    amaliyot:"Tarbiyachi bolaga tayyor javob bermaydi, balki uning savol berishiga, o'zi kuzatib xulosa chiqarishiga imkon yaratadi. Masalan, \"Nega yomg'ir yog'adi?\" savoliga darhol javob berish o'rniga, bola bilan birga kuzatish va kichik tajriba o'tkaziladi."
+  },
+  {
+    cls:'c2', num:2,
+    title:"Har tomonlama rivojlanish va farovonlik",
+    desc:"5 ta sohani integratsiyalash. Xavfsiz, inklyuziv muhit yaratish bolaning to'liq rivojlanishi uchun zarur.",
+    tushuntirish:[
+      "Maktabgacha ta'lim bolaning har tomonlama rivojlanishini ta'minlashi lozim — bu jismoniy, ijtimoiy-hissiy, kommunikativ, bilish va ijodiy rivojlanish sohalarini integratsiyalash orqali amalga oshiriladi.",
+      "Dastur bolaning farovonligini ta'minlashga alohida e'tibor qaratadi: xavfsiz, inklyuziv va qiziqarli ta'lim muhiti yaratish, shuningdek Bola huquqlari konvensiyasida belgilangan huquqlarni hurmat qilish asosiy talab hisoblanadi."
+    ],
+    amaliyot:"Bitta mashg'ulot bir vaqtning o'zida bir nechta sohani qamrab oladi — masalan, \"Mevalar\" mavzusida bolalar mevalarni sanaydi (bilish), nomlaydi (nutq), harakatli o'yin o'ynaydi (jismoniy) va rasm chizadi (ijodiy)."
+  },
+  {
+    cls:'c3', num:3,
+    title:"Bola shaxsiga yo'naltirilgan va o'yinga asoslangan ta'lim",
+    desc:"O'yin eng samarali o'qitish usuli. Tizimli va erkin o'yin har ikkisi ham qo'llab-quvvatlanadi.",
+    tushuntirish:[
+      "Bola shaxsiga yo'naltirilgan va o'yinga asoslangan ta'lim bolalarga ta'lim berishning eng samarali usuli deb tan olingan.",
+      "Dastur bolalarda muammolarni aniqlash va samarali hal qilish, kreativlik va ijtimoiy o'zaro muloqotga yordam beradigan tizimlashtirilgan va tizimlashtirilmagan (erkin) o'yin turlarini baravar qo'llab-quvvatlaydi."
+    ],
+    amaliyot:"Kun tartibida bolalarga o'z markazini (San'at, Qurish-yasash, Syujetli-rolli o'yin va h.k.) erkin tanlash imkoni beriladi. Pedagog rahbar emas, balki fasilitator — kuzatuvchi va yo'naltiruvchi rolida ishtirok etadi."
+  },
+  {
+    cls:'c4', num:4,
+    title:"Inklyuziv va teng huquqli ta'lim",
+    desc:"Barcha bolalar, jismoniy yoki boshqa imkoniyatlaridan qat'i nazar, sifatli ta'limdan foydalanish huquqiga ega.",
+    tushuntirish:[
+      "Barcha bolalar, shu jumladan alohida ta'lim ehtiyojlari bo'lgan bolalar ham, sifatli maktabgacha ta'limdan teng foydalanish imkoniyatiga ega bo'lishi lozim.",
+      "Dastur rivojlantiruvchi ta'lim muhitining moslashuvchan, xilma-xil, xavfsiz va qulay bo'lishini ta'minlaydi — bu yondashuvga ko'ra, bola muhitga emas, balki muhit bolaning ehtiyojiga moslashtiriladi."
+    ],
+    amaliyot:"Guruhda alohida ehtiyojli bola uchun individual ta'lim rejasi (ITR) tuziladi, topshiriqlar moslashtiriladi, zarur jihozlar (panduslar, sensor vositalar) va qulay psixologik muhit ta'minlanadi."
+  },
+  {
+    cls:'c5', num:5,
+    title:"Ota-onalar va jamoatchilik bilan hamkorlik",
+    desc:"Ota-onalar va mahallani ta'lim jarayoniga faol jalb qilish — bolaning rivojlanishi uchun muhim omil.",
+    tushuntirish:[
+      "Bolaning rivojlanishida ota-onalar va mahalliy jamoatchilikning roli muhim ahamiyatga ega — oila bolaning birinchi va eng asosiy tarbiyachisi hisoblanadi.",
+      "Maktabgacha ta'lim tashkilotlari ta'lim jarayoniga oila, mahalla va madaniyat tashkilotlarini faol tarzda jalb qiladi, bu bolaning xavfsizligi va atrof-muhitga g'amxo'rlik qilishini ham anglatadi."
+    ],
+    amaliyot:"Ota-onalar majlislari, maslahat kunlari, kuzatuv natijalari haqida muntazam xabardor qilish, hududning tabiiy va madaniy xususiyatlarini (hududiy tarkibiy qism — 20%) ta'lim mazmuniga kiritish."
+  },
+  {
+    cls:'c6', num:6,
+    title:"Hayoti davomida ta'lim olishga tayyorgarlik",
+    desc:"Tanqidiy fikrlash, mustaqillik va o'z-o'zini rivojlantirish ko'nikmalarini erta yoshdan shakllantirish.",
+    tushuntirish:[
+      "Bolalarda tanqidiy fikrlash, mustaqillik va mustaqil ta'lim olish ko'nikmalarini rivojlantirish rag'batlantiriladi hamda hayoti davomida ta'lim olishga bo'lgan muhabbat tarbiyalanadi.",
+      "Maktabgacha yoshda tanqidiy fikrlash — bu \"tanqid qilish\" emas, balki o'yin va muloqot jarayonida \"nega?\" va \"qanday?\" degan savollarni bera olish, eshitgan har bir narsasiga ishonavermaslik qobiliyatidir."
+    ],
+    amaliyot:"Ertalabki va kechki davra suhbatlari orqali bolalarga kun rejasi, o'tgan kun yutuqlari muhokama qilinadi, ochiq savollar beriladi: \"Bugun nimani o'rgandik?\", \"Sen nima deb o'ylaysan?\""
+  }
+];
+
+const list = document.getElementById('tamoyil-list');
+list.innerHTML = tamoyillar.map(t=>`
+  <div class="tamoyil-card ${t.cls}" data-id="${t.num}">
+    <div class="tamoyil-head" onclick="toggleTamoyil(${t.num})">
+      <div class="tamoyil-num">${t.num}</div>
+      <div class="tamoyil-head-text">
+        <div class="tamoyil-title">${t.title}</div>
+        <div class="tamoyil-desc">${t.desc}</div>
+      </div>
+      <i class="ti ti-chevron-down tamoyil-chevron"></i>
+    </div>
+    <div class="tamoyil-body">
+      <div class="tamoyil-body-inner">
+        <div class="tb-block">
+          <div class="tb-label"><i class="ti ti-book-2"></i> Tushuntirish</div>
+          ${t.tushuntirish.map(p=>`<div class="tb-text">${p}</div>`).join('')}
+        </div>
+        <div class="tb-practice">
+          <b>Amaliyotda</b>
+          ${t.amaliyot}
+        </div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+function toggleTamoyil(num){
+  const card = document.querySelector(`.tamoyil-card[data-id="${num}"]`);
+  card.classList.toggle('open');
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
