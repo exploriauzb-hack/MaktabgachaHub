@@ -20,11 +20,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 
-/* OVERLAY */
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
 
-/* SIDEBAR */
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -47,10 +45,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
 
-/* MAIN */
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:1040px}
 
-/* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
 .btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
@@ -60,48 +56,70 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
 
-/* INFO BOX */
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
 
-/* STATS ROW */
 .stats-row{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
 .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
 .stat-chip i{font-size:16px;color:var(--accent)}
 .stat-chip b{color:var(--text);font-size:14px}
 
-/* SECTION TITLE */
 .sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
 
-/* SOHA GRID */
-.soha-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:26px}
-.soha-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:transform .15s,box-shadow .15s,border-color .15s;position:relative;overflow:hidden}
-.soha-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent-mid)}
-.soha-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(59,130,246,.12);border-color:#93c5fd}
-.soha-card.s1::before{background:var(--green)}
-.soha-card.s2::before{background:var(--amber)}
-.soha-card.s3::before{background:var(--accent-mid)}
-.soha-card.s4::before{background:var(--pro)}
-.soha-card.s5::before{background:var(--pink)}
+/* SOHA ACCORDION CARDS */
+.soha-list{display:flex;flex-direction:column;gap:10px;margin-bottom:26px}
+.soha-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.soha-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.10)}
+.soha-card.open{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.10)}
 
-.soha-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.soha-head .icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.s1 .icon{background:var(--green-soft);color:var(--green)}
-.s2 .icon{background:var(--amber-soft);color:var(--amber)}
-.s3 .icon{background:var(--accent-soft);color:var(--accent)}
-.s4 .icon{background:var(--pro-soft);color:var(--pro)}
-.s5 .icon{background:var(--pink-soft);color:var(--pink)}
-.soha-head h4{font-size:13.5px;font-weight:700;line-height:1.3}
+.soha-head{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;cursor:pointer;position:relative}
+.soha-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green)}
+.soha-card.s2 .soha-head::before{background:var(--amber)}
+.soha-card.s3 .soha-head::before{background:var(--accent-mid)}
+.soha-card.s4 .soha-head::before{background:var(--pro)}
+.soha-card.s5 .soha-head::before{background:var(--pink)}
 
-.soha-card ul{list-style:none;font-size:12px;color:var(--muted);line-height:1.95}
-.soha-card ul li{padding-left:16px;position:relative}
-.soha-card ul li::before{content:'•';position:absolute;left:0;font-weight:800}
-.s1 ul li::before{color:var(--green)}
-.s2 ul li::before{color:var(--amber)}
-.s3 ul li::before{color:var(--accent-mid)}
-.s4 ul li::before{color:var(--pro)}
-.s5 ul li::before{color:var(--pink)}
+.soha-icon{flex-shrink:0;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.s1 .soha-icon{background:var(--green-soft);color:var(--green)}
+.s2 .soha-icon{background:var(--amber-soft);color:var(--amber)}
+.s3 .soha-icon{background:var(--accent-soft);color:var(--accent)}
+.s4 .soha-icon{background:var(--pro-soft);color:var(--pro)}
+.s5 .soha-icon{background:var(--pink-soft);color:var(--pink)}
+
+.soha-head-text{flex:1;min-width:0}
+.soha-title{font-size:14px;font-weight:700;margin-bottom:4px;line-height:1.35}
+.soha-desc{font-size:12.5px;color:var(--muted);line-height:1.6}
+.soha-chevron{flex-shrink:0;font-size:18px;color:var(--muted);transition:transform .2s ease;margin-top:9px}
+.soha-card.open .soha-chevron{transform:rotate(180deg);color:var(--accent)}
+
+.soha-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.soha-card.open .soha-body{max-height:3000px}
+.soha-body-inner{padding:0 18px 18px 72px;display:flex;flex-direction:column;gap:12px}
+
+.sb-block{background:var(--bg);border-radius:10px;padding:12px 14px}
+.sb-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.s2 .sb-label{color:var(--amber)}
+.s3 .sb-label{color:var(--accent)}
+.s4 .sb-label{color:var(--pro)}
+.s5 .sb-label{color:var(--pink)}
+.sb-text{font-size:12.5px;color:var(--text);line-height:1.7}
+
+/* Kichik sohalar pills */
+.sub-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.sub-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text)}
+
+/* Natijalar list */
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:2px}
+.sb-list li{font-size:12.5px;color:var(--text);line-height:1.6;padding-left:18px;position:relative}
+.sb-list li::before{content:'';position:absolute;left:2px;top:7px;width:6px;height:6px;border-radius:50%;background:var(--green)}
+.s2 .sb-list li::before{background:var(--amber)}
+.s3 .sb-list li::before{background:var(--accent-mid)}
+.s4 .sb-list li::before{background:var(--pro)}
+.s5 .sb-list li::before{background:var(--pink)}
+
+.sb-practice{background:var(--amber-soft);border-left:3px solid var(--amber);border-radius:8px;padding:10px 12px;font-size:12px;color:#92400e;line-height:1.6}
+.sb-practice b{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;color:var(--amber)}
 
 /* INTEGRATION BOX */
 .integration-box{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:14px;padding:22px 24px;margin-bottom:26px;position:relative;overflow:hidden}
@@ -111,17 +129,31 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .integration-box p{font-size:12.5px;color:#bfdbfe;line-height:1.7}
 
 /* INDICATOR CODE */
-.code-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.code-pill{font-family:monospace;font-size:14px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:8px 14px;border-radius:8px;letter-spacing:.04em;flex-shrink:0}
+.code-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:10px}
+.code-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.code-pill{font-family:monospace;font-size:15px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:8px 14px;border-radius:8px;letter-spacing:.04em;flex-shrink:0}
 .code-desc{font-size:12px;color:var(--muted);line-height:1.7}
 .code-desc b{color:var(--text)}
+.code-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.code-part{background:var(--bg);border-radius:8px;padding:10px 12px}
+.code-part .cp-sym{font-family:monospace;font-weight:700;color:var(--accent);font-size:13px}
+.code-part .cp-txt{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.age-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.age-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--green-soft);color:var(--green)}
+
+/* COMPETENCY MINI BOX */
+.kompet-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:26px}
+.kompet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px}
+.kompet-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--text)}
+.kompet-item i{font-size:15px;color:var(--accent);flex-shrink:0}
 
 /* FLOATING BACK */
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
 
-/* ===== MOBILE ===== */
+.source-note{font-size:11px;color:var(--muted);text-align:center;padding:14px;margin-bottom:90px;line-height:1.6}
+
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
@@ -140,19 +172,26 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
   .sec-title{font-size:11px;margin-bottom:8px}
 
-  .soha-grid{grid-template-columns:1fr;gap:10px;margin-bottom:18px}
-  .soha-card{padding:14px}
-  .soha-head .icon{width:30px;height:30px;font-size:15px}
-  .soha-head h4{font-size:12.5px}
-  .soha-card ul{font-size:11.5px}
+  .soha-list{gap:8px;margin-bottom:18px}
+  .soha-head{padding:12px 14px;gap:10px}
+  .soha-icon{width:32px;height:32px;font-size:15px;border-radius:8px}
+  .soha-title{font-size:12.5px}
+  .soha-desc{font-size:11.5px}
+  .soha-body-inner{padding:0 14px 14px 50px}
+  .sb-text,.sb-list li{font-size:11.5px}
 
   .integration-box{padding:16px;margin-bottom:18px}
   .integration-box h3{font-size:13px}
   .integration-box p{font-size:11.5px}
 
-  .code-box{padding:14px 16px;gap:12px}
-  .code-pill{font-size:12px;padding:7px 11px}
+  .code-box{padding:14px 16px}
+  .code-pill{font-size:13px;padding:7px 11px}
   .code-desc{font-size:11px}
+  .code-parts{grid-template-columns:1fr 1fr}
+
+  .kompet-box{padding:14px 16px;margin-bottom:18px}
+  .kompet-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .kompet-item{font-size:11px}
 
   .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
 }
@@ -160,6 +199,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 @media(max-width:400px){
   .main{padding:12px 12px 90px}
   .topbar h1{font-size:13px;max-width:150px}
+  .code-parts{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -187,7 +227,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="sidebar-section">Professional</div>
   <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
 
@@ -222,106 +262,62 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
   <div class="info-box">
     <i class="ti ti-info-circle"></i>
-    Ilk Qadam dasturi <b>5 ta asosiy rivojlanish sohasi</b>ga asoslangan. Har bir mashg'ulot bir nechta sohani birgalikda rivojlantirishga qaratilgan.
+    Ilk Qadam dasturi <b>5 ta asosiy rivojlanish sohasi</b>ga asoslangan. Kartani bosing — har biri kichik sohalari, 6-7 yoshdagi kutilayotgan natijalari va amaliy misollari bilan to'liq ochiladi.
   </div>
 
   <div class="stats-row">
     <div class="stat-chip"><i class="ti ti-chart-dots-3"></i><span>Jami: <b>5 soha</b></span></div>
     <div class="stat-chip"><i class="ti ti-link"></i><span>Yondashuv: <b>Integratsiya</b></span></div>
     <div class="stat-chip"><i class="ti ti-code"></i><span>Indikator: <b>4 qismli kod</b></span></div>
+    <div class="stat-chip"><i class="ti ti-stars"></i><span>Tayanch kompetensiya: <b>5 ta</b></span></div>
   </div>
 
-  <div class="sec-title"><i class="ti ti-layout-grid"></i> 5 ta rivojlanish sohasi</div>
-  <div class="soha-grid">
-
-    <div class="soha-card s1">
-      <div class="soha-head">
-        <div class="icon"><i class="ti ti-run"></i></div>
-        <h4>1. Jismoniy rivojlanish</h4>
-      </div>
-      <ul>
-        <li>Yirik motorika</li>
-        <li>Mayda motorika va sensomotorika</li>
-        <li>Sog'lom turmush tarzi</li>
-        <li>Shaxsiy gigiyena</li>
-        <li>Harakat muvofiqlash</li>
-      </ul>
-    </div>
-
-    <div class="soha-card s2">
-      <div class="soha-head">
-        <div class="icon"><i class="ti ti-mood-smile"></i></div>
-        <h4>2. Ijtimoiy-hissiy rivojlanish</h4>
-      </div>
-      <ul>
-        <li>Men konsepsiyasi</li>
-        <li>Hissiy nazorat</li>
-        <li>Tengdoshlar bilan hamkorlik</li>
-        <li>Nizolarni hal etish</li>
-        <li>Ijtimoiy muloqot</li>
-      </ul>
-    </div>
-
-    <div class="soha-card s3">
-      <div class="soha-head">
-        <div class="icon"><i class="ti ti-message-circle-2"></i></div>
-        <h4>3. Nutq va muloqot</h4>
-      </div>
-      <ul>
-        <li>Nutq va til rivojlanishi</li>
-        <li>O'qishga tayyorgarlik</li>
-        <li>Yozuvga tayyorgarlik</li>
-        <li>Lug'at boyligini kengaytirish</li>
-        <li>Badiiy asarlarga qiziqish</li>
-      </ul>
-    </div>
-
-    <div class="soha-card s4">
-      <div class="soha-head">
-        <div class="icon"><i class="ti ti-brain"></i></div>
-        <h4>4. Bilish jarayonlari</h4>
-      </div>
-      <ul>
-        <li>Mantiqiy fikrlash</li>
-        <li>Elementar matematika (FEMP)</li>
-        <li>Dunyoni anglash</li>
-        <li>Raqamli savodxonlik</li>
-        <li>Kuzatish va tadqiqot</li>
-      </ul>
-    </div>
-
-    <div class="soha-card s5">
-      <div class="soha-head">
-        <div class="icon"><i class="ti ti-palette"></i></div>
-        <h4>5. Ijodiy rivojlanish</h4>
-      </div>
-      <ul>
-        <li>Badiiy tasavvur</li>
-        <li>Ijodiy qobiliyatlar</li>
-        <li>Tasviriy sanat, musiqa, raqs</li>
-        <li>Teatr va dramatizatsiya</li>
-        <li>Milliy an'analarga qiziqish</li>
-      </ul>
-    </div>
-
-  </div>
+  <div class="sec-title"><i class="ti ti-layout-grid"></i> 5 ta rivojlanish sohasi — bosing va to'liq o'qing</div>
+  <div class="soha-list" id="soha-list"></div>
 
   <div class="integration-box">
     <div class="ihead">
       <div class="icon"><i class="ti ti-link"></i></div>
       <h3>Integratsiyalashgan yondashuv</h3>
     </div>
-    <p>Ilk Qadam dasturida sohalar alohida emas, balki bir-biriga bog'liq holda rivojlantiriladi. Masalan, "Kuz bargi" mavzusidagi bir mashg'ulot bir vaqtning o'zida tabiat bilan tanishuv (4-soha), mayda motorika (1-soha) va ijodkorlikni (5-soha) rivojlantiradi.</p>
+    <p>Ilk Qadam dasturida bolaning rivojlanishi yaxlit jarayon sifatida qaraladi — sohalar alohida-alohida emas, balki bir-biriga chambarchas bog'liq holda rivojlantiriladi. Masalan, "Kuz bargi" mavzusidagi bitta mashg'ulot bir vaqtning o'zida tabiat bilan tanishuv (4-soha), mayda motorika (1-soha), nutqni rivojlantirish (3-soha) va ijodkorlikni (5-soha) qamrab oladi. Pedagog mashg'ulot rejasini tuzishda har doim "qaysi sohalar birga ishlayapti?" deb so'rashi lozim.</p>
   </div>
 
-  <div class="sec-title"><i class="ti ti-code"></i> Indikator kodlari haqida</div>
-  <div class="code-box">
-    <div class="code-pill">3.1.2.b</div>
-    <div class="code-desc">
-      Har bir indikator kodi 4 qismdan iborat: <b>soha.kichik_soha.indikator.yosh_guruhi</b><br>
-      Misol: 3-soha (Nutq), 1-kichik soha, 2-indikator, b-guruh (4-5 yosh)
+  <div class="sec-title"><i class="ti ti-stars"></i> Sohalar ortidagi 5 ta tayanch kompetensiya</div>
+  <div class="kompet-box">
+    <div class="sb-text">Har bir rivojlanish sohasi yakunda bolada quyidagi umumiy tayanch kompetensiyalarni shakllantirishga xizmat qiladi (6-7 yosh, "Ilm yo'li" bosqichi):</div>
+    <div class="kompet-grid">
+      <div class="kompet-item"><i class="ti ti-message-circle"></i> Kommunikativ</div>
+      <div class="kompet-item"><i class="ti ti-users-group"></i> Ijtimoiy</div>
+      <div class="kompet-item"><i class="ti ti-user-circle"></i> Shaxsiy ("Men")</div>
+      <div class="kompet-item"><i class="ti ti-bulb"></i> Bilish (kognitiv)</div>
+      <div class="kompet-item"><i class="ti ti-brain"></i> Tanqidiy fikrlash</div>
     </div>
   </div>
+
+  <div class="sec-title"><i class="ti ti-code"></i> Indikator kodlari qanday o'qiladi?</div>
+  <div class="code-box">
+    <div class="code-row">
+      <div class="code-pill">1.3.12.a</div>
+      <div class="code-desc">
+        Har bir kutilayotgan natija (indikator) o'zining noyob kodiga ega bo'lib, bu kod tarbiyachiga rivojlanish xaritasini tez va aniq to'ldirishga yordam beradi.
+      </div>
+    </div>
+    <div class="code-parts">
+      <div class="code-part"><div class="cp-sym">1</div><div class="cp-txt">Rivojlanish sohasi tartib raqami (1–5)</div></div>
+      <div class="code-part"><div class="cp-sym">3</div><div class="cp-txt">Soha ichidagi kichik soha tartib raqami</div></div>
+      <div class="code-part"><div class="cp-sym">12</div><div class="cp-txt">Kutilayotgan natijaning (indikatorning) tartib raqami</div></div>
+      <div class="code-part"><div class="cp-sym">a</div><div class="cp-txt">Yosh guruhi belgisi (quyida)</div></div>
+    </div>
+    <div class="age-tags">
+      <span class="age-tag">a — 3–4 yosh</span>
+      <span class="age-tag">b — 4–5 yosh</span>
+      <span class="age-tag">c — 5–6 yosh</span>
+      <span class="age-tag">d — 6–7 yosh</span>
+    </div>
+  </div>
+
+  <p class="source-note">Manba: "Ilk qadam" milliy o'quv dasturi, uchinchi nashr (Toshkent, 2026) — Maktabgacha ta'lim tashkilotlari direktor va mutaxassislarini qayta tayyorlash instituti o'quv qo'llanmasi asosida</p>
 
 </main>
 
@@ -376,6 +372,125 @@ function checkHamburger(){
 }
 checkHamburger();
 window.addEventListener('resize',checkHamburger);
+</script>
+
+<!-- SOHA DATA + RENDER -->
+<script>
+const sohalar = [
+  {
+    cls:'s1', icon:'ti-run',
+    title:"1. Jismoniy rivojlanish va sog'lom turmush tarzini shakllantirish",
+    desc:"Yirik va mayda motorika, sensomotorika, gigiyena va xavfsizlik asoslari.",
+    tasnif:"Bu soha bolalarning jismoniy harakat sohasida tajriba orttirishini, jumladan sog'lom tana va ijtimoiy-hissiy farovonlikni ta'minlash uchun asos bo'lgan yirik motorika ko'nikmalarini rivojlantirishni o'z ichiga oladi. Shuningdek, mayda motorika va sensomotorika (qo'l va ko'z harakatlarini muvofiqlashtirish) rivojlantiriladi — bu kelajakda savodxonlikka bog'liq faoliyatlar uchun muhim hisoblanadi.",
+    kichik:["Yirik motorika","Mayda motorika","Sensomotorika","Sog'lom turmush tarzi va xavfsizlik"],
+    natijalar:[
+      "O'z imkoniyatlari va yoshiga oid jismoniy rivojlanish me'yorlariga muvofiq jismoniy faollikni namoyon etadi",
+      "Harakat faolligi turlarini muvofiqlashgan va maqsadga yo'naltirilgan holda bajara oladi",
+      "Turli hayotiy va ta'lim vaziyatlarida mayda motorika ko'nikmalaridan foydalanadi",
+      "Shaxsiy gigiyena ko'nikmalarini qo'llaydi, sog'lom ovqatlanish asoslarini biladi",
+      "Hayot xavfsizligi asoslari qoidalariga rioya qiladi"
+    ],
+    amaliyot:"Ertalabki badantarbiya, harakatli o'yinlar ('To'pni olib kel', 'Sakrash yo'lakchasi'), qaychi bilan qirqish, plastilin yumshatish kabi mayda motorika mashqlari hamda qo'l yuvish, kiyinish kabi kundalik gigiyena ko'nikmalarini mashq qilish."
+  },
+  {
+    cls:'s2', icon:'ti-mood-smile',
+    title:"2. Ijtimoiy-hissiy rivojlanish",
+    desc:"\"Men\" konsepsiyasi, hissiy nazorat, tengdoshlar bilan muloqot.",
+    tasnif:"Bu soha bolada o'z his-tuyg'ulari va boshqalarning hissiy holatlarini anglash, ularning sabablarini tushunish, hissiyotlarni boshqarish (emotsional nazorat) hamda boshqalarga hissiy qo'llab-quvvatlash ko'rsata olish kabi muhim ko'nikmalarni shakllantirishni nazarda tutadi. Aynan shu davrda bolaning \"Men\" (Men-konsepsiyasi) tushunchasi shakllanadi.",
+    kichik:["\"Men\" konsepsiyasi","Hissiy rivojlanish","Ijtimoiy rivojlanish"],
+    natijalar:[
+      "O'z \"Men\"i va kundalik hayotda boshqa insonlarning rollari haqida tasavvurga ega bo'ladi",
+      "O'z his-tuyg'ularini boshqara oladi va vaziyatga mos holda ifoda etadi",
+      "Boshqalarning his-tuyg'ularini tanib oladi va mos ravishda munosabat bildiradi",
+      "Kattalar va tengdoshlar bilan vaziyatga mos ravishda muloqot qiladi",
+      "Murakkab vaziyatlarda faol va aniq yechim topishga harakat qiladi"
+    ],
+    amaliyot:"Rolli o'yinlar ('Oila', 'Do'kon', 'Bog'cha') orqali turli ijtimoiy rollarni bajarish, nizoli vaziyatlarni muhokama qilish, his-tuyg'ularni rasm yoki so'z orqali ifodalashga undash."
+  },
+  {
+    cls:'s3', icon:'ti-message-circle-2',
+    title:"3. Nutq, muloqot, o'qish va yozish ko'nikmalari",
+    desc:"Tinglab tushunish, lug'at boyligi, o'qish-yozishga tayyorgarlik.",
+    tasnif:"Nutq bolaning atrof-olamni tanib bilishi va o'zini ifoda etishi uchun vositadir. Bu soha o'qishga nisbatan ijobiy munosabat va o'qish malakalarini (harflar, bosma so'zlarni tanish), nutqni (lug'at boyligi, grammatik to'g'ri dialogik va monologik nutq) hamda yozish malakalarini rivojlantirishni qamrab oladi.",
+    kichik:["Nutq va til","O'qishga tayyorgarlik","Yozuvga tayyorgarlik"],
+    natijalar:[
+      "Ona tilidagi nutqni tinglaydi va tushunadi",
+      "Ona tilida to'g'ri talaffuz qiladi, grammatik shakllar va turli gap tuzilishlaridan foydalanadi",
+      "Badiiy asarlarga qiziqish bildirishni boshlaydi",
+      "Turli shakldagi matnlarni mustaqil tuzish va qayta so'zlab berishni biladi",
+      "Ona tilida o'qish va yozishning boshlang'ich ko'nikmalariga ega bo'ladi"
+    ],
+    amaliyot:"Ertak tinglash va qayta so'zlash, berilgan rasm asosida hikoya tuzish, savol-javoblar, she'r yodlash, harflarni qum ustida yoki plastilindan yasab o'rganish."
+  },
+  {
+    cls:'s4', icon:'ti-brain',
+    title:"4. Bilish jarayonlarini rivojlantirish",
+    desc:"Mantiqiy fikrlash, elementar matematika, dunyoni anglash.",
+    tasnif:"Bu soha bolalarning elementar matematika, raqamli savodxonlik, fan va ekologik mas'uliyatni o'rganish bilan bog'liq ko'nikmalarini rivojlantirishni o'z ichiga oladi. Mantiqiy fikrlash va muammolarni hal qilish — bu sabab-oqibat munosabatlarini o'rnatish, gipotezalarni va ijodiy yechimlarni o'ylab topish ko'nikmalaridir.",
+    kichik:["Mantiqiy fikrlash va muammolarni hal qilish","Elementar matematika","Dunyoni anglash"],
+    natijalar:[
+      "Bilish jarayoniga nisbatan faol qiziqishni namoyon etadi",
+      "Ta'limiy va hayotiy faoliyatda zarur ma'lumotlarni mustaqil izlab topadi va undan foydalanadi",
+      "Predmetlar, hodisalar va voqealar o'rtasidagi oddiy bog'lanishlarni anglab yetadi",
+      "Son va sanoq haqida tasavvurga ega bo'ladi, elementar matematik hisob-kitoblarni bajaradi",
+      "Atrof-muhitdagi hodisalar va obyektlarni kuzatadi va tadqiq qiladi"
+    ],
+    amaliyot:"Ranglarni ajratish, shakllarni solishtirish va saralash, sanash mashqlari, oddiy tajribalar (suv, qum, havo bilan), 'Nima uchun?' savollariga birga javob izlash."
+  },
+  {
+    cls:'s5', icon:'ti-palette',
+    title:"5. Ijodiy rivojlanish",
+    desc:"Badiiy tasavvur, san'at, musiqa, milliy an'analar.",
+    tasnif:"Bu soha atrofdagi voqelikka estetik munosabatni shakllantirish, tasavvur va o'zini ifoda etish qobiliyatlarini rivojlantirishni o'z ichiga oladi. Dunyoga badiiy qarash bolaning estetik didi, badiiy tasavvuri va fantaziyasini tasviriy san'at, musiqa, raqs va teatr orqali ifoda etish qobiliyatini rivojlantirishga yordam beradi.",
+    kichik:["Dunyoni badiiy tasavvur qilish","Badiiy va ijodiy qobiliyatlar"],
+    natijalar:[
+      "San'at va madaniyatga qiziqishini namoyon etadi",
+      "Milliy an'analarni qadrlaydi va ularni kundalik hayotning bir qismi sifatida qabul qiladi",
+      "Muayyan san'at turlariga nisbatan o'zining shaxsiy qiziqishini erkin ifoda etadi",
+      "Egallagan bilim va ko'nikmalarini turli hayotiy vaziyatlarda ijodiy g'oyalarni amalga oshirishda qo'llaydi",
+      "Insonning jamiyatdagi ijobiy o'zgarishlarni yaratishdagi rolini tushunadi"
+    ],
+    amaliyot:"Rasm chizish, plastilindan shakllar yasash, milliy qo'shiq va raqslarni o'rganish, ertak qahramonlarini sahnalashtirish, xalq amaliy san'ati namunalari bilan tanishtirish."
+  }
+];
+
+const list = document.getElementById('soha-list');
+list.innerHTML = sohalar.map((s,i)=>`
+  <div class="soha-card ${s.cls}" data-id="${i}">
+    <div class="soha-head" onclick="toggleSoha(${i})">
+      <div class="soha-icon"><i class="ti ${s.icon}"></i></div>
+      <div class="soha-head-text">
+        <div class="soha-title">${s.title}</div>
+        <div class="soha-desc">${s.desc}</div>
+      </div>
+      <i class="ti ti-chevron-down soha-chevron"></i>
+    </div>
+    <div class="soha-body">
+      <div class="soha-body-inner">
+        <div class="sb-block">
+          <div class="sb-label"><i class="ti ti-book-2"></i> Tasnif</div>
+          <div class="sb-text">${s.tasnif}</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-label"><i class="ti ti-list-tree"></i> Kichik sohalar</div>
+          <div class="sub-pills">${s.kichik.map(k=>`<span class="sub-pill">${k}</span>`).join('')}</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-label"><i class="ti ti-flag-check"></i> 6–7 yoshda kutilayotgan natijalar</div>
+          <ul class="sb-list">${s.natijalar.map(n=>`<li>${n}</li>`).join('')}</ul>
+        </div>
+        <div class="sb-practice">
+          <b>Amaliyotda</b>
+          ${s.amaliyot}
+        </div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+function toggleSoha(i){
+  document.querySelector(`.soha-card[data-id="${i}"]`).classList.toggle('open');
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
