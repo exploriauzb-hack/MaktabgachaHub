@@ -24,7 +24,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow:hidden;transition:transform .25s ease}
+.sidebar-nav{flex:1;overflow-y:auto;min-height:0}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
 .logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
@@ -52,12 +53,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar h1 span{color:var(--accent)}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
-
-/* PRO TOGGLE (demo uchun) */
-.pro-toggle{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 14px;margin-bottom:16px;font-size:12px;font-weight:500}
-.pro-toggle input{accent-color:var(--pro);width:16px;height:16px;cursor:pointer}
-.pro-toggle label{cursor:pointer;color:var(--text)}
-.pro-toggle span{color:var(--muted);font-size:11px}
 
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
@@ -158,6 +153,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
+  <div class="sidebar-nav">
   <div class="sidebar-section">Asosiy</div>
   <a href="../dashboard.html" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
   <a href="jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
@@ -176,12 +172,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  </div>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
       <div class="user-info"><div class="name" id="sb-name">Tarbiyachi</div><div class="plan" id="sb-plan">Bepul tarif</div></div>
     </div>
-    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 
@@ -192,20 +189,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <h1><i class="ti ti-notebook" style="color:var(--accent);font-size:20px"></i> <span>Ilk Qadam</span> Konspektlar</h1>
     </div>
     <div class="topbar-right">
-      <span class="plan-pill pro" id="plan-pill"><i class="ti ti-crown"></i> PRO</span>
+      <span class="plan-pill" id="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
     </div>
-  </div>
-
-  <!-- DEMO PRO TOGGLE -->
-  <div class="pro-toggle">
-    <input type="checkbox" id="pro-check" checked onchange="togglePro()">
-    <label for="pro-check"><b>PRO foydalanuvchi sifatida ko'rish</b></label>
-    <span>(Demo: real tizimda Supabase auth orqali aniqlanadi)</span>
   </div>
 
   <div class="info-box" id="info-box">
     <i class="ti ti-info-circle"></i>
-    <span id="info-text">"Ilk Qadam" milliy dasturi asosida <b>4 ta yosh guruhi</b> bo'yicha professional KN konspektlar. PRO tarif — <b>barcha konspektlar ochiq</b>.</span>
+    <span id="info-text">"Ilk Qadam" milliy dasturi asosida <b>4 ta yosh guruhi</b> bo'yicha professional KN konspektlar. Har bir guruhdan birinchi <b>5 ta</b> konspekt bepul.</span>
   </div>
 
   <div class="age-tabs">
@@ -325,16 +315,17 @@ function chk(){document.getElementById('hamburger').style.display=window.innerWi
 chk();window.addEventListener('resize',chk);
 </script>
 
-<script>
-// ===== PRO STATUS =====
-// Haqiqiy loyihada bu Supabase auth dan olinadi:
-// const isProUser = profile?.subscription_tier === 'pro' || profile?.subscription_tier === 'corporate'
-// Demo uchun checkbox orqali boshqariladi
-var isProUser = true; // default: PRO
-var FREE_LIMIT = 5;   // bepul foydalanuvchi uchun limit
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
 
-function togglePro(){
-  isProUser = document.getElementById('pro-check').checked;
+<script>
+// ===== PRO STATUS (Supabase auth orqali) =====
+var isProUser = false;
+var FREE_LIMIT = 5;
+
+function applyPlanUI(proUser){
+  isProUser = proUser;
   var pill = document.getElementById('plan-pill');
   var infoText = document.getElementById('info-text');
   var sbPlan = document.getElementById('sb-plan');
@@ -400,7 +391,6 @@ function renderKN(age,list){
     return;
   }
 
-  // FREE limit hisoblash (PRO bo'lsa cheksiz)
   var freeShown=0;
   var months=[...new Set(list.map(k=>k.oy))];
   var html='';
@@ -411,15 +401,11 @@ function renderKN(age,list){
     html+=`<div class="month-div"><div class="mline"></div><span class="month-label ${age}"><i class="ti ti-calendar-event" style="font-size:11px;margin-right:4px"></i>${oy}</span><div class="mline"></div></div>`;
 
     items.forEach(k=>{
-      // ===== ASOSIY TUZATISH =====
-      // PRO foydalanuvchi bo'lsa — hech qachon lock qilma
-      // Bepul foydalanuvchi bo'lsa — isPro:true konspektlarni FREE_LIMIT dan keyin lock qil
       var locked = false;
       if(!isProUser && k.isPro){
         locked = freeShown >= FREE_LIMIT;
       }
-      if(!k.isPro) freeShown++; // faqat bepul konspektlar hisoblanadi
-      // ===========================
+      if(!k.isPro) freeShown++;
 
       var idx=k.id;
       html+=`<div class="kn-card" id="card-${idx}">
@@ -519,7 +505,18 @@ function printKN(id,age){
   w.document.close();w.print();
 }
 
-['a1','a2','a3','a4'].forEach(age=>renderKN(age,knData[age]));
+window.addEventListener('load', async () => {
+  const auth = await initAuth(true);
+  if (!auth) return;
+  if (typeof fillNav === 'function') fillNav();
+
+  const name = getUserName();
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+
+  const proUser = isPro() || isCorporate();
+  applyPlanUI(proUser);
+});
 </script>
 </body>
 </html>
