@@ -14,14 +14,16 @@
   --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
   --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
   --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+  --age1:#0369a1;--age1-soft:#e0f2fe;
+  --age2:#15803d;--age2-soft:#f0fdf4;
+  --age3:#b45309;--age3-soft:#fffbeb;
+  --age4:#7c3aed;--age4-soft:#f5f3ff;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
-
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -38,89 +40,125 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
 .user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;background:var(--bg)}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
-.user-info{min-width:0}
-.user-info .name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-info .name{font-size:12px;font-weight:600}
 .user-info .plan{font-size:11px;color:var(--muted)}
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:1080px;padding-bottom:80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:10px;flex:1}
+.btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
+.topbar h1{font-size:20px;font-weight:600}
+.topbar h1 span{color:var(--accent)}
+.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
 
-/* FAB BACK — xuddi jadval.html dek */
-.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
-.fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
-.fab-back i{font-size:18px}
+/* INFO */
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.info-box i{font-size:16px;flex-shrink:0}
 
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
+/* AGE TABS */
+.age-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.age-tab{padding:8px 18px;border-radius:10px;border:2px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
+.age-tab i{font-size:15px}
+.age-tab.a1{color:var(--age1)}
+.age-tab.a1.active{background:var(--age1-soft);border-color:var(--age1)}
+.age-tab.a2{color:var(--age2)}
+.age-tab.a2.active{background:var(--age2-soft);border-color:var(--age2)}
+.age-tab.a3{color:var(--age3)}
+.age-tab.a3.active{background:var(--age3-soft);border-color:var(--age3)}
+.age-tab.a4{color:var(--age4)}
+.age-tab.a4.active{background:var(--age4-soft);border-color:var(--age4)}
 
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px}
-.topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
-.btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
-.btn-hamburger:hover{background:var(--bg)}
-.topbar h1{font-size:20px;font-weight:600;display:flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.topbar h1 i{color:var(--accent);font-size:20px}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
-.plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
+/* AGE PANEL */
+.age-panel{display:none}
+.age-panel.active{display:block}
 
-.info-banner{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:500;margin-bottom:18px}
-.info-banner.pro{background:var(--pro-soft);color:var(--pro)}
-.info-banner i{font-size:15px}
+/* AGE HEADER */
+.age-header{border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.age-header.a1{background:var(--age1-soft);border:1px solid #bae6fd}
+.age-header.a2{background:var(--age2-soft);border:1px solid #bbf7d0}
+.age-header.a3{background:var(--age3-soft);border:1px solid #fde68a}
+.age-header.a4{background:var(--age4-soft);border:1px solid #ddd6fe}
+.age-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.age-icon.a1{background:var(--age1);color:#fff}
+.age-icon.a2{background:var(--age2);color:#fff}
+.age-icon.a3{background:var(--age3);color:#fff}
+.age-icon.a4{background:var(--age4);color:#fff}
+.age-icon i{font-size:24px}
+.age-hinfo h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.age-hinfo p{font-size:12px;color:var(--muted);line-height:1.5}
+.age-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.age-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:rgba(0,0,0,.07)}
 
-.filter-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.filter-card select{padding:7px 12px;border-radius:8px;border:1px solid var(--border);font-size:12.5px;color:var(--text);background:var(--bg);outline:none;cursor:pointer}
-.btn-reset{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12.5px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .15s}
-.btn-reset:hover{background:var(--bg);color:var(--text)}
+/* FILTER BAR */
+.filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-bar select{padding:7px 10px;border-radius:8px;border:1px solid var(--border);font-size:12px;color:var(--text);background:var(--bg);outline:none;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-reset{padding:7px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px}
+.btn-reset:hover{background:var(--bg)}
 
-.sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.sec-title i{font-size:14px}
+/* SEC TITLE */
+.sec-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 
-.kn-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
-.kn-card:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.08)}
-.kn-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px;flex-wrap:wrap}
+/* MONTH DIVIDER */
+.month-div{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+.month-div .mline{flex:1;height:1px;background:var(--border)}
+.month-label{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;white-space:nowrap}
+.month-label.a1{background:var(--age1-soft);color:var(--age1);border:1px solid #bae6fd}
+.month-label.a2{background:var(--age2-soft);color:var(--age2);border:1px solid #bbf7d0}
+.month-label.a3{background:var(--age3-soft);color:var(--age3);border:1px solid #fde68a}
+.month-label.a4{background:var(--age4-soft);color:var(--age4);border:1px solid #ddd6fe}
+
+/* KN CARD */
+.kn-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.kn-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.kn-hdr{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:10px}
 .kn-hdr:hover{background:var(--bg)}
-.kn-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
-.kb{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap}
-.kb1{background:var(--accent-soft);color:var(--accent)}
-.kb2{background:var(--green-soft);color:var(--green)}
-.kb3{background:var(--amber-soft);color:var(--amber)}
-.kn-title{font-size:13.5px;font-weight:600}
-.kn-arrow{color:var(--muted);font-size:13px;flex-shrink:0;transition:transform .2s}
+.kn-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.kb{border-radius:20px;padding:2px 9px;font-size:10px;font-weight:600;white-space:nowrap}
+.kb.ay{background:var(--accent-soft);color:var(--accent)}
+.kb.soha{background:var(--green-soft);color:var(--green)}
+.kb.kun{background:var(--amber-soft);color:var(--amber)}
+.kb.kod{background:#f1f5f9;color:#475569}
+.kn-title{font-size:13px;font-weight:600}
+.kn-arrow{color:var(--muted);font-size:14px;flex-shrink:0;transition:transform .2s}
 .kn-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
 .kn-body.open{display:block}
 .kn-sec{margin-top:12px}
-.kn-sec h5{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:5px;font-weight:600}
-.kn-sec p,.kn-sec li{font-size:12.5px;color:var(--text);line-height:1.7}
+.kn-sec h5{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:5px;font-weight:700}
+.kn-sec p,.kn-sec li{font-size:12.5px;color:var(--text);line-height:1.8}
 .kn-sec ul{padding-left:16px}
-.btn-print{margin-top:14px;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+.kn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kn-step{background:var(--bg);border-radius:8px;padding:10px 12px}
+.kn-step-num{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.kn-step-title{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px}
+.kn-step-text{font-size:11.5px;color:var(--text);line-height:1.6}
+.btn-print{margin-top:14px;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
 .btn-print:hover{background:var(--accent-mid)}
 
-.lock-card{background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);border-radius:12px;padding:24px;text-align:center;margin-top:16px}
-.lock-card .ic{font-size:26px;margin-bottom:8px;color:#fff}
-.lock-card h3{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
-.lock-card p{font-size:12px;color:#bfdbfe;margin-bottom:14px}
-.lock-card a.btn-premium{background:#fff;color:var(--accent);font-size:12.5px;font-weight:600;padding:8px 20px;border-radius:7px;text-decoration:none;display:inline-block}
-.lock-card a.btn-premium:hover{background:#eff6ff}
+/* PRO LOCK */
+.pro-lock{position:relative;border-radius:10px;overflow:hidden}
+.pro-lock::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.7);backdrop-filter:blur(2px);z-index:5}
+.lock-banner{background:linear-gradient(135deg,var(--pro),#a855f7);border-radius:12px;padding:20px;text-align:center;margin:12px 0}
+.lock-banner .lb-icon{font-size:28px;color:#fde68a;margin-bottom:8px}
+.lock-banner h3{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.lock-banner p{font-size:12px;color:#e9d5ff;margin-bottom:14px}
+.lock-banner .btn-pro{background:#fff;color:var(--pro);font-size:12px;font-weight:700;padding:8px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'Inter',sans-serif}
 
-.empty-state{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px}
-
-#notifPopup{display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px}
+/* FAB */
+.fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.fab-back:hover{transform:translateY(-3px)}
+.fab-back i{font-size:18px}
 
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
+  .main{margin-left:0;padding:16px 14px 80px}
   .btn-hamburger{display:flex}
-  .main{margin-left:0;padding:14px 14px 80px}
-  .topbar{margin-bottom:14px}
   .topbar h1{font-size:15px}
-  .plan-pill{font-size:11px;padding:4px 10px}
-  .info-banner{font-size:11.5px;padding:9px 12px}
-  .filter-card{padding:10px 12px;gap:6px}
-  .filter-card select{font-size:11.5px;padding:6px 10px}
-  .kn-hdr{padding:12px 14px}
-  .kn-title{font-size:12.5px}
-  .kb{font-size:10px;padding:2px 8px}
-  .kn-body{padding:0 14px 14px}
-  .kn-sec p,.kn-sec li{font-size:12px}
+  .age-tabs{gap:6px}
+  .age-tab{padding:6px 12px;font-size:11px}
+  .kn-grid{grid-template-columns:1fr}
   .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
 }
 </style>
@@ -128,7 +166,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <body>
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
-
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -155,13 +192,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
-      <div class="avatar" id="sb-avatar">T</div>
-      <div class="user-info">
-        <div class="name" id="sb-name">Tarbiyachi</div>
-        <div class="plan" id="sb-plan">Bepul tarif</div>
-      </div>
+      <div class="avatar">T</div>
+      <div class="user-info"><div class="name">Tarbiyachi</div><div class="plan">Bepul tarif</div></div>
     </div>
-    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
+    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 
@@ -169,210 +203,718 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="topbar">
     <div class="topbar-left">
       <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-      <h1><i class="ti ti-notebook"></i> Konspektlar</h1>
+      <h1><i class="ti ti-notebook" style="color:var(--accent);font-size:20px"></i> <span>Ilk Qadam</span> Konspektlar</h1>
     </div>
-    <div class="topbar-right">
-      <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights"></i> Bepul</span>
-    </div>
+    <div class="topbar-right"><span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span></div>
   </div>
 
-  <div class="info-banner" id="access-note"><i class="ti ti-info-circle"></i> <span id="access-note-text"></span></div>
-
-  <div class="filter-card">
-    <select id="kn-hafta" onchange="filterKn()"><option value="">Hafta</option></select>
-    <select id="kn-kun" onchange="filterKn()">
-      <option value="">Kun</option>
-      <option>Dushanba</option><option>Seshanba</option><option>Chorshanba</option><option>Payshanba</option><option>Juma</option>
-    </select>
-    <select id="kn-soha" onchange="filterKn()">
-      <option value="">Soha</option>
-      <option>Nutq va til</option><option>FEMP</option><option>Tabiat bilan tanishuv</option>
-      <option>Tasviriy sanat</option><option>Musiqa</option><option>Jismoniy tarbiya</option>
-    </select>
-    <button class="btn-reset" onclick="resetKn()"><i class="ti ti-filter-off"></i> Tozalash</button>
+  <div class="info-box">
+    <i class="ti ti-info-circle"></i>
+    <span>"Ilk Qadam" milliy dasturi asosida <b>4 ta yosh guruhi</b> bo'yicha professional KN konspektlar. Har bir guruhdan birinchi <b>5 ta</b> konspekt bepul. Qolganlarini PRO bilan oching.</span>
   </div>
 
-  <div class="sec-title"><i class="ti ti-list-details"></i> Kundalik mashg'ulot konspekti</div>
-  <div id="kn-list"></div>
-  <div id="lock-section" style="display:none"></div>
+  <!-- AGE TABS -->
+  <div class="age-tabs">
+    <button class="age-tab a1 active" onclick="showAge('a1')"><i class="ti ti-baby-carriage"></i> 3–4 yosh (Kichik)</button>
+    <button class="age-tab a2" onclick="showAge('a2')"><i class="ti ti-sun"></i> 4–5 yosh (O'rta)</button>
+    <button class="age-tab a3" onclick="showAge('a3')"><i class="ti ti-star"></i> 5–6 yosh (Katta)</button>
+    <button class="age-tab a4" onclick="showAge('a4')"><i class="ti ti-crown"></i> 6–7 yosh (Tayyorlov)</button>
+  </div>
+
+  <!-- ===== 3-4 YOSH ===== -->
+  <div class="age-panel active" id="panel-a1">
+    <div class="age-header a1">
+      <div class="age-icon a1"><i class="ti ti-baby-carriage"></i></div>
+      <div class="age-hinfo">
+        <h3>Kichik guruh — 3–4 yosh</h3>
+        <p>Sensor tajriba, o'yin orqali bilish, nutq va muloqot asoslari. Kodlar: a (3–4 yosh)</p>
+        <div class="age-badges">
+          <span class="age-badge" style="background:#e0f2fe;color:#0369a1">5 soha</span>
+          <span class="age-badge" style="background:#e0f2fe;color:#0369a1">36 hafta</span>
+          <span class="age-badge" style="background:#e0f2fe;color:#0369a1">Sentyabr–May</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <select id="f1-oy" onchange="filterKN('a1')"><option value="">Oy</option><option>Sentyabr</option><option>Oktyabr</option><option>Noyabr</option><option>Dekabr</option><option>Yanvar</option><option>Fevral</option><option>Mart</option><option>Aprel</option><option>May</option></select>
+      <select id="f1-soha" onchange="filterKN('a1')"><option value="">Soha</option><option>1-soha: Jismoniy</option><option>2-soha: Ijtimoiy-hissiy</option><option>3-soha: Nutq</option><option>4-soha: Bilish</option><option>5-soha: Ijodiy</option></select>
+      <button class="btn-reset" onclick="resetFilter('a1')"><i class="ti ti-filter-off"></i> Tozalash</button>
+    </div>
+
+    <div id="list-a1"></div>
+  </div>
+
+  <!-- ===== 4-5 YOSH ===== -->
+  <div class="age-panel" id="panel-a2">
+    <div class="age-header a2">
+      <div class="age-icon a2"><i class="ti ti-sun"></i></div>
+      <div class="age-hinfo">
+        <h3>O'rta guruh — 4–5 yosh</h3>
+        <p>Erkin o'yin, ijodiy faoliyat, elementar matematika va tabiatni o'rganish. Kodlar: b (4–5 yosh)</p>
+        <div class="age-badges">
+          <span class="age-badge" style="background:#f0fdf4;color:#15803d">5 soha</span>
+          <span class="age-badge" style="background:#f0fdf4;color:#15803d">36 hafta</span>
+          <span class="age-badge" style="background:#f0fdf4;color:#15803d">Sentyabr–May</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <select id="f2-oy" onchange="filterKN('a2')"><option value="">Oy</option><option>Sentyabr</option><option>Oktyabr</option><option>Noyabr</option><option>Dekabr</option><option>Yanvar</option><option>Fevral</option><option>Mart</option><option>Aprel</option><option>May</option></select>
+      <select id="f2-soha" onchange="filterKN('a2')"><option value="">Soha</option><option>1-soha: Jismoniy</option><option>2-soha: Ijtimoiy-hissiy</option><option>3-soha: Nutq</option><option>4-soha: Bilish</option><option>5-soha: Ijodiy</option></select>
+      <button class="btn-reset" onclick="resetFilter('a2')"><i class="ti ti-filter-off"></i> Tozalash</button>
+    </div>
+    <div id="list-a2"></div>
+  </div>
+
+  <!-- ===== 5-6 YOSH ===== -->
+  <div class="age-panel" id="panel-a3">
+    <div class="age-header a3">
+      <div class="age-icon a3"><i class="ti ti-star"></i></div>
+      <div class="age-hinfo">
+        <h3>Katta guruh — 5–6 yosh</h3>
+        <p>Tanqidiy fikrlash, loyiha faoliyati, o'qish va yozishga tayyorgarlik. Kodlar: c (5–6 yosh)</p>
+        <div class="age-badges">
+          <span class="age-badge" style="background:#fffbeb;color:#b45309">5 soha</span>
+          <span class="age-badge" style="background:#fffbeb;color:#b45309">36 hafta</span>
+          <span class="age-badge" style="background:#fffbeb;color:#b45309">Sentyabr–May</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <select id="f3-oy" onchange="filterKN('a3')"><option value="">Oy</option><option>Sentyabr</option><option>Oktyabr</option><option>Noyabr</option><option>Dekabr</option><option>Yanvar</option><option>Fevral</option><option>Mart</option><option>Aprel</option><option>May</option></select>
+      <select id="f3-soha" onchange="filterKN('a3')"><option value="">Soha</option><option>1-soha: Jismoniy</option><option>2-soha: Ijtimoiy-hissiy</option><option>3-soha: Nutq</option><option>4-soha: Bilish</option><option>5-soha: Ijodiy</option></select>
+      <button class="btn-reset" onclick="resetFilter('a3')"><i class="ti ti-filter-off"></i> Tozalash</button>
+    </div>
+    <div id="list-a3"></div>
+  </div>
+
+  <!-- ===== 6-7 YOSH ===== -->
+  <div class="age-panel" id="panel-a4">
+    <div class="age-header a4">
+      <div class="age-icon a4"><i class="ti ti-crown"></i></div>
+      <div class="age-hinfo">
+        <h3>Tayyorlov guruhi — 6–7 yosh</h3>
+        <p>Maktabga tayyorlik, barcha kompetensiyalarni mustahkamlash. Kodlar: d (6–7 yosh)</p>
+        <div class="age-badges">
+          <span class="age-badge" style="background:#f5f3ff;color:#7c3aed">5 soha</span>
+          <span class="age-badge" style="background:#f5f3ff;color:#7c3aed">36 hafta</span>
+          <span class="age-badge" style="background:#f5f3ff;color:#7c3aed">Sentyabr–May</span>
+        </div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <select id="f4-oy" onchange="filterKN('a4')"><option value="">Oy</option><option>Sentyabr</option><option>Oktyabr</option><option>Noyabr</option><option>Dekabr</option><option>Yanvar</option><option>Fevral</option><option>Mart</option><option>Aprel</option><option>May</option></select>
+      <select id="f4-soha" onchange="filterKN('a4')"><option value="">Soha</option><option>1-soha: Jismoniy</option><option>2-soha: Ijtimoiy-hissiy</option><option>3-soha: Nutq</option><option>4-soha: Bilish</option><option>5-soha: Ijodiy</option></select>
+      <button class="btn-reset" onclick="resetFilter('a4')"><i class="ti ti-filter-off"></i> Tozalash</button>
+    </div>
+    <div id="list-a4"></div>
+  </div>
 </main>
 
-<!-- FAB BACK — jadval.html dek -->
-<a href="../dashboard.html" class="fab-back">
-  <i class="ti ti-arrow-left"></i> Dashboard
-</a>
-
-<div id="notifPopup"></div>
+<a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  let W,H;
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  let W,H;function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
   resize();window.addEventListener('resize',resize);
-  const types=['star','heart','circle','abc','flower'];
   const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   const shapes=[];
-  for(let i=0;i<28;i++){shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)})}
-  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
-  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
-  function drawFlower(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;for(let i=0;i<6;i++){const a=i*Math.PI/3;ctx.beginPath();ctx.ellipse(cx+r*.6*Math.cos(a),cy+r*.6*Math.sin(a),r*.5,r*.25,a,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fef08a';ctx.beginPath();ctx.arc(cx,cy,r*.35,0,Math.PI*2);ctx.fill();ctx.restore()}
-  function drawABC(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.font=`bold ${r*1.2}px Inter,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';const l=['A','B','C','1','2','3'];ctx.fillText(l[Math.floor(Math.abs(cx+cy))%l.length],cx,cy);ctx.restore()}
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    shapes.forEach(s=>{
-      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
-      if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
-      if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
-      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
-      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
-      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
-      else if(s.t==='flower')drawFlower(ctx,0,0,s.size*.8,s.color,s.op);
-      else if(s.t==='abc')drawABC(ctx,0,0,s.size*.7,s.color,s.op);
-      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
-      ctx.restore();
-    });
-    requestAnimationFrame(frame);
-  }
+  for(let i=0;i<22;i++)shapes.push({color:colors[Math.floor(Math.random()*colors.length)],size:rnd(12,28),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.25,0.25),vy:rnd(-0.35,-0.1),op:rnd(0.12,0.35)});
+  function frame(){ctx.clearRect(0,0,W,H);shapes.forEach(s=>{s.x+=s.vx;s.y+=s.vy;if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(s.x,s.y,s.size*.6,0,Math.PI*2);ctx.fill()});requestAnimationFrame(frame)}
   frame();
 })();
-</script>
-
-<script>
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden';}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow='';}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';}
-checkHamburger();
-window.addEventListener('resize',checkHamburger);
+function chk(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+chk();window.addEventListener('resize',chk);
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.js"></script>
-<script src="../js/auth.js"></script>
 <script>
-var knData=[
-  {hafta:1,kun:'Dushanba',soha:'Nutq va til',kod:'3.1.2.b',mavzu:"Oila - suhbat va hikoya tuzish",maqsad:"Oila a'zolari haqida lug'at boyligi va bog'lanish nutqni rivojlantirish.",jihozlar:"Oila surati, kartochkalar, qo'g'irchoqlar",borish:["Kirish (3 daq): Kayfiyat doirasi","Motivatsiya (4 daq): Qo'g'irchoq oilasi keldi","Asosiy qism (12 daq): Oila haqida suhbat","Jismoniy daqiqa (2 daq): Barmoq o'yini","Mustahkamlash (4 daq): Kartochkalar","Refleksiya (2 daq)"],natija:"Oila a'zolarini nomlaydi, 2-3 so'zdan gap tuzadi.",izoh:"Surat o'rniga bolalar o'z oila rasmini olib kelishi mumkin."},
-  {hafta:1,kun:'Seshanba',soha:'FEMP',kod:'4.2.3.b',mavzu:"Bir va ko'p. Katta va kichik",maqsad:"Bir, ko'p, katta, kichik tushunchalarini shakllantirish.",jihozlar:"Turli hajmdagi o'yinchoqlar, geometrik shakllar",borish:["Kirish (3 daq): Qo'shiq","Motivatsiya (4 daq): Qutidan narsalar","Asosiy qism (12 daq): Katta/kichik taqqoslash","Jismoniy daqiqa (2 daq): Harakatli o'yin","Mustahkamlash (4 daq): Mustaqil ishlash","Refleksiya (2 daq)"],natija:"Bir va ko'pni farqlaydi, katta-kichikni taqqoslaydi.",izoh:"Haqiqiy narsalar ishlatish samaraliroq."},
-  {hafta:1,kun:'Chorshanba',soha:'Tabiat bilan tanishuv',kod:'4.3.1.b',mavzu:"Kuz fasli - tabiat o'zgarishlari",maqsad:"Kuz belgilarini ajratish va tabiat o'zgarishlarini kuzatish.",jihozlar:"Kuz barglari, suratlar, kuz kiyimlari",borish:["Kirish (3 daq): Kuz haqida savol","Motivatsiya (4 daq): Barg ko'rsatiladi","Asosiy qism (12 daq): Kuz belgilari","Jismoniy daqiqa (2 daq): Barg kabi uchish","Mustahkamlash (4 daq): Barg yig'ish o'yini","Refleksiya (2 daq)"],natija:"Kuzning 3 ta belgisini aytadi.",izoh:"Sayr paytida haqiqiy barglar yig'ish samarali."},
-  {hafta:2,kun:'Dushanba',soha:'Nutq va til',kod:'3.2.1.b',mavzu:"Bog'cha - mening ikkinchi uyim",maqsad:"Bog'cha xonalari va qoidalar haqida nutqni rivojlantirish.",jihozlar:"Bog'cha xaritasi, fotosuratlar",borish:["Kirish (3 daq): Kayfiyat","Motivatsiya (4 daq): Bog'chamizni taniylik","Asosiy qism (12 daq): Xonalar haqida suhbat","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Chizish","Refleksiya (2 daq)"],natija:"Bog'cha xonalarini nomlaydi, qoidalarni aytadi.",izoh:"Xona bo'ylab ekskursiya o'tkazish mumkin."},
-  {hafta:2,kun:'Seshanba',soha:'FEMP',kod:'4.2.1.b',mavzu:"Geometrik shakllar: doira, kvadrat, uchburchak",maqsad:"Uchta asosiy geometrik shaklni farqlash va nomlash.",jihozlar:"Shakllar to'plami, flanel doskasi",borish:["Kirish (3 daq)","Motivatsiya (4 daq): Shakllar topshirig'i","Asosiy qism (12 daq): Shakllarni o'rganish","Jismoniy daqiqa (2 daq): Shakl bo'lib turaylik","Mustahkamlash (4 daq)","Refleksiya (2 daq)"],natija:"3 ta shaklni nomlab, farqlab ko'rsatadi.",izoh:""},
-  {hafta:3,kun:'Dushanba',soha:'Nutq va til',kod:'3.1.3.b',mavzu:"Meva va sabzavotlar - tasviriy suhbat",maqsad:"Meva-sabzavotlar nomini bilish va tasvirlash.",jihozlar:"Haqiqiy mevalar, sabzavotlar, suratlar",borish:["Kirish (3 daq): Hid bilish tajribasi","Motivatsiya (4 daq): Sehrli quti","Asosiy qism (12 daq): Nomlash, tasvirlash","Jismoniy daqiqa (2 daq)","Mustahkamlash (4 daq): Tasnif","Refleksiya (2 daq)"],natija:"8 ta meva/sabzavot nomini biladi.",izoh:"Haqiqiy mevalar ishlatish eng samarali."},
-];
+// ===================== DATA =====================
+var FREE_LIMIT=5;
 
-var FREE_LIMIT=3;
+// Konspektlar ma'lumotlari
+var knData={
+  a1:[ // 3-4 yosh
+    {
+      id:'a1-001',oy:'Sentyabr',hafta:1,kun:'Dushanba',soha:'2-soha: Ijtimoiy-hissiy',
+      kod:'2.1.1.a',mavzu:"Men va mening bog'cham",
+      maqsad:"Bolada bog'chaga nisbatan ijobiy munosabat shakllantirish, o'zini guruhda xavfsiz his qilishini ta'minlash.",
+      jihozlar:"Bola surati, guruh fotosi, rangli kartochkalar, qo'g'irchoq",
+      natija:"Bola bog'cha xonasini ko'rsatib nomi bilan ataydi, tarbiyachi ismini aytadi.",
+      izoh:"Kichik yoshdagi bolalar yangi muhitda qiynalishi mumkin. Jarayonni o'yin shaklida olib boring.",
+      kompetensiya:"Ijtimoiy kompetensiya: guruhda o'zini anglash.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Kayfiyat doirasi",matn:"Bolalar doira bo'lib o'tiradilar. Tarbiyachi 'Bugun kayfiyatingiz qanday?' deb so'raydi. Har biri qo'lini ko'tarib javob beradi."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Qo'g'irchoq mehmonga keldi",matn:"Qo'g'irchoq 'Mana bu bog'cha qanday go'zal! Bu yerda kimlar o'qiydi?' deydi. Bolalar o'zlarini tanishtiradilar."},
+        {vaqt:"Asosiy (10 daq)",sarlavha:"Bog'chamni taniylik",matn:"Tarbiyachi guruh xonasini ko'rsatib, har bir burchakni nomlaydi: o'yin burchagi, kitob burchagi, san'at markazi. Bolalar ketidan yurib, 'Bu nima?' savollariga javob beradilar."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"'Barmoqcham' o'yini",matn:"Bolalar o'rinlarida o'tirib barmoq o'yini bajaradilar: 'Bir barmoq, ikki barmoq... hammamiz do'stmiz!'"},
+        {vaqt:"Mustahkamlash (5 daq)",sarlavha:"Rasmim bog'chada",matn:"Har bir bola o'z suratini guruh fotosiga yaqin joylashtiradi. 'Bu bizning guruhimiz' deb aytadilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bugungi saboq",matn:"'Bugun nima o'rgandik?' — Bolalar javob beradilar. Tarbiyachi hammasini maqtaydi."}
+      ]
+    },
+    {
+      id:'a1-002',oy:'Sentyabr',hafta:1,kun:'Seshanba',soha:'3-soha: Nutq',
+      kod:'3.1.1.a',mavzu:"Mening ismim va oilam",
+      maqsad:"Bolaning o'z ismi, oilasi va yaqinlari haqida sodda gaplar tuzishini rivojlantirish.",
+      jihozlar:"Oila fotosi yoki rasmi, kartochkalar, qo'g'irchoq oilasi",
+      natija:"Bola o'z ismini, ota-onasi ismini aytadi va 2-3 so'zdan iborat gap tuzadi.",
+      izoh:"Oila suratlarini oldindan ota-onalardan so'rang. Har bir bolaga individual e'tibor bering.",
+      kompetensiya:"Kommunikativ kompetensiya: o'zini taqdim etish.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Salom qo'shig'i",matn:"'Salom, salom, do'stlarim!' qo'shig'ini birgalikda kuylaydilar. Har biri ismini aytadi."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Qo'g'irchoq oilasi",matn:"Tarbiyachi qo'g'irchoq oilasini ko'rsatadi: 'Bu ona, bu ota, bu bola.' Bolalar repetitsiya qiladilar."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Mening oilam",matn:"Har bir bola o'z oila suratini ko'rsatib: 'Bu mening onam — u [ism]. Bu dadam — u [ism]. Men — [ism]' deydi. Tarbiyachi savollar beradi: 'Oying nima ish qiladi?'"},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Oilam kabi harakat",matn:"'Onam kabi yuring — sekin-sekin. Dadam kabi yuring — katta qadam. Akam kabi sakrang!'"},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Kimning oilasi?",matn:"Tarbiyachi rasmlarni aralashtiradi, bolalar o'z oilalarini topib olishadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bugungi savol",matn:"'Uyga borganda onangga nima deysiz?' — 'Oyi, men bog'chada [shu narsani] o'rgandim!'"}
+      ]
+    },
+    {
+      id:'a1-003',oy:'Sentyabr',hafta:1,kun:'Chorshanba',soha:'4-soha: Bilish',
+      kod:'4.2.1.a',mavzu:"Ranglarni taniylik: qizil, sariq, ko'k",
+      maqsad:"Bolada uchta asosiy rang (qizil, sariq, ko'k) haqida tasavvur hosil qilish va ularni nomlay olishni ta'minlash.",
+      jihozlar:"Rangli kartochkalar, rangli kubiklar, rangli mato parchalari, bo'yoqlar",
+      natija:"Bola qizil, sariq, ko'k ranglarni ko'rsatganda to'g'ri nomlay oladi.",
+      izoh:"Ranglarni kundalik narsalar bilan bog'lang: qizil — olma, sariq — quyosh, ko'k — osmon.",
+      kompetensiya:"Bilish kompetensiyasi: tasnif va nomlash.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Sehirli quti",matn:"Tarbiyachi yashirin qutidan rangli narsalarni bittadan chiqaradi. Bolalar 'Voy!' deb hayratlanishadi."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Kamalak qo'shig'i",matn:"'Kamalak, kamalak, rangli-rangli kamalak!' qo'shig'ini kuylaydilar. Rangli kartochkalarni ko'rsatadilar."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Rang ovchilari",matn:"Tarbiyachi 'Qizil narsa toping!' deydi — bolalar xonada qizil narsalarni topib kelishadi. So'ng sariq, ko'k. Har bir rang nomlanadi va takrorlanadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Rangli harakatlar",matn:"Qizil kartochka — sakrash, sariq — o'tirish, ko'k — qo'l ko'tarish. Tarbiyachi kartochkalarni ko'rsatadi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Ranglarni joylashtir",matn:"Bolalar rangli kubikları rangli doiralarga joylashtiradilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Eng sevimli rang",matn:"Har biri o'zining eng sevimli rangini aytadi va sababini tushuntiradi."}
+      ]
+    },
+    {
+      id:'a1-004',oy:'Sentyabr',hafta:1,kun:'Payshanba',soha:'1-soha: Jismoniy',
+      kod:'1.1.1.a',mavzu:"Men harakat qilaman: yurish, yugurish, sakrash",
+      maqsad:"Bolada yirik motorika ko'nikmalarini rivojlantirish: muvozanat, koordinatsiya, harakatlar uyg'unligi.",
+      jihozlar:"Gimnastika to'shakchalari, rangli belgilar, to'p, musiqa",
+      natija:"Bola to'g'ri yuradi, muvofiqlashgan holda yuguradi va ikki oyoqda sakray oladi.",
+      izoh:"Harakatlarni musiqaga moslashtiring. Kuchli va sust bolalarga alohida e'tibor bering.",
+      kompetensiya:"Shaxsiy kompetensiya: jismoniy faollik.",
+      borish:[
+        {vaqt:"Kirish (2 daq)",sarlavha:"Qo'llarni isitaylik",matn:"Barmoq va qo'l mushaklarini isitish mashqlari: mushtlashtirish, yoyish, aylantirish."},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Harakat sayohati",matn:"1. 'Fil kabi yuring' — og'ir, sekin qadam. 2. 'Qushcha kabi yuguring' — engil, tez. 3. 'Qo'g'irchoq kabi sakrang' — ikki oyoqda baland sakrash. 4. 'Mushukcha kabi emakling' — to'rt oyoqda. Har birini 2-3 marta takrorlash."},
+        {vaqt:"O'yin (5 daq)",sarlavha:"'Rangli to'xtash' o'yini",matn:"Musiqa yangraganida harakatlanish, to'xtaganda rangini ko'rsatilgan kartochkaga qarab turish."},
+        {vaqt:"Refleksiya (3 daq)",sarlavha:"Tanangizni tinglang",matn:"Bolalar yotib nafas oladilar. 'Yuragingiz qanday urmoqda? Nafasingiz tez-tez.'"}
+      ]
+    },
+    {
+      id:'a1-005',oy:'Sentyabr',hafta:1,kun:'Juma',soha:'5-soha: Ijodiy',
+      kod:'5.1.1.a',mavzu:"Erkin chizish: men sevgan narsam",
+      maqsad:"Bolada tasviriy san'atga qiziqish uyg'otish, erkin ijod qilish va o'z his-tuyg'ularini rasm orqali ifodalash imkoniyatini yaratish.",
+      jihozlar:"Oq qog'oz (katta), mum bo'yoqlar, akvareli bo'yoqlar, fartuklar",
+      natija:"Bola o'z xohishi bilan rasm chizadi va uning mazmunini tarbiyachiga tushuntiradi.",
+      izoh:"Bolaning rasmini baholamang, faqat jarayonni rag'batlantiring. 'Qanday chiroyli rang tanladingiz!' deya maqtang.",
+      kompetensiya:"Ijodiy kompetensiya: o'zini erkin ifodalash.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"San'at kuni boshlanmoqda",matn:"Tarbiyachi katta qog'ozga erkin chizib ko'rsatadi: 'Mana, men quyosh chizdim. Siz nima chizasiz?'"},
+        {vaqt:"Motivatsiya (3 daq)",sarlavha:"Sehirli bo'yoqlar",matn:"Bolalar bo'yoqlarni ushlab ko'radi, hidlaydi, rangarangligidan zavqlanadi."},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Erkin ijod",matn:"Har bir bola o'zi xohlagan narsani chizadi. Tarbiyachi yonma-yon yurib: 'Bu nima?' deb so'raydi, javobni eshitadi, maqtaydi."},
+        {vaqt:"Ko'rgazma (4 daq)",sarlavha:"Mening rasmim",matn:"Rasmlar devoriga osilib, har biri o'z rasmini tanishtiradi: 'Men [narsa] chizdim, chunki...'"},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Zavq savoli",matn:"'Bugun rasm chizish yoqdimi? Keyingi safar nima chizasiz?'"}
+      ]
+    },
+    // PRO konspektlar
+    {
+      id:'a1-006',oy:'Sentyabr',hafta:2,kun:'Dushanba',soha:'3-soha: Nutq',isPro:true,
+      kod:'3.1.2.a',mavzu:"Kuz fasli — tabiat o'zgarishlari",
+      maqsad:"Bolada kuz haqida so'z boyligi boyitish, kuz belgilarini nomlash va 2-3 so'zdan iborat gaplar tuzish.",
+      jihozlar:"Kuz barglari (haqiqiy), kuz manzarasi rasmi, rangli qog'ozlar",
+      natija:"Bola kuzning 2-3 belgisini aytadi, kuz haqida 2-3 so'zli gap tuzadi.",
+      izoh:"Sayr paytida haqiqiy barglar yig'ish mashg'ulotni boyitadi.",
+      kompetensiya:"Kommunikativ kompetensiya: tavsiflovchi nutq.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Kuz bargi keldi",matn:"Tarbiyachi kuz bargini olib keladi: 'Bu barg daraxtdan tushdi. Bu qaysi fasl?'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Kuz rasmini ko'raylik",matn:"Kuz manzarasi rasmi ko'rsatiladi: sariq daraxtlar, to'kilgan barglar, kulrang osmon. Savol-javob."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Kuz belgilari",matn:"Birgalikda kuzning belgilari sanab o'tiladi: 1. Barglar sarg'aydi. 2. Yomg'ir ko'payadi. 3. Havo soviydi. 4. Qushlar uchib ketadi. Har bir belgi kartochka bilan ko'rsatiladi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Barg bo'lib uchaylik",matn:"Bolalar barg kabi sekin-sekin 'uchadilar' — aylanadilar, pastga tushadi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Kuz bandajini yaratingiz",matn:"Har bir bola kuz ranglaridan birini tanlaydi va qog'ozga bosadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Kuz nimasi yoqadi?",matn:"'Kuzda nima sevimli?'"}
+      ]
+    },
+    {
+      id:'a1-007',oy:'Oktyabr',hafta:5,kun:'Dushanba',soha:'4-soha: Bilish',isPro:true,
+      kod:'4.2.2.a',mavzu:"Meva va sabzavotlar: tasnif",
+      maqsad:"Bolada meva va sabzavotlarni farqlash, nomlash va tasnif qilish ko'nikmalarini shakllantirish.",
+      jihozlar:"Haqiqiy mevalar va sabzavotlar (yoki rasmlar), ikkita savat, kartochkalar",
+      natija:"Bola 5 ta meva va 5 ta sabzavot nomini aytadi, ularni ikki guruhga ajratadi.",
+      izoh:"Haqiqiy mevalar qo'llatish yanada samarali. Bolalar ushlab, hidlab ko'rsinlar.",
+      kompetensiya:"Bilish kompetensiyasi: tasnif va guruhlash.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Sehirli quti",matn:"Qutidan meva va sabzavotlarni bittadan chiqarib, bolalar nomini taxmin qiladi."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Bozor kuni",matn:"'Bugun bozorga bordik. Ikki savatimiz bor: biri meva uchun, biri sabzavot uchun.'"},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Savatga joylashtir",matn:"Har bir bola navbat bilan meva yoki sabzavotni olib, to'g'ri savatga solinadi. Nega bundayligi tushuntiriladi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Sabzavot-meva harakatlari",matn:"'Olma' — doira shakli, 'sabzi' — uzun tortish, 'tarvuz' — katta doira qo'llar bilan."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Lotto o'yini",matn:"Kartochkalar aralashtirilib, bolalar lotto o'ynaydilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Sog'lom ovqat",matn:"'Qaysi mevani yaxshi ko'rasiz?'"}
+      ]
+    },
+    {
+      id:'a1-008',oy:'Noyabr',hafta:9,kun:'Dushanba',soha:'2-soha: Ijtimoiy-hissiy',isPro:true,
+      kod:'2.2.1.a',mavzu:"His-tuyg'ularim: xursand, xafa, hayron",
+      maqsad:"Bolada uchta asosiy his-tuyg'uni (xursandlik, xafalik, hayronlik) anglash va ifodalash ko'nikmasini rivojlantirish.",
+      jihozlar:"Yuz ifodalari rasmlari, ko'zgu, qo'g'irchoqlar",
+      natija:"Bola uchta his-tuyg'uni to'g'ri nomlaydi va rasmdan ko'rsata oladi.",
+      izoh:"Bolalarning real kechinmalariga murojaat qiling: 'Bugun xursandmisiz?'",
+      kompetensiya:"Ijtimoiy kompetensiya: hissiyotlarni anglash.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Ko'zgu bilan tanishuv",matn:"Bolalar ko'zguga qarab turli yuz ifodalari qilishadi. 'Mana xursand yuz, mana xafa yuz.'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Qo'g'irchoqning kuni",matn:"Qo'g'irchoq 'aladdin': 'Bugun men tort yedim — xursandman. Lekin o'yinchog'im yo'qoldi — xafaman. Sichqonni ko'rdim — hayronman!'"},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Hissiyot kartochkalari",matn:"Uchta katta yuz rasmi ko'rsatiladi. Tarbiyachi voqea aytadi, bolalar qaysi yuz ekanini ko'rsatadi. Keyin o'zlari voqea o'ylab topadilar."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Yuzim gapiryapti",matn:"Musiqa tinglaydilar — quvnoq bo'lsa xursand yuz, ma'yus bo'lsa xafa yuz."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Qanday his qilyapman?",matn:"Har bir bola bugun qanday his qilayotganini yuz ifodasi bilan ko'rsatadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Do'st nima qiladi?",matn:"'Do'stingiz xafa bo'lsa nima qilasiz?'"}
+      ]
+    }
+  ],
+  a2:[ // 4-5 yosh
+    {
+      id:'a2-001',oy:'Sentyabr',hafta:1,kun:'Dushanba',soha:'2-soha: Ijtimoiy-hissiy',
+      kod:'2.1.2.b',mavzu:"Men va do'stlarim — guruhim",
+      maqsad:"Bolada guruh a'zosi ekanligini anglash, do'stlik qoidalarini o'zlashtirish va sherikchilik ko'nikmalarini rivojlantirish.",
+      jihozlar:"Guruh fotosi, do'stlik sharhi kartochkalari, rangli chiziqlar",
+      natija:"Bola do'stlik qoidalaridan 3 tasini aytadi, guruhda hamkorlik ko'rsatadi.",
+      izoh:"Do'stlik mavzusini ertaklar orqali kuchaytiring. Birgalikda qoidalar tuzatganingiz samaraliroq.",
+      kompetensiya:"Ijtimoiy kompetensiya: hamkorlik va do'stlik.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Do'stlik qo'shig'i",matn:"'Do'stim bor, do'stim bor, men uchun u yor!' qo'shig'ini kuylaydilar."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Do'stlik qoidalari",matn:"Bolalar birgalikda do'stlik qoidalarini o'ylab topadilar: 1. Narsangni baham ko'r. 2. Yig'lasang yordam ber. 3. Navbatni kut. 4. Uzr so'ra."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Qoidalarni qo'llaymiz",matn:"Rol o'yini: 'Agar do'sting o'yinchoqni so'rasa nima qilasan?' Turli vaziyatlar muhokama qilinadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Do'stlik halqasi",matn:"Qo'llarni ushlashib, doira bo'lib o'tiradilar va turib birgalikda harakat qiladilar."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Do'stlik kartasi",matn:"Har bir bola do'sti haqida bir narsa chizadi va tuhfa qiladi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bugungi yutuq",matn:"'Bugun do'stingga qanday yaxshilik qildingiz?'"}
+      ]
+    },
+    {
+      id:'a2-002',oy:'Sentyabr',hafta:1,kun:'Seshanba',soha:'4-soha: Bilish',
+      kod:'4.2.3.b',mavzu:"Geometrik shakllar: doira, kvadrat, uchburchak, to'rtburchak",
+      maqsad:"Bolada 4 ta geometrik shaklni farqlash, nomlash va ularning xususiyatlarini aniqlash ko'nikmalarini shakllantirish.",
+      jihozlar:"Geometrik shakllar to'plami (katta va kichik), flanel doskasi, rangli qog'ozlar",
+      natija:"Bola 4 ta shaklni nomlay oladi, ularni farqlay oladi va 'Uchburchakni toping' vazifasini bajaradi.",
+      izoh:"Shakllarni kundalik narsalarda toping: deraza — kvadrat, soat — doira.",
+      kompetensiya:"Bilish kompetensiyasi: tasniflash va muqoyasa.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Shakllar shahri",matn:"'Bir mamlakatda shakllar yashardi. Doira — dumalardi, Kvadrat — burchaklari bor edi...' — qisqa ertak."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Flanel doskasida shakllar",matn:"4 ta shakl ko'rsatiladi, nomlanadi. Bolalar takrorlaydi."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Shakllarni o'rganaylik",matn:"Har bir shaklning xususiyatlari: Doira — dumaloq, burchagi yo'q. Kvadrat — 4 teng tomon, 4 burchak. Uchburchak — 3 tomon, 3 burchak. To'rtburchak — 2 uzun, 2 qisqa tomon. Bolalar qo'llari bilan shakllarni ko'rsatadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Shakl bo'laylik",matn:"'Doira!' — bolalar doira bo'lib turadi. 'Uchburchak!' — 3 ta bola uchburchak hosil qiladi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Shakllardan surat",matn:"Bolalar shakllardan uy, mashina, yoki yuz yasaydilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Xonadagi shakllar",matn:"'Uyingizda qanday shakllar bor?'"}
+      ]
+    },
+    {
+      id:'a2-003',oy:'Sentyabr',hafta:1,kun:'Chorshanba',soha:'3-soha: Nutq',
+      kod:'3.1.3.b',mavzu:"Kuz fasli — hikoya tuzish",
+      maqsad:"Bolada kuz haqida 4-5 so'zli gaplar tuzish, rasmga qarab hikoya qilish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Kuz manzarasi rasmlari (seriyali), kuz barglari, rangli bo'yoqlar",
+      natija:"Bola kuz rasmiga qarab 3-4 gapdan iborat hikoya tuzadi.",
+      izoh:"Savol-javob orqali hikoya tuzishga yo'llang. 'Keyin nima bo'ldi?' deb davom ettiring.",
+      kompetensiya:"Kommunikativ kompetensiya: bog'liq nutq.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Kuz shamoli",matn:"'Kuz keldi, kuz keldi...' she'rini birgalikda o'qiydilar."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Kuz suratlari galereyasi",matn:"Kuz rasmlari devorda osib qo'yilgan. Bolalar 'galereyada' yurib, har biriga qaraydilar."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Hikoya tuzamiz",matn:"Tarbiyachi 3 qismlik rasm qatorini ko'rsatadi: 1. Yashil daraxtlar. 2. Sariq barglar. 3. To'kilgan barglar. Bolalar navbat bilan har bir rasmni tasvirlab, hikoya tuzadilar."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Barg yig'amiz",matn:"Xonada sochilgan qog'oz barglarni yig'ib, savatchaga soladilar."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Kuz rasmim",matn:"Bolalar o'z kuz rasmlarini chizadilar, keyin hikoya qiladilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Kuz nima beradi?",matn:"'Kuz bizga nima beradi?'"}
+      ]
+    },
+    {
+      id:'a2-004',oy:'Sentyabr',hafta:1,kun:'Payshanba',soha:'1-soha: Jismoniy',
+      kod:'1.2.1.b',mavzu:"Mayda motorika: plastilindan shakllar yasash",
+      maqsad:"Bolada plastilin bilan ishlash orqali mayda motorika va ijodiy tafakkurni rivojlantirish.",
+      jihozlar:"Plastilin (turli ranglar), taxta, plastik pichoq (xavfsiz), namunalar",
+      natija:"Bola plastilinni yumshata oladi, sharcha, kolbasacha va oddiy shakllar yasay oladi.",
+      izoh:"Hamma bolaning plastilinini oldindan yumshating. Ijodiy tanlovni hurmat qiling.",
+      kompetensiya:"Shaxsiy kompetensiya: mayda motorika va ijod.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Qo'l massaji",matn:"Qo'llarni issiq suvda yuvib, barmoqlarni birma-bir siqadilar: 'Qo'llarim isindi, tayyor!'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Plastilin olamiga sayohat",matn:"'Bu plastilindan nima yasash mumkin?' — Bolalar taxmin qiladi. Tarbiyachi tez sharcha yasab ko'rsatadi."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Birgalikda yasaymiz",matn:"1. Sharcha yasash — ikki kaft orasida aylantirish. 2. Kolbasacha — qo'l bilan uzaytirish. 3. Doira — kolbasachani yumaloqlashtirish. 4. Erkin ijod: 'O'zingiz nima yasaysiz?'"},
+        {vaqt:"Ko'rgazma (4 daq)",sarlavha:"Asarimiz",matn:"Har biri yasagan narsasini ko'rsatib tushuntiradi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Qo'llarim nima qila oladi?",matn:"'Qo'llarim bilan yana nima qila olaman?'"}
+      ]
+    },
+    {
+      id:'a2-005',oy:'Sentyabr',hafta:1,kun:'Juma',soha:'5-soha: Ijodiy',
+      kod:'5.2.1.b',mavzu:"Milliy naqshlar — gul va barglar",
+      maqsad:"Bolada o'zbek milliy naqshlariga qiziqish uyg'otish va oddiy naqsh elementlarini chizish ko'nikmalarini shakllantirish.",
+      jihozlar:"Milliy naqshli buyumlar (ko'za, ro'mol), naqsh namunalari, bo'yoqlar, qog'oz",
+      natija:"Bola milliy naqshlardan iborat oddiy bezak chizadi va uning nomini aytadi.",
+      izoh:"Milliy buyumlarni ota-onalardan yig'ib keling. Har bir naqshning nomini o'zbek tilida ayting.",
+      kompetensiya:"Ijodiy kompetensiya: milliy meros va estetik did.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Milliy naqshlar galereyasi",matn:"Ko'za, ro'mol, gildim ko'rsatiladi. 'Bularda nima bor?' — bolalar naqshlarni ko'radilar."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Naqshlarning ma'nosi",matn:"Tarbiyachi tushuntiradi: 'Ajdodlarimiz bu naqshlarni chiziganlar. Gul — go'zallik. Barg — hayot.' Bolalar takrorlaydi."},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Naqsh chizamiz",matn:"1. Daftar qog'oziga qalam bilan gul shaklini chizib olishadi. 2. Bo'yoqlar bilan bo'yashadilar. 3. Atrofiga barg rasmi qo'shadilar."},
+        {vaqt:"Ko'rgazma (4 daq)",sarlavha:"Milliy ko'rgazma",matn:"Rasmlar stoliga qo'yilib, bolalar bir-birining asarini tomosha qiladi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Naqsh qayerda?",matn:"'Uyingizda qayerda naqsh bor?'"}
+      ]
+    },
+    {
+      id:'a2-006',oy:'Oktyabr',hafta:5,kun:'Dushanba',soha:'4-soha: Bilish',isPro:true,
+      kod:'4.3.2.b',mavzu:"Jonli va jonsiz tabiat",
+      maqsad:"Bolada jonli va jonsiz tabiat o'rtasidagi farqni aniqlash, ularni tasnif qilish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Tabiat rasmlari, o'simliklar, toshlar, hayvon rasmlari",
+      natija:"Bola 5 ta jonli va 5 ta jonsiz tabiat ob'ektini nomlaydi va ularni farqlaydi.",
+      izoh:"Sayrda haqiqiy tabiat ob'ektlari bilan ishlang. Kuzatish daftarini qo'llang.",
+      kompetensiya:"Bilish kompetensiyasi: tasnif, kuzatish.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Tabiat nima?",matn:"'Tabiat — bu bizni o'rab turgan hamma narsa. Qaysi narsalar tabiatga kiradi?'"},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Jonlimi yoki jonsizmi?",matn:"Tarbiyachi tosh va o'simlikni ko'rsatadi: 'Tosh nafas oladimi? Yo'q! O'simlik nafas oladimi? Ha!'"},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Tasniflaymiz",matn:"Rasmlar ikkita guruhga ajratiladi: Jonli (o'simlik, hayvon, odam, qurt) va Jonsiz (tosh, suv, tuproq, havo, quyosh). Sabablar muhokama qilinadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Jonli o'yin",matn:"'Jonli narsa aytilsa — harakatlaning, jonsiz aytilsa — qotib qoling!'"},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Tabiat albomi",matn:"Bolalar guruh bo'lib tabiat albomi yaratadilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Tabiatni muhofaza qilaylik",matn:"'Tabiatni qanday asrash kerak?'"}
+      ]
+    }
+  ],
+  a3:[ // 5-6 yosh
+    {
+      id:'a3-001',oy:'Sentyabr',hafta:1,kun:'Dushanba',soha:'3-soha: Nutq',
+      kod:'3.1.5.c',mavzu:"Men o'qishni o'rganaman: tovushlar va harflar",
+      maqsad:"Bolada tovushni ajratib eshitish, so'z boshidagi tovushni aniqlash va unli-undosh farqini bilish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Harf kartochkalari, tovush sxemalari, o'yinchoqlar, rasmli alifbo",
+      natija:"Bola so'z boshidagi tovushni ajratadi, unli/undoshni farqlaydi, A, B, O, G tovushlarini taniydi.",
+      izoh:"Bu maktabga tayyorlash emas, balki tovushga qiziqish uyg'otish. Majburlamang.",
+      kompetensiya:"Kommunikativ kompetensiya: o'qishga tayyorgarlik.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Tovush o'yini",matn:"'Men qo'l chaqqanman!' — 'Qo'l' so'zida nechta tovush? Eshiting: Q-O'-L. Uch tovush!'"},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Tovushlar mamlakati",matn:"'Unlilar kuylaydigan tovushlar: A-A-A, O-O-O. Undoshlar esa shivir-shivir: S-S-S, M-M-M.'"},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Tovush ovchilari",matn:"1. 'Olma' — bosh tovush nima? O! 2. 'Daraxt' — D! 3. Har bir bola o'yinchoq nomi bilan boshlanadigan tovushni topadi. Unli yoki undosh ekanligini aniqlaydi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Tovush harakati",matn:"Unli — qo'l yuqoriga, undosh — qo'l yon tomonga."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Tovush sxemasi",matn:"Qisqa so'z sxemasi tuziladi: har bir tovush — bitta katakcha."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bugungi kashfiyot",matn:"'Bugun qanday yangilik bilib oldingiz?'"}
+      ]
+    },
+    {
+      id:'a3-002',oy:'Sentyabr',hafta:1,kun:'Seshanba',soha:'4-soha: Bilish',
+      kod:'4.1.3.c',mavzu:"Mantiqiy fikrlash: qoidani top",
+      maqsad:"Bolada ketma-ketlik qonuniyatini aniqlash, qoidaga ko'ra davom ettirish va muammoni hal qilish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Rangli shakllar ketma-ketligi, kartochkalar, sxemalar",
+      natija:"Bola 3 elementli ketma-ketlikni davom ettiradi, qoidasini so'z bilan ifodalaydi.",
+      izoh:"Birinchi marta birgalikda bajaring. Mustaqil ishlashga asta-sekin o'tkazing.",
+      kompetensiya:"Bilish kompetensiyasi: mantiqiy fikrlash.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Sehrli ketma-ketlik",matn:"'Bugun men sehrgar bo'laman! Mening qoidamni toping!' — Doira, kvadrat, doira, kvadrat... 'Keyin nima?'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Tabiatdagi ketma-ketlik",matn:"'Tabiatda ham ketma-ketliklar bor: tun-kun, kuz-qish-bahor-yoz. Bu nima uchun?'"},
+        {vaqt:"Asosiy (14 daq)",sarlavha:"Qoidani topamiz",matn:"1. Qizil-ko'k-sariq, qizil-ko'k-sariq... (3 elementli). 2. Katta-kichik-katta-kichik (o'lcham). 3. O'z ketma-ketligingizni yasang (ijodiy). Bolalar qoidasini so'z bilan ifodalaydi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Harakat ketma-ketligi",matn:"Qo'l chap-o'ng, oyoq chap-o'ng, doiraviy harakat. Ketma-ketlikda."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Do'stimga topshiriq",matn:"Har bir bola o'z ketma-ketligini yasab, do'stiga beradi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Qayerda qoidalar bor?",matn:"'Uyingizda qanday ketma-ketliklar bor?'"}
+      ]
+    },
+    {
+      id:'a3-003',oy:'Sentyabr',hafta:1,kun:'Chorshanba',soha:'2-soha: Ijtimoiy-hissiy',
+      kod:'2.3.2.c',mavzu:"Nizolarni tinch yo'l bilan hal qilish",
+      maqsad:"Bolada muammoli vaziyatlarda o'zini tutish, muloqot orqali muammo hal qilish va empatiya ko'nikmalarini shakllantirish.",
+      jihozlar:"Rol o'yini kartochkalari, 'tinchlik stoli' belgisi",
+      natija:"Bola nizo vaziyatida 'Uzr so'rayman', 'Keling gaplashamiz', 'Menga yoqmadi' iboralarini qo'llaydigan bo'ladi.",
+      izoh:"Real guruh vaziyatlaridan misol keltiring. Bolalarning hissiyotlarini inkor etmang.",
+      kompetensiya:"Ijtimoiy kompetensiya: nizo hal qilish, empatiya.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Nizo nima?",matn:"'Nizo — bu ikki kishi bir-biriga rozi bo'lmaganda. Bunaqa holat bo'lganmi?' — bolalar tajribalari."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Qo'g'irchoqlar nizosi",matn:"Ikki qo'g'irchoq o'yinchoq uchun tortishadi. 'Bular nima qilishi kerak?'"},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Tinchlik usullari",matn:"3 ta usul: 1. 'To'xtash — nafas olish — fikrlash.' 2. 'O'z his-tuyg'ungni ayt: Menga yoqmadi chunki...' 3. 'Birgalikda yechim toping.' Rol o'yinlarida mashq qilinadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Nafas mashqi",matn:"Chuqur nafas olish: 4 sekund nafas ol, 4 sekund tut, 4 sekund chiqar."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Tinchlik stoli",matn:"Guruhda 'tinchlik stoli' ochiladi — nizo bo'lganida bu yerga kelinadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Eng yaxshi usul",matn:"'Qaysi usul sizga ko'proq yoqdi?'"}
+      ]
+    },
+    {
+      id:'a3-004',oy:'Sentyabr',hafta:1,kun:'Payshanba',soha:'4-soha: Bilish',
+      kod:'4.2.4.c',mavzu:"10 ichida hisoblash va taqqoslash",
+      maqsad:"Bolada 10 gacha tartib bilan sanash, ko'p-oz tushunchalarini amaliy qo'llash va son qatorini tushunish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Predmetlar to'plami (tugmalar, kubiklar), son kartochkalari, daftar",
+      natija:"Bola 10 gacha oldinga va orqaga sanaydi, ko'p-oz-teng farqlaydi, son qatorida tartibini biladi.",
+      izoh:"Haqiqiy predmetlar bilan sanash abstraktsiyadan samaraliroq. Har bir predmetni alohida ajrating.",
+      kompetensiya:"Bilish kompetensiyasi: elementar matematika.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Barmoqlar bilan sanash",matn:"1 dan 10 gacha barmoqlar bilan sanaydilar. Keyin 10 dan 1 gacha orqaga."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Bozorchi o'yini",matn:"'Bozorga bordim. 3 ta olma oldim, 5 ta o'rik oldim. Qaysinisi ko'p?'"},
+        {vaqt:"Asosiy (14 daq)",sarlavha:"Sanaylik va taqqoslalik",matn:"1. Ikkita guruhga predmet qo'yilib, qaysi ko'p ekanligini aniqlaymiz. 2. Tenglashtirish — qaysi guruhga nechta qo'shish kerak? 3. Son qatori — 5 dan keyin nima keladi?"},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Raqam tanichi",matn:"Tarbiyachi raqam kartochkasini ko'rsatadi, bolalar o'sha miqdorda harakat bajaradilar."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Math o'yini",matn:"Juftlik o'yini: kuchli bola susroqqa yordam beradi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Matematik kashfiyot",matn:"'Bugun nimani yangi bildingiz?'"}
+      ]
+    },
+    {
+      id:'a3-005',oy:'Sentyabr',hafta:1,kun:'Juma',soha:'5-soha: Ijodiy',
+      kod:'5.2.3.c',mavzu:"Teatr va dramatizatsiya: 'Uchta to'ng'iz'",
+      maqsad:"Bolada teatr san'atiga qiziqish, rol ijro etish, nutq va harakat uyg'unligini rivojlantirish.",
+      jihozlar:"To'ng'iz va bo'ri niqoblari yoki qo'lqop qo'g'irchoqlari, sahnalashtirish sxemasi",
+      natija:"Bola o'z rolini ijro etadi, matnni so'z bilan ifodalaydi va sahna harakatlari bajaradi.",
+      izoh:"Bolalar o'z rollari uchun dialog yaratadilar. Tayyor matn bermasdan, improvizatsiyani qo'llab-quvvatlang.",
+      kompetensiya:"Ijodiy kompetensiya: teatr, dramatizatsiya.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Ertakni eslaymiz",matn:"'Uchta to'ng'iz' ertagi qisqacha aytib beriladi. Savol-javob: 'Kimlar bor ertakda? Nima bo'ldi?'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Biz aktyormiz!",matn:"'Bugun biz bu ertakni o'ynab ko'ramiz. Kim qaysi rol olmoqchi?'"},
+        {vaqt:"Asosiy (14 daq)",sarlavha:"Sahnalashtirish",matn:"Rollar taqsimlanadi. Birinchi o'yin — tarbiyachi ko'mak beradi. Ikkinchi o'yin — mustaqil. Eng qiyin sahna: bo'ri uylarga puflaydi."},
+        {vaqt:"Tomoshabin (3 daq)",sarlavha:"Doim clapping",matn:"Tomoshabinlar (kutayotganlar) qarsak chaladilar va 'Bravo!' deydilar."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Aktyor sifatida",matn:"'Qaysi rolni ijro etish qiyin/oson edi? Nima uchun?'"}
+      ]
+    },
+    {
+      id:'a3-006',oy:'Oktyabr',hafta:5,kun:'Dushanba',soha:'3-soha: Nutq',isPro:true,
+      kod:'3.2.2.c',mavzu:"O'qishga tayyorgarlik: bo'g'inlar",
+      maqsad:"Bolada so'zni bo'g'inlarga bo'lish, bo'g'inlar sonini aniqlash ko'nikmalarini shakllantirish.",
+      jihozlar:"So'z rasmlari, qarsak topshiriqlari, bo'g'in sxemalari",
+      natija:"Bola 1-3 bo'g'inli so'zlarni bo'g'inlarga bo'ladi, bo'g'inlar sonini aniqlay oladi.",
+      izoh:"Qarsak bilan bo'g'in ajratish eng samarali usul. Har bir bo'g'inda qarsak chaldirilsin.",
+      kompetensiya:"Kommunikativ kompetensiya: bo'g'in tahlili.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Qarsak bilan ayt",matn:"'OL-MA' — ikki qarsak. 'DA-RAX-T' — uch qarsak. Birgalikda mashq qilinadi."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Bo'g'in nima?",matn:"Tarbiyachi tushuntiradi: 'Bir nafasda aytgan qism — bo'g'in. OL bir nafas, MA yana bir nafas.'"},
+        {vaqt:"Asosiy (13 daq)",sarlavha:"Bo'g'in o'yini",matn:"Rasmlar ko'rsatiladi: it (1), olma (2), somon (2), daraxt (2), qovun (2), kapalak (3). Har birini bo'g'inlarga bo'lib, soni aniqlanadi."},
+        {vaqt:"Jismoniy (3 daq)",sarlavha:"Bo'g'in harakati",matn:"1 bo'g'in — o'tirish, 2 bo'g'in — sakrash, 3 bo'g'in — aylanish."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"O'z so'zingni bo'l",matn:"Bolalar o'z ismlarini bo'g'inlarga bo'ladi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bo'g'in sanadi",matn:"'Eng ko'p bo'g'inli so'zni toping!'"}
+      ]
+    }
+  ],
+  a4:[ // 6-7 yosh
+    {
+      id:'a4-001',oy:'Sentyabr',hafta:1,kun:'Dushanba',soha:'3-soha: Nutq',
+      kod:'3.1.7.d',mavzu:"Harflar va tovushlar: o'qishga tayyorlik",
+      maqsad:"Bolada harf va tovush o'rtasidagi bog'liqlikni anglash, so'zni harflarga ajratish va birinchi harfni aniq nomlash ko'nikmalarini rivojlantirish.",
+      jihozlar:"Katta alifbo, harf kartochkalari, so'z-rasm kartochkalari, bo'r va daftar",
+      natija:"Bola 15 ta harfni taniydi, so'z boshidagi harfni aniq nomlaydi, ikki harfdan tashkil topgan bo'g'inni o'qiydi.",
+      izoh:"Majburlash maktabga tayyorlikning emas, qiziqish uyg'otishning vositasidir. Har bir harfni voqea sifatida tanishtiring.",
+      kompetensiya:"Kommunikativ kompetensiya: o'qish boshlang'ich ko'nikmasi.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Bugun qaysi harfni uchratasiz?",matn:"'Kechagi kunda qaysi harf ko'zingizga tushdi: daftarda, kitobda, ko'chada?' Bolalar javob beradi."},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Alifbo — dostimiz",matn:"Katta alifbo devorda. Tarbiyachi 'A dan Z gacha 29 harf bor. Bular — til xazinasi. Bugun yangi harflar bilan tanishamiz.'"},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"O'qish mashqi",matn:"1. Harf tanishtirish: 'A' — alifbo, olma, ari. 2. So'z-rasm o'yini: Rasm ko'rsatiladi, bola boshidagi harfni topadi. 3. Bo'g'in o'qish: MA, DA, ON, OT — tarbiyachi ko'rsatadi, bola o'qiydi. 4. Kichik tekst (3-4 so'z): birgalikda o'qiladi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Harf tanichi",matn:"Tarbiyachi havo bilan harf chizadi — bolalar nomini aytadi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Harfdan so'z",matn:"'M' harfidan boshlanadigan so'zlarni toping. Kim ko'proq aytadi?"},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Bugungi muvaffaqiyat",matn:"'Bugun qaysi harfni yaxshiroq bildingiz?'"}
+      ]
+    },
+    {
+      id:'a4-002',oy:'Sentyabr',hafta:1,kun:'Seshanba',soha:'4-soha: Bilish',
+      kod:'4.1.5.d',mavzu:"Muammoni hal qilish: tajriba o'tkazamiz",
+      maqsad:"Bolada ilmiy fikrlash — taxmin qilish, tajriba o'tkazish, kuzatish va xulosa chiqarish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Suv, tuz, qand, idishlar, qoshiq, kuzatuv daftari, qalam",
+      natija:"Bola tajriba rejasini tuzadi, natijani taxmin qiladi, tajribadan so'ng xulosa chiqaradi va yozib qoldiradi.",
+      izoh:"Tajribani bolalar o'zlari bajarsin. Tarbiyachi faqat yo'naltiradi, javob bermaydi.",
+      kompetensiya:"Bilish va tanqidiy fikrlash kompetensiyasi.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Savol — tadqiqot boshi",matn:"'Suvga tuz solinsa nima bo'ladi?' — Bolalar taxmin qiladi. Barcha taxminlar daftarga yoziladi (tarbiyachi yozadi)."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Olimlar kabi",matn:"'Haqiqiy olimlar ham shunday qiladilar: savol — taxmin — tajriba — xulosa. Biz bugun olimmiz!'"},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Laboratoriya",matn:"Tajriba 1: Tuz suvda eriydi? Har guruh kuzatadi. Tajriba 2: Qand eriydi? Tajriba 3: Tosh eriydi? Har birida: tajriba → kuzatish → natija → taxmin bilan solishtirish."},
+        {vaqt:"Yozish (4 daq)",sarlavha:"Olimning daftari",matn:"Kuzatuv daftariga: 'Nimani ko'rdim → nima bo'ldi → xulosa' — bolalar chizib/yozib qoldirishadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Ilmiy kashfiyot",matn:"'Bugun nimani aniqladingiz? Bu kashfiyot hayotda qanday foydali?'"}
+      ]
+    },
+    {
+      id:'a4-003',oy:'Sentyabr',hafta:1,kun:'Chorshanba',soha:'2-soha: Ijtimoiy-hissiy',
+      kod:'2.2.4.d',mavzu:"Mas'uliyat va mustaqillik: o'z ishimni o'zim qilaman",
+      maqsad:"Bolada o'ziga yuklangan vazifani mustaqil bajarish, natijasi uchun mas'uliyat sezish va jamoaviy ishda o'z hissasini qo'shish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Mas'uliyat jadvali, vazifa kartochkalari, rag'bat nishonlari",
+      natija:"Bola kundalik vazifasini eslatmasdan bajaradi, 'Mening mas'uliyatim bu — chunki...' deb tushuntiradi.",
+      izoh:"Mas'uliyatni jazolamang, rag'batlantiring. Xato qilganida ham 'keyingi safar qanday qilasan?' deb so'rang.",
+      kompetensiya:"Shaxsiy kompetensiya: mas'uliyat va mustaqillik.",
+      borish:[
+        {vaqt:"Kirish (4 daq)",sarlavha:"Mas'uliyat nima?",matn:"'Mas'uliyat — bu biror narsani o'z zimmaiga olib, uni bajarish. Misol: Uyda sizning mas'uliyatingiz nima?'"},
+        {vaqt:"Motivatsiya (5 daq)",sarlavha:"Guruh vazifalarimiz",matn:"Guruh vazifalari: kitoblarni joylashtirish, o'simliklarga suv quyish, stullarni tartiblashtirish. 'Kim qaysi vazifani oladi?'"},
+        {vaqt:"Asosiy (12 daq)",sarlavha:"Mas'uliyat jadvali",matn:"Jadval to'ldiriladi: Ism — Vazifasi — Kun. Har biri o'z vazifasini bajaradi. Jarayon kuzatiladi va nishon qo'yiladi."},
+        {vaqt:"Muhokama (4 daq)",sarlavha:"Qiyin bo'ldimi?",matn:"'Vazifani bajarishda qiyin narsa bo'ldimi? Nima uchun mas'uliyat muhim?'"},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Men mas'ulman",matn:"Har biri 'Men [vazifa]ga mas'ulman, chunki...' jumlasini to'ldiradi."}
+      ]
+    },
+    {
+      id:'a4-004',oy:'Sentyabr',hafta:1,kun:'Payshanba',soha:'4-soha: Bilish',
+      kod:'4.2.6.d',mavzu:"20 ichida amallar: qo'shish va ayirish",
+      maqsad:"Bolada 20 ichida qo'shish va ayirish amallarini bajarish, son qatorida yo'nalishni aniqlash va matnli masalalar yechish ko'nikmalarini rivojlantirish.",
+      jihozlar:"Amaliy materiallar (tayoqchalar, tugmalar), matnli masalalar kartochkasi, raqam qatori",
+      natija:"Bola 20 ichida qo'shish va ayirishni amaliy predmetlar bilan va yoddan bajaradi, oddiy matnli masalani yechadi.",
+      izoh:"Abstraktsiyadan oldin predmetlar bilan ishlasin. Matnli masalada avval sharoitni tushuntirishga e'tibor bering.",
+      kompetensiya:"Bilish kompetensiyasi: amaliy matematika.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Tez sanog'imiz",matn:"1 dan 20 gacha va orqaga sanaydilar. Keyin juft-toq raqamlar: 2,4,6,8..."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Bozor masalasi",matn:"'Onasi 15 so'm berdi. Kitob 8 so'm. Qancha puli qoldi?' — Bolalar taxmin qiladi."},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Qo'shish va ayirish",matn:"1. Predmetlar bilan: 7 ta tayoq + 5 ta = 12. 2. Raqam qatori bilan: 15 - 6 = ? (oldinga-orqaga siljish). 3. Matnli masalalar: 2 ta masala amaliy hal qilinadi. 4. Juftlikda tekshirishadi."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Matematik harakatlar",matn:"Tarbiyachi misol aytadi: 10+5=? Bola javob darajasida sakraydi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"O'z masalamni tuzaman",matn:"Har biri bir matnli masala tuzadi, qo'shnisiniga beradi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Matematika hayotda",matn:"'Uyda qayerda qo'shish yoki ayirishdan foydalanasiz?'"}
+      ]
+    },
+    {
+      id:'a4-005',oy:'Sentyabr',hafta:1,kun:'Juma',soha:'3-soha: Nutq',
+      kod:'3.3.2.d',mavzu:"Yozishga tayyorlik: qalam boshqarish",
+      maqsad:"Bolada qalam to'g'ri ushlab, tekis va egri chiziqlar, halqalar va spiral chizish orqali yozishga tayyorlik ko'nikmalarini rivojlantirish.",
+      jihozlar:"Daftar, qalam, rangli qalamlar, chiziqli va hujayrali qog'oz",
+      natija:"Bola qalamni to'g'ri ushlab, chiziq bo'ylab aniq chizadi, harfga o'xshash shakllarni yoza oladi.",
+      izoh:"Qo'lni to'g'ri o'rgatish muhim. Majburlash charchalik chaqiradi — qisqa sessiyalar samarali.",
+      kompetensiya:"Kommunikativ kompetensiya: yozishga tayyorgarlik.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Qo'l isitish",matn:"Barmoq massaji, mushtlashtirish-yoyish, aylantirish. 'Qalamimiz tayyor!'"},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Qalam do'stimiz",matn:"'Qalam to'g'ri ushlanmasa — xat yomon chiqadi. To'g'ri usulini bilib olamiz.'"},
+        {vaqt:"Asosiy (15 daq)",sarlavha:"Chiziqlar ustasi",matn:"1. Tekis gorizontal chiziq — chapdan o'ngga. 2. Vertikal chiziq — yuqoridan pastga. 3. Egri chiziq — to'lqin. 4. Spiral — markazdan tashqariga. 5. Yopiq halqa — bir tekkis. 6. Harfga o'xshash: I, L, T, O shakllar."},
+        {vaqt:"Baholash (4 daq)",sarlavha:"Mening chiziqlarim",matn:"Bolalar o'z ishlarini ko'rsatadi. Tarbiyachi eng chiroyl chiziqni maqtaydi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Yozuvchi bo'lamiz",matn:"'Yozish o'rganish uchun nima kerak?'"}
+      ]
+    },
+    {
+      id:'a4-006',oy:'Oktyabr',hafta:5,kun:'Dushanba',soha:'4-soha: Bilish',isPro:true,
+      kod:'4.1.6.d',mavzu:"Vaqt tushunchasi: soat, hafta, oy",
+      maqsad:"Bolada vaqt o'lchov birliklarini (soat, kun, hafta, oy) anglash, soat raqamlarini ko'rsatish va kundalik tartibni vaqt bilan bog'lash ko'nikmalarini rivojlantirish.",
+      jihozlar:"Katta soat modeli (yoki haqiqiy soat), hafta jadvali, oy nomi kartochkalari",
+      natija:"Bola soat raqamlarini ko'rsatadi, haftaning 7 kunini ketma-ketlikda aytadi, 12 oy nomini biladi.",
+      izoh:"Kundalik tartibni vaqt bilan bog'lang: 'Biz 9:00 da bog'chaga kelamiz, 13:00 da tushlik.'",
+      kompetensiya:"Bilish kompetensiyasi: vaqt va fazo.",
+      borish:[
+        {vaqt:"Kirish (3 daq)",sarlavha:"Bugun qaysi kun?",matn:"'Bugun necha-nechanchi? Qaysi oy? Qaysi kun?' — Bolalar javob beradi. Hafta jadvali ko'rsatiladi."},
+        {vaqt:"Motivatsiya (4 daq)",sarlavha:"Soat gapirsa",matn:"'Soat — bu vaqt o'lchash asbobi. Agar soat bo'lmasa nima bo'lardi?' — Muhokama."},
+        {vaqt:"Asosiy (14 daq)",sarlavha:"Vaqtni bilamiz",matn:"1. Soat modeli: millar ko'rsatiladi, 'Soat necha?' o'yini. 2. Kunlar: Dushanba...Yakshanba — qo'shiq bilan. 3. Oylar: 12 oy, qaysi fasl bilan bog'liq? 4. Kundalik jadval: sabah, tush, kechqurun."},
+        {vaqt:"Jismoniy (2 daq)",sarlavha:"Soat mili",matn:"Bolalar aylana bo'lib turadi, biri 'mil' bo'lib aylana bo'ylab yuradi."},
+        {vaqt:"Mustahkamlash (4 daq)",sarlavha:"Mening kun jadvalim",matn:"Har biri o'zining kundalik jadvalini chizadi."},
+        {vaqt:"Refleksiya (2 daq)",sarlavha:"Vaqtni qadrlaymiz",matn:"'Vaqtni tejash uchun nima qilish kerak?'"}
+      ]
+    }
+  ]
+};
 
-window.addEventListener('load',async()=>{
-  const auth=await initAuth(true);
-  if(!auth)return;
-  if(typeof fillNav==='function')fillNav();
+// ===================== RENDER =====================
+function colorOf(age){return {a1:'var(--age1)',a2:'var(--age2)',a3:'var(--age3)',a4:'var(--age4)'}[age]}
+function softOf(age){return {a1:'var(--age1-soft)',a2:'var(--age2-soft)',a3:'var(--age3-soft)',a4:'var(--age4-soft)'}[age]}
 
-  const proUser=isPro();
-  document.getElementById('hero-plan').innerHTML=proUser
-    ?'<i class="ti ti-crown"></i> Professional'
-    :'<i class="ti ti-free-rights"></i> Bepul';
-  if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
+function renderKN(age, list){
+  const container=document.getElementById('list-'+age);
+  if(!list.length){container.innerHTML='<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;color:var(--muted);font-size:13px">Filterlarga mos konspekt topilmadi.</div>';return}
 
-  const banner=document.getElementById('access-note');
-  if(proUser){banner.classList.add('pro');document.getElementById('access-note-text').textContent="Cheksiz konspektlarga ega siz!";}
-  else{document.getElementById('access-note-text').textContent=`Bepul rejada ${FREE_LIMIT} ta konspekt ko'rishingiz mumkin.`;}
+  let freeCount=0;
+  let months=[...new Set(list.map(k=>k.oy))];
+  let html='';
 
-  const weeks=[...new Set(knData.map(k=>k.hafta))].sort((a,b)=>a-b);
-  const sel=document.getElementById('kn-hafta');
-  weeks.forEach(h=>{const o=document.createElement('option');o.value=h;o.textContent=h+'-hafta';sel.appendChild(o)});
+  months.forEach(oy=>{
+    let oyItems=list.filter(k=>k.oy===oy);
+    if(!oyItems.length)return;
+    html+=`<div class="month-div"><div class="mline"></div><span class="month-label ${age}"><i class="ti ti-calendar-event" style="font-size:11px;margin-right:4px"></i>${oy}</span><div class="mline"></div></div>`;
 
-  renderKn(knData);
-});
+    oyItems.forEach((k,i)=>{
+      const isFree=!k.isPro;
+      if(isFree)freeCount++;
+      const locked=k.isPro && freeCount>=FREE_LIMIT;
+      const color=colorOf(age), soft=softOf(age);
+      const idx=k.id;
 
-function renderKn(list){
-  const isLimited=!isPro();
-  const visibleList=isLimited?list.slice(0,FREE_LIMIT):list;
-  const lockedCount=isLimited?Math.max(0,list.length-FREE_LIMIT):0;
-
-  if(!visibleList.length){
-    document.getElementById('kn-list').innerHTML='<div class="empty-state">Konspekt topilmadi.</div>';
-    document.getElementById('lock-section').style.display='none';
-    return;
-  }
-
-  document.getElementById('kn-list').innerHTML=visibleList.map((k,i)=>`
-    <div class="kn-card">
-      <div class="kn-hdr" onclick="toggleKn(${i})">
-        <div>
-          <div class="kn-meta">
-            <span class="kb kb1">${k.hafta}-hafta</span>
-            <span class="kb kb2">${k.kun}</span>
-            <span class="kb kb3">${k.soha}</span>
+      html+=`<div class="kn-card" id="card-${idx}">
+        <div class="kn-hdr" onclick="toggleKN('${idx}')">
+          <div style="flex:1;min-width:0">
+            <div class="kn-meta">
+              <span class="kb ay">${k.oy}</span>
+              <span class="kb kun">${k.kun}</span>
+              <span class="kb soha">${k.soha}</span>
+              <span class="kb kod">${k.kod}</span>
+              ${k.isPro?'<span class="kb" style="background:var(--pro-soft);color:var(--pro)"><i class="ti ti-crown" style="font-size:9px"></i> PRO</span>':'<span class="kb" style="background:#f0fdf4;color:#15803d"><i class="ti ti-lock-open" style="font-size:9px"></i> Bepul</span>'}
+            </div>
+            <div class="kn-title">${k.mavzu}</div>
           </div>
-          <div class="kn-title">${k.mavzu}</div>
+          <i class="ti ti-chevron-down kn-arrow" id="arr-${idx}"></i>
         </div>
-        <span class="kn-arrow" id="arr-${i}"><i class="ti ti-chevron-down"></i></span>
-      </div>
-      <div class="kn-body" id="kn-${i}">
-        <div class="kn-sec"><h5>Indikator kodi</h5><p>${k.kod}</p></div>
-        <div class="kn-sec"><h5>Maqsad</h5><p>${k.maqsad}</p></div>
-        <div class="kn-sec"><h5>Jihozlar</h5><p>${k.jihozlar}</p></div>
-        <div class="kn-sec"><h5>Darsning borishi</h5><ul>${k.borish.map(b=>`<li>${b}</li>`).join('')}</ul></div>
-        <div class="kn-sec"><h5>Kutilgan natija</h5><p>${k.natija}</p></div>
-        ${k.izoh?`<div class="kn-sec"><h5>Tarbiyachi izohi</h5><p>${k.izoh}</p></div>`:''}
-        <button class="btn-print" onclick="printKn(${i})"><i class="ti ti-printer"></i> Chop etish</button>
-      </div>
-    </div>
-  `).join('');
+        <div class="kn-body" id="body-${idx}">`;
 
-  window._knVisible=visibleList;
-
-  if(lockedCount>0){
-    document.getElementById('lock-section').style.display='block';
-    document.getElementById('lock-section').innerHTML=`
-      <div class="lock-card">
-        <div class="ic"><i class="ti ti-lock"></i></div>
-        <h3>Yana ${lockedCount} ta konspekt mavjud</h3>
-        <p>Professional obuna bilan barcha 30+ konspektlarga ega bo'ling</p>
-        <a href="../premium.html" class="btn-premium">Premium olish — 49 000 so'm/oy</a>
-      </div>`;
-  } else {
-    document.getElementById('lock-section').style.display='none';
-  }
+      if(locked){
+        html+=`<div class="lock-banner">
+          <div class="lb-icon"><i class="ti ti-crown"></i></div>
+          <h3>Bu konspekt PRO versiyada</h3>
+          <p>Barcha konspektlarga ega bo'lish uchun Professional obunaga o'ting</p>
+          <button class="btn-pro" onclick="window.location.href='../premium.html'"><i class="ti ti-crown"></i> PRO olish — 49 000 so'm/oy</button>
+        </div>`;
+      } else {
+        html+=`
+          <div class="kn-sec"><h5><i class="ti ti-target" style="font-size:11px"></i> Maqsad</h5><p>${k.maqsad}</p></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+            <div class="kn-sec"><h5><i class="ti ti-tools" style="font-size:11px"></i> Jihozlar</h5><p>${k.jihozlar}</p></div>
+            <div class="kn-sec"><h5><i class="ti ti-brain" style="font-size:11px"></i> Kompetensiya</h5><p>${k.kompetensiya}</p></div>
+          </div>
+          <div class="kn-sec" style="margin-top:12px"><h5><i class="ti ti-list-details" style="font-size:11px"></i> Darsning borishi</h5>
+            <div class="kn-grid" style="margin-top:8px">
+              ${k.borish.map(b=>`<div class="kn-step"><div class="kn-step-num">${b.vaqt}</div><div class="kn-step-title">${b.sarlavha}</div><div class="kn-step-text">${b.matn}</div></div>`).join('')}
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+            <div class="kn-sec"><h5><i class="ti ti-check" style="font-size:11px"></i> Kutilgan natija</h5><p>${k.natija}</p></div>
+            ${k.izoh?`<div class="kn-sec"><h5><i class="ti ti-info-circle" style="font-size:11px"></i> Tarbiyachi izohi</h5><p>${k.izoh}</p></div>`:''}
+          </div>
+          <button class="btn-print" onclick="printKN('${idx}','${age}')"><i class="ti ti-printer"></i> Chop etish</button>`;
+      }
+      html+='</div></div>';
+    });
+  });
+  container.innerHTML=html;
 }
 
-function toggleKn(i){
-  const body=document.getElementById('kn-'+i),arr=document.getElementById('arr-'+i);
+function toggleKN(id){
+  const body=document.getElementById('body-'+id);
+  const arr=document.getElementById('arr-'+id);
   body.classList.toggle('open');
-  arr.style.transform=body.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
+  arr.style.transform=body.classList.contains('open')?'rotate(180deg)':'rotate(0)';
 }
 
-function filterKn(){
-  const h=document.getElementById('kn-hafta').value;
-  const k=document.getElementById('kn-kun').value;
-  const s=document.getElementById('kn-soha').value;
-  renderKn(knData.filter(x=>(!h||x.hafta==h)&&(!k||x.kun===k)&&(!s||x.soha===s)));
+function filterKN(age){
+  const n=age.replace('a','');
+  const oy=document.getElementById('f'+n+'-oy').value;
+  const soha=document.getElementById('f'+n+'-soha').value;
+  let list=knData[age].filter(k=>(!oy||k.oy===oy)&&(!soha||k.soha===soha));
+  renderKN(age,list);
 }
 
-function resetKn(){
-  ['kn-hafta','kn-kun','kn-soha'].forEach(id=>document.getElementById(id).value='');
-  renderKn(knData);
+function resetFilter(age){
+  const n=age.replace('a','');
+  document.getElementById('f'+n+'-oy').value='';
+  document.getElementById('f'+n+'-soha').value='';
+  renderKN(age,knData[age]);
 }
 
-function printKn(i){
-  const k=window._knVisible[i];
+function showAge(age){
+  document.querySelectorAll('.age-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.age-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.age-tab.'+age).classList.add('active');
+  document.getElementById('panel-'+age).classList.add('active');
+}
+
+// Print
+function printKN(id,age){
+  const k=knData[age].find(x=>x.id===id);
+  if(!k)return;
   const w=window.open('','_blank');
-  w.document.write(`<html><head><title>KN Konspekt</title>
-    <style>body{font-family:sans-serif;padding:24px;max-width:700px;margin:auto}h2{color:#1e40af}h4{border-bottom:1px solid #eee;padding-bottom:4px;margin-top:14px}li{margin:4px 0}</style>
-    </head><body>
-    <h2>KN Konspekt — MaktabgachaHub</h2>
-    <p>Hafta: ${k.hafta} | Kun: ${k.kun} | Soha: ${k.soha}</p>
-    <p>Indikator: ${k.kod}</p>
-    <h4>Mavzu</h4><p>${k.mavzu}</p>
-    <h4>Maqsad</h4><p>${k.maqsad}</p>
-    <h4>Jihozlar</h4><p>${k.jihozlar}</p>
-    <h4>Darsning borishi</h4><ul>${k.borish.map(b=>`<li>${b}</li>`).join('')}</ul>
-    <h4>Kutilgan natija</h4><p>${k.natija}</p>
-    ${k.izoh?`<h4>Izoh</h4><p>${k.izoh}</p>`:''}
-    </body></html>`);
+  w.document.write(`<html><head><title>KN Konspekt — MaktabgachaHub</title>
+  <style>body{font-family:sans-serif;padding:28px;max-width:760px;margin:auto;color:#111}
+  h1{color:#1e40af;font-size:18px;margin-bottom:4px}
+  .meta{font-size:12px;color:#666;margin-bottom:16px}
+  h3{border-bottom:1px solid #e5e7eb;padding-bottom:4px;margin-top:16px;font-size:14px;color:#1e40af}
+  .step{background:#f0f4ff;border-radius:8px;padding:10px 12px;margin:6px 0}
+  .step-t{font-size:11px;color:#6b7280;font-weight:700}
+  .step-h{font-size:13px;font-weight:700;color:#1e40af;margin:3px 0}
+  p,li{font-size:13px;line-height:1.7}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media print{body{padding:10px}}
+  </style></head><body>
+  <h1>KN Konspekt — "${k.mavzu}"</h1>
+  <div class="meta">${k.oy} | ${k.kun} | ${k.soha} | ${k.kod} | MaktabgachaHub.uz</div>
+  <h3>Maqsad</h3><p>${k.maqsad}</p>
+  <h3>Jihozlar</h3><p>${k.jihozlar}</p>
+  <h3>Kompetensiya</h3><p>${k.kompetensiya}</p>
+  <h3>Darsning borishi</h3>
+  ${k.borish.map(b=>`<div class="step"><div class="step-t">${b.vaqt}</div><div class="step-h">${b.sarlavha}</div><p>${b.matn}</p></div>`).join('')}
+  <h3>Kutilgan natija</h3><p>${k.natija}</p>
+  ${k.izoh?`<h3>Tarbiyachi izohi</h3><p>${k.izoh}</p>`:''}
+  </body></html>`);
   w.document.close();w.print();
 }
+
+// Init
+['a1','a2','a3','a4'].forEach(age=>renderKN(age,knData[age]));
 </script>
 </body>
 </html>
