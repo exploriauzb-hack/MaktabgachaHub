@@ -40,7 +40,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .user-info .plan{font-size:11px;color:var(--muted)}
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
-
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:10px}
@@ -49,12 +48,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar h1{font-size:20px;font-weight:600}
 .topbar h1 span{color:var(--accent)}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
-
-/* VARIANT TANLASH */
+.plan-pill.pro{background:var(--pro-soft);color:var(--pro)}
 .variant-screen{display:block}
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
-.variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:0}
+.variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .variant-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:20px 16px;cursor:pointer;transition:all .2s;text-align:center;position:relative}
 .variant-card:hover:not(.locked){border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
 .variant-card.locked{opacity:.75;cursor:default}
@@ -68,22 +66,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .variant-card .vc-badge.pro{background:var(--pro-soft);color:var(--pro)}
 .lock-overlay{position:absolute;inset:0;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.6);backdrop-filter:blur(1px)}
 .lock-overlay i{font-size:28px;color:var(--pro)}
-
-/* TEST SCREEN */
 .test-screen{display:none}
 .test-header{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .test-header .th-left{flex:1;min-width:0}
 .test-header .th-title{font-size:15px;font-weight:700;color:var(--accent)}
 .test-header .th-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .timer-box{display:flex;align-items:center;gap:8px;background:var(--amber-soft);border:1px solid #fcd34d;border-radius:8px;padding:8px 14px;font-size:16px;font-weight:700;color:var(--amber);flex-shrink:0}
-.timer-box i{font-size:18px}
 .timer-box.danger{background:var(--red-soft);border-color:#fca5a5;color:var(--red)}
-
 .progress-wrap{margin-bottom:16px}
 .progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
 .progress-bar{height:6px;background:var(--bg);border-radius:99px;overflow:hidden}
 .progress-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s ease}
-
 .q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px}
 .q-num{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:5px}
 .q-num i{font-size:13px;color:var(--accent)}
@@ -92,7 +85,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .option-btn{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:9px;border:2px solid var(--border);background:var(--surface);cursor:pointer;text-align:left;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--text);transition:all .15s;width:100%}
 .option-btn:hover:not(:disabled){border-color:#93c5fd;background:var(--accent-soft)}
 .option-btn:disabled{cursor:default}
-.option-btn .opt-letter{width:24px;height:24px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .15s}
+.option-btn .opt-letter{width:24px;height:24px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
 .option-btn.correct{border-color:#86efac;background:var(--green-soft)}
 .option-btn.correct .opt-letter{background:#86efac;color:var(--green)}
 .option-btn.wrong{border-color:#fca5a5;background:var(--red-soft)}
@@ -103,13 +96,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .feedback-box.show{display:flex}
 .feedback-box.ok{background:var(--green-soft);color:var(--green);border:1px solid #86efac}
 .feedback-box.err{background:var(--red-soft);color:var(--red);border:1px solid #fca5a5}
-.feedback-box i{font-size:16px;flex-shrink:0}
-
-.btn-next{margin-top:12px;display:flex;align-items:center;gap:8px;padding:11px 24px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .15s,box-shadow .15s}
-.btn-next:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(30,64,175,.3)}
-.btn-next i{font-size:16px}
-
-/* RESULT SCREEN */
+.btn-next{margin-top:12px;display:flex;align-items:center;gap:8px;padding:11px 24px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .15s}
+.btn-next:hover{transform:translateY(-1px)}
 .result-screen{display:none}
 .result-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;margin-bottom:16px}
 .result-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:30px}
@@ -117,22 +105,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .result-icon.mid{background:var(--amber-soft);color:var(--amber)}
 .result-icon.low{background:var(--red-soft);color:var(--red)}
 .result-pct{font-size:48px;font-weight:700;margin-bottom:4px}
-.result-pct.great{color:var(--green)}
-.result-pct.mid{color:var(--amber)}
-.result-pct.low{color:var(--red)}
+.result-pct.great{color:var(--green)}.result-pct.mid{color:var(--amber)}.result-pct.low{color:var(--red)}
 .result-label{font-size:16px;font-weight:600;margin-bottom:8px}
 .result-sub{font-size:13px;color:var(--muted)}
 .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
 .rs-item{background:var(--bg);border-radius:10px;padding:12px;text-align:center}
-.rs-val{font-size:20px;font-weight:700}
-.rs-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.rs-val{font-size:20px;font-weight:700}.rs-lbl{font-size:11px;color:var(--muted);margin-top:2px}
 .result-btns{display:flex;gap:10px;flex-wrap:wrap}
-.btn-retry{flex:1;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .15s}
-.btn-retry:hover{transform:translateY(-1px)}
-.btn-back2{flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
-.btn-back2:hover{background:var(--bg)}
-
-/* PRO MODAL */
+.btn-retry{flex:1;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px}
+.btn-back2{flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:7px}
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
 .modal{background:var(--surface);border-radius:16px;padding:28px;max-width:460px;width:100%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
@@ -147,34 +128,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .modal-price{background:var(--pro-soft);border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .modal-price .price{font-size:22px;font-weight:700;color:var(--pro)}
 .modal-price .price span{font-size:13px;font-weight:400;color:var(--muted)}
-.btn-buy{width:100%;padding:13px;background:linear-gradient(135deg,var(--pro),#a855f7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,box-shadow .15s}
-.btn-buy:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.35)}
-
+.btn-buy{width:100%;padding:13px;background:linear-gradient(135deg,var(--pro),#a855f7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px)}
-.fab-back i{font-size:18px}
-
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .sidebar-close{display:flex}
-  .btn-hamburger{display:flex}
-  .main{margin-left:0;padding:14px 14px 80px}
-  .topbar{margin-bottom:16px}
-  .topbar h1{font-size:15px}
-  .variant-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .test-header{gap:10px;padding:12px 14px}
-  .q-card{padding:14px}
-  .q-text{font-size:13px;padding:8px 12px}
-  .option-btn{font-size:12px;padding:9px 11px;gap:8px}
-  .result-pct{font-size:36px}
-  .result-stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sidebar-close{display:flex}
+  .btn-hamburger{display:flex}.main{margin-left:0;padding:14px 14px 80px}
+  .topbar h1{font-size:15px}.variant-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .q-text{font-size:13px}.option-btn{font-size:12px}.result-pct{font-size:36px}
   .fab-back{bottom:16px;right:12px;padding:10px 14px;font-size:12px}
 }
-@media(max-width:420px){
-  .variant-grid{grid-template-columns:1fr}
-  .result-btns{flex-direction:column}
-}
+@media(max-width:420px){.variant-grid{grid-template-columns:1fr}.result-btns{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -208,13 +172,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
-      <div class="avatar">T</div>
+      <div class="avatar" id="sb-avatar">T</div>
       <div class="user-info">
-        <div class="name">Tarbiyachi</div>
-        <div class="plan">Bepul tarif</div>
+        <div class="name" id="sb-name">Tarbiyachi</div>
+        <div class="plan" id="sb-plan">Bepul tarif</div>
       </div>
     </div>
-    <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 
@@ -224,45 +188,29 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
       <h1><span>Vaziyatlar</span> testi</h1>
     </div>
-    <span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
+    <span class="plan-pill" id="planPill"><i class="ti ti-free-rights"></i> Bepul</span>
   </div>
-
-  <!-- VARIANT TANLASH -->
   <div class="variant-screen" id="variantScreen">
-    <div class="info-box">
-      <i class="ti ti-info-circle"></i>
-      Kasbiy vaziyatlarni qanday hal qilishingizni sinab ko'ring. Har bir variantda 15 ta savol, 20 daqiqa vaqt.
-    </div>
+    <div class="info-box"><i class="ti ti-info-circle"></i> Kasbiy vaziyatlarni qanday hal qilishingizni sinab ko'ring. Har bir variantda 15 ta savol, 20 daqiqa vaqt.</div>
     <div class="variant-grid" id="variantGrid"></div>
   </div>
-
-  <!-- TEST JARAYONI -->
   <div class="test-screen" id="testScreen">
     <div class="test-header">
       <div class="th-left">
         <div class="th-title" id="th-title">1-variant</div>
         <div class="th-sub" id="th-sub">Vaziyatli kasbiy mahorat testi</div>
       </div>
-      <div class="timer-box" id="timerBox">
-        <i class="ti ti-clock"></i>
-        <span id="timerTxt">20:00</span>
-      </div>
+      <div class="timer-box" id="timerBox"><i class="ti ti-clock"></i><span id="timerTxt">20:00</span></div>
     </div>
     <div class="progress-wrap">
-      <div class="progress-info">
-        <span id="progTxt">1 / 15</span>
-        <span id="progPct">0%</span>
-      </div>
+      <div class="progress-info"><span id="progTxt">1 / 15</span><span id="progPct">0%</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
     </div>
     <div id="qArea"></div>
   </div>
-
-  <!-- NATIJA -->
   <div class="result-screen" id="resultScreen"></div>
 </main>
 
-<!-- PRO MODAL -->
 <div class="modal-overlay" id="proModal" onclick="if(event.target===this)closeProModal()">
   <div class="modal">
     <button class="modal-close" onclick="closeProModal()"><i class="ti ti-x"></i></button>
@@ -270,7 +218,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <h2>Professional tarif kerak</h2>
     <p>Bu variant faqat PRO foydalanuvchilar uchun. Barcha variantlarga to'liq kirish uchun obuna bo'ling.</p>
     <div class="modal-feats">
-      <div class="mf"><i class="ti ti-circle-check"></i> Barcha vaziyat variantlari (1–2 bepul)</div>
+      <div class="mf"><i class="ti ti-circle-check"></i> Barcha vaziyat variantlari (3, 4, 5)</div>
       <div class="mf"><i class="ti ti-circle-check"></i> Cheksiz testlar va konspektlar</div>
       <div class="mf"><i class="ti ti-circle-check"></i> Attestatsiya, portfolio, oyinlar</div>
       <div class="mf"><i class="ti ti-circle-check"></i> AI Konspekt generator</div>
@@ -282,20 +230,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       </div>
       <div style="background:var(--pro);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
     </div>
-    <button class="btn-buy" onclick="window.location.href='premium.html'">
-      <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
-    </button>
+    <button class="btn-buy" onclick="window.location.href='premium.html'"><i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish</button>
   </div>
 </div>
 
 <a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
 <script>
-// ══════════════════════════════════════════
-// BARCHA SAVOLLAR (75 ta: 30 bepul + 45 PRO)
-// ══════════════════════════════════════════
 var ALL_Q=[
-  // ── 1-2 VARIANT (bepul, 1–30) ──
   {q:"Guruhga yangi kelgan 3 yoshli bola yig'lab, onasini chaqiradi. Siz nima qilasiz?",opts:["Onasiga bolani olib ketishni taklif qilaman","Bolani majburlab onasidan ajratib olaman","Quchoqlab, onasi tez kelishini aytib, o'yinga band qilaman","E'tibor bermay, o'zi ko'nikadi deb kutaman"],ans:2},
   {q:"4 yoshli bola bog'chaga birinchi kun kelgan, doim yig'laydi. Sizning harakatingiz?",opts:["Onasiga bolani bir hafta uyda saqlashni tavsiya qilaman","Majburlab guruhga olib kiraman va qoldiraman","Sevimli o'yinchog'ini olib kelishni onasiga aytaman","Yig'isiga umuman qaramay, boshqa ishimni davom ettiraman"],ans:2},
   {q:"Tushki uyqudan keyin 5 yoshli bola onasini so'rab yig'laydi. Nima qilasiz?",opts:["Onasiga darhol qo'ng'iroq qilib, vaziyatni aytaman","Bolani tinchlantirmay, o'zi to'xtashini kutaman","Yoniga borib, erkalab, sevimli o'yinini taklif qilaman","Bolani boshqa xonaga olib chiqib, yolg'iz qoldiraman"],ans:2},
@@ -310,7 +252,7 @@ var ALL_Q=[
   {q:"Kichik guruhda bir bola jamoa o'yiniga qo'shilmay, chetda o'tiradi. Siz nima qilasiz?",opts:["Majburlab o'yinga qo'shaman, qolmasin deb","Chetda o'tirganiga e'tibor qilmayman","Yoniga borib, birgalikda o'yinni boshlashni taklif qilaman","Boshqa bolalarga uning ustidan kulishga ruxsat beraman"],ans:2},
   {q:"O'yin vaqtida bola doim yutqizsa, asabiylashib, o'yinni tashlab ketadi. Sizning harakatingiz?",opts:["Undan keyin o'yinni umuman tashkil qilmayman","«Yutqizish ham odatiy» deb tushuntirib, bardoshli bo'lishga o'rgataman","Har doim uning yutishiga sharoit yarataman","Boshqa bolalarni ayblab, o'yinni to'xtataman"],ans:1},
   {q:"Mashg'ulot vaqtida bola qo'lini ko'tarmasdan javob aytib qo'yadi. Siz qanday munosabat bildirasiz?",opts:["Qattiq tanbeh berib, qoidani eslataman","Javobini eshitib, keyin qo'l ko'tarish kerakligini aytaman","Javobiga e'tibor bermay, boshqa bolani so'rayman","Darsni to'xtatib, bu haqda uzoq gapirib o'tiraman"],ans:1},
-  {q:"Tarbiyachi sifatida siz yangi uslubni joriy qilmoqchisiz, lekin ba'zi bolalar qarshilik qiladi. Qanday yo'l tutasiz?",opts:["O'z uslubimni majburlab o'tkazaman, ular ko'nikadi","Qarshilik qilganlarni jazolab, boshqalarga ibrat qilaman","Bolalarni tushuntirib, qiziqish uyg'otib, asta-sekin joriy qilaman","Butunlay bekor qilib, eski usulda davom etaman"],ans:2},
+  {q:"Siz yangi uslubni joriy qilmoqchisiz, lekin ba'zi bolalar qarshilik qiladi. Qanday yo'l tutasiz?",opts:["O'z uslubimni majburlab o'tkazaman, ular ko'nikadi","Qarshilik qilganlarni jazolab, boshqalarga ibrat qilaman","Bolalarni tushuntirib, qiziqish uyg'otib, asta-sekin joriy qilaman","Butunlay bekor qilib, eski usulda davom etaman"],ans:2},
   {q:"Guruhda bola doim yolg'on gapiradi, boshqalarni ayblaydi. Siz qanday ish ko'rasiz?",opts:["Har safar yolg'onini fosh qilib, hamma oldida uyalaman","Ota-onasini chaqirib, qattiq gapirishlarini so'rayman","Ijobiy xatti-harakatlarini maqtab, rostgo'ylikni rag'batlantiraman","Bu yoshga xos deb e'tibor bermay qo'yaman"],ans:2},
   {q:"6 yoshli bola mustaqil ravishda murakkab vazifani bajara olmay, yordam so'raydi. Siz nima qilasiz?",opts:["Bajarib berib, faqat natijasini ko'rsataman","«O'zing o'ylab ko'r» deb rad javobini beraman","Yo'l-yo'riq ko'rsatib, o'zi bajarishiga imkon yarataman","Boshqa bolalarga o'rgatishini buyuraman"],ans:2},
   {q:"Guruhda bir bola juda qo'zg'aluvchan, doim yugurib, xavfli harakatlar qiladi. Tarbiyachi sifatida?",opts:["Jazolab, butun kun stulda o'tqazaman","Faoliyatini cheklab, tinch o'yinlar o'ynataman","Harakatchan o'yinlar va sport mashqlari bilan band qilaman","Ota-onasiga murojaat qilib, davolanishini tavsiya qilaman"],ans:2},
@@ -326,60 +268,56 @@ var ALL_Q=[
   {q:"Guruhda bolalar mustaqil faoliyatda tartibsizlik qilishadi. Siz qanday yo'l qo'llaysiz?",opts:["Har bir topshiriqni bajarish tartibini aniq ko'rsatib, nazorat qilaman","Tartibsizlikka e'tibor bermay, o'zlari tushunishlarini kutaman","Bolalar bilan birgalikda tartib qoidalarini ishlab chiqaman","Jazolar tizimini joriy qilib, intizomni o'rnataman"],ans:2},
   {q:"6 yoshli bola maktabga borishdan qo'rqishini aytadi. Sizning ishingiz?",opts:["«Qo'rqma, hamma boradi» deb qisqa javob beraman","Ota-onasiga murojaat qilib, ular hal qilishini so'rayman","Bolani maktab hayoti bilan ijobiy misollar orqali tanishtirib, qiziqish uyg'otaman","«Hali vaqt bor» deb, mavzuni kechiktiraman"],ans:2},
   {q:"Tarbiyachi sifatida siz o'zingizning kasbiy xatongizni sezib qoldingiz. Bolalar oldida qanday ish qilasiz?",opts:["Xatoni yashirib, boshqa mavzuga o'tib ketaman","Xatoni tan olib, to'g'rilayman va bolalardan kechirim so'rayman","Boshqa tarbiyachini ayblab, o'zimni oqlayman","Xatoni tuzataman, lekin tan olmayman"],ans:1},
-
-  // ── 3-VARIANT PRO (31–45) — Muloqot va xulq-atvor ──
-  {q:"5 yoshli bola mashg'ulot paytida tarbiyachiga: «Sen mening o'qituvchim emassiz!» deb aytdi. Siz qanday munosabat bildirasiz?",opts:["Bolani darhol guruhdан chiqarib, xonaga kiritmayman","Bolani so'kinish uchun qattiq jazolаyman","Sakin ohangda sababini so'rab, his-tuyg'ularini tushunishga harakat qilaman","Boshqa bolalar oldida uni uyаltirib qo'yaman"],ans:2},
-  {q:"Guruhda 6 yoshli bola har kuni bog'chaga kelishdan bosh tortadi, ota-onasi majburlab olib keladi. Siz nima qilasiz?",opts:["Ota-onasiga bolani uyda qoldirish kerak deb aytaman","Bolani kuzatib, nima sababdan qo'rqayotganini aniqlayman va ishonch muhiti yarataман","Hamma oldida bolani uyalmang deb tanbeh beraman","Boshqa bolalar bilan o'ynamaslikka ruxsat beraman"],ans:1},
-  {q:"4 yoshli bola o'rtog'ining non-nonushtasini yashirib oldi. Siz bu vaziyatni qanday hal qilasiz?",opts:["Bolani hamma oldida uyatga qo'yib, nonni qaytartiraman","Ikkalasini ham teng darajada aybdor deb hisoblayman","Nonni olib qo'ygan bolaga sababini so'rab, mulkni qaytarishni va kechirim so'rashni o'rgataman","E'tibor bermayman, bola o'zi kechirim so'raydi"],ans:2},
+  // 3-variant PRO
+  {q:"5 yoshli bola mashg'ulot paytida: «Sen mening o'qituvchim emassiz!» deb aytdi. Siz qanday munosabat bildirasiz?",opts:["Bolani darhol guruhdan chiqarib, xonaga kiritmayman","Bolani so'kinish uchun qattiq jazolаyman","Sakin ohangda sababini so'rab, his-tuyg'ularini tushunishga harakat qilaman","Boshqa bolalar oldida uni uyaltirib qo'yaman"],ans:2},
+  {q:"Guruhda 6 yoshli bola har kuni bog'chaga kelishdan bosh tortadi. Siz nima qilasiz?",opts:["Ota-onasiga bolani uyda qoldirish kerak deb aytaman","Bolani kuzatib, nima sababdan qo'rqayotganini aniqlayman va ishonch muhiti yarataman","Hamma oldida bolani uyalmang deb tanbeh beraman","Boshqa bolalar bilan o'ynamaslikka ruxsat beraman"],ans:1},
+  {q:"4 yoshli bola o'rtog'ining nonushtasini yashirib oldi. Siz bu vaziyatni qanday hal qilasiz?",opts:["Bolani hamma oldida uyatga qo'yib, nonni qaytartiraman","Ikkalasini ham teng darajada aybdor deb hisoblayman","Nonni olib qo'ygan bolaga sababini so'rab, mulkni qaytarishni va kechirim so'rashni o'rgataman","E'tibor bermayman, bola o'zi kechirim so'raydi"],ans:2},
   {q:"Mashg'ulotda 5 yoshli bola boshqa bolani: «Sen ahmoqsan!» deb xafa qildi. Sizning zudlik bilan harakatingiz?",opts:["Aytgan bolani guruhdan olib chiqib, chetga o'tqazaman","Xafa bo'lgan bolaga e'tibor bermay, darsni davom ettiraman","Ikkalasini ham to'xtatib, his-tuyg'ularni ifodalashning to'g'ri yo'lini ko'rsataman","Dars tugagach ota-onasiga shikoyat qilaman"],ans:2},
-  {q:"Ota-onadan biri siz haqingizda boshqacha fikr bildirdi va guruh boshqaruvingizni tanqid qildi. Qanday ish tutasiz?",opts:["Ota-onaga qattiq javob berib, hududimni himoya qilaman","Muammoni e'tiborsiz qoldirib, ota-onadan qochaман","Sakin tarzda ota-onaning fikrlarini tinglab, muhokama uchun vaqt belgilayman","Mudirga shikoyat qilib, ota-onani chaqirtiraman"],ans:2},
-  {q:"6 yoshli bola boshqa bolani: «U mening do'stim emas!» deb rad etdi. Siz qanday munosabat ko'rsatasiz?",opts:["Rad etilgan bolaga e'tibor bermay, o'yin davom etadi","Do'stlikni majbur qilish mumkin emasligini tushuntirib, ikkalasini ham yonlab gaplashaman","Aytgan bolani jazolаyman, do'stlik majburiy deb tushuntiraman","Ota-onalariga ikkovi ham do'st bo'lishi kerak deb aytaman"],ans:1},
-  {q:"Sayrda bola boshqa guruhдаги nоtanish kattaga ergashmoqchi bo'ldi. Siz nima qilasiz?",opts:["Bolaga noto'g'ri ekanini aytib, darhol o'z guruhingizga qaytaraman","Bolani kuzatib turaман, xavf bo'lmasa aralashmayman","Boshqa bolalarga nоtanish kishiga ergashmaslikni buyuraman","Vaziyatni e'tiborsiz qoldirib, sayr davom etadi"],ans:0},
-  {q:"5 yoshli bola har kuni nonushtadan keyin qorin og'rishi borligini aytadi. Siz qanday harakat qilasiz?",opts:["Bola o'ynamoqchi deb o'ylab, darsga qaytaраman","Darhol ota-onasiga xabar berib, tibbiy yordamga murojaat qilishni tavsiya qilaman","Bolaga dori berib, o'zi tuzаlib ketishini kutaman","Bolani uyqu xonasiga yubоrib, dam oldiraman"],ans:1},
-  {q:"Guruhda bir bola boshqa bolalarning barcha o'yinchoqlarini o'ziga olishga harakat qiladi. Sizning pedagogik yondashuvingiz?",opts:["O'yinchoqlarni tortib olib, hech kimga bermayman","Ulashish tushunchasini o'yin shaklida amaliy o'rgataman","Bolani burchakka o'tqazib, vaqt o'tishini kutaman","Ota-onasiga shikoyat qilib, kattalar hal qilsin deb kutaman"],ans:1},
+  {q:"Ota-onadan biri guruh boshqaruvingizni tanqid qildi. Qanday ish tutasiz?",opts:["Ota-onaga qattiq javob berib, hududimni himoya qilaman","Muammoni e'tiborsiz qoldirib, ota-onadan qochaman","Sakin tarzda ota-onaning fikrlarini tinglab, muhokama uchun vaqt belgilayman","Mudirga shikoyat qilib, ota-onani chaqirtiraman"],ans:2},
+  {q:"6 yoshli bola boshqa bolani: «U mening do'stim emas!» deb rad etdi. Siz qanday munosabat ko'rsatasiz?",opts:["Rad etilgan bolaga e'tibor bermay, o'yin davom etadi","Do'stlikni majbur qilish mumkin emasligini tushuntirib, ikkalasini ham yonlab gaplashaman","Aytgan bolani jazolayman, do'stlik majburiy deb tushuntiraman","Ota-onalariga ikkovi ham do'st bo'lishi kerak deb aytaman"],ans:1},
+  {q:"Sayrda bola notanish kattaga ergashmoqchi bo'ldi. Siz nima qilasiz?",opts:["Bolaga noto'g'ri ekanini aytib, darhol o'z guruhingizga qaytaraman","Bolani kuzatib turaman, xavf bo'lmasa aralashmayman","Boshqa bolalarga notanish kishiga ergashmaslikni buyuraman","Vaziyatni e'tiborsiz qoldirib, sayr davom etadi"],ans:0},
+  {q:"5 yoshli bola har kuni nonushtadan keyin qorin og'rishi borligini aytadi. Siz qanday harakat qilasiz?",opts:["Bola o'ynamoqchi deb o'ylab, darsga qaytaraman","Darhol ota-onasiga xabar berib, tibbiy yordamga murojaat qilishni tavsiya qilaman","Bolaga dori berib, o'zi tuzalib ketishini kutaman","Bolani uyqu xonasiga yuborib, dam oldiraman"],ans:1},
+  {q:"Guruhda bir bola boshqa bolalarning o'yinchoqlarini o'ziga olishga harakat qiladi. Sizning pedagogik yondashuvingiz?",opts:["O'yinchoqlarni tortib olib, hech kimga bermayman","Ulashish tushunchasini o'yin shaklida amaliy o'rgataman","Bolani burchakka o'tqazib, vaqt o'tishini kutaman","Ota-onasiga shikoyat qilib, kattalar hal qilsin deb kutaman"],ans:1},
   {q:"4 yoshli bola mashg'ulot paytida ro'molchasi yo'qligini aytib yig'laydi. Siz nima qilasiz?",opts:["Yig'lasiga e'tibor bermay, mashg'ulotni davom ettiraman","Bolani yupatib, vaqtinchalik alternativ topsam, mashg'ulotni davom ettiraman","Darhol onasiga qo'ng'iroq qilib, ro'molcha olib kelishini so'rayman","Bolani uxlash xonasiga yuborib, onasi kelguncha kutdiraman"],ans:1},
-  {q:"Guruhda ikki bola bir-birini turtishdi va biri yiqilib tizzasi tirnaldi. Qanday harakat qilasiz?",opts:["Ikkalasini ham jazolab, burchakka o'tqazaman","Yarador bolani birinchi tibbiy yordamga olib, ikkinchi bolaga keyinroq yondashaman","Boshqa bolalarga «ko'ringlar» deb ibrat qilaman","Ota-onalariga darhol qo'ng'iroq qilib, holатni aytaman"],ans:1},
-  {q:"Mashg'ulot davomida bola: «Bu o'yin menga yoqmaydi, men o'ynamayman» dedi. Sizning yechimingiz?",opts:["Majburlab o'yinga qo'shaman, chora yo'q","Bolaning rоlini o'zgartirib, muqobil ishtirok shakli taклif qilaman","Bolani uyga yuboraman, istамаsa majbur emasman","Boshqa bolalar ham o'ynamaslikka undab qo'ymasin deb tinch qoldiraman"],ans:1},
-  {q:"Ota-ona uchrashuvida bir ota o'z farzandiga doim birinchi bo'lishni talab qilayotganini aytdi. Siz nima maslahat berasiz?",opts:["Bu ota-onaning huquqi, aralashmayman","Raqobat yaxshi, shu tarzda davom etsin deb qo'llayман","Bolani birinchi bo'lishga emas, jarayondan zavq olishga yo'naltirish muhimligini tushuntiraman","Bolani maxsus mashg'ulotlarga yozish kerak deb tavsiya qilaman"],ans:2},
-  {q:"6 yoshli bola siz bilan suhbatda: «Men uyda ko'p yig'layman, lekin sababini bilmayman» dedi. Qanday yondashuvni qo'llaysiz?",opts:["Bola dramatik qilayapti deb e'tibor bermayman","Bolani psixolog хонасига yuborib, o'zim aralashmayman","Bolani diqqat bilan tinglab, his-tuyg'ularini ifodalashiga yordam beraman va zarur bo'lsa mutaxassisga yo'nalтираман","Ota-onasiga darhol qo'ng'iroq qilib, bu muammo uydan deb aytaman"],ans:2},
-  {q:"Yangi tarbiyachi hamkasbingiz bolani noto'g'ri usul bilan jazoлаmoqda. Siz qanday ish tutasiz?",opts:["Vaziyatga aralashmayman, bu uning ishi","Hamkasbimni hamma oldida tanqid qilaman","Bolani himoya qilib, hamkasbim bilan keyinchalik xususiy muhokama qilaman","Mudirga shikoyat xati yozaman, hamkasbimni tashlab yuboraman"],ans:2},
-
-  // ── 4-VARIANT PRO (46–60) — Rivojlanish va ta'lim jarayoni ──
-  {q:"Nutq rivojlanishi kechikkan 5 yoshli bola guruhda o'zini izolyatsiya qilmoqda. Siz qanday harakat qilasiz?",opts:["Bolani alohida guruhga o'tkazishni tavsiya qilaman","Boshqa bolalarga uni e'tiborsiz qoldirish kerak deb aytaman","Nutq terapevtiga yo'naltirib, guruhda inklyuziv muhit yarataман","Ota-onasiga bolani uyda qoldirishni aytaman"],ans:2},
+  {q:"Guruhda ikki bola bir-birini turtishdi va biri yiqilib tizzasi tirnaldi. Qanday harakat qilasiz?",opts:["Ikkalasini ham jazolab, burchakka o'tqazaman","Yarador bolani birinchi tibbiy yordamga olib, ikkinchi bolaga keyinroq yondashaman","Boshqa bolalarga «ko'ringlar» deb ibrat qilaman","Ota-onalariga darhol qo'ng'iroq qilib, holatni aytaman"],ans:1},
+  {q:"Mashg'ulot davomida bola: «Bu o'yin menga yoqmaydi, men o'ynamayman» dedi. Sizning yechimingiz?",opts:["Majburlab o'yinga qo'shaman, chora yo'q","Bolaning rolini o'zgartirib, muqobil ishtirok shakli taklif qilaman","Bolani uyga yuboraman, istamaса majbur emasman","Boshqa bolalar ham o'ynamaslikka undab qo'ymasin deb tinch qoldiraman"],ans:1},
+  {q:"Ota-ona uchrashuvida bir ota o'z farzandiga doim birinchi bo'lishni talab qilayotganini aytdi. Siz nima maslahat berasiz?",opts:["Bu ota-onaning huquqi, aralashmayman","Raqobat yaxshi, shu tarzda davom etsin deb qo'llayman","Bolani birinchi bo'lishga emas, jarayondan zavq olishga yo'naltirish muhimligini tushuntiraman","Bolani maxsus mashg'ulotlarga yozish kerak deb tavsiya qilaman"],ans:2},
+  {q:"6 yoshli bola: «Men uyda ko'p yig'layman, lekin sababini bilmayman» dedi. Qanday yondashuvni qo'llaysiz?",opts:["Bola dramatik qilayapti deb e'tibor bermayman","Bolani psixolog xonasiga yuborib, o'zim aralashmayman","Bolani diqqat bilan tinglab, his-tuyg'ularini ifodalashiga yordam beraman va zarur bo'lsa mutaxassisga yo'naltiraman","Ota-onasiga darhol qo'ng'iroq qilib, bu muammo uydan deb aytaman"],ans:2},
+  {q:"Yangi hamkasbingiz bolani noto'g'ri usul bilan jazolаmoqda. Siz qanday ish tutasiz?",opts:["Vaziyatga aralashmayman, bu uning ishi","Hamkasbimni hamma oldida tanqid qilaman","Bolani himoya qilib, hamkasbim bilan keyinchalik xususiy muhokama qilaman","Mudirga shikoyat xati yozaman, hamkasbimni tashlab yuboraman"],ans:2},
+  // 4-variant PRO
+  {q:"Nutq rivojlanishi kechikkan 5 yoshli bola guruhda o'zini izolyatsiya qilmoqda. Siz qanday harakat qilasiz?",opts:["Bolani alohida guruhga o'tkazishni tavsiya qilaman","Boshqa bolalarga uni e'tiborsiz qoldirish kerak deb aytaman","Nutq terapevtiga yo'naltirib, guruhda inklyuziv muhit yarataman","Ota-onasiga bolani uyda qoldirishni aytaman"],ans:2},
   {q:"Qo'l motorikasi zaiflashgan 4 yoshli bola plastilin bilan ishlashni istamaydi. Sizning pedagogik yechimingiz?",opts:["Majburlab plastilin bilan ishlashga qo'yaman","Bolaga engilroq materiallar (xamir, qum) bilan boshlashni taklif qilaman","Bu bolaning qobilyati yo'q deb, topshiriq bermayman","Ota-onasiga bolani davolash zarur deb aytaman"],ans:1},
-  {q:"Guruhdagi 6 yoshli bola allaqachon o'qiy oladi va mashg'ulotlar unga qiyin kelmayapti. Siz nima qilasiz?",opts:["Boshqa bolalarga xalal bermasin uchun jimgina o'tirsin deyман","Unga murakkab qo'shimcha topshiriqlar va mentor rоli beraman","Bolani keyingi guruhga o'tkazishni talab qilaman","Ota-onasiga bolani alohida maktabga o'tkazishni tavsiya qilaman"],ans:1},
+  {q:"Guruhdagi 6 yoshli bola allaqachon o'qiy oladi va mashg'ulotlar unga qiyin kelmayapti. Siz nima qilasiz?",opts:["Boshqa bolalarga xalal bermasin uchun jimgina o'tirsin deyman","Unga murakkab qo'shimcha topshiriqlar va mentor roli beraman","Bolani keyingi guruhga o'tkazishni talab qilaman","Ota-onasiga bolani alohida maktabga o'tkazishni tavsiya qilaman"],ans:1},
   {q:"Mashg'ulotda berilgan savollarga hech kim javob bermayapti. Tarbiyachi sifatida qanday yo'l tutasiz?",opts:["Bolalarni dangasa deb jazolayman","Darhol javobni o'zim berib, keyingi mavzuga o'taman","Savolni oddiyroq shaklda qayta berib, yo'l-yo'riq ko'rsataman","Mashg'ulotni bekor qilib, erkin o'yin vaqtini boshlayman"],ans:2},
-  {q:"5 yoshli bola ranг farqlashda qiynalayapti. Bu sizga qachon ahamiyatli bo'ldi va nima qilasiz?",opts:["Bu normal, kattaroq bo'lgach o'zi ko'rar","Ko'ruv mutaxassisiga ko'rinish zarurligi haqida ota-onasiga tavsiya beraman","Bolaga ko'r bo'lib qolasan deb qo'rqitaman","Boshqa bolalar bilan taqqoslab, kamsitaman"],ans:1},
-  {q:"Guruhda bola matematika mashg'ulotida doim xato qiladi va o'zini past baholaydi. Sizning yondashuvingiz?",opts:["Uning xatolarini hamma oldida ko'rsatib, uyalтираman","Bolaga «Siz yaxshi harakat qilyapsiz» deb quvvatlantiraman, individual yondashuv qo'llayman","Matematikadan ozod qilaman, unga kerak emas","Ota-onasiga matematika repetitorini yollashni tavsiya qilaman"],ans:1},
-  {q:"4 yoshli bola chap qo'lini ko'proq ishlatади. Oiлa bolani o'ng qo'lga o'rgatishini so'radi. Siz qanday javob berasiz?",opts:["Ota-ona nima desa to'g'ri, o'ng qo'lga o'rgataман","Chap qo'llilik tabiiy ekanligini ilmiy asosda tushuntirib, bolani o'ng qo'lga majburlamaslikni maslahat beraman","Bu bolaning xislati emas, davр o'tsa o'zgaradi deyман","Mudirdan ruxsat olib, keyin qaror qilaman"],ans:1},
+  {q:"5 yoshli bola rang farqlashda qiynalayapti. Bu sizga ahamiyatli bo'ldi va nima qilasiz?",opts:["Bu normal, kattaroq bo'lgach o'zi ko'rar","Ko'ruv mutaxassisiga ko'rinish zarurligi haqida ota-onasiga tavsiya beraman","Bolaga ko'r bo'lib qolasan deb qo'rqitaman","Boshqa bolalar bilan taqqoslab, kamsitaman"],ans:1},
+  {q:"Guruhda bola matematika mashg'ulotida doim xato qiladi va o'zini past baholaydi. Sizning yondashuvingiz?",opts:["Uning xatolarini hamma oldida ko'rsatib, uyaltiraman","Bolaga «Siz yaxshi harakat qilyapsiz» deb quvvatlantiraman, individual yondashuv qo'llayman","Matematikadan ozod qilaman, unga kerak emas","Ota-onasiga matematika repetitorini yollashni tavsiya qilaman"],ans:1},
+  {q:"4 yoshli bola chap qo'lini ko'proq ishlatadi. Oila bolani o'ng qo'lga o'rgatishini so'radi. Siz qanday javob berasiz?",opts:["Ota-ona nima desa to'g'ri, o'ng qo'lga o'rgataman","Chap qo'llilik tabiiy ekanligini ilmiy asosda tushuntirib, bolani o'ng qo'lga majburlamaslikni maslahat beraman","Bu bolaning xislati emas, davr o'tsa o'zgaradi deyman","Mudirdan ruxsat olib, keyin qaror qilaman"],ans:1},
   {q:"Katta guruhda bir bola doim ertakni o'rtasida to'xtatib, o'zining versiyasini aytadi. Qanday yo'l qo'llaysiz?",opts:["Bolani qattiq tanbeh berib, gapirmaslikka buyuraman","Bolaning ijodiy fikrlashini qo'llab-quvvatlab, «O'z ertaklar» vaqtini tashkil etaman","Bolani eshitmaganday darsni davom ettiraman","Boshqa bolalar norozilik bildirganda bolani chiqarib yuboraman"],ans:1},
-  {q:"Tabiat burchagida o'simlik qurib qoldi. Bu haqda bolalar uchun qanday ta'limiy imkoniyat yaratasiz?",opts:["O'simlikni tezda olib tashlаb, bolalar ko'rmasin","O'simlikni bolalar bilan birgalikda tekshirib, nima sababdan quriganini kuzatib o'rganamiz","Gardkash deb bolalarga aytaman, qiynamasın","Bolalar e'tibor bermasin uchun boshqa tomon o'tirib olishaman"],ans:1},
-  {q:"Siz rejalаshtirilgan mashg'ulotni boshlayotganингizda bolalar butunlay boshqa mavzuga qiziqib qolishdi. Nima qilasiz?",opts:["Rejadan chetlashmayman, mashg'ulotni majburlab o'tkazaman","Bolalarning qiziqishidan foydalanib, rejani moslashuvchan tarzda o'zgartiraman","Bolalarga «Keyin gaplashamiz» deb e'tibor bermayman","Guruhни ikki qismga bo'lib, har kimga alohida mavzu beraman"],ans:1},
-  {q:"Guruhda bir bola rasm chizishni yoqtirmaydi, lekin konstruktorni juda yaxshi ko'radi. Baholashda qanday yondashasiz?",opts:["Rasm chizmaganи учun bahosini past qo'yaman","Har bir bolaning kuchli tomonlarini tan olib, ko'p shaklдаги rivojlanishni qo'llayman","Konstruktorni yig'ib qo'yib, majburlab rasm chizdiramан","Boshqa bolalarga ham konstruktor bilan o'ynatаман, rasm vaqtini bekor qilаман"],ans:1},
-  {q:"Mashg'ulot mobaynida bolalar bera olmaydigan darajada qiyin savol tug'ildi. Siz qanday munosabat bildirasiz?",opts:["«Bu savolni hali bilmasangiz kerak» deb o'tib ketaman","Savolni yoshga mos bosqichlarga bo'lib, birgalikda izlashга yo'nalтираман","Noto'g'ri savol berildi deb, mavzuni almashtiраман","Javobни to'g'ridan-to'g'ri aytib, bolalardan o'tib ketishlaрini so'rayman"],ans:1},
-  {q:"Siz haftalik rejani tayyorlayotib, bir bolaning nutq muammosi borligini sezdingiz. Нима qilasiz?",opts:["Uni alohida guruhga o'tkazish haqida mudir bilan gaplashaman","Nutq terapevtiga yo'naltirib, individual mashg'ulotlarda ko'proq nutqiy faollikni qo'llayman","Ota-onasiga hech nima aytmayman, o'zi o'sib ketadi","Boshqa bolalar bilan bir xil mashg'ulot beraman, farq qilmayman"],ans:1},
-  {q:"Guruhда xulq-atvor muammolari bo'lgan bola bor. Attestatsiya komissiyasi guruhni kuzatishga keldi. Siz qanday tayyorlanasiz?",opts:["O'sha bolani boshqa xonaga olib chiqib, komissiyadan yashiraman","Barcha bolalar bilan oddiy ish tutib, haqiqiy muhitni ko'rsataman","Faqat «yaxshi» bolalarni kо'rinарli joylarga o'tqazaman","Bolani ota-onasiga bir kun uyda qoldirishni so'rayman"],ans:1},
-  {q:"6 yoshli bola so'z boyligini rivojlantirish mashg'ulotida hamisha past javob beradi. Buning sababi nima bo'lishi mumkin va siz nima qilasiz?",opts:["Bola dangasa, ko'proq jazolayman","Ikki tilli muhit, kam kitob yoki boshqa omillarni aniqlab, individual yondashuv ishlab chiqaman","Bu bolaning aqliy rivojlanishi zaif deb ota-onasiga bildiraman","Mashg'ulotni boshqa bolalar uchun o'tkazib, unga e'tibor bermayman"],ans:1},
-
-  // ── 5-VARIANT PRO (61–75) — Xavfsizlik, ota-ona, muassasa ──
-  {q:"Ota-ona sizdan bolasiga mashg'ulotda maxsus munosabat ko'rsatishingizni talab qilmoqda. Siz qanday javob berasiz?",opts:["Ota-onaning talabini bajaraman, bola maxsus e'tiborga loyiq","Barcha bolalar teng muomilaga loyiq ekanligini muloyimlik bilan tushuntiraman","Ota-onaga qattiq javob berib, aralashmasликни buyuraman","Mudir bilan maslahatlashib, qaror chiqarishini kutaman"],ans:1},
+  {q:"Tabiat burchagida o'simlik qurib qoldi. Bu haqda bolalar uchun qanday ta'limiy imkoniyat yaratasiz?",opts:["O'simlikni tezda olib tashlab, bolalar ko'rmasin","O'simlikni bolalar bilan birgalikda tekshirib, nima sababdan quriganini kuzatib o'rganamiz","Gardkash deb bolalarga aytaman, qiynamasin","Bolalar e'tibor bermasin uchun boshqa tomon o'tirib olishaman"],ans:1},
+  {q:"Rejalashtirilgan mashg'ulotni boshlayotganingizda bolalar butunlay boshqa mavzuga qiziqib qolishdi. Nima qilasiz?",opts:["Rejadan chetlashmayman, mashg'ulotni majburlab o'tkazaman","Bolalarning qiziqishidan foydalanib, rejani moslashuvchan tarzda o'zgartiraman","Bolalarga «Keyin gaplashamiz» deb e'tibor bermayman","Guruhni ikki qismga bo'lib, har kimga alohida mavzu beraman"],ans:1},
+  {q:"Guruhda bir bola rasm chizishni yoqtirmaydi, lekin konstruktorni juda yaxshi ko'radi. Baholashda qanday yondashasiz?",opts:["Rasm chizmagani uchun bahosini past qo'yaman","Har bir bolaning kuchli tomonlarini tan olib, ko'p shakldagi rivojlanishni qo'llayman","Konstruktorni yig'ib qo'yib, majburlab rasm chizdiram","Boshqa bolalarga ham konstruktor bilan o'ynataман, rasm vaqtini bekor qilaman"],ans:1},
+  {q:"Mashg'ulot mobaynida bolalar bera olmaydigan darajada qiyin savol tug'ildi. Siz qanday munosabat bildirasiz?",opts:["«Bu savolni hali bilmasangiz kerak» deb o'tib ketaman","Savolni yoshga mos bosqichlarga bo'lib, birgalikda izlashga yo'naltiraman","Noto'g'ri savol berildi deb, mavzuni almashtiraman","Javobni to'g'ridan-to'g'ri aytib, bolalardan o'tib ketishlarini so'rayman"],ans:1},
+  {q:"Siz haftalik rejani tayyorlayotib, bir bolaning nutq muammosi borligini sezdingiz. Nima qilasiz?",opts:["Uni alohida guruhga o'tkazish haqida mudir bilan gaplashaman","Nutq terapevtiga yo'naltirib, individual mashg'ulotlarda ko'proq nutqiy faollikni qo'llayman","Ota-onasiga hech nima aytmayman, o'zi o'sib ketadi","Boshqa bolalar bilan bir xil mashg'ulot beraman, farq qilmayman"],ans:1},
+  {q:"Guruhda xulq-atvor muammolari bo'lgan bola bor. Attestatsiya komissiyasi keldi. Siz qanday tayyorlanasiz?",opts:["O'sha bolani boshqa xonaga olib chiqib, komissiyadan yashiraman","Barcha bolalar bilan oddiy ish tutib, haqiqiy muhitni ko'rsataman","Faqat «yaxshi» bolalarni ko'rinarli joylarga o'tqazaman","Bolani ota-onasiga bir kun uyda qoldirishni so'rayman"],ans:1},
+  {q:"6 yoshli bola so'z boyligini rivojlantirish mashg'ulotida hamisha past javob beradi. Siz nima qilasiz?",opts:["Bola dangasa, ko'proq jazolayman","Ikki tilli muhit, kam kitob yoki boshqa omillarni aniqlab, individual yondashuv ishlab chiqaman","Bu bolaning aqliy rivojlanishi zaif deb ota-onasiga bildiraman","Mashg'ulotni boshqa bolalar uchun o'tkazib, unga e'tibor bermayman"],ans:1},
+  // 5-variant PRO
+  {q:"Ota-ona sizdan bolasiga mashg'ulotda maxsus munosabat ko'rsatishingizni talab qilmoqda. Siz qanday javob berasiz?",opts:["Ota-onaning talabini bajaraman, bola maxsus e'tiborga loyiq","Barcha bolalar teng muomilaga loyiq ekanligini muloyimlik bilan tushuntiraman","Ota-onaga qattiq javob berib, aralashmaslikni buyuraman","Mudir bilan maslahatlashib, qaror chiqarishini kutaman"],ans:1},
   {q:"Bog'chada yong'in signali chalindi. Tarbiyachi sifatida qanday harakat qilasiz?",opts:["Bolalarni xonada qoldirib, o'zim ahvolni tekshiraman","Bolalarni xotirjamlik bilan evakuatsiya yo'lidan olib chiqaman va xavfsiz joyda hisoblayman","Ota-onalarga qo'ng'iroq qilib, kelishlarini kutaman","Signal noto'g'ri bo'lsa kerak deb e'tibor bermayman"],ans:1},
-  {q:"Guruhda bola allergik reaksiya belgilarini ko'rsatmoqda — terisi qizarib, shishyapti. Siz nima qilasiz?",opts:["Bolani kuzataman, o'tib ketar","Darhol tibbiy xodimni chaqiraman, ota-onasiga xabar beraman va berilgan doriни ishlataman","Bolaga o'zim dori beraman","Bolaga suv ichiraman va uxlashini kutaman"],ans:1},
+  {q:"Guruhda bola allergik reaksiya belgilarini ko'rsatmoqda — terisi qizarib, shishyapti. Siz nima qilasiz?",opts:["Bolani kuzataman, o'tib ketar","Darhol tibbiy xodimni chaqiraman, ota-onasiga xabar beraman va berilgan dorini ishlataman","Bolaga o'zim dori beraman","Bolaga suv ichiraman va uxlashini kutaman"],ans:1},
   {q:"Guruh xonasida elektr toki urib turgan simi yechilganini ko'rdingiz. Birinchi navbatda nima qilasiz?",opts:["Simni o'zim joyiga qo'yishga harakat qilaman","Bolalarni xonadan olib chiqib, xizmat xodimiga darhol xabar beraman","Simning ustiga kovar qo'yib, bolalarni ogohlantirib qo'yaman","Bolalar ko'rmasin deb narsalarni ustiga qo'yaman"],ans:1},
-  {q:"Ota-ona bola haqida qo'shni tarbiyachidan ma'lumot so'radi. Siz qanday munosabat bildirasiz?",opts:["Ma'lumotni berib yuboraman, zarari yo'q","Bolalar haqidagi ma'lumot maxfiy ekanligini aytib, qo'shni tarbiyachiga yo'naltirmayman","Qo'shni tarbiyachiga «o'zing gapir» deb aytaman","Mudirga xabar berib, ota-onani kutishga qoldiraman"],ans:1},
-  {q:"Guruhдa bir bola boshqa bolalarning sumkalarini tintib qo'yganini ko'rdingiz. Sizning pedagogik harakatingiz?",opts:["Bolani hamma oldida uyatga qo'yaman","Bolani xonadan chiqarib, ota-onasiga shikoyat xati yozaman","Bolani alohida olib, xatti-harakatining oqibatlarini tushuntirib, kechirim so'rishga yo'nalтираman","E'tibor bermayman, kichik bola nima tushunadi"],ans:2},
-  {q:"Ota-onalar yig'ilishida bir ota-ona boshqa bolani ayblab, hamma oldida gapirdi. Siz nima qilasiz?",opts:["Ota-onaning gapiga qo'shilaman","Boshqa bolaning huquqlarini himoya qilib, muhokamani xususiylashtirishni taklif qilaman","Yig'ilishни to'xtatib, barcha ota-onani chiqarib yuboraman","Sukut saqlаb, vaziyat o'z-o'zidan hal bo'lishini kutaman"],ans:1},
+  {q:"Ota-ona bola haqida qo'shni tarbiyachidan ma'lumot so'radi. Siz qanday munosabat bildirasiz?",opts:["Ma'lumotni berib yuboraman, zarari yo'q","Bolalar haqidagi ma'lumot maxfiy ekanligini aytib, to'g'ridan-to'g'ri javob bermayman","Qo'shni tarbiyachiga «o'zing gapir» deb aytaman","Mudirga xabar berib, ota-onani kutishga qoldiraman"],ans:1},
+  {q:"Guruhda bir bola boshqa bolalarning sumkalarini tintib qo'yganini ko'rdingiz. Sizning pedagogik harakatingiz?",opts:["Bolani hamma oldida uyatga qo'yaman","Bolani xonadan chiqarib, ota-onasiga shikoyat xati yozaman","Bolani alohida olib, xatti-harakatining oqibatlarini tushuntirib, kechirim so'rishga yo'naltiraman","E'tibor bermayman, kichik bola nima tushunadi"],ans:2},
+  {q:"Ota-onalar yig'ilishida bir ota-ona boshqa bolani ayblab, hamma oldida gapirdi. Siz nima qilasiz?",opts:["Ota-onaning gapiga qo'shilaman","Boshqa bolaning huquqlarini himoya qilib, muhokamani xususiylashtirishni taklif qilaman","Yig'ilishni to'xtatib, barcha ota-onani chiqarib yuboraman","Sukut saqlаb, vaziyat o'z-o'zidan hal bo'lishini kutaman"],ans:1},
   {q:"Mudir sizdan rejalashtirilmagan tadbirni o'tkazishingizni so'radi, lekin bu bolalar dam olish vaqtiga to'g'ri keladi. Nima qilasiz?",opts:["Bolalarni dam olishdan mahrum qilib, tadbirni o'tkazaman","Mudir bilan muloyimlik bilan gaplashib, bolalar manfaatlarini tushuntirib, muqobil vaqtni taklif qilaman","Tadbirni bekor qilaman, mudir noto'g'ri so'rayapti","Bolalarga tadbir majburiy deb e'lon qilaman"],ans:1},
-  {q:"Guruhga tashrif buyurgan ota-ona boshqa bolalar haqida salbiy fikr bildirdi. Siz qanday munosabat bildirasiz?",opts:["Ota-onaga rozi bo'lib, o'sha bolaning muammolarini aytaman","Barcha bolalar huquqlari teng ekanligini tushuntirib, salbiy muhokamani to'xtataman","E'tibor bermay, ota-onani kuzatib turaман","Ota-onani guruhdan chiqarib yuboraman"],ans:1},
-  {q:"Bog'cha hududida notanish shaxs bolalar o'ynayotgan joyga yaqinlashmoqda. Qanday harakat qilasiz?",opts:["Bolalarni kuzatib turaман, xavf ko'rinsa aralashaман","Bolalarni darhol ichkariga olib kiraman va xavfsizlik xizmatiga xabar beraman","Notanish kishiga yaqinlashib, kim ekanini so'rayman","Boshqa tarbiyachiga xabar berib, o'zim bolalar bilan o'yinni davom ettiraman"],ans:1},
-  {q:"Ota-ona bolasiga guruhda «hamma narsani yeyishga» majburlashingizni so'radi. Qanday javob berasiz?",opts:["Ota-onaning isteğini bajarib, bolani majburlab ovqatlantiraман","Bolani majburlash zarar ekanligini tushuntirib, ishtaha rivojlantiruvchi muqobil usullarni tavsiya qilaman","Ota-onaga javoб bermayman, o'zim bilgаnча qilaman","Bolaga ota-onasi aytdi deb majburlab ovqatlaтаman"],ans:1},
-  {q:"Guruh jurnalida boshqa tarbiyachining qo'ygan baholarini noto'g'ri ekanini sezdingiz. Siz nima qilasiz?",opts:["Jurnalni o'zim to'g'irlаб qo'yaman","Hamkasbimga vaziyatni aytib, birgalikda mudir bilan maslahat qilaman","E'tibor bermayman, bu mening ishim emas","Mudirga yozma shikoyat qilaman, hamkasbimni aybdor deb ko'rsataman"],ans:1},
-  {q:"Bolalar sayr vaqtida kapalak topib, uni guruhga olib kirmoqchi. Tarbiyachi sifatida qanday munosabat bildirasiz?",opts:["Kapalakni olib qo'yib, tashlab yuborishni buyuraman","Jonzotni erkin qo'yib yuborish kerakligini tushuntirib, tabiatga nisbatan mehr hissini shakllanтираman","Kapalakni guruhga kiritaman, bolalar o'rgansin","Bolalarni kapalaklardan qo'rqitaman"],ans:1},
+  {q:"Guruhga tashrif buyurgan ota-ona boshqa bolalar haqida salbiy fikr bildirdi. Siz qanday munosabat bildirasiz?",opts:["Ota-onaga rozi bo'lib, o'sha bolaning muammolarini aytaman","Barcha bolalar huquqlari teng ekanligini tushuntirib, salbiy muhokamani to'xtataman","E'tibor bermay, ota-onani kuzatib turaman","Ota-onani guruhdan chiqarib yuboraman"],ans:1},
+  {q:"Bog'cha hududida notanish shaxs bolalar o'ynayotgan joyga yaqinlashmoqda. Qanday harakat qilasiz?",opts:["Bolalarni kuzatib turaman, xavf ko'rinsa aralashaman","Bolalarni darhol ichkariga olib kiraman va xavfsizlik xizmatiga xabar beraman","Notanish kishiga yaqinlashib, kim ekanini so'rayman","Boshqa tarbiyachiga xabar berib, o'zim bolalar bilan o'yinni davom ettiraman"],ans:1},
+  {q:"Ota-ona bolasiga guruhda «hamma narsani yeyishga» majburlashingizni so'radi. Qanday javob berasiz?",opts:["Ota-onaning isteğini bajarib, bolani majburlab ovqatlantiraman","Bolani majburlash zarar ekanligini tushuntirib, ishtaha rivojlantiruvchi muqobil usullarni tavsiya qilaman","Ota-onaga javob bermayman, o'zim bilgancha qilaman","Bolaga ota-onasi aytdi deb majburlab ovqatlаtaman"],ans:1},
+  {q:"Guruh jurnalida boshqa tarbiyachining qo'ygan baholarini noto'g'ri ekanini sezdingiz. Siz nima qilasiz?",opts:["Jurnalni o'zim to'g'irlab qo'yaman","Hamkasbimga vaziyatni aytib, birgalikda mudir bilan maslahat qilaman","E'tibor bermayman, bu mening ishim emas","Mudirga yozma shikoyat qilaman, hamkasbimni aybdor deb ko'rsataman"],ans:1},
+  {q:"Bolalar sayr vaqtida kapalak topib, uni guruhga olib kirmoqchi. Tarbiyachi sifatida qanday munosabat bildirasiz?",opts:["Kapalakni olib qo'yib, tashlab yuborishni buyuraman","Jonzotni erkin qo'yib yuborish kerakligini tushuntirib, tabiatga nisbatan mehr hissini shakllantiraman","Kapalakni guruhga kiritaman, bolalar o'rgansin","Bolalarni kapalaklardan qo'rqitaman"],ans:1},
   {q:"Guruhda bola tish og'rig'idan qiynalmoqda. Siz tarbiyachi sifatida nima qilasiz?",opts:["Bolaga o'zim og'riq qoldiruvchi dori beraman","Tibbiy xodimga topshiraman va ota-onasiga xabar beraman","Bolaga sabr qilishni aytib, darsni davom ettiraman","Bolani uy vazifasidan ozod qilib, xonada uxlataman"],ans:1},
-  {q:"Attestatsiya komissiyasi oldida siz tayyorlanmagan savolni berdi. Siz qanday javob berasiz?",opts:["Bilmaganim uchun kechirim so'rab, javob berishdan bosh tortaman","Savolni aniq tushunganingizni bildiraman, biladiganlarimni aytib, bilmaganim bo'yicha izlanishimni ta'kidlayman","Boshqa mavzuga o'tib, savolni e'tiborsiz qoldiraman","Komissiyaga bu savol dasturdan tashqari deb e'tiroz bildiraman"],ans:1}
+  {q:"Attestatsiya komissiyasi oldida siz tayyorlanmagan savolni berdi. Siz qanday javob berasiz?",opts:["Bilmaganim uchun kechirim so'rab, javob berishdan bosh tortaman","Savolni aniq tushunganligimni bildiraman, biladiganlarimni aytib, bilmaganim bo'yicha izlanishimni ta'kidlayman","Boshqa mavzuga o'tib, savolni e'tiborsiz qoldiraman","Komissiyaga bu savol dasturdan tashqari deb e'tiroz bildiraman"],ans:1}
 ];
 
-// Variantlar: 1-variant (1-15), 2-variant (16-30), 3-5 PRO
 var VARIANTS=[
   {name:"1-variant",sub:"1–15-savollar • Bepul",icon:"ti-bulb",color:"blue",free:true,range:[0,15]},
   {name:"2-variant",sub:"16–30-savollar • Bepul",icon:"ti-bulb",color:"blue",free:true,range:[15,30]},
@@ -388,21 +326,18 @@ var VARIANTS=[
   {name:"5-variant",sub:"Xavfsizlik va muassasa • PRO",icon:"ti-crown",color:"purple",free:false,range:[60,75]},
 ];
 
-// STATE
 var curVariant=null,questions=[],curIdx=0,score=0,answered=false,timerSec=0,timerInt=null;
 var LETTERS=['A','B','C','D'];
 
-// ══ BG CANVAS ══
+// BG
 (function(){
   var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d'),W,H;
   function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
   resize();window.addEventListener('resize',resize);
-  var types=['star','heart','circle','abc','flower'],colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+  var types=['star','heart','circle'],colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   var shapes=[];
-  for(var i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
-  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(var i=0;i<5;i++){var a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
-  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  for(var i=0;i<28;i++)shapes.push({t:types[i%3],color:colors[i%6],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.15,0.4)});
   function frame(){
     ctx.clearRect(0,0,W,H);
     shapes.forEach(function(s){
@@ -410,9 +345,7 @@ var LETTERS=['A','B','C','D'];
       if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
       if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
       ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
-      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
-      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
-      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill();}
+      ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill();
       ctx.restore();
     });
     requestAnimationFrame(frame);
@@ -420,153 +353,97 @@ var LETTERS=['A','B','C','D'];
   frame();
 })();
 
-// ══ SIDEBAR ══
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSidebar();closeProModal()}});
 function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
 checkHamburger();window.addEventListener('resize',checkHamburger);
-
-// ══ PRO MODAL ══
 function openProModal(){document.getElementById('proModal').classList.add('show');document.body.style.overflow='hidden'}
 function closeProModal(){document.getElementById('proModal').classList.remove('show');document.body.style.overflow=''}
 
-// ══ VARIANTLAR ══
-function buildVariantGrid(){
+// ── YAGONA buildVariantGrid ──
+function buildVariantGrid(proUser){
+  proUser=proUser||false;
   var g=document.getElementById('variantGrid');
   g.innerHTML=VARIANTS.map(function(v,i){
-    var locked=!v.free;
-    return '<div class="variant-card'+(locked?' locked':'')+(locked?'':'')+'" onclick="'+(locked?'openProModal()':'startVariant('+i+')')+'">'+
+    var locked=!v.free&&!proUser;
+    return '<div class="variant-card'+(locked?' locked':'')+'" onclick="'+(locked?'openProModal()':'startVariant('+i+')')+'">'+
       '<div class="vc-icon '+v.color+'"><i class="ti '+v.icon+'"></i></div>'+
       '<div class="vc-name">'+v.name+'</div>'+
       '<div class="vc-sub">'+v.sub+'</div>'+
       '<div class="vc-badge '+(locked?'pro':'free')+'">'+
-        (locked?'<i class="ti ti-crown"></i> PRO':'<i class="ti ti-lock-open"></i> Bepul')+
+        (locked?'<i class="ti ti-crown"></i> PRO':'<i class="ti ti-lock-open"></i> '+(v.free?'Bepul':'PRO — Ochiq'))+
       '</div>'+
       (locked?'<div class="lock-overlay"><i class="ti ti-lock"></i></div>':'')+
     '</div>';
   }).join('');
 }
 
-// ══ TEST BOSHLASH ══
 function startVariant(idx){
   curVariant=VARIANTS[idx];
-  var r=curVariant.range;
-  questions=ALL_Q.slice(r[0],r[1]);
-  // 3,4,5-variant uchun shuffle (bepulda tartib saqlansin)
-  if(idx>=2){questions=shuffle(questions.slice())}
+  questions=ALL_Q.slice(curVariant.range[0],curVariant.range[1]);
+  if(idx>=2){for(var i=questions.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=questions[i];questions[i]=questions[j];questions[j]=t;}}
   curIdx=0;score=0;
   document.getElementById('variantScreen').style.display='none';
   document.getElementById('testScreen').style.display='block';
   document.getElementById('th-title').textContent=curVariant.name;
   document.getElementById('th-sub').textContent='Vaziyatli kasbiy mahorat testi — '+questions.length+' ta savol';
-  startTimer(20*60);
-  showQ();
+  startTimer(20*60);showQ();
 }
 
-function shuffle(a){
-  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}
-  return a;
-}
-
-// ══ TIMER ══
 function startTimer(sec){
-  timerSec=sec;
-  clearInterval(timerInt);
-  renderTimer();
-  timerInt=setInterval(function(){
-    timerSec--;
-    renderTimer();
-    if(timerSec<=0){clearInterval(timerInt);timeUp();}
-  },1000);
+  timerSec=sec;clearInterval(timerInt);renderTimer();
+  timerInt=setInterval(function(){timerSec--;renderTimer();if(timerSec<=0){clearInterval(timerInt);showResult(true);}},1000);
 }
 function renderTimer(){
   var m=Math.floor(timerSec/60),s=timerSec%60;
   document.getElementById('timerTxt').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-  var box=document.getElementById('timerBox');
-  if(timerSec<=60)box.classList.add('danger');else box.classList.remove('danger');
+  document.getElementById('timerBox').className='timer-box'+(timerSec<=60?' danger':'');
 }
-function timeUp(){showResult(true)}
 
-// ══ SAVOL KO'RSATISH ══
 function showQ(){
   answered=false;
-  var q=questions[curIdx],total=questions.length;
-  var pct=Math.round((curIdx/total)*100);
+  var q=questions[curIdx],total=questions.length,pct=Math.round((curIdx/total)*100);
   document.getElementById('progTxt').textContent=(curIdx+1)+' / '+total;
   document.getElementById('progPct').textContent=pct+'%';
   document.getElementById('progFill').style.width=pct+'%';
-
   var html='<div class="q-card">'+
     '<div class="q-num"><i class="ti ti-bulb"></i> '+curVariant.name+' — '+(curIdx+1)+'-savol</div>'+
-    '<div class="q-text">'+q.q+'</div>'+
-    '<div class="options-list">';
-
+    '<div class="q-text">'+q.q+'</div><div class="options-list">';
   q.opts.forEach(function(opt,i){
-    html+='<button class="option-btn" id="opt'+i+'" onclick="selectOpt('+i+')">'+
-      '<span class="opt-letter">'+LETTERS[i]+'</span>'+
-      '<span>'+opt+'</span>'+
-    '</button>';
+    html+='<button class="option-btn" id="opt'+i+'" onclick="selectOpt('+i+')"><span class="opt-letter">'+LETTERS[i]+'</span><span>'+opt+'</span></button>';
   });
-
-  html+='</div>'+
-    '<div class="feedback-box" id="feedback"><i class="ti ti-circle-check"></i><span id="feedbackTxt"></span></div>'+
-    '<button class="btn-next" id="btnNext" style="display:none" onclick="nextQ()">'+
-      (curIdx+1<questions.length?'Keyingi savol <i class="ti ti-arrow-right"></i>':'Natijani ko\'rish <i class="ti ti-chart-bar"></i>')+
-    '</button>'+
-  '</div>';
-
+  html+='</div><div class="feedback-box" id="feedback"><i class="ti ti-circle-check" id="fbIcon"></i><span id="feedbackTxt"></span></div>'+
+    '<button class="btn-next" id="btnNext" style="display:none" onclick="nextQ()">'+(curIdx+1<questions.length?'Keyingi savol <i class="ti ti-arrow-right"></i>':'Natijani ko\'rish <i class="ti ti-chart-bar"></i>')+'</button></div>';
   document.getElementById('qArea').innerHTML=html;
 }
 
 function selectOpt(i){
-  if(answered)return;
-  answered=true;
-  var q=questions[curIdx];
-  var correct=q.ans===i;
+  if(answered)return;answered=true;
+  var q=questions[curIdx],correct=q.ans===i;
   if(correct)score++;
-
-  // Barcha tugmalarni disable
   q.opts.forEach(function(_,j){
-    var btn=document.getElementById('opt'+j);
-    btn.disabled=true;
-    if(j===q.ans){btn.classList.add(correct&&j===i?'correct':'reveal');}
-    if(j===i&&!correct){btn.classList.add('wrong');}
+    var b=document.getElementById('opt'+j);b.disabled=true;
+    if(j===q.ans)b.classList.add(correct&&j===i?'correct':'reveal');
+    if(j===i&&!correct)b.classList.add('wrong');
   });
-
-  // Feedback
   var fb=document.getElementById('feedback');
-  var ft=document.getElementById('feedbackTxt');
-  fb.classList.add('show');
-  if(correct){
-    fb.className='feedback-box show ok';
-    fb.querySelector('i').className='ti ti-circle-check';
-    ft.textContent="To'g'ri javob! Yaxshi ish qildingiz.";
-  }else{
-    fb.className='feedback-box show err';
-    fb.querySelector('i').className='ti ti-circle-x';
-    ft.textContent="Xato. To'g'ri javob: "+LETTERS[q.ans]+") "+q.opts[q.ans];
-  }
+  fb.className='feedback-box show '+(correct?'ok':'err');
+  document.getElementById('fbIcon').className='ti '+(correct?'ti-circle-check':'ti-circle-x');
+  document.getElementById('feedbackTxt').textContent=correct?"To'g'ri javob! Yaxshi ish qildingiz.":"Xato. To'g'ri javob: "+LETTERS[q.ans]+") "+q.opts[q.ans];
   document.getElementById('btnNext').style.display='flex';
 }
 
-function nextQ(){
-  curIdx++;
-  if(curIdx>=questions.length){showResult(false);}else{showQ();}
-}
+function nextQ(){curIdx++;if(curIdx>=questions.length)showResult(false);else showQ();}
 
-// ══ NATIJA ══
 function showResult(timeOut){
   clearInterval(timerInt);
-  var total=questions.length;
-  var pct=Math.round((score/total)*100);
+  var total=questions.length,pct=Math.round((score/total)*100);
   var cls=pct>=80?'great':pct>=60?'mid':'low';
   var icon=pct>=80?'ti-trophy':pct>=60?'ti-mood-smile':'ti-mood-sad';
   var label=pct>=80?"Ajoyib natija! Siz zo'r tarbiyachisiz!":pct>=60?"Yaxshi! Bilimingizni mustahkamlang.":"Ko'proq mashq qiling!";
-
   document.getElementById('testScreen').style.display='none';
-  var rs=document.getElementById('resultScreen');
-  rs.style.display='block';
+  var rs=document.getElementById('resultScreen');rs.style.display='block';
   rs.innerHTML='<div class="result-card">'+
     '<div class="result-icon '+cls+'"><i class="ti '+icon+'"></i></div>'+
     '<div class="result-pct '+cls+'">'+pct+'%</div>'+
@@ -576,100 +453,39 @@ function showResult(timeOut){
       '<div class="rs-item"><div class="rs-val" style="color:var(--green)">'+score+'</div><div class="rs-lbl">To\'g\'ri</div></div>'+
       '<div class="rs-item"><div class="rs-val" style="color:var(--red)">'+(total-score)+'</div><div class="rs-lbl">Xato</div></div>'+
       '<div class="rs-item"><div class="rs-val" style="color:var(--accent)">'+pct+'%</div><div class="rs-lbl">Natija</div></div>'+
-    '</div>'+
-  '</div>'+
-  '<div class="result-btns">'+
-    '<button class="btn-retry" onclick="restartVariant()"><i class="ti ti-refresh"></i> Qayta urinish</button>'+
-    '<button class="btn-back2" onclick="goVariants()"><i class="ti ti-grid-dots"></i> Variantlar</button>'+
-  '</div>';
-}
-
-function restartVariant(){
-  document.getElementById('resultScreen').style.display='none';
-  var idx=VARIANTS.indexOf(curVariant);
-  startVariant(idx);
-}
-function goVariants(){
-  clearInterval(timerInt);
-  document.getElementById('resultScreen').style.display='none';
-  document.getElementById('testScreen').style.display='none';
-  document.getElementById('variantScreen').style.display='block';
-}
-
-window.addEventListener('load', async () => {
-  // Supabase auth
-  if (typeof initAuth !== 'undefined') {
-    const auth = await initAuth(true);
-    if (!auth) return;
-    const name = getUserName();
-    document.querySelector('.sidebar-bottom .avatar').textContent = name.charAt(0).toUpperCase();
-    document.querySelector('.sidebar-bottom .name').textContent = name;
-    const planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
-    document.querySelector('.sidebar-bottom .plan').textContent = planLabel + ' tarif';
-    document.querySelector('.plan-pill').innerHTML =
-      (isPro() ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
-  }
-
-  // Pro tekshiruvi bilan grid
-  buildVariantGrid();
-});
-
-function buildVariantGrid() {
-  var proUser = (typeof isPro === 'function') ? isPro() : false;
-  var g = document.getElementById('variantGrid');
-  g.innerHTML = VARIANTS.map(function(v, i) {
-    var locked = !v.free && !proUser;
-    return '<div class="variant-card' + (locked ? ' locked' : '') + '" onclick="' +
-      (locked ? 'openProModal()' : 'startVariant(' + i + ')') + '">' +
-      '<div class="vc-icon ' + v.color + '"><i class="ti ' + v.icon + '"></i></div>' +
-      '<div class="vc-name">' + v.name + '</div>' +
-      '<div class="vc-sub">' + v.sub + '</div>' +
-      '<div class="vc-badge ' + (locked ? 'pro' : 'free') + '">' +
-        (locked ? '<i class="ti ti-crown"></i> PRO' : '<i class="ti ti-lock-open"></i> ' + (v.free ? 'Bepul' : 'PRO — Ochiq')) +
-      '</div>' +
-      (locked ? '<div class="lock-overlay"><i class="ti ti-lock"></i></div>' : '') +
+    '</div></div>'+
+    '<div class="result-btns">'+
+      '<button class="btn-retry" onclick="restartVariant()"><i class="ti ti-refresh"></i> Qayta urinish</button>'+
+      '<button class="btn-back2" onclick="goVariants()"><i class="ti ti-grid-dots"></i> Variantlar</button>'+
     '</div>';
-  }).join('');
 }
 
-// Faylning eng pastiga, barcha <script> lardan keyin qo'shing:
-// Avvalgi "buildVariantGrid();" ni o'chirib, mana shuni qo'ying:
+function restartVariant(){document.getElementById('resultScreen').style.display='none';startVariant(VARIANTS.indexOf(curVariant));}
+function goVariants(){clearInterval(timerInt);document.getElementById('resultScreen').style.display='none';document.getElementById('testScreen').style.display='none';document.getElementById('variantScreen').style.display='block';}
+</script>
 
-window.addEventListener('load', async () => {
-  // Supabase auth
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/premium.js"></script>
+<script>
+window.addEventListener('load', async function() {
+  var proUser = false;
   if (typeof initAuth !== 'undefined') {
-    const auth = await initAuth(true);
+    var auth = await initAuth(true);
     if (!auth) return;
-    const name = getUserName();
-    document.querySelector('.sidebar-bottom .avatar').textContent = name.charAt(0).toUpperCase();
-    document.querySelector('.sidebar-bottom .name').textContent = name;
-    const planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
-    document.querySelector('.sidebar-bottom .plan').textContent = planLabel + ' tarif';
-    document.querySelector('.plan-pill').innerHTML =
-      (isPro() ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
+    var name = getUserName();
+    document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+    document.getElementById('sb-name').textContent = name;
+    proUser = isPro() || isCorporate();
+    var planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
+    document.getElementById('sb-plan').textContent = planLabel + ' tarif';
+    var pill = document.getElementById('planPill');
+    pill.className = 'plan-pill' + (proUser ? ' pro' : '');
+    pill.innerHTML = (proUser ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
   }
-
-  // Pro tekshiruvi bilan grid
-  buildVariantGrid();
+  buildVariantGrid(proUser);
 });
-
-function buildVariantGrid() {
-  var proUser = (typeof isPro === 'function') ? isPro() : false;
-  var g = document.getElementById('variantGrid');
-  g.innerHTML = VARIANTS.map(function(v, i) {
-    var locked = !v.free && !proUser;
-    return '<div class="variant-card' + (locked ? ' locked' : '') + '" onclick="' +
-      (locked ? 'openProModal()' : 'startVariant(' + i + ')') + '">' +
-      '<div class="vc-icon ' + v.color + '"><i class="ti ' + v.icon + '"></i></div>' +
-      '<div class="vc-name">' + v.name + '</div>' +
-      '<div class="vc-sub">' + v.sub + '</div>' +
-      '<div class="vc-badge ' + (locked ? 'pro' : 'free') + '">' +
-        (locked ? '<i class="ti ti-crown"></i> PRO' : '<i class="ti ti-lock-open"></i> ' + (v.free ? 'Bepul' : 'PRO — Ochiq')) +
-      '</div>' +
-      (locked ? '<div class="lock-overlay"><i class="ti ti-lock"></i></div>' : '') +
-    '</div>';
-  }).join('');
-}
 </script>
 </body>
 </html>
