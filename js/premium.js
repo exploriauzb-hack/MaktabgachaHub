@@ -1,283 +1,240 @@
 // ═══════════════════════════════════════
-// js/premium.js — Obuna va to'lov tizimi
+// js/auth.js — Login / Register / Logout
+// Barcha sahifalarda ishlatiladi
 // ═══════════════════════════════════════
 
-const PLANS = {
-  pro: {
-    id       : 'pro',
-    name     : 'Professional ⭐',
-    price    : 49000,
-    priceText: '49 000',
-    color    : '#7c3aed',
-    features : [
-      'Cheksiz testlar (6 toifa)',
-      'Barcha konspektlar (30+)',
-      'Oyinlar, qo\'shiqlar, mashg\'ulotlar',
-      'AI Konspekt generator',
-      'Attestatsiya testlari',
-      'Portfolio yaratish',
-    ]
-  },
-  corporate: {
-    id       : 'corporate',
-    name     : 'MTT Korporativ 🏢',
-    price    : 299000,
-    priceText: '299 000',
-    color    : '#b45309',
-    features : [
-      'Professional + hamma narsa',
-      '20+ tarbiyachi uchun',
-      'Admin boshqaruv paneli',
-      'Davomat tizimi (QR)',
-      'Ota-ona portali',
-      'Bola rivojlanish monitoringi',
-      'Oylik hisobotlar (PDF)',
-    ]
-  }
+// ── Joriy foydalanuvchi va profil ──
+let _currentUser    = null
+let _currentProfile = null
+
+// ── Joriy sahifa qaysi papkada ekanini aniqlash ──
+// root (dashboard.html, index.html) yoki pages/ ichida
+function _rootPath() {
+  return location.pathname.includes('/pages/') ? '../' : ''
 }
 
-// ── Premium modal ochish ──
-function openPremiumModal(module) {
-  const modal = document.getElementById('premium-modal')
-  if (!modal) return
+// PRO modul sahifalari "pages/" papkasida joylashgan.
+// Joriy sahifa pages/ ichida bo'lsa — prefiks kerak emas, root'da bo'lsa — 'pages/' qo'shiladi.
+function _proHref(file) {
+  return location.pathname.includes('/pages/') ? file : 'pages/' + file
+}
 
-  const moduleNames = {
-    games           : 'Oyinlar',
-    songs           : 'Qo\'shiqlar',
-    activities      : 'Mashg\'ulotlar',
-    ai_konspekt     : 'AI Konspekt generator',
-    attestation     : 'Attestatsiya testlari',
-    portfolio       : 'Portfolio',
-    attendance      : 'Davomat tizimi',
-    parent_portal   : 'Ota-ona portali',
-    child_monitoring: 'Bola monitoringi',
-    reports         : 'Hisobotlar',
+// Sahifa yuklanganda sessiyani tekshirish
+async function initAuth(requireAuth = true) {
+  const { data: { session } } = await _sb.auth.getSession()
+
+  if (!session) {
+    if (requireAuth) window.location.href = _rootPath() + 'index.html'
+    return null
   }
 
-  const name = moduleNames[module] || 'Bu bo\'lim'
-  document.getElementById('premium-module-name').textContent = name
-  modal.classList.add('show')
-  document.body.style.overflow = 'hidden'
-}
+  _currentUser = session.user
 
-function closePremiumModal() {
-  const modal = document.getElementById('premium-modal')
-  if (modal) modal.classList.remove('show')
-  document.body.style.overflow = ''
-}
+  // Profilni olish
+  const { data: profile } = await _sb
+    .from('profiles')
+    .select('*')
+    .eq('id', _currentUser.id)
+    .single()
 
-// ── Premium modal HTML (yangi dizayn bilan mos) ──
-function injectPremiumModal() {
-  if (document.getElementById('premium-modal')) return
+  _currentProfile = profile
 
-  // CSS inject — agar sahifada premium modal style yo'q bo'lsa
-  if (!document.getElementById('premium-modal-style')) {
-    const style = document.createElement('style')
-    style.id = 'premium-modal-style'
-    style.textContent = `
-      #premium-modal {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,.5);
-        z-index: 9000;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-        backdrop-filter: blur(4px);
-      }
-      #premium-modal.show { display: flex; }
-      #premium-modal .pm-box {
-        background: #fff;
-        border-radius: 16px;
-        padding: 28px;
-        max-width: 460px;
-        width: 100%;
-        position: relative;
-        box-shadow: 0 20px 60px rgba(0,0,0,.2);
-      }
-      #premium-modal .pm-close {
-        position: absolute;
-        top: 14px; right: 14px;
-        background: #f4f5f7;
-        border: none;
-        border-radius: 8px;
-        width: 30px; height: 30px;
-        cursor: pointer;
-        color: #6b7280;
-        font-size: 16px;
-        display: flex; align-items: center; justify-content: center;
-      }
-      #premium-modal .pm-close:hover { background: #e5e7eb; }
-      #premium-modal .pm-icon {
-        width: 56px; height: 56px;
-        background: #f5f3ff;
-        border-radius: 14px;
-        display: flex; align-items: center; justify-content: center;
-        margin-bottom: 16px;
-        color: #7c3aed;
-        font-size: 28px;
-      }
-      #premium-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; color: #111827; }
-      #premium-modal .pm-desc { font-size: 13px; color: #6b7280; margin-bottom: 20px; line-height: 1.6; }
-      #premium-modal .pm-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-      #premium-modal .pm-feat {
-        display: flex; align-items: center; gap: 10px;
-        font-size: 13px; color: #111827;
-      }
-      #premium-modal .pm-feat-icon { font-size: 16px; color: #15803d; flex-shrink: 0; }
-      #premium-modal .pm-price-box {
-        background: #f5f3ff;
-        border-radius: 10px;
-        padding: 14px 16px;
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 20px;
-      }
-      #premium-modal .pm-price { font-size: 22px; font-weight: 700; color: #7c3aed; }
-      #premium-modal .pm-price span { font-size: 13px; font-weight: 400; color: #6b7280; }
-      #premium-modal .pm-old { font-size: 12px; color: #9ca3af; text-decoration: line-through; margin-top: 2px; }
-      #premium-modal .pm-discount {
-        background: #7c3aed; color: #fff;
-        padding: 4px 10px; border-radius: 20px;
-        font-size: 11px; font-weight: 700;
-      }
-      #premium-modal .pm-btn-buy {
-        width: 100%; padding: 13px;
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
-        color: #fff; border: none; border-radius: 10px;
-        font-size: 14px; font-weight: 700; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        transition: transform .15s, box-shadow .15s;
-        font-family: inherit;
-      }
-      #premium-modal .pm-btn-buy:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,.35); }
-      #premium-modal .pm-btn-skip {
-        width: 100%; padding: 10px; margin-top: 8px;
-        background: none; border: none;
-        color: #9ca3af; font-size: 13px; cursor: pointer;
-        font-family: inherit;
-      }
-      #premium-modal .pm-btn-skip:hover { color: #6b7280; }
-    `
-    document.head.appendChild(style)
+  // Profil yo'q bo'lsa — yaratish
+  if (!profile) {
+    const name = _currentUser.user_metadata?.full_name
+      || _currentUser.email.split('@')[0]
+
+    await _sb.from('profiles').upsert({
+      id: _currentUser.id,
+      full_name: name,
+      role: 'teacher',
+      subscription_tier: 'free',
+      xp: 0
+    })
+
+    const { data: newProfile } = await _sb
+      .from('profiles')
+      .select('*')
+      .eq('id', _currentUser.id)
+      .single()
+
+    _currentProfile = newProfile
   }
 
-  document.body.insertAdjacentHTML('beforeend', `
-    <div id="premium-modal" onclick="if(event.target===this)closePremiumModal()">
-      <div class="pm-box">
-        <button class="pm-close" onclick="closePremiumModal()">✕</button>
-        <div class="pm-icon"><i class="ti ti-crown"></i></div>
-        <h2>Professional tarif</h2>
-        <p class="pm-desc">
-          "<span id="premium-module-name"></span>" bo'limi faqat Professional obuna uchun mavjud.
-          Barcha PRO imkoniyatlarga to'liq kirish oling.
-        </p>
-        <div class="pm-features">
-          ${PLANS.pro.features.map(f => `
-            <div class="pm-feat">
-              <i class="ti ti-circle-check pm-feat-icon"></i> ${f}
-            </div>
-          `).join('')}
-        </div>
-        <div class="pm-price-box">
-          <div>
-            <div class="pm-price">49 000 so'm <span>/ oy</span></div>
-            <div class="pm-old">Avval: 79 000 so'm</div>
-          </div>
-          <div class="pm-discount">−38%</div>
-        </div>
-        <button class="pm-btn-buy" onclick="window.location.href='premium.html'">
-          <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
-        </button>
-        <button class="pm-btn-skip" onclick="closePremiumModal()">Keyinroq</button>
-      </div>
-    </div>
-  `)
+  return { user: _currentUser, profile: _currentProfile }
 }
 
-// ── To'lov boshlash ──
-async function startPayment(planId) {
-  const plan = PLANS[planId]
-  if (!plan) return
-
-  if (!_currentUser) {
-    window.location.href = 'index.html'
-    return
-  }
-
-  const msg = encodeURIComponent(
-    `Salom! Men MaktabgachaHub ${plan.name} obunasini olmoqchiman.\n` +
-    `Email: ${_currentUser.email}\n` +
-    `Summa: ${plan.priceText} so'm/oy`
-  )
-
-  await _sb.from('payment_logs').insert({
-    user_id : _currentUser.id,
-    amount  : plan.price,
-    currency: 'UZS',
-    provider: 'telegram',
-    status  : 'pending'
-  })
-
-  window.open(`https://t.me/maktabgachahub_bot?start=payment_${planId}_${_currentUser.id}`, '_blank')
-  showToast('Telegram bot orqali to\'lov amalga oshiriladi', 'ok')
+// ── Foydalanuvchi ismini olish ──
+function getUserName() {
+  if (!_currentProfile && !_currentUser) return 'Mehmon'
+  return _currentProfile?.full_name
+    || _currentUser?.user_metadata?.full_name
+    || _currentUser?.email?.split('@')[0]
+    || 'Tarbiyachi'
 }
 
-// ── Obunani faollashtirish (admin tomonidan) ──
-async function activateSubscription(userId, planId) {
-  const periodEnd = new Date()
-  periodEnd.setMonth(periodEnd.getMonth() + 1)
+// ── Subscription tekshirish ──
+function getUserPlan() {
+  return _currentProfile?.subscription_tier || 'free'
+}
 
-  await _sb.from('subscriptions').upsert({
-    user_id             : userId,
-    plan                : planId,
-    status              : 'active',
-    payment_provider    : 'telegram',
-    current_period_start: new Date().toISOString(),
-    current_period_end  : periodEnd.toISOString()
-  })
+function isPro() {
+  const plan = getUserPlan()
+  return plan === 'pro' || plan === 'corporate'
+}
+
+function isCorporate() {
+  return getUserPlan() === 'corporate'
+}
+
+// ── Modul ruxsati ──
+const MODULE_ACCESS = {
+  daily_schedule : ['free', 'pro', 'corporate'],
+  weekly_plan    : ['free', 'pro', 'corporate'],
+  soha           : ['free', 'pro', 'corporate'],
+  tamoyil        : ['free', 'pro', 'corporate'],
+  tests          : ['free', 'pro', 'corporate'],  // limitli/cheksiz
+  konspekt       : ['free', 'pro', 'corporate'],  // limitli/cheksiz
+  games          : ['pro', 'corporate'],
+  songs          : ['pro', 'corporate'],
+  activities     : ['pro', 'corporate'],
+  ai_konspekt    : ['pro', 'corporate'],
+  attestation    : ['pro', 'corporate'],
+  portfolio      : ['pro', 'corporate'],
+  attendance     : ['corporate'],
+  parent_portal  : ['corporate'],
+  child_monitoring: ['corporate'],
+  reports        : ['corporate'],
+}
+
+function hasAccess(module) {
+  const plan = getUserPlan()
+  return MODULE_ACCESS[module]?.includes(plan) ?? false
+}
+
+// ── Test limiti (bepul: 5 ta/oy) ──
+async function checkTestLimit() {
+  if (isPro()) return { allowed: true, count: 0, limit: 999 }
+
+  const monthStart = new Date()
+  monthStart.setDate(1)
+  monthStart.setHours(0, 0, 0, 0)
+
+  const { count } = await _sb
+    .from('test_results')
+    .select('id', { count: 'exact' })
+    .eq('user_id', _currentUser.id)
+    .gte('completed_at', monthStart.toISOString())
+
+  return { allowed: count < 5, count, limit: 5 }
+}
+
+// ── Chiqish ──
+// Joriy sahifa root'da yoki pages/ ichida bo'lishidan qat'i nazar
+// to'g'ri index.html'ga yo'naltiradi.
+async function doLogout() {
+  await _sb.auth.signOut()
+  window.location.href = _rootPath() + 'index.html'
+}
+
+// ── XP qo'shish ──
+async function addXP(amount) {
+  if (!_currentUser) return
+  const newXP = (_currentProfile?.xp || 0) + amount
 
   await _sb
     .from('profiles')
-    .update({ subscription_tier: planId })
-    .eq('id', userId)
+    .update({ xp: newXP })
+    .eq('id', _currentUser.id)
+
+  if (_currentProfile) _currentProfile.xp = newXP
+  return newXP
 }
 
-// ── Obuna muddatini tekshirish ──
-async function checkSubscriptionExpiry() {
-  if (!_currentUser) return
+// ── Daraja aniqlash ──
+function getLevel(xp) {
+  if (xp >= 800) return { lvl: 5, title: 'Ustoz Tarbiyachi',      next: 9999 }
+  if (xp >= 400) return { lvl: 4, title: 'Malakali Tarbiyachi',   next: 800  }
+  if (xp >= 200) return { lvl: 3, title: 'Tajribali Tarbiyachi',  next: 400  }
+  if (xp >= 80)  return { lvl: 2, title: 'Rivojlanayotgan',       next: 200  }
+  return           { lvl: 1, title: 'Yangi Tarbiyachi',      next: 80   }
+}
 
-  const plan = getUserPlan()
-  if (plan === 'free') return
-
-  const { data } = await _sb
-    .from('subscriptions')
-    .select('current_period_end')
-    .eq('user_id', _currentUser.id)
-    .eq('status', 'active')
-    .single()
-
-  if (!data) return
-
-  const end      = new Date(data.current_period_end)
-  const now      = new Date()
-  const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24))
-
-  if (daysLeft <= 0) {
-    await _sb.from('profiles')
-      .update({ subscription_tier: 'free' })
-      .eq('id', _currentUser.id)
-    await _sb.from('subscriptions')
-      .update({ status: 'expired' })
-      .eq('user_id', _currentUser.id)
-    showToast('Obuna muddati tugadi. Yangilang!', 'err')
-  } else if (daysLeft <= 3) {
-    showToast(`⚠️ Obuna ${daysLeft} kundan keyin tugaydi!`, 'err')
+// ── Toast xabar ──
+function showToast(msg, type = 'ok') {
+  let t = document.getElementById('toast')
+  if (!t) {
+    t = document.createElement('div')
+    t.id = 'toast'
+    t.className = 'toast'
+    document.body.appendChild(t)
   }
+  t.textContent = msg
+  t.className = `toast ${type} show`
+  setTimeout(() => t.classList.remove('show'), 3000)
 }
 
-// Sahifa yuklanganda modalni tayyorla va muddatni tekshir
-window.addEventListener('load', () => {
-  injectPremiumModal()
-  checkSubscriptionExpiry()
-})
+// ── PRO sidebar elementlarini bog'lash ──
+// Ikona klassiga qarab modul nomi va sahifa faylini aniqlaydi.
+// HTMLga tegmasdan, har qanday sahifadagi sidebar'da ishlaydi.
+const PRO_NAV_MAP = {
+  'ti-puzzle'     : { module: 'games',       file: 'oyinlar.html' },
+  'ti-music'      : { module: 'songs',       file: 'qoshiqlar.html' },
+  'ti-brush'      : { module: 'activities',  file: 'mashgulot.html' },
+  'ti-certificate': { module: 'attestation', file: 'attestatsiya.html' },
+  'ti-id-badge-2' : { module: 'portfolio',   file: 'portfolio.html' },
+}
+
+function bindProNav() {
+  document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+    const badge = item.querySelector('.badge')
+    if (!badge || badge.textContent.trim() !== 'PRO') return
+
+    const iconEl = item.querySelector('i')
+    const iconClass = iconEl && [...iconEl.classList].find(c => c.startsWith('ti-'))
+    const cfg = iconClass && PRO_NAV_MAP[iconClass]
+    if (!cfg) return
+
+    item.style.cursor = 'pointer'
+    item.onclick = () => {
+      if (isPro()) {
+        window.location.href = _proHref(cfg.file)
+      } else if (typeof openPremiumModal === 'function') {
+        openPremiumModal(cfg.module)
+      } else {
+        window.location.href = _proHref('premium.html')
+      }
+    }
+  })
+}
+
+// ── Nav elementlarini to'ldirish ──
+function fillNav() {
+  const nameEl = document.getElementById('nav-name')
+  const lvlEl  = document.getElementById('nav-lvl')
+  const planEl = document.getElementById('nav-plan')
+
+  if (nameEl) {
+    const name = getUserName()
+    nameEl.textContent = name.length > 14 ? name.slice(0, 14) + '…' : name
+  }
+
+  if (lvlEl) {
+    const xp  = _currentProfile?.xp || 0
+    const lv  = getLevel(xp)
+    lvlEl.textContent = lv.lvl + '-daraja'
+  }
+
+  if (planEl) {
+    const plan = getUserPlan()
+    planEl.textContent = plan === 'pro' ? '⭐ Pro'
+      : plan === 'corporate' ? '🏢 Korporativ'
+      : 'Bepul'
+    planEl.style.background = plan === 'pro' ? '#6c47ff'
+      : plan === 'corporate' ? '#f59e0b'
+      : 'rgba(255,255,255,0.2)'
+  }
+
+  // PRO sidebar elementlarini har sahifada avtomatik bog'lash
+  bindProNav()
+}
