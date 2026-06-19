@@ -5,27 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Haftalik mavzular</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/@tabler/icons-webfont/2.44.0/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f0f4ff;
-  --surface:#ffffff;
-  --border:#e5e7eb;
-  --text:#111827;
-  --muted:#6b7280;
-  --accent:#1e40af;
-  --accent-soft:#eff6ff;
-  --accent-mid:#3b82f6;
-  --green:#15803d;
-  --green-soft:#f0fdf4;
-  --amber:#b45309;
-  --amber-soft:#fffbeb;
-  --red:#b91c1c;
-  --pro:#7c3aed;
-  --pro-soft:#f5f3ff;
-  --sidebar:240px;
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+  --rose:#be185d;--rose-soft:#fdf2f8;--cyan:#0e7490;--cyan-soft:#ecfeff;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
@@ -33,7 +22,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -41,7 +29,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .logo-text span{display:block;font-size:11px;font-weight:400;color:var(--muted)}
 .sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px}
 .sidebar-section{padding:12px 12px 4px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;position:relative}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;margin:1px 8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s}
 .nav-item:hover{background:var(--bg);color:var(--text)}
 .nav-item.active{background:var(--accent-soft);color:var(--accent)}
 .nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
@@ -55,77 +43,96 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
 
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px 100px;max-width:1080px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap}
 .topbar-left{display:flex;align-items:center;gap:12px}
 .btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
-.btn-hamburger:hover{background:var(--bg)}
 .topbar h1{font-size:20px;font-weight:600}
 .topbar h1 span{color:var(--accent)}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
 
-/* INFO BOX */
-.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
-.info-box i{font-size:16px;flex-shrink:0}
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:18px;display:flex;align-items:flex-start;gap:8px}
+.info-box i{font-size:16px;flex-shrink:0;margin-top:1px}
 
-/* STATS ROW */
-.stats-row{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
-.stat-chip i{font-size:16px;color:var(--accent)}
-.stat-chip b{color:var(--text);font-size:14px}
+/* AGE SELECTOR */
+.age-section{margin-bottom:18px}
+.age-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.age-tabs{display:flex;gap:8px;flex-wrap:wrap}
+.age-tab{flex:1;min-width:140px;background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .15s;text-align:left;font-family:'Inter',sans-serif}
+.age-tab:hover{border-color:#93c5fd;transform:translateY(-2px)}
+.age-tab.active{border-color:var(--accent);background:var(--accent-soft)}
+.age-tab .age-num{font-size:16px;font-weight:700;color:var(--accent)}
+.age-tab .age-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.age-tab.active .age-num{color:var(--accent)}
 
-/* QUARTER DIVIDER */
-.quarter-divider{display:flex;align-items:center;gap:10px;margin:24px 0 14px}
+.stats-row{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:500}
+.stat-chip i{font-size:15px;color:var(--accent)}
+.stat-chip b{color:var(--text);font-size:13px}
+
+/* DOMAIN LEGEND */
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+.quarter-divider{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
 .quarter-divider .qdiv-line{flex:1;height:1px;background:var(--border)}
 .quarter-label{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--accent);white-space:nowrap;background:var(--accent-soft);padding:5px 12px;border-radius:20px;border:1px solid #bfdbfe}
 .quarter-label.q2{color:var(--green);background:var(--green-soft);border-color:#bbf7d0}
 .quarter-label.q3{color:var(--amber);background:var(--amber-soft);border-color:#fde68a}
 .quarter-label.q4{color:var(--pro);background:var(--pro-soft);border-color:#ddd6fe}
 
-/* WEEK GRID */
-.week-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:8px}
-.week-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:default}
-.week-card:hover{border-color:#93c5fd;box-shadow:0 2px 10px rgba(59,130,246,.1);transform:translateY(-2px)}
+.week-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-bottom:8px}
+.week-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:pointer;position:relative}
+.week-card:hover{border-color:#93c5fd;box-shadow:0 4px 14px rgba(59,130,246,.12);transform:translateY(-2px)}
 .week-card-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .week-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .week-num.q2{background:var(--green)}
 .week-num.q3{background:var(--amber)}
 .week-num.q4{background:var(--pro)}
 .week-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.week-goal{font-size:11px;color:var(--muted);margin:6px 0 8px;line-height:1.4}
 .stags{display:flex;flex-wrap:wrap;gap:4px}
-.stag{background:var(--accent-soft);color:var(--accent);border-radius:20px;padding:2px 8px;font-size:10px;font-weight:600}
-.stag.q2{background:var(--green-soft);color:var(--green)}
-.stag.q3{background:var(--amber-soft);color:var(--amber)}
-.stag.q4{background:var(--pro-soft);color:var(--pro)}
+.stag{display:flex;align-items:center;gap:4px;background:var(--accent-soft);color:var(--accent);border-radius:20px;padding:2px 8px;font-size:9.5px;font-weight:700}
+.stag-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 
-/* FLOATING BACK */
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:50;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface);border-radius:16px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:24px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;font-size:16px;color:var(--muted)}
+.modal-close:hover{background:#e2e8f0}
+.modal-week-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:var(--accent);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.modal-goal{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.modal-sec-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px;display:flex;align-items:center;gap:6px}
+.modal-domain-list{display:flex;flex-direction:column;gap:8px}
+.domain-row{display:flex;align-items:flex-start;gap:10px;background:var(--bg);border-radius:10px;padding:9px 12px;font-size:12px}
+.domain-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.domain-row b{display:block;font-size:12px;margin-bottom:2px}
+.domain-row span{color:var(--muted);font-size:11.5px}
+
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
-.fab-back i{font-size:18px}
 
-/* MOBILE */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
-  .main{margin-left:0;padding:16px}
+  .main{margin-left:0;padding:16px 16px 90px}
   .btn-hamburger{display:flex}
   .topbar h1{font-size:16px}
   .week-grid{grid-template-columns:1fr 1fr}
   .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
+  .age-tab{min-width:120px}
 }
-@media(max-width:420px){
-  .week-grid{grid-template-columns:1fr}
-}
+@media(max-width:420px){ .week-grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -141,7 +148,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <div class="sidebar-section">Professional</div>
-  <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item"><i class="ti ti-puzzle"></i> O'yinlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
@@ -153,73 +160,58 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar">T</div>
-      <div class="user-info">
-        <div class="name">Tarbiyachi</div>
-        <div class="plan">Bepul tarif</div>
-      </div>
+      <div class="user-info"><div class="name">Tarbiyachi</div><div class="plan">Bepul tarif</div></div>
     </div>
     <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
 
-<!-- MAIN -->
 <main class="main">
   <div class="topbar">
     <div class="topbar-left">
       <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
       <h1><span>Haftalik mavzular</span> rejasi</h1>
     </div>
-    <div class="topbar-right">
-      <span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
-    </div>
+    <span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
   </div>
 
   <div class="info-box">
     <i class="ti ti-info-circle"></i>
-    Har hafta uchun mavzu barcha <b>5 ta rivojlanish sohasi</b> bilan integratsiyalashgan. Jami <b>30 hafta</b> — o'quv yili davomida.
+    <div>"Ilk qadam" milliy o'quv dasturi (3-nashr) asosida. Har bir hafta mavzusi <b>5 rivojlanish sohasi</b> (Jismoniy, Ijtimoiy-hissiy, Nutq, Bilish, Ijodiy) bilan integratsiyalashgan. Yil davomida <b>30 hafta</b>, har bir yosh guruhi uchun chuqurlik darajasi moslashtirilgan. Quyida o'z yosh guruhingizni tanlang — mavzular shu guruhga mos kengaytirilgan holda ko'rinadi.</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-chip"><i class="ti ti-calendar-stats"></i><span>Jami: <b>30 hafta</b></span></div>
-    <div class="stat-chip"><i class="ti ti-layout-grid"></i><span>Choraklar: <b>4 ta</b></span></div>
-    <div class="stat-chip"><i class="ti ti-chart-dots-3"></i><span>Soha integratsiyasi: <b>5 ta</b></span></div>
+  <div class="age-section">
+    <div class="age-label"><i class="ti ti-users"></i> Yosh toifasini tanlang</div>
+    <div class="age-tabs" id="age-tabs">
+      <button class="age-tab active" data-age="a"><div class="age-num">3–4 yosh</div><div class="age-desc">Kichik guruh · sensor-amaliy</div></button>
+      <button class="age-tab" data-age="b"><div class="age-num">4–5 yosh</div><div class="age-desc">O'rta guruh · so'z+harakat</div></button>
+      <button class="age-tab" data-age="c"><div class="age-num">5–6 yosh</div><div class="age-desc">Katta guruh · tadqiqot</div></button>
+      <button class="age-tab" data-age="d"><div class="age-num">6–7 yosh</div><div class="age-desc">Tayyorlov guruh · maktabga tayyorgarlik</div></button>
+    </div>
   </div>
 
-  <!-- Q1 -->
-  <div class="quarter-divider">
-    <div class="quarter-label"><i class="ti ti-book"></i> I-CHORAK · 1–8 hafta</div>
-    <div class="qdiv-line"></div>
-  </div>
-  <div class="week-grid" id="wg1"></div>
+  <div class="stats-row" id="stats-row"></div>
 
-  <!-- Q2 -->
-  <div class="quarter-divider">
-    <div class="quarter-label q2"><i class="ti ti-book"></i> II-CHORAK · 9–16 hafta</div>
-    <div class="qdiv-line"></div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#1e40af"></span>1. Jismoniy</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#be185d"></span>2. Ijtimoiy-hissiy</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#15803d"></span>3. Nutq</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#b45309"></span>4. Bilish</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#7c3aed"></span>5. Ijodiy</span>
   </div>
-  <div class="week-grid" id="wg2"></div>
 
-  <!-- Q3 -->
-  <div class="quarter-divider">
-    <div class="quarter-label q3"><i class="ti ti-book"></i> III-CHORAK · 17–23 hafta</div>
-    <div class="qdiv-line"></div>
-  </div>
-  <div class="week-grid" id="wg3"></div>
-
-  <!-- Q4 -->
-  <div class="quarter-divider">
-    <div class="quarter-label q4"><i class="ti ti-book"></i> IV-CHORAK · 24–30 hafta</div>
-    <div class="qdiv-line"></div>
-  </div>
-  <div class="week-grid" id="wg4" style="margin-bottom:80px"></div>
+  <div id="weeks-container"></div>
 </main>
 
-<!-- FLOATING BACK -->
-<a href="../dashboard.html" class="fab-back">
-  <i class="ti ti-arrow-left"></i> Dashboard
-</a>
+<a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
-<!-- ANIMATED BG -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -229,97 +221,171 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
   const shapes=[];
-  for(let i=0;i<28;i++)shapes.push({color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.42)});
+  for(let i=0;i<24;i++)shapes.push({color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,30),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),op:rnd(0.16,0.4)});
   function frame(){
     ctx.clearRect(0,0,W,H);
     shapes.forEach(s=>{
-      s.x+=s.vx;s.y+=s.vy;s.rot+=s.vrot;
+      s.x+=s.vx;s.y+=s.vy;
       if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
       if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
-      ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
-      ctx.globalAlpha=s.op;ctx.fillStyle=s.color;
-      ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.globalAlpha=s.op;ctx.fillStyle=s.color;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.size*.6,0,Math.PI*2);ctx.fill();
       ctx.restore();
     });
     requestAnimationFrame(frame);
   }
   frame();
 })();
-</script>
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden';}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closeModal();}});
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';}
+checkHamburger();window.addEventListener('resize',checkHamburger);
 
-<!-- SIDEBAR JS -->
-<script>
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-  document.body.style.overflow='hidden';
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-  document.body.style.overflow='';
-}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){
-  document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';
-}
-checkHamburger();
-window.addEventListener('resize',checkHamburger);
-</script>
+// ---------- DOMAIN COLORS ----------
+const DOMAIN = {
+  1:{name:"Jismoniy rivojlanish va sog'lom turmush tarzi", color:'#1e40af'},
+  2:{name:"Ijtimoiy-hissiy rivojlanish", color:'#be185d'},
+  3:{name:"Nutq, muloqot, o'qish-yozish ko'nikmalari", color:'#15803d'},
+  4:{name:"Bilish jarayonlarini rivojlantirish", color:'#b45309'},
+  5:{name:"Ijodiy rivojlanish", color:'#7c3aed'}
+};
 
-<!-- WEEKS DATA -->
-<script>
-var weeks=[
-  {n:1, t:'Men va mening oilam',             tags:['Nutq','2-soha']},
-  {n:2, t:"Mening bog'cham va do'stlarim",   tags:['Muloqot',"Do'stlik"]},
-  {n:3, t:'Kuz fasli',                        tags:['Tabiat','4-soha']},
-  {n:4, t:'Meva va sabzavotlar',              tags:['Tasnif','4-soha']},
-  {n:5, t:'Non va oziq-ovqat',                tags:["Sog'lik",'Mehnat']},
-  {n:6, t:'Uy hayvonlari',                    tags:['Hayvonlar','Parvarish']},
-  {n:7, t:'Yovvoyi hayvonlar',                tags:["O'rmon",'Tasnif']},
-  {n:8, t:'Qushlar dunyosi',                  tags:["Ko'chuvchi",'Kuzatish']},
-  {n:9, t:'Kiyim-kechak',                     tags:['Fasl','Rang']},
-  {n:10,t:'Uy va mebel',                      tags:['Xona','Buyumlar']},
-  {n:11,t:'Transport vositalari',              tags:['Quruqlik','Havo']},
-  {n:12,t:'Kasb-hunar',                        tags:['Mehnat','Asbob']},
-  {n:13,t:'Mening shahrim',                    tags:["Ko'cha",'Xavfsizlik']},
-  {n:14,t:"Vatan - O'zbekiston",              tags:['Davlat','Milliy']},
-  {n:15,t:'Qish fasli',                        tags:['Qor','Sovuq']},
-  {n:16,t:'Yangi yil bayrami',                 tags:['Bezak','Sovga']},
-  {n:17,t:"Navro'z bayrami",                  tags:["An'ana",'Milliy']},
-  {n:18,t:'Bahor fasli',                       tags:['Gul','Yashillik']},
-  {n:19,t:'Suv va xususiyatlari',              tags:['Tajriba','4-soha']},
-  {n:20,t:'Kasblar dunyosi',                   tags:['Mehnat','Jamiyat']},
-  {n:21,t:'Men va mening tanam',               tags:['Jismoniy','1-soha']},
-  {n:22,t:"Ovqatlanish va sog'lik",           tags:["Sog'lik",'Gigiyena']},
-  {n:23,t:"O'simliklar",                       tags:['Tabiat','Kuzatish']},
-  {n:24,t:'Hid va ranglar',                    tags:['Sezgi','1-soha']},
-  {n:25,t:'Raqamlar dunyosi',                  tags:['FEMP','4-soha']},
-  {n:26,t:"Shakllar va o'lchamlar",           tags:['Geometriya','4-soha']},
-  {n:27,t:'Vaqt tushunchasi',                  tags:['Kun','Hafta','4-soha']},
-  {n:28,t:"Xalqimizning urf-odatlari",        tags:['Milliy','5-soha']},
-  {n:29,t:'Kitob va savodxonlik',              tags:['Nutq','3-soha']},
-  {n:30,t:'Yoz fasli va dam olish',            tags:['Tabiat','Sayr']},
+// ---------- BASE 30 WEEKS (umumiy mavzular asosi - Ilk qadam tartibi) ----------
+const baseWeeks=[
+  {n:1, t:'Men va mening oilam', soha:[2,3]},
+  {n:2, t:"Mening bog'cham va do'stlarim", soha:[2,3]},
+  {n:3, t:'Kuz fasli', soha:[4,1]},
+  {n:4, t:'Meva va sabzavotlar', soha:[4,1]},
+  {n:5, t:'Non va oziq-ovqat', soha:[1,2]},
+  {n:6, t:'Uy hayvonlari', soha:[4,2]},
+  {n:7, t:'Yovvoyi hayvonlar', soha:[4,3]},
+  {n:8, t:'Qushlar dunyosi', soha:[4,1]},
+  {n:9, t:'Kiyim-kechak', soha:[1,4]},
+  {n:10,t:'Uy va mebel', soha:[4,2]},
+  {n:11,t:'Transport vositalari', soha:[4,1]},
+  {n:12,t:'Kasb-hunar', soha:[2,3]},
+  {n:13,t:'Mening shahrim', soha:[1,2]},
+  {n:14,t:"Vatan - O'zbekiston", soha:[2,5]},
+  {n:15,t:'Qish fasli', soha:[4,1]},
+  {n:16,t:'Yangi yil bayrami', soha:[5,2]},
+  {n:17,t:"Navro'z bayrami", soha:[5,2]},
+  {n:18,t:'Bahor fasli', soha:[4,5]},
+  {n:19,t:'Suv va xususiyatlari', soha:[4,1]},
+  {n:20,t:'Kasblar dunyosi', soha:[2,3]},
+  {n:21,t:'Men va mening tanam', soha:[1,4]},
+  {n:22,t:"Ovqatlanish va sog'lik", soha:[1,2]},
+  {n:23,t:"O'simliklar", soha:[4,3]},
+  {n:24,t:'Hid va ranglar', soha:[1,5]},
+  {n:25,t:'Raqamlar dunyosi', soha:[4,3]},
+  {n:26,t:"Shakllar va o'lchamlar", soha:[4,5]},
+  {n:27,t:'Vaqt tushunchasi', soha:[4,3]},
+  {n:28,t:"Xalqimizning urf-odatlari", soha:[5,2]},
+  {n:29,t:'Kitob va savodxonlik', soha:[3,4]},
+  {n:30,t:'Yoz fasli va dam olish', soha:[4,1]}
 ];
 
-// q=1,2,3,4 → color class
+// ---------- AGE-SPECIFIC GOAL & ACTIVITY GENERATORS ----------
+const ageMeta = {
+  a:{ label:'3–4 yosh', desc:"Sensor-amaliy o'rganish, kichik buyumlar bilan ishlash, taqlid orqali bilim olish.",
+      goalPrefix:"Bola sensor tajriba va o'yin orqali", actType:"Ko'rgazmali o'yin, kub/qum bilan ishlash, taqlid harakatlari"},
+  b:{ label:'4–5 yosh', desc:"So'z boyligini kengaytirish, oddiy guruhlash va sabab-oqibat bog'lanishlarini anglash.",
+      goalPrefix:"Bola so'z va harakatni bog'lab", actType:"Didaktik o'yin, rolli o'yin, oddiy taqqoslash topshiriqlari"},
+  c:{ label:'5–6 yosh', desc:"Tadqiqotchilik faolligi, kichik tajribalar, mantiqiy bog'lanishlarni mustaqil topish.",
+      goalPrefix:"Bola mustaqil kuzatish va tadqiq orqali", actType:"Kichik tajriba, loyihaviy faoliyat, guruh muhokamasi"},
+  d:{ label:'6–7 yosh', desc:"Maktabga tayyorgarlik: tanqidiy fikrlash, elementar matematika, yozuvga tayyorgarlik.",
+      goalPrefix:"Bola tanqidiy fikrlash va mustaqil xulosa orqali", actType:"Muammoli topshiriq, loyiha taqdimoti, yozuv elementlari mashqi"}
+};
+
+function buildActivitiesForWeek(week, ageKey){
+  // generate 3 short activity lines per domain referenced in week.soha, adapted by age
+  const meta = ageMeta[ageKey];
+  return week.soha.map(d=>{
+    const dom = DOMAIN[d];
+    let txt = '';
+    if(ageKey==='a') txt = `"${week.t}" mavzusida sodda ko'rgazmali material va sezgi organlari orqali tanishtirish.`;
+    if(ageKey==='b') txt = `"${week.t}" mavzusida suhbat, rolli o'yin va taqqoslash topshiriqlari orqali mustahkamlash.`;
+    if(ageKey==='c') txt = `"${week.t}" mavzusida kichik tajriba/kuzatuv, savol-javob va guruh loyihasi orqali chuqurlashtirish.`;
+    if(ageKey==='d') txt = `"${week.t}" mavzusida muammoli vaziyat, elementar hisob-kitob va taqdimot orqali maktabga tayyorlash.`;
+    return {domainId:d, domain:dom, text:txt};
+  });
+}
+
 function qOf(n){return n<=8?'':n<=16?'q2':n<=23?'q3':'q4'}
 
-function cardHtml(w){
-  var q=qOf(w.n);
-  return `<div class="week-card">
+function statsHtml(ageKey){
+  const meta=ageMeta[ageKey];
+  return `
+    <div class="stat-chip"><i class="ti ti-calendar-stats"></i><span>Jami: <b>30 hafta</b></span></div>
+    <div class="stat-chip"><i class="ti ti-users"></i><span>Guruh: <b>${meta.label}</b></span></div>
+    <div class="stat-chip"><i class="ti ti-bulb"></i><span>${meta.desc}</span></div>
+  `;
+}
+
+function cardHtml(week, ageKey){
+  const q=qOf(week.n);
+  const tags = week.soha.map(d=>{
+    const dom=DOMAIN[d];
+    return `<span class="stag"><span class="stag-dot" style="background:${dom.color}"></span>${dom.name.split(' ')[0]}</span>`;
+  }).join('');
+  return `<div class="week-card" data-n="${week.n}" data-age="${ageKey}">
     <div class="week-card-top">
-      <div class="week-num ${q}">${w.n}</div>
-      <div class="week-title">${w.t}</div>
+      <div class="week-num ${q}">${week.n}</div>
+      <div class="week-title">${week.t}</div>
     </div>
-    <div class="stags">${w.tags.map(t=>`<span class="stag ${q}">${t}</span>`).join('')}</div>
+    <div class="week-goal">${ageMeta[ageKey].goalPrefix} mavzuni o'zlashtiradi.</div>
+    <div class="stags">${tags}</div>
   </div>`;
 }
 
-document.getElementById('wg1').innerHTML=weeks.slice(0,8).map(cardHtml).join('');
-document.getElementById('wg2').innerHTML=weeks.slice(8,16).map(cardHtml).join('');
-document.getElementById('wg3').innerHTML=weeks.slice(16,23).map(cardHtml).join('');
-document.getElementById('wg4').innerHTML=weeks.slice(23,30).map(cardHtml).join('');
+function renderWeeks(ageKey){
+  const container=document.getElementById('weeks-container');
+  document.getElementById('stats-row').innerHTML = statsHtml(ageKey);
+  let html='';
+  const quarters=[
+    {label:'I-CHORAK · 1–8 hafta', cls:'', slice:[0,8]},
+    {label:'II-CHORAK · 9–16 hafta', cls:'q2', slice:[8,16]},
+    {label:'III-CHORAK · 17–23 hafta', cls:'q3', slice:[16,23]},
+    {label:'IV-CHORAK · 24–30 hafta', cls:'q4', slice:[23,30]}
+  ];
+  quarters.forEach(q=>{
+    html+=`<div class="quarter-divider"><div class="quarter-label ${q.cls}"><i class="ti ti-book"></i> ${q.label}</div><div class="qdiv-line"></div></div>`;
+    html+=`<div class="week-grid">${baseWeeks.slice(q.slice[0],q.slice[1]).map(w=>cardHtml(w,ageKey)).join('')}</div>`;
+  });
+  container.innerHTML=html;
+  container.querySelectorAll('.week-card').forEach(card=>{
+    card.addEventListener('click',()=>openModal(parseInt(card.dataset.n),card.dataset.age));
+  });
+}
+
+function openModal(n, ageKey){
+  const week = baseWeeks.find(w=>w.n===n);
+  const acts = buildActivitiesForWeek(week, ageKey);
+  const q=qOf(n);
+  const qLabel = q==='' ? 'I-chorak' : q==='q2'?'II-chorak':q==='q3'?'III-chorak':'IV-chorak';
+  let html = `
+    <span class="modal-week-badge"><i class="ti ti-calendar-event"></i> ${n}-hafta · ${qLabel} · ${ageMeta[ageKey].label}</span>
+    <div class="modal-title">${week.t}</div>
+    <div class="modal-goal">${ageMeta[ageKey].goalPrefix} "${week.t}" mavzusini o'zlashtiradi. Faoliyat turi: ${ageMeta[ageKey].actType}.</div>
+    <div class="modal-sec-title"><i class="ti ti-chart-dots-3"></i> Integratsiyalashgan rivojlanish sohalari</div>
+    <div class="modal-domain-list">
+      ${acts.map(a=>`<div class="domain-row"><span class="domain-dot" style="background:${a.domain.color}"></span><div><b>${a.domain.name}</b><span>${a.text}</span></div></div>`).join('')}
+    </div>
+  `;
+  document.getElementById('modal-content').innerHTML=html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+
+document.querySelectorAll('.age-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.age-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    renderWeeks(tab.dataset.age);
+  });
+});
+
+renderWeeks('a');
 </script>
 </body>
 </html>
