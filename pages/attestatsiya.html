@@ -73,7 +73,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .mode-badge.exam{background:var(--accent-soft);color:var(--accent)}
 
 /* VARIANT CARDS */
-.variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.variant-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
 .variant-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px 12px;cursor:pointer;text-align:center;transition:border-color .15s,transform .15s}
 .variant-card:hover{border-color:#93c5fd;transform:translateY(-2px)}
 .variant-card.selected{border-color:var(--accent);background:var(--accent-soft)}
@@ -179,13 +179,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .topbar{margin-bottom:14px}
   .topbar h1{font-size:15px}
   .mode-grid{grid-template-columns:1fr}
-  .variant-grid{grid-template-columns:1fr 1fr 1fr}
+  .variant-grid{grid-template-columns:repeat(3,1fr)}
   .cat-grid{grid-template-columns:1fr 1fr}
   .q-text{font-size:13.5px}
   .timer-inner{padding:0 14px}
 }
 @media(max-width:480px){
-  .variant-grid{grid-template-columns:1fr}
+  .variant-grid{grid-template-columns:1fr 1fr}
   .cat-grid{grid-template-columns:1fr}
 }
 </style>
@@ -259,8 +259,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div style="background:var(--bg);border-radius:12px;padding:16px;text-align:left;margin-bottom:22px;">
         <div style="font-weight:600;font-size:12.5px;margin-bottom:10px;">✅ Pro rejimda nima bor:</div>
         <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--muted);">
-          <span><i class="ti ti-clipboard-list" style="margin-right:6px;color:var(--accent)"></i>3 ta variant — har biri 40 ta savol</span>
-          <span><i class="ti ti-book-2" style="margin-right:6px;color:var(--accent)"></i>Maktabgacha pedagogika (2019) kitob asosida</span>
+          <span><i class="ti ti-clipboard-list" style="margin-right:6px;color:var(--accent)"></i>5 ta variant — har biri 40 ta savol</span>
           <span><i class="ti ti-clock" style="margin-right:6px;color:var(--accent)"></i>90 daqiqalik haqiqiy taymer</span>
           <span><i class="ti ti-chart-bar" style="margin-right:6px;color:var(--accent)"></i>Batafsil natija va xatolarni ko'rish</span>
           <span><i class="ti ti-trophy" style="margin-right:6px;color:var(--accent)"></i>Sertifikat (75%+ natijada)</span>
@@ -324,6 +323,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
           <h4>3-Variant</h4>
           <p>40 ta savol</p>
         </div>
+        <div class="variant-card" id="vc-4" onclick="selectVariant(4)">
+          <div class="vnum">4</div>
+          <h4>4-Variant</h4>
+          <p>40 ta savol</p>
+        </div>
+        <div class="variant-card" id="vc-5" onclick="selectVariant(5)">
+          <div class="vnum">5</div>
+          <h4>5-Variant</h4>
+          <p>40 ta savol</p>
+        </div>
       </div>
     </div>
 
@@ -334,6 +343,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
         <button class="cat-btn" onclick="selectCat('v1')">📘 1-Variant savollar<div class="cat-num">40 savol</div></button>
         <button class="cat-btn" onclick="selectCat('v2')">📗 2-Variant savollar<div class="cat-num">40 savol</div></button>
         <button class="cat-btn" onclick="selectCat('v3')">📙 3-Variant savollar<div class="cat-num">40 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('v4')">📗 4-Variant savollar<div class="cat-num">40 savol</div></button>
+        <button class="cat-btn" onclick="selectCat('v5')">📙 5-Variant savollar<div class="cat-num">40 savol</div></button>
       </div>
     </div>
 
@@ -621,6 +632,858 @@ const VARIANTS = {
     {q:"Bolaning maktabgacha yoshdagi fikrlash xususiyati qanday?",opts:["Faqat so'zlar orqali","Ko'rgazmali-amaliy, ko'rgazmali-obrazli va elementar mantiqiy fikrlash bosqichma-bosqich rivojlanadi","Faqat abstrakt fikrlash","Faqat matematik fikrlash"],ans:1,exp:"Maktabgacha yoshda tafakkur ko'rgazmali-amaliy dan ko'rgazmali-obrazli ga, so'ng elementar mantiqiy fikrlashga o'tadi."},
     {q:"Bolaning ijtimoiylashuvi qanday amalga oshadi?",opts:["Faqat maktabga borish bilan","Oila, bog'cha, tengdoshlar va atrofdagilar orqali me'yorlar va qadriyatlarni o'zlashtirish bilan","Faqat do'st orttirish bilan","Faqat o'yin orqali"],ans:1,exp:"Sotsializatsiya — bola jamiyatning me'yorlari, qadriyatlari, xulq-atvor qoidalari va madaniyatini oila, bog'cha va atrofdagilar orqali o'zlashtirish jarayoni."},
     {q:"MTT da maxsus ehtiyojli bolalar uchun qo'llaniluvchi yondashuv?",opts:["Alohida sinflarda o'qitish","Inklyuziv ta'lim — ularni oddiy guruhga integratsiya qilish","Uyda o'qitish","Faqat sport mashg'ulotlari"],ans:1,exp:"Inklyuziv ta'lim — maxsus ehtiyojli bolalarni oddiy guruhga integratsiya qilish tamoyili."},
+  ],
+
+  variant_4: [
+    {
+      q: "'Ilk qadam' davlat o'quv dasturi qachon tasdiqlangan?",
+      opts: ["2016 yil","2017 yil","2018 yil","2020 yil"],
+      ans: 2,
+      exp: "'Ilk qadam' davlat o'quv dasturi 2018 yilda tasdiqlangan va MTT larda qo'llanilmoqda."
+    },
+    {
+      q: "Bolaning rivojlanishi qaysi hujjatda qayd etib boriladi?",
+      opts: ["Kundalik daftar","Rivojlanish xaritasi","Patranaj daftar","Psixolog xulosasi"],
+      ans: 1,
+      exp: "Bolaning rivojlanish dinamikasi 'Rivojlanish xaritasi' (individual kuzatuv daftari) da qayd etib boriladi."
+    },
+    {
+      q: "MTT da sog'lomlashtirish davri qachon bo'ladi?",
+      opts: ["1 may — 1 iyul","1 iyun — 31 avgust","1 iyul — 1 sentyabr","15 iyun — 15 avgust"],
+      ans: 1,
+      exp: "MTT da sog'lomlashtirish (yozgi) davri 1 iyundan 31 avgustgacha davom etadi."
+    },
+    {
+      q: "Maktabgacha yoshdagi bolaning umumiy muhim kompetensiyalari qaysilar?",
+      opts: [
+        "Faqat kommunikativ kompetensiya",
+        "Kommunikativ, o'yin, ijtimoiy va bilish kompetensiyalari",
+        "Faqat bilish kompetensiyasi",
+        "Sport va mehnat kompetensiyalari"
+      ],
+      ans: 1,
+      exp: "'Ilk qadam' dasturiga ko'ra bolaning umumiy muhim kompetensiyalari: kommunikativ, o'yin, ijtimoiy va bilish kompetensiyalari."
+    },
+    {
+      q: "O'zbekistonda maktabgacha ta'lim sohasida faoliyat olib borgan olimlar qaysilar?",
+      opts: [
+        "K.Ushinskiy, P.Yusupova",
+        "Sh.Sodiqova, O.Xasanboyeva, F.Qodirova, P.Yusupova",
+        "Faqat N.Krupskaya",
+        "Faqat F.Fröbel"
+      ],
+      ans: 1,
+      exp: "O'zbekistonda maktabgacha pedagogika sohasida Sh.Sodiqova, O.Xasanboyeva, F.Qodirova, P.Yusupova va boshqalar faoliyat olib borgan."
+    },
+    {
+      q: "Pedagog attestatsiyasida 1-bosqichda nechta test savoli beriladi?",
+      opts: ["20 ta","30 ta","40 ta","50 ta"],
+      ans: 2,
+      exp: "Pedagog attestatsiyasining 1-bosqichida 40 ta test savoli beriladi (35 ta mutaxassislik + 5 ta kasbiy standart)."
+    },
+    {
+      q: "Maktabgacha ta'limda 'texnologik karta' nima?",
+      opts: [
+        "Kompyuter dasturi",
+        "Mashg'ulotni maqsad, bosqich, usul va vositalar bilan batafsil rejalashtirish hujjati",
+        "Bolalar jadval jadvali",
+        "Darslik"
+      ],
+      ans: 1,
+      exp: "Texnologik karta — mashg'ulotni maqsad, bosqichlar, usullar, vositalar va kutilayotgan natijalar bilan batafsil loyihalash hujjati."
+    },
+    {
+      q: "Friedrich Fröbel kimligini belgilang.",
+      opts: [
+        "Rus psixologi",
+        "Bolalar bog'chasini ixtiro qilgan nemis pedagogi",
+        "Fransuz falsafachisi",
+        "Amerika ta'lim islohotchisi"
+      ],
+      ans: 1,
+      exp: "Friedrich Fröbel (1782–1852) — birinchi bolalar bog'chasini yaratgan nemis pedagogi; 'bolalar bog'chasi' atamasini muomalaga kiritgan."
+    },
+    {
+      q: "Jan Amos Komenskiyning maktabgacha ta'limga qo'shgan asosiy hissasi nima?",
+      opts: [
+        "Bolalar psixologiyasini o'rgangan",
+        "'Ona maktabi' asarida 6 yoshgacha bo'lgan bolalar tarbiyasi tizimini ishlab chiqqan",
+        "Birinchi bog'chani ochgan",
+        "Montessori metodini yaratgan"
+      ],
+      ans: 1,
+      exp: "Ya. A. Komenskiy o'zining 'Ona maktabi' asarida 6 yoshgacha bo'lgan bolalar tarbiyasining mazmuni va metodlarini tizimlashtirgan."
+    },
+    {
+      q: "Maktabgacha yoshdagi bolada nutqning qaysi turi avval rivojlanadi?",
+      opts: ["Yozma nutq","Monolog nutq","Dialog nutq (muloqot)","She'riy nutq"],
+      ans: 2,
+      exp: "Maktabgacha yoshda avval dialog nutq — muloqot jarayonida so'rash, javob berish — rivojlanadi, keyin monolog nutqqa o'tiladi."
+    },
+    {
+      q: "Tarbiyachi kasbiy standartiga ko'ra qanday kompetensiyalarga ega bo'lishi kerak?",
+      opts: [
+        "Faqat bilim kompetensiyasi",
+        "Predmetli, metodologik, kommunikativ, ijtimoiy va shaxsiy kompetensiyalar",
+        "Faqat kommunikativ kompetensiya",
+        "Faqat amaliy ko'nikmalar"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi kasbiy standartiga ko'ra predmetli, metodologik, kommunikativ, ijtimoiy-axloqiy va shaxsiy rivojlanish kompetensiyalariga ega bo'lishi kerak."
+    },
+    {
+      q: "Tarbiyachining refleksiv faoliyati deganda nima tushuniladi?",
+      opts: [
+        "Ko'zguga qarab tayyorlanish",
+        "O'z pedagogik faoliyatini tanqidiy tahlil qilib, kamchiliklarni aniqlash va o'sish",
+        "Bolalar bilan o'ynash",
+        "Hujjatlarni to'ldirish"
+      ],
+      ans: 1,
+      exp: "Refleksiya — tarbiyachining o'z darsini, usullarini, munosabatlarini tanqidiy baholab, samarali tomonlarini kuchaytirib, kamchiliklarini tuzatishga qaratilgan ongli faoliyat."
+    },
+    {
+      q: "Tarbiyachi mashg'ulotni rejalashtirish jarayonida qaysi tamoyilga birinchi o'rinda amal qilishi kerak?",
+      opts: [
+        "Ko'proq material berish",
+        "Bolaning yoshi, rivojlanish darajasi va individual xususiyatlariga moslik",
+        "Qiziqarli bo'lishi",
+        "Qisqa bo'lishi"
+      ],
+      ans: 1,
+      exp: "Mashg'ulot rejalashtirish birinchi navbatda bolaning yoshi, rivojlanish darajasi va individual xususiyatlariga moslikni ta'minlashni talab qiladi."
+    },
+    {
+      q: "Bolalar bilan ishlashda 'pedagogik muloqot madaniyati' nimani anglatadi?",
+      opts: [
+        "Ko'p gapirish",
+        "Hurmat, e'tibor, tinglash, aniq va tushunarli til, ijobiy munosabat",
+        "Faqat adabiy til ishlatish",
+        "Faqat bolalar bilan o'zbek tilida gapirish"
+      ],
+      ans: 1,
+      exp: "Pedagogik muloqot madaniyati — bolaga hurmat, diqqat, faol tinglash, tushunarli til, ijobiy his-tuyg'u va ta'sirchanlikni o'z ichiga oladi."
+    },
+    {
+      q: "Tarbiyachining pedagogik kuzatuvdagi asosiy vazifasi nima?",
+      opts: [
+        "Bolani baholash uchun ma'lumot yig'ish",
+        "Bolaning rivojlanish dinamikasini aniqlash va ta'lim jarayonini moslashtirish",
+        "Ota-onalarga hisobot tayyorlash",
+        "Muassasa rahbari uchun ma'lumot to'plash"
+      ],
+      ans: 1,
+      exp: "Pedagogik kuzatuv asosan bolaning rivojlanish yo'lini tushunish va shunga asoslanib ta'lim jarayonini har bir bolaga moslashtirish uchun amalga oshiriladi."
+    },
+    {
+      q: "Mashg'ulotda bolalar faolligi past bo'lsa, tarbiyachi qanday qilishi kerak?",
+      opts: [
+        "Mashg'ulotni to'xtatish",
+        "Usulni o'zgartirish, o'yin elementi kiritish, savol berish yoki ko'rgazma ishlatish",
+        "Bolalarni jazolash",
+        "Ota-onalarni chaqirish"
+      ],
+      ans: 1,
+      exp: "Faollik past bo'lganda tajribali tarbiyachi usulni o'zgartiradi: savol beradi, o'yin elementi kiritadi, ko'rgazmali vosita ishlatadi yoki vazifani qiziqarli shaklga o'tkazadi."
+    },
+    {
+      q: "MTT da pedagogik kengash (pedagogsovet) qanday maqsadda o'tkaziladi?",
+      opts: [
+        "Tarbiyachilarni jazolash uchun",
+        "Muassasa ta'lim-tarbiya jarayonini muhokama, tahlil qilish va rivojlantirish uchun",
+        "Faqat hisobot eshitish uchun",
+        "Ota-onalar uchun"
+      ],
+      ans: 1,
+      exp: "Pedagogik kengash — MTT jamoasining kollegial organi; ta'lim-tarbiya masalalarini muhokama qilish, umumlashtirish va rivojlantirish qarorlarini qabul qilish maqsadida o'tkaziladi."
+    },
+    {
+      q: "Tarbiyachining kasbiy portfeli nimani o'z ichiga oladi?",
+      opts: [
+        "Faqat diplomlar",
+        "Attestatsiya hujjatlari, ishlanmalar, natijalar, kurslar, ota-onalar fikri, ijodiy ishlar",
+        "Faqat fotosuratlar",
+        "Faqat sertifikatlar"
+      ],
+      ans: 1,
+      exp: "Kasbiy portfolio tarbiyachining rivojlanishini hujjatlovchi to'plam: attestatsiya hujjatlari, ishlanmalar, natijalar, malaka oshirish kurslari, ijodiy ishlar va boshqalar."
+    },
+    {
+      q: "Tarbiyachi o'z malakasini oshirish uchun necha yilda bir marta kurs o'tishi shart?",
+      opts: ["Har yili","Har 2 yilda","Har 3 yilda","Har 5 yilda"],
+      ans: 2,
+      exp: "O'zbekistonda pedagog xodimlar har 3 yilda bir marta malaka oshirish kurslaridan o'tishi shart."
+    },
+    {
+      q: "Inklyuziv ta'limda tarbiyachining asosiy roli nima?",
+      opts: [
+        "Maxsus ehtiyojli bolani alohida o'tqazish",
+        "Barcha bolalar uchun qabul qiluvchi, moslashtiruvchi muhit yaratish va hamkorlikda ishlash",
+        "Faqat sog'lom bolalar bilan ishlash",
+        "Maxsus pedagog uchun joy ajratish"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi inklyuziv muhitda barcha bolalar — shu jumladan maxsus ehtiyojlilar — uchun qabul qiluvchi va qo'llab-quvvatlovchi muhit yaratadi, mutaxassislar bilan hamkorlik qiladi."
+    },
+    {
+      q: "Vaziyat: 4 yoshli Alisher mashg'ulot paytida boshqa bolalarni bezovta qilyapti, joy qoldirmaydi. Tarbiyachi qanday to'g'ri harakat qiladi?",
+      opts: [
+        "Alisherga qattiq tanbeh beradi va burchakka o'tqazadi",
+        "Alisherga aniq, qisqa qoida eslatib, muqobil faoliyat yoki mas'uliyatli rol taklif qiladi",
+        "Ota-onasini darhol chaqiradi",
+        "Boshqa bolalarni ko'chiradi"
+      ],
+      ans: 1,
+      exp: "Ijobiy intizom tamoyilida bola xulq-atvorini jazolash emas, balki muqobil ijobiy faoliyatga yo'naltirish, mas'uliyat berish samaraliroq. Qattiq jazo bolada xavotir uyg'otadi."
+    },
+    {
+      q: "Vaziyat: Ona Malika 5 yoshli qizi mashg'ulotlarda ko'p o'tirmasligini, doim yurib yurishi katta muammo ekanini aytadi. Tarbiyachi qanday javob berishi kerak?",
+      opts: [
+        "'Ha, Malika haqiqatan ham muammoli bola' deydi",
+        "Malika faolligining normal ekanini, harakat orqali o'rganishini va bu energiyani ijobiy yo'naltirish usullarini ota-onaga tushuntiradi",
+        "'Uyda ko'proq o'tirishga o'rgating' deydi",
+        "Psixologga yuboramiz deydi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi ota-onaga bolaning rivojlanish xususiyatlarini tushuntirib, hamkorlikda yechim izlashi kerak. Bolani 'muammoli' deb belgilash zararli."
+    },
+    {
+      q: "Vaziyat: Siz yangi mashg'ulot boshlayapsiz, lekin bir necha bola hali oldingi faoliyatdan ajray olmaydi. Qanday harakat qilasiz?",
+      opts: [
+        "Darhol ovozingizni ko'taradi, 'jim bo'ling' deyiladi",
+        "Diqqatni jalb qiluvchi signal, qo'shiq yoki qisqa o'yin elementi orqali bolalarni yangi faoliyatga yumshoq o'tkazasiz",
+        "O'sha bolalarni chetga o'tqizasiz",
+        "Mashg'ulotni kechiktiradi"
+      ],
+      ans: 1,
+      exp: "O'tish vaqtlarida bolalar uchun signal (qo'shiq, ritm, qo'l harakati) ishlating — bu yumshoq, ijobiy o'tishni ta'minlaydi va foydalimroq."
+    },
+    {
+      q: "Vaziyat: Sardor (6 yosh) rasmni chizib bo'lib, 'Bu yaxshi chiqmadi, men qila olmayman' deydi. Tarbiyachi qanday munosabatda bo'lishi kerak?",
+      opts: [
+        "'Haqiqatan ham yaxshi chiqmabdi' deydi",
+        "Uning sa'y-harakatini maqtab, 'Nima yoqdingga, nima o'zgartirmoqchisan?' deb jarayoniga e'tibor qaratadi",
+        "'Vaqt bo'ldi, keyinga qoldiring' deydi",
+        "Boshqa bola chizganini ko'rsatib, 'Mana shunday qil' deydi"
+      ],
+      ans: 1,
+      exp: "Ijodiy o'z-o'ziga ishonchni mustahkamlash uchun tarbiyachi natijani emas, harakatni maqtaydi va bolani o'zi baholashga yo'naltiradi."
+    },
+    {
+      q: "Vaziyat: Gruppadagi ikkita bola o'yinchoq uchun janjallashmoqda. Tarbiyachi qanday hal qiladi?",
+      opts: [
+        "O'yinchoqni olib qo'yadi, ikkalosini ham chetlashtiradi",
+        "Har ikkisini tinglaydi, his-tuyg'ularini nomlab, o'zlari yechim topishiga yordam beradi",
+        "Kattaroq bolaga beradi",
+        "E'tibor bermaydi, o'zlari hal qilsin"
+      ],
+      ans: 1,
+      exp: "Nizoni hal qilishda tarbiyachi vositachi bo'ladi: har ikkisini tinglaydi, his-tuyg'ularini nomlab o'rgatadi va bolalarni o'zlari yechim topishiga ko'maklashadi."
+    },
+    {
+      q: "Vaziyat: Ota-ona bolasiga uyda faqat o'zbek tilida gapirmaslik kerak, ikki tilli tarbiyalashni so'raydi. Tarbiyachi qanday munosabatda bo'ladi?",
+      opts: [
+        "Rad etadi, faqat o'zbek tilida gapirish majburiy deydi",
+        "Ota-onaning qaroriga hurmat bilan munosabatda bo'ladi, o'z tavsiyasini va muassasadagi til siyosatini ochiqona tushuntiradi",
+        "E'tibor bermaydi",
+        "Rahbarga shikoyat qiladi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi ota-onani hurmat qiladi, muloqotda ochiq va hamkorlikka tayyor bo'ladi. Muassasaning rasmiy til siyosatini tushuntiradi, lekin ota-ona huquqini tan oladi."
+    },
+    {
+      q: "Vaziyat: Farrux har kuni bog'chaga kelganda ko'p yig'laydi, onasidan ajralay olmaydi. Bu holat 3 haftadan beri davom etmoqda. Tarbiyachi nima qilishi kerak?",
+      opts: [
+        "Onani tezroq ketishiga majbur qiladi",
+        "Moslashish protokolini ko'rib chiqib, psixolog bilan maslahatlashadi va ota-ona bilan strategiya ishlab chiqadi",
+        "Bolaga e'tibor bermaydi, o'zi o'rganadi deydi",
+        "Bolani uyda qoldiring deydi"
+      ],
+      ans: 1,
+      exp: "3 haftadan ortiq davom etgan moslashish qiyinchiligi — bu psixolog jalb qilish, ota-ona bilan yaqin hamkorlik va individual yondashuv talab etadigan holat."
+    },
+    {
+      q: "Vaziyat: Tarbiyachi mashg'ulotni o'tdi, lekin bolalarning ko'pchiligi mavzuni tushunmadi. Buning sababi nima bo'lishi mumkin?",
+      opts: [
+        "Bolalar qobiliyatsiz",
+        "Mashg'ulot bolalar yosh va rivojlanish darajasiga, qiziqishiga mos tashkil etilmagan yoki usullar samarasiz bo'lgan",
+        "Xona sovuq bo'lgan",
+        "Mashg'ulot uzoq davom etgan"
+      ],
+      ans: 1,
+      exp: "Agar ko'pchilik tushunmasa, muammo bolalarda emas — tarbiyachi usul, daraja yoki taqdimot mosligini qayta ko'rib chiqishi kerak."
+    },
+    {
+      q: "Vaziyat: Guruhda bitta bola boshqa bolalarga qo'l ko'taradi. Tarbiyachi qanday qadamlarni bosadi?",
+      opts: [
+        "Bolani jazolab, guruhdan ajratadi",
+        "Xavfsizlikni ta'minlaydi, bolani tinchitadi, sababini aniqlaydi, ota-ona va psixolog bilan hamkorlikda chora ko'radi",
+        "E'tibor bermaydi",
+        "Darhol uyiga yuboradi"
+      ],
+      ans: 1,
+      exp: "Zo'ravonlik xatti-harakatida tarbiyachi avval xavfsizlikni ta'minlaydi, so'ng tinchlantiradi, sababini aniqlaydi va ota-ona, psixolog bilan hamkorlikda tizimli yondashuv qo'llaydi."
+    },
+    {
+      q: "Vaziyat: Bir ota-ona bolasiga bog'chada boshqalardan ortiq imtiyoz berishingizni so'raydi. Tarbiyachi qanday javob beradi?",
+      opts: [
+        "Rozi bo'ladi",
+        "Barcha bolalarga teng munosabat asosiy tamoyil ekanini tushuntiradi va individual yondashuv mavjudligini aytadi",
+        "Rad etadi va ota-onani rahbarga yo'llaydi",
+        "E'tibor bermaydi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi barcha bolalarga adolatli munosabat tamoyilini tushuntiradi. Bu ota-onaning huquqini hurmat qilgan holda kasbiy etika chegarasini saqlashni anglatadi."
+    },
+    {
+      q: "Vaziyat: Siz yangidan ishlayotgan tarbiyachi sifatida tajribali hamkasbingizning usuli samarasiz deb hissiyotsiziz. Nima qilasiz?",
+      opts: [
+        "Rahbarga shikoyat qilasiz",
+        "Avval kuzatasiz, so'ng ochiq va hurmatli muloqotda o'z kuzatuvingizni baham ko'rasiz",
+        "E'tibor bermaysiz",
+        "O'zingiz boshqacha qilib, ziddiyat yaratmaysiz"
+      ],
+      ans: 1,
+      exp: "Kasbiy etikada avval kuzatish, so'ng hurmatli muloqot yaxshi yondashuv. Hamkorlikda professional o'sish jamoaga foyda keltiradi."
+    },
+    {
+      q: "MTT da bolalar guruhlarining tuzilishi asosan qanday belgilanadi?",
+      opts: [
+        "Ixtiyoriy",
+        "Yosh bo'yicha (bir yoshli yoki aralash yosh guruhlari)",
+        "Jins bo'yicha",
+        "Bola salomatligi bo'yicha"
+      ],
+      ans: 1,
+      exp: "MTT da guruhlar asosan yosh bo'yicha (kichik, o'rta, katta, maktabga tayyorlov guruhlari) tuziladi; ayrim muassasalarda aralash yosh guruhlar ham tashkil etiladi."
+    },
+    {
+      q: "Bolada 'sababiy tafakkur' (cause-effect) qachon faol rivojlana boshlaydi?",
+      opts: ["1-2 yoshda","3-4 yoshdan boshlab","7 yoshdan keyin","Faqat maktabda"],
+      ans: 1,
+      exp: "Sababiy (sabab-natija) aloqalarini tushunish 3-4 yoshdan boshlab rivojlana boshlaydi, 5-7 yoshda yanada mustahkamlanadi."
+    },
+    {
+      q: "Maktabgacha ta'limda ijtimoiy-xizmat ko'rsatish modeli (community-based care) nimani anglatadi?",
+      opts: [
+        "Faqat davlat MTT lari",
+        "Oila, jamoat tashkilotlari va mahalla bilan hamkorlikda bolalarga yordam berish tizimi",
+        "Faqat xususiy bogʻchalar",
+        "Faqat maktablar"
+      ],
+      ans: 1,
+      exp: "Ijtimoiy-xizmat ko'rsatish modeli davlat, oila, mahalla va jamoat tashkilotlari hamkorligida bolalar rivojlanishini qo'llab-quvvatlashni nazarda tutadi."
+    },
+    {
+      q: "Bolalarga atrofdagi tabiat bilan tanishtirishda asosiy metod qaysi?",
+      opts: [
+        "Faqat rasm ko'rsatish",
+        "Bevosita kuzatish, tajriba va ekskursiya",
+        "Faqat hikoya qilish",
+        "Faqat multfilm ko'rsatish"
+      ],
+      ans: 1,
+      exp: "Bolalar tabiat haqidagi bilimni bevosita kuzatish, tajriba va tabiatga chiqish (ekskursiya) orqali yanada chuqur va mazmunli o'zlashtiradi."
+    },
+    {
+      q: "Maktabgacha ta'limda 'kun tartibi' nima uchun muhim?",
+      opts: [
+        "Faqat vaqtni boshqarish uchun",
+        "Bolada barqarorlik, xavfsizlik hissi, biologik ritm va intizomni shakllantirishga yordam beradi",
+        "Tarbiyachi uchun qulay bo'lish uchun",
+        "Ota-onalar uchun"
+      ],
+      ans: 1,
+      exp: "To'g'ri tashkil etilgan kun tartibi bolada barqarorlik va xavfsizlik hissi uyg'otadi, biologik ritmni o'rnatadi, sog'liq va intizomni mustahkamlaydi."
+    },
+    {
+      q: "Maktabgacha ta'limda 'yashirin dastur' (hidden curriculum) nima?",
+      opts: [
+        "Maxfiy darslik",
+        "Rasmiy dasturda yozilmagan, lekin kun tartibida, muloqotda va muhitda bolaga singadigan qadriyatlar va normalar",
+        "Faqat ota-onalar uchun ma'lumot",
+        "Attestatsiya uchun yashirin topshiriq"
+      ],
+      ans: 1,
+      exp: "Yashirin dastur — tarbiyachi munosabati, kun tartibi, muhit bezagi orqali bolaga ongsiz ravishda singadigan qadriyatlar, normalar va munosabat modeli."
+    },
+    {
+      q: "'Bola huquqlari to'g'risida'gi BMT Konvensiyasi qachon qabul qilingan?",
+      opts: ["1979 yil","1989 yil","1995 yil","2000 yil"],
+      ans: 1,
+      exp: "BMT Bola huquqlari to'g'risidagi Konvensiyasi 1989 yilda qabul qilingan. O'zbekiston 1992 yilda ratifikatsiya qilgan."
+    },
+    {
+      q: "MTT da bolalarni ovqatlantirish normasi kimlar tomonidan belgilanadi?",
+      opts: [
+        "Tarbiyachi tomonidan",
+        "Sanitariya-gigiyena qoidalari va Sog'liqni saqlash vazirligi normativlari asosida",
+        "Ota-onalar tomonidan",
+        "Muassasa oshpazi tomonidan"
+      ],
+      ans: 1,
+      exp: "Bolalar ovqatlanishining normativi SanPin (sanitariya qoidalari) va Sog'liqni saqlash vazirligi yo'riqnomalari asosida belgilanadi."
+    },
+    {
+      q: "Bolaning bilish qiziqishini uyg'otishda 'muammoli ta'lim' deganda nima tushuniladi?",
+      opts: [
+        "Bolani qiyin ahvolga solish",
+        "Bolani qiziqarli muammo va savollar orqali fikrlashga, o'zi yechim izlashga undash",
+        "Ko'p vazifa berish",
+        "Bolani sinash"
+      ],
+      ans: 1,
+      exp: "Muammoli ta'limda tarbiyachi tayyor javob bermay, bolani 'Nega?', 'Qanday?' savollari orqali mustaqil fikrlashga va kashfiyot qilishga yo'naltiradi."
+    },
+    {
+      q: "Maktabgacha ta'limda 'Montessori metodi'ning asosi nima?",
+      opts: [
+        "Tarbiyachi markaz bo'ladi",
+        "Bola erkin tanlash va o'z-o'zini tarbiyalash orqali rivojlanadi, tarbiyachi yo'naltiruvchi rolda",
+        "Faqat guruhda ishlash",
+        "Raqobat orqali o'rganish"
+      ],
+      ans: 1,
+      exp: "Montessori metodida bola tayyor materiallar bilan erkin, mustaqil ishlaydi; tarbiyachi bevosita o'rgatmaydi, balki muhit yaratib, kuzatib, yo'naltiradi."
+    },
+  ],
+
+  variant_5: [
+    {
+      q: "O'zbekiston Respublikasining 'Ta'lim to'g'risida'gi Qonuniga ko'ra maktabgacha ta'lim necha yoshdan necha yoshgacha?",
+      opts: ["0-5 yosh","0-7 yosh","2-6 yosh","3-7 yosh"],
+      ans: 1,
+      exp: "O'zbekiston qonunchiligiga ko'ra maktabgacha ta'lim 0 yoshdan 7 yoshgacha bo'lgan bolalarni qamrab oladi."
+    },
+    {
+      q: "Kadrlar tayyorlash milliy modelida ta'lim tizimining asosiy vazifasi nima?",
+      opts: [
+        "Faqat kasb-hunar o'rgatish",
+        "Raqobatbardosh, ijodkor, mustaqil fikrlaydigan shaxslarni tarbiyalash",
+        "Faqat imtihon o'tkazish",
+        "Faqat diplom berish"
+      ],
+      ans: 1,
+      exp: "Kadrlar tayyorlash milliy modeli raqobatbardosh, ijodkor, mustaqil fikrlaydigan, ma'naviyatli shaxslarni tarbiyalashni asosiy vazifa qiladi."
+    },
+    {
+      q: "MTT da bolalarga nisbatan jismoniy jazo qo'llash qanday baholanadi?",
+      opts: [
+        "Ruxsat etilgan, agar ota-onalar rozi bo'lsa",
+        "Qat'iyan man etilgan — bu bolaning huquqlarini buzish",
+        "Faqat og'ir holatlarda ruxsat etiladi",
+        "Tarbiyachi qaroriga bog'liq"
+      ],
+      ans: 1,
+      exp: "Bolalarga jismoniy jazo qo'llash qat'iyan taqiqlangan — bu Bola huquqlari konvensiyasini, O'zbekiston qonunchiligini va pedagogik etikani buzadi."
+    },
+    {
+      q: "Maktabgacha ta'limda 'STEM' yondashuvi nimani anglatadi?",
+      opts: [
+        "Faqat matematika",
+        "Fan, texnologiya, muhandislik va matematikani integratsiyalashgan holda o'rgatish",
+        "Faqat sport",
+        "Faqat san'at"
+      ],
+      ans: 1,
+      exp: "STEM — Science, Technology, Engineering, Mathematics — fan, texnologiya, muhandislik va matematikani hayotiy muammolar orqali integratsiyalashgan holda o'rgatish yondashuvi."
+    },
+    {
+      q: "Bolaning mayda motorikasini rivojlantirish nima uchun muhim?",
+      opts: [
+        "Faqat rasmga ko'maklashadi",
+        "Yozuvga tayyorlaydi, aql va nutq rivojlanishiga ijobiy ta'sir qiladi",
+        "Faqat qo'l kuchini oshiradi",
+        "Sport uchun kerak"
+      ],
+      ans: 1,
+      exp: "Mayda motorika — qo'l va barmoq harakatlari — yozishga tayyorlaydi, miyaning nutq va fikrlash markazlari bilan chambarchas bog'liq."
+    },
+    {
+      q: "Pedagogik tadqiqotda 'validlik' (to'g'rilik) deganda nima tushuniladi?",
+      opts: [
+        "O'lchovning takrorlanuvchanligi",
+        "O'lchov vositasining haqiqatan o'lchashi kerak bo'lgan narsani o'lchashi",
+        "Natijaning yaxshi bo'lishi",
+        "Ko'p bola ishtirok etishi"
+      ],
+      ans: 1,
+      exp: "Validlik — diagnostik yoki tadqiqot vositasi haqiqatan nima o'lchashi kerak bo'lsa, o'shani o'lchashi. Masalan, nutq testi nutqni o'lchashi kerak."
+    },
+    {
+      q: "Lev Vigotskiyning 'yaqin rivojlanish zonasi' (YRZ) ta'rifini belgilang.",
+      opts: [
+        "Bolaning hozirgi bilim darajasi",
+        "Bola mustaqil bajara olmaydi, lekin katta yoki tengdoshi yordamida bajara oladigan vazifalar maydoni",
+        "Bolaning maksimal qobiliyati",
+        "Kelgusi yillarda rivojlanish darajasi"
+      ],
+      ans: 1,
+      exp: "YRZ — bolaning mustaqil darajasi bilan kattalar yordamida erishishi mumkin bo'lgan daraja orasidagi zona. Ta'lim shu zonaga yo'naltirilishi kerak."
+    },
+    {
+      q: "MTT da 'sog'liq pasporti' (rivojlanish kartasi) qanday hujjat?",
+      opts: [
+        "Tibbiy guvohnoma",
+        "Bolaning jismoniy, aqliy va ijtimoiy rivojlanish ko'rsatkichlarini qayd etib boriladigan individual hujjat",
+        "Ota-onalar uchun ma'lumot varaqasi",
+        "Muassasa uchun statistik hujjat"
+      ],
+      ans: 1,
+      exp: "Rivojlanish kartasi (sog'liq pasporti) bolaning jismoniy o'lchami, salomatligi, rivojlanish ko'rsatkichlarini va dinamikasini qayd etib boriladigan individual hujjat."
+    },
+    {
+      q: "O'yinning turlari qaysilar?",
+      opts: [
+        "Faqat rolli o'yin",
+        "Rolli o'yin, didaktik o'yin, qurilish-konstruktiv o'yin, harakatli o'yin va teatr o'yini",
+        "Faqat didaktik o'yin",
+        "Faqat harakatli o'yin"
+      ],
+      ans: 1,
+      exp: "Maktabgacha yoshda o'yinning asosiy turlari: rolli (syujetli), didaktik, harakatli, konstruktiv va dramatik (teatr) o'yinlar."
+    },
+    {
+      q: "'Ilk qadam' dasturida 'bilish kompetensiyasi' nima?",
+      opts: [
+        "Faqat savolga javob berish",
+        "Bolaning atrofdagi olam haqida savol berishi, kuzatishi, tajriba o'tkazishi va xulosa chiqara olishi",
+        "Faqat sanash",
+        "Faqat ranglarni bilish"
+      ],
+      ans: 1,
+      exp: "'Ilk qadam'da bilish kompetensiyasi bolaning atrofdagi olam haqida qiziquvchanlik, kuzatish, tajriba va xulosa chiqarish ko'nikmalarini o'z ichiga oladi."
+    },
+    {
+      q: "Tarbiyachi mashg'ulot yakunida qanday baholash usulidan foydalanishi maqsadga muvofiq?",
+      opts: [
+        "Raqamli baho qo'yadi",
+        "Bolalar bilan birgalikda nima qilganlarini muhokama qiladi, nima yoqqanini so'raydi va taqdim qilishga imkon beradi",
+        "Faqat maqtaydi",
+        "Baholamaydi"
+      ],
+      ans: 1,
+      exp: "Maktabgacha yoshda yakuniy baholash raqamli emas: bolalar bilan aks-sado (reflection), nima o'rgandim, nima yoqdi suhbati va ish taqdimoti samarali usul."
+    },
+    {
+      q: "Tarbiyachi mashg'ulotda 'ochiq savollar'dan foydalanishning maqsadi nima?",
+      opts: [
+        "Ko'p gapirtirish uchun",
+        "'Ha/yo'q'dan chuqurroq fikrlashga undash: 'Nima uchun?', 'Qanday fikrlaysan?'",
+        "Bolani sinash uchun",
+        "Vaqt o'tkazish uchun"
+      ],
+      ans: 1,
+      exp: "Ochiq savollar bolada tanqidiy va ijodiy tafakkurni rivojlantiradi — bir so'zli emas, kengaytirilgan, fikrlovchi javob talab qiladi."
+    },
+    {
+      q: "Tarbiyachi guruhda ijobiy psixologik muhit yaratish uchun nimalar qiladi?",
+      opts: [
+        "Doim ovozini ko'taradi",
+        "Har bir bolani ismi bilan murojaat qiladi, his-tuyg'ularini tan oladi, xavfsizlik va qabul qilinish hissini ta'minlaydi",
+        "Faqat o'yin o'ynaydi",
+        "Faqat ota-onalar bilan ishlaydi"
+      ],
+      ans: 1,
+      exp: "Ijobiy psixologik muhit — bolani ismi bilan murojaat qilish, his-tuyg'ularini tan olish, maqtash, xavfsizlik hissi va hamkorlik muhiti yaratish orqali ta'minlanadi."
+    },
+    {
+      q: "Bolaning rivojlanishi bo'yicha ota-onaga ma'lumot berishda asosiy tamoyil qanday?",
+      opts: [
+        "Faqat muammolarni aytish",
+        "Kuchli tomonlardan boshlash, aniq misollar keltirish, hamkorlik taklif etish va maxfiylikka rioya qilish",
+        "Faqat yaxshi narsalarni aytish",
+        "Yozma hisobot berish"
+      ],
+      ans: 1,
+      exp: "Ota-onaga fikr bildirishda: avval ijobiy tomonlarni aytish, aniq va konkret misollar keltirish, hamkorlikda yechim izlash va maxfiylikni saqlash muhim."
+    },
+    {
+      q: "MTT da bolaning sog'lig'iga shubhali belgilar paydo bo'lsa (isitma, toshmalar), tarbiyachi qanday harakat qiladi?",
+      opts: [
+        "O'zi dori beradi",
+        "Bolani guruhdan ajratadi, ota-onaga xabar beradi va tibbiyot xodimini chaqiradi",
+        "E'tibor bermaydi, uyiga ketganda ko'rinadi",
+        "Boshqa bolalar bilan birga qoldiradi"
+      ],
+      ans: 1,
+      exp: "Kasallik belgilari paydo bo'lsa: bola guruhdan ajratiladi (izolyatsiya), ota-onaga darhol xabar beriladi va muassasa medpunkti (hamshira/shifokor) xabardor qilinadi."
+    },
+    {
+      q: "Tarbiyachi o'z guruhidagi bola xavf ostida ekanini sezsa (uyda zo'ravonlik, e'tiborsizlik), nima qilishi kerak?",
+      opts: [
+        "Sirdosh bo'lib, ota-onaga aytmaydi",
+        "Muassasa rahbari va tegishli idoralarga (ijtimoiy xizmatlar) darhol xabar berishi shart",
+        "Bolani olib qoladi",
+        "Boshqa ota-onalarga aytadi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi bolani himoya qilish majburiyatiga ega — xavf ostidagi bola to'g'risida rahbariyat va tegishli idoralarga xabar berish uning kasbiy va qonuniy vazifasi."
+    },
+    {
+      q: "Tarbiyachining professional chegaralari (professional boundaries) nimani anglatadi?",
+      opts: [
+        "Ota-onalar bilan do'st bo'lmaslik",
+        "Bolaga g'amxo'rlik va kasbiy munosabatni shaxsiy munosabatdan ajratib, etik chegaralarni saqlash",
+        "Faqat ish vaqtida gapirish",
+        "Bolalar bilan o'ynamaslik"
+      ],
+      ans: 1,
+      exp: "Professional chegaralar — tarbiyachi bolani sevishi va g'amxo'r bo'lishi bilan birga kasbiy etika talablarini, maxfiylikni va rollar aniqligini saqlashni anglatadi."
+    },
+    {
+      q: "Tarbiyachi hamkaslari bilan pedagogik hamkorlik (team teaching) qanday foydalar beradi?",
+      opts: [
+        "Ish yukini kamaytiradi",
+        "Tajriba almashish, yangi g'oyalar, bolalarga sifatliroq ta'lim va kasbiy o'sish",
+        "Faqat vaqt tejash",
+        "Rahbarga yoqish uchun"
+      ],
+      ans: 1,
+      exp: "Pedagogik hamkorlik tajriba almashish, kasbiy o'sish, yangi yondashuvlar va bolalarga ko'proq e'tibor berish imkoniyatini beradi."
+    },
+    {
+      q: "MTT da 'ochiq dars' (open lesson) o'tkazishning maqsadi nima?",
+      opts: [
+        "Faqat nazorat uchun",
+        "Hamkaslarga pedagogik tajriba ulashish, professional muloqot va o'zini rivojlantirish",
+        "Faqat ota-onalar uchun ko'rinish",
+        "Baholash uchun"
+      ],
+      ans: 1,
+      exp: "Ochiq dars — tarbiyachining pedagogik mahoratini hamkaslari bilan ulashishi, professional muloqot va o'zaro o'rganish uchun muhim shakl."
+    },
+    {
+      q: "Tarbiyachining ish hujjatlari qaysilardan iborat?",
+      opts: [
+        "Faqat dars rejasi",
+        "Perspektiv reja, kalendar reja, texnologik karta, kuzatuv daftari, ota-onalar bilan ishlash rejasi",
+        "Faqat hisobot",
+        "Faqat mashg'ulot jadvali"
+      ],
+      ans: 1,
+      exp: "Tarbiyachining asosiy ish hujjatlari: perspektiv va kalendar reja, texnologik kartalar, kuzatuv daftari (rivojlanish xaritasi), ota-onalar bilan ishlash rejasi."
+    },
+    {
+      q: "Vaziyat: 3 yoshli Zulfiya birinchi kuni bog'chada butunlay gapirmaydi va o'ynamaydi. Tarbiyachi nima qilishi kerak?",
+      opts: [
+        "Majburlab gapirishga undaydi",
+        "Bosim qilmasdan, yonida bo'lib, xavfsizlik hissi uyg'otadi va sekin-asta o'yinga taklif etadi",
+        "Ota-onasini chaqiradi, uyga yuboradi",
+        "E'tibor bermaydi"
+      ],
+      ans: 1,
+      exp: "Yangi muhitga moslashish stressida bola jim turishi normal. Tarbiyachi majburlamasdan, yaqin turib, xavfsizlik va qabul qilinish hissini ta'minlaydi."
+    },
+    {
+      q: "Vaziyat: Siz dars o'tayotgansiz, birdan bir bola yiqilib, tizzasiga shikast yetadi. Qanday harakat tartibida ish tutasiz?",
+      opts: [
+        "Darsni davom ettiradi",
+        "Darsni to'xtatib, bolaga yordam beradi, zarur bo'lsa tibbiy xodimni chaqiradi, hodisani hujjatlashtiradi va ota-onani xabardor qiladi",
+        "Boshqa bolaga yordam qilishni topshiradi",
+        "Bolani o'zi davolashga urinadi"
+      ],
+      ans: 1,
+      exp: "Shikastlanishda: darsni to'xtatib bola xavfsizligini ta'minlash, tibbiy yordam chaqirish, hodisani qayd etish va ota-onaga xabar berish tartibida harakat qilish kerak."
+    },
+    {
+      q: "Vaziyat: Guruhda ota-onalar orasida bolalar to'g'risida oshkora gaplashilayotganini eshitdingiz. Tarbiyachi nima qiladi?",
+      opts: [
+        "Quloq solmaydi",
+        "Har bir bola haqidagi ma'lumot maxfiy ekanini muloyimlik bilan eslatadi va bu xatti-harakatning noto'g'riligini tushuntiradi",
+        "O'zi ham qo'shiladi",
+        "Ota-onalarni rahbarga shikoyat qiladi"
+      ],
+      ans: 1,
+      exp: "Bolalar haqidagi ma'lumot maxfiy. Tarbiyachi bu tamoyilni ota-onalarga tushuntirishi va maxfiylikni ta'minlashi kasbiy majburiyat."
+    },
+    {
+      q: "Vaziyat: Guruhingizda iqtidorli bola bor — u mashg'ulotlarni tez bajardi va zerikyapti. Nima qilasiz?",
+      opts: [
+        "Bolaga uyda o'tirishi aytiladi",
+        "Qo'shimcha chuqurroq vazifalar, ijodiy topshiriqlar va yetakchi rol beriladi",
+        "E'tibor bermaydi",
+        "Ota-onalariga maktabga berishni maslahat beradi"
+      ],
+      ans: 1,
+      exp: "Iqtidorli bolalarga differensiatsiyalangan yondashuv kerak: chuqurroq, murakkabdroq topshiriqlar, ijodiy loyihalar va tengdoshlariga yordam roli."
+    },
+    {
+      q: "Vaziyat: Bir ota-ona siz o'tkazgan mashg'ulot uslubiga e'tiroz bildiradi. Qanday munosabatda bo'lasiz?",
+      opts: [
+        "Bahs qiladi",
+        "Ota-onani diqqat bilan tinglaydi, uning fikrini hurmat qiladi va o'z pedagogik yondashuvini tushuntiradi",
+        "E'tibor bermaydi",
+        "Rahbarga topshiradi"
+      ],
+      ans: 1,
+      exp: "Tarbiyachi ota-onani tinglaydi, hurmat bilan munosabatda bo'ladi va pedagogik qarorining asosini tushuntiradi. Bahs qilish munosabatni yomonlashtiradi."
+    },
+    {
+      q: "Vaziyat: Bolalar ovqat paytida ko'pchiligi taomni yemaydi. Tarbiyachi qanday harakat qiladi?",
+      opts: [
+        "Majburlab yediradi",
+        "Majburlamasdan, ijobiy muhit yaratadi, bolani taom bilan tanishtiradi va ota-onaga ham xabar beradi",
+        "E'tibor bermaydi",
+        "Ota-onaga 'yaxshi ovqatlantiring' deydi"
+      ],
+      ans: 1,
+      exp: "Ovqatni majburlash salbiy munosabat uyg'otadi. Tarbiyachi ijobiy muhit yaratib, tanishtirish usulidan foydalanadi va ovqatlanish muammosini ota-ona bilan muhokama qiladi."
+    },
+    {
+      q: "Vaziyat: Bola siz bergan uyga vazifani bajarmagani uchun uyalayapti. Qanday munosabatda bo'lasiz?",
+      opts: [
+        "Hamma oldida tanqid qiladi",
+        "Bolani alohida, xayrixohlik bilan sababini so'raydi va qo'llab-quvvatlaydi",
+        "Baholashni kamaytiradi",
+        "E'tibor bermaydi"
+      ],
+      ans: 1,
+      exp: "Bolani hamma oldida uyaltirish zarar. Alohida, muloyim muloqot bolaning qadr-qimmatini saqlaydi va muammoning sababini aniqlashga yordam beradi."
+    },
+    {
+      q: "Vaziyat: Siz pedagogik maslahat uchun muassasa psixologiga murojaat qilmoqchisiz. Bu to'g'ri qarormi?",
+      opts: [
+        "Yo'q, bu zaiflik belgisi",
+        "Ha — bu kasbiy mas'uliyat va bolaning manfaatini birinchi o'ringa qo'yish belgisi",
+        "Faqat jiddiy holatda",
+        "Faqat rahbar ruxsati bilan"
+      ],
+      ans: 1,
+      exp: "Psixolog bilan hamkorlik zaiflik emas, balki kasbiy mas'uliyat. Bola manfaatini ta'minlash uchun mutaxassislar bilan ishlash zamonaviy pedagogning belgisi."
+    },
+    {
+      q: "Vaziyat: Guruhda bola boshqalarga nisbatan til (nutq) rivojlanishida orqada qolmoqda. Tarbiyachi nima qilishi kerak?",
+      opts: [
+        "E'tibor bermaydi, o'sib qoladi",
+        "Kuzatuv olib boradi, ota-onaga ma'lumot beradi, logoped yoki psixologga yo'llaydi va individual mashqlarni qo'llaydi",
+        "Ko'proq gapirtirishga urinadi",
+        "Maktabga tayyorlov guruhiga o'tkazadi"
+      ],
+      ans: 1,
+      exp: "Nutq orqada qolishida tarbiyachi kuzatuv qiladi, ota-onaga murojaat qiladi, logoped bilan hamkorlik qiladi va kundalik mashg'ulotlarda individual yondashuv qo'llaydi."
+    },
+    {
+      q: "Vaziyat: Yangi bola guruhga qo'shildi, boshqa bolalar uni qabul qilmaydi. Tarbiyachi qanday harakat qiladi?",
+      opts: [
+        "Bolalarga jazo beradi",
+        "Yangi bolani guruhga moslashtiradigan o'yinlar tashkil etadi, tengdoshlariga empato va qabul qilish muhimligini suhbat va faoliyat orqali tushuntiradi",
+        "E'tibor bermaydi",
+        "Yangi bolani boshqa guruhga o'tkazadi"
+      ],
+      ans: 1,
+      exp: "Qabul qiluvchi guruh muhitini shakllantirish tarbiyachining asosiy vazifasi. Hamkorlikdagi o'yinlar, suhbat va ijobiy guruh tajribalari orqali integratsiya ta'minlanadi."
+    },
+    {
+      q: "Maktabgacha yoshda harakatli o'yinlarning asosiy rivojlantiruvchi ahamiyati nima?",
+      opts: [
+        "Faqat charchatish",
+        "Jismoniy sifatlar (tezlik, chaqqonlik, kuch), qoida bajarish, hamkorlik va emotsional rivojlanish",
+        "Faqat vaqt o'tkazish",
+        "Faqat nutq rivojlanishi"
+      ],
+      ans: 1,
+      exp: "Harakatli o'yinlar jismoniy sifatlar, o'yin qoidalarini bajarish (iroda), hamkorlik, musobaqa ruhiyati va emotsional rivojlanishga xizmat qiladi."
+    },
+    {
+      q: "MTT ning ota-onalar bilan hamkorlik shakllari qaysilar?",
+      opts: [
+        "Faqat yig'ilish",
+        "Ota-onalar yig'ilishi, individual suhbat, ochiq eshik kuni, konsultatsiya, birgalikdagi tadbirlar, axborot burchaklari",
+        "Faqat telefon qo'ng'irog'i",
+        "Faqat xat"
+      ],
+      ans: 1,
+      exp: "Ota-onalar bilan hamkorlik shakllari: guruh yig'ilishlari, individual suhbatlar, ochiq eshik kunlari, maslahatlar, birgalikdagi bayramlar, axborot burchaklari va raqamli kanallar."
+    },
+    {
+      q: "Bolaning ijtimoiy-emotsional rivojlanishini kuzatishda tarbiyachi qanday vositalardan foydalanadi?",
+      opts: [
+        "Faqat test",
+        "Kuzatuv daftari, bola rasmlari tahlili, o'yin kuzatuvi, ota-onalar bilan suhbat va portfolio",
+        "Faqat anketa",
+        "Faqat psixolog xulosasi"
+      ],
+      ans: 1,
+      exp: "Emotsional-ijtimoiy rivojlanishni kuzatishda: kundalik kuzatuv yozuvlari, o'yin kuzatuvi, rasm tahlili, ota-onalar bilan suhbat va portfolio asosiy vositalar hisoblanadi."
+    },
+    {
+      q: "Bolalarda o'z-o'ziga xizmat ko'nikmalarini rivojlantirish qanday ahamiyatga ega?",
+      opts: [
+        "Faqat vaqtni tejash",
+        "Mustaqillik, mas'uliyat, o'z-o'ziga ishonch va hayotiy ko'nikmalar (life skills) shakllantirishga xizmat qiladi",
+        "Faqat ota-onaga qulay bo'lish uchun",
+        "Faqat jismoniy rivojlanish uchun"
+      ],
+      ans: 1,
+      exp: "O'z-o'ziga xizmat ko'nikmalari (kiyinish, yuvish, ovqatlanish) mustaqillik, mas'uliyat va o'z-o'ziga ishonch — hayotiy muhim fazilatlarni shakllantiradi."
+    },
+    {
+      q: "Maktabgacha ta'limda drama va teatr o'yinlarining rivojlantiruvchi roli nima?",
+      opts: [
+        "Faqat ko'ngilochar",
+        "Nutq, ijodiy tafakkur, empato, his-tuyg'ularni ifodalash va ijtimoiy rollarni o'zlashtirish",
+        "Faqat nutq uchun",
+        "Faqat san'at uchun"
+      ],
+      ans: 1,
+      exp: "Teatr o'yini nutqni, ijodiy va obrazli fikrlashni, empatiyani, his-tuyg'ularni nazorat qilishni va ijtimoiy rollarni o'zlashtirishni rivojlantiradi."
+    },
+    {
+      q: "Bolalarda matematik tushunchalarni o'yinchoqlar va kundalik hayot orqali rivojlantirish qaysi tamoyilga asoslanadi?",
+      opts: [
+        "Mexanik yodlash tamoyili",
+        "Ko'rgazmalilik va amaliylik tamoyili — konkretdan abstraktga",
+        "Tezlik tamoyili",
+        "Raqobat tamoyili"
+      ],
+      ans: 1,
+      exp: "Maktabgacha yoshda matematika haqiqiy predmetlar, o'yin va kundalik hayot orqali (konkretdan abstraktga) o'rgatiladi — bu ko'rgazmalilik va amaliylik tamoyili."
+    },
+    {
+      q: "MTT da 'rivojlantiruvchi o'yin muhiti' qanday tashkil etiladi?",
+      opts: [
+        "Ko'p o'yinchoq sotib olish",
+        "Bolalar yoshi va qiziqishiga mos, turli faoliyat markazlari (kitob, qurilish, san'at, tabiat, rol o'yini) bilan to'ldirilgan makon",
+        "Faqat sport inventarlari",
+        "Faqat rasm va suratlar"
+      ],
+      ans: 1,
+      exp: "Rivojlantiruvchi o'yin muhiti turli faoliyat markazlari — kitobxona, qurilish, san'at, tabiat burchagi, rol o'yini — bilan tashkil etilgan, erkin tanlash imkonini beruvchi makon."
+    },
+    {
+      q: "Pedagogik etikada 'maxfiylik' (konfidensiallik) tamoyili nimani talab qiladi?",
+      opts: [
+        "Bola haqida hech kimga hech narsa aytmaslik",
+        "Bola va oila haqidagi ma'lumotni ruxsatsiz uchinchi shaxslarga bermay saqlash",
+        "Faqat yozma ma'lumot bermaslik",
+        "Faqat tibbiy ma'lumotni saqlash"
+      ],
+      ans: 1,
+      exp: "Maxfiylik tamoyili — bola va oilasi haqidagi har qanday ma'lumot (rivojlanish, oilaviy holat, tibbiy ma'lumot) ota-ona ruxsatisiz uchinchi shaxslarga berilmasligini talab qiladi."
+    },
+    {
+      q: "Maktabgacha ta'limda 'differensiatsiyalangan yondashuv' nima?",
+      opts: [
+        "Har xil darslik ishlatish",
+        "Bir guruh ichida har bir bolaning rivojlanish darajasiga qarab vazifa murakkabligini moslashtirish",
+        "Bolalarni guruhlarga ajratish",
+        "Faqat iqtidorlilar bilan ishlash"
+      ],
+      ans: 1,
+      exp: "Differensiatsiyalangan yondashuv — bir xil mavzuda turli darajadagi bolalarga mos topshiriqlar, yordam darajasi va baholash usullarini moslashtirib qo'llash."
+    },
+    {
+      q: "Bolada 'o'z-o'zini tartibga solish' (self-regulation) ko'nikmasi qanday shakllanadi?",
+      opts: [
+        "O'z-o'zicha rivojlanadi",
+        "O'yin qoidalari, kutish mashqlari, his-tuyg'ularni nomlab o'rgatish va izchil kun tartibi orqali",
+        "Faqat jazolash orqali",
+        "Faqat maqtash orqali"
+      ],
+      ans: 1,
+      exp: "O'z-o'zini tartibga solish o'yin qoidalari (navbat kutish, qoida bajarish), his-tuyg'ularni nomlab o'rgatish va izchil kun tartibi orqali rivojlanadi."
+    }
   ]
 };
 
@@ -674,7 +1537,7 @@ function selectMode(m){
 
 function selectVariant(n){
   selectedVariant=n;
-  [1,2,3].forEach(i=>document.getElementById('vc-'+i).classList.toggle('selected',i===n));
+  [1,2,3,4,5].forEach(i=>document.getElementById('vc-'+i).classList.toggle('selected',i===n));
 }
 
 function selectCat(cat){
@@ -689,7 +1552,7 @@ function selectCat(cat){
 function startExam(){
   if(mode==='mashq'){
     if(!selectedCat){showToast('Toifani tanlang','err');return;}
-    const key=selectedCat==='v1'?'variant_1':selectedCat==='v2'?'variant_2':'variant_3';
+    const key='variant_'+selectedCat.replace('v','');
     examQuestions=shuffle(VARIANTS[key]);
     timeLeft=0;
   } else {
