@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Kunlik jadval</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -14,14 +14,16 @@
   --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
   --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
   --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+  --stem-f:#10b981;--stem-fb:#f0fdf4;
+  --stem-m:#3b82f6;--stem-mb:#eff6ff;
+  --stem-mu:#f59e0b;--stem-mub:#fffbeb;
+  --stem-t:#8b5cf6;--stem-tb:#f5f3ff;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
-
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-
 .sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
@@ -40,16 +42,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;flex-shrink:0}
 .user-info .name{font-size:12px;font-weight:600}
 .user-info .plan{font-size:11px;color:var(--muted)}
-.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:background .15s;font-family:'Inter',sans-serif}
 .btn-logout:hover{background:var(--bg);color:var(--red)}
-
 .fab-back{position:fixed;bottom:28px;right:28px;z-index:100;display:flex;align-items:center;gap:8px;padding:12px 18px;background:var(--accent);color:#fff;border:none;border-radius:50px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(30,64,175,.35);transition:transform .2s,box-shadow .2s;text-decoration:none}
 .fab-back:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(30,64,175,.45)}
 .fab-back i{font-size:18px}
-
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px;max-width:960px}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:12px}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:24px 28px 80px;max-width:960px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:12px}
 .btn-hamburger{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0}
 .btn-hamburger:hover{background:var(--bg)}
@@ -57,63 +56,117 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .topbar h1 span{color:var(--accent)}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent)}
-
-.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:10px;padding:12px 16px;font-size:12px;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+/* INFO BOX */
+.info-box{border-radius:10px;padding:12px 16px;font-size:12px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
 .info-box i{font-size:16px;flex-shrink:0}
-
-.day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.info-box.blue{background:var(--accent-soft);border:1px solid #bfdbfe;color:var(--accent)}
+/* STEM LEGEND */
+.stem-legend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.stem-badge-sm{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;cursor:default}
+.stem-badge-sm.F{background:var(--stem-fb);color:var(--stem-f)}
+.stem-badge-sm.M{background:var(--stem-mb);color:var(--stem-m)}
+.stem-badge-sm.Mu{background:var(--stem-mub);color:var(--stem-mu)}
+.stem-badge-sm.T{background:var(--stem-tb);color:var(--stem-t)}
+/* AGE TABS */
+.age-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px}
+.age-tab{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 8px;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif;text-align:center;position:relative}
+.age-tab:hover{border-color:#93c5fd;color:var(--text);background:var(--bg)}
+.age-tab.active{color:#fff;border-color:transparent}
+.age-tab .age-main{font-size:14px;font-weight:700;display:block;margin-bottom:2px}
+.age-tab .age-sub{font-size:10px;opacity:.85;display:block}
+/* DAY TABS */
+.day-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .day-tab{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:7px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
 .day-tab:hover{background:var(--bg);color:var(--text);border-color:#93c5fd}
 .day-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-.day-summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.summary-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:6px}
+/* SUMMARY */
+.day-summary{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.summary-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:5px}
 .summary-chip i{font-size:13px;color:var(--accent)}
 .summary-chip b{color:var(--text)}
-
-.sec-title{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+/* SEC TITLE */
+.sec-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .sec-title i{font-size:14px}
-
-.sched-list{display:flex;flex-direction:column;gap:8px}
-.sched-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .15s,box-shadow .15s,transform .15s}
+/* SCHEDULE */
+.sched-list{display:flex;flex-direction:column;gap:7px}
+.sched-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px;display:flex;align-items:center;gap:10px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:pointer}
 .sched-item:hover{border-color:#93c5fd;box-shadow:0 2px 8px rgba(59,130,246,.1);transform:translateX(3px)}
-
-.time-badge{display:flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:700;white-space:nowrap;min-width:96px;background:var(--accent-soft);color:var(--accent)}
+.sched-item.active-item{border-color:#93c5fd;box-shadow:0 2px 10px rgba(59,130,246,.12)}
+.time-badge{display:flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:7px;font-size:10px;font-weight:700;white-space:nowrap;min-width:90px;background:var(--accent-soft);color:var(--accent)}
 .time-badge.rest{background:var(--green-soft);color:var(--green)}
 .time-badge.meal{background:var(--amber-soft);color:var(--amber)}
-
-/* Icon wrapper — emoji o'rniga tabler icon */
-.sched-icon-wrap{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:var(--accent-soft);color:var(--accent)}
+.sched-icon-wrap{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--accent-soft);color:var(--accent)}
 .sched-icon-wrap.green{background:var(--green-soft);color:var(--green)}
 .sched-icon-wrap.amber{background:var(--amber-soft);color:var(--amber)}
 .sched-icon-wrap.rest{background:var(--green-soft);color:var(--green)}
 .sched-icon-wrap.purple{background:var(--pro-soft);color:var(--pro)}
 .sched-icon-wrap.slate{background:#f1f5f9;color:#475569}
-
+.sched-icon-wrap.pink{background:#fdf2f8;color:#9d174d}
 .sched-body{flex:1;min-width:0}
-.sched-name{font-size:13px;font-weight:600;color:var(--text)}
-.sched-desc{font-size:11px;color:var(--muted);margin-top:2px}
-.sched-tag{flex-shrink:0;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;background:var(--pro-soft);color:var(--pro)}
-.sched-tag.main{background:var(--accent-soft);color:var(--accent)}
-.sched-tag.rest{background:var(--green-soft);color:var(--green)}
-
+.sched-name{font-size:12px;font-weight:600;color:var(--text)}
+.sched-desc{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4}
+.sched-tags{display:flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px}
+.tag.lesson{background:var(--accent-soft);color:var(--accent)}
+.tag.rest{background:var(--green-soft);color:var(--green)}
+.tag.soha1{background:#f0fdf4;color:#166534}
+.tag.soha2{background:#fdf2f8;color:#9d174d}
+.tag.soha3{background:#eff6ff;color:#1e40af}
+.tag.soha4{background:#f5f3ff;color:#6d28d9}
+.tag.soha5{background:#fffbeb;color:#92400e}
+/* STEM BADGE */
+.stem-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+.stem-badge.F{background:var(--stem-fb);color:var(--stem-f)}
+.stem-badge.M{background:var(--stem-mb);color:var(--stem-m)}
+.stem-badge.Mu{background:var(--stem-mub);color:var(--stem-mu)}
+.stem-badge.T{background:var(--stem-tb);color:var(--stem-t)}
+/* EXPAND */
+.sched-expand{display:none;border-top:1px solid var(--border);margin-top:10px;padding-top:10px}
+.sched-item.open .sched-expand{display:block}
+.expand-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.expand-box{background:var(--bg);border-radius:8px;padding:9px 11px}
+.expand-box-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.expand-box-title i{font-size:12px}
+.expand-box p{font-size:11px;color:var(--text);line-height:1.6}
+.expand-box.full{grid-column:1/-1}
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface);border-radius:14px;width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden}
+.modal-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0}
+.modal-hdr h3{font-size:14px;font-weight:700}
+.modal-cls{background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:2px;display:flex;border-radius:6px;transition:background .15s}
+.modal-cls:hover{background:var(--bg)}
+.modal-body{padding:18px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+.m-row{background:var(--bg);border-radius:10px;padding:11px 13px}
+.m-row-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.m-row-title i{font-size:13px;color:var(--accent)}
+.m-row p{font-size:12px;color:var(--text);line-height:1.7}
+.m-row.green{border-left:3px solid var(--stem-f)}
+.m-row.blue{border-left:3px solid var(--stem-m)}
+.m-row.amber{border-left:3px solid var(--stem-mu)}
+.m-row.purple{border-left:3px solid var(--stem-t)}
+.m-row.accent{border-left:3px solid var(--accent)}
+.m-soha-tags{display:flex;flex-wrap:wrap;gap:5px}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-close{display:flex}
-  .main{margin-left:0;padding:16px 16px 80px}
+  .main{margin-left:0;padding:14px 14px 80px}
   .btn-hamburger{display:flex}
-  .topbar h1{font-size:16px}
-  .time-badge{min-width:80px;font-size:10px}
-  .sched-item{gap:8px;padding:10px 12px}
-  .fab-back{bottom:20px;right:16px;padding:10px 14px;font-size:12px}
+  .topbar h1{font-size:15px}
+  .age-tabs{grid-template-columns:repeat(2,1fr)}
+  .time-badge{min-width:76px;font-size:9px}
+  .sched-item{gap:7px;padding:9px 10px}
+  .fab-back{bottom:16px;right:16px;padding:10px 14px;font-size:12px}
+  .expand-grid{grid-template-columns:1fr}
+  .expand-box.full{grid-column:auto}
 }
 </style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
 <div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
-
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon"><i class="ti ti-school"></i></div>
@@ -141,31 +194,36 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar">T</div>
-      <div class="user-info">
-        <div class="name">Tarbiyachi</div>
-        <div class="plan">Bepul tarif</div>
-      </div>
+      <div class="user-info"><div class="name">Tarbiyachi</div><div class="plan">Bepul tarif</div></div>
     </div>
     <button class="btn-logout"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
 </aside>
-
 <main class="main">
   <div class="topbar">
     <div class="topbar-left">
       <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-      <h1><span>Kunlik jadval</span> — 4-5 yosh</h1>
+      <h1><span>Kunlik jadval</span> — <span id="age-label-head">4–5 yosh</span></h1>
     </div>
     <div class="topbar-right">
       <span class="plan-pill"><i class="ti ti-free-rights"></i> Bepul</span>
     </div>
   </div>
-
-  <div class="info-box">
+  <div class="info-box blue">
     <i class="ti ti-info-circle"></i>
-    Har bir mashg'ulot rivojlanish sohalariga mos integratsiyalashgan tarzda tuzilgan.
+    <span>Har bir mashg'ulot <b>«Ilk Qadam» milliy o'quv dasturi</b> asosida, rivojlanish sohalari va <b>STEM</b> integratsiyasi bilan tuzilgan. Faoliyatni bosing — batafsil ko'ring.</span>
   </div>
-
+  <!-- STEM legend -->
+  <div class="stem-legend">
+    <span style="font-size:11px;font-weight:600;color:var(--muted);align-self:center;">STEM:</span>
+    <span class="stem-badge-sm F"><i class="ti ti-flask"></i> Fan (Science)</span>
+    <span class="stem-badge-sm M"><i class="ti ti-math-symbols"></i> Matematik</span>
+    <span class="stem-badge-sm Mu"><i class="ti ti-tools"></i> Muhandislik</span>
+    <span class="stem-badge-sm T"><i class="ti ti-cpu"></i> Texnologiya</span>
+  </div>
+  <!-- AGE TABS -->
+  <div class="age-tabs" id="age-tabs"></div>
+  <!-- DAY TABS -->
   <div class="day-tabs" id="day-tabs">
     <button class="day-tab active" data-day="dush">Dushanba</button>
     <button class="day-tab" data-day="sesh">Seshanba</button>
@@ -173,29 +231,698 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <button class="day-tab" data-day="pay">Payshanba</button>
     <button class="day-tab" data-day="juma">Juma</button>
   </div>
-
   <div class="day-summary" id="day-summary"></div>
-  <div class="sec-title"><i class="ti ti-calendar-event"></i> <span id="day-label">Dushanba</span> dasturi</div>
-  <div id="day-content" class="sched-list"></div>
+  <div class="sec-title" id="sec-title-label"><i class="ti ti-calendar-event"></i> <span>Dushanba</span> dasturi</div>
+  <div class="sched-list" id="sched-list"></div>
 </main>
+<a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
-<a href="../dashboard.html" class="fab-back">
-  <i class="ti ti-arrow-left"></i> Dashboard
-</a>
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal" onclick="handleModalBg(event)">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3 id="modal-title">Faoliyat</h3>
+      <button class="modal-cls" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
 <script>
+// ============ DATA ============
+
+var SOHA = {
+  '1':{label:'1-soha: Jismoniy rivojlanish',cls:'soha1',short:'Jismoniy'},
+  '2':{label:'2-soha: Ijtimoiy-hissiy',cls:'soha2',short:'Ijtimoiy-hissiy'},
+  '3':{label:'3-soha: Nutq va muloqot',cls:'soha3',short:'Nutq'},
+  '4':{label:'4-soha: Bilish jarayonlari',cls:'soha4',short:'Bilish'},
+  '5':{label:'5-soha: Ijodiy rivojlanish',cls:'soha5',short:'Ijodiy'},
+};
+
+var STEM = {
+  F:{label:'Fan',icon:'ti-flask',cls:'F',desc:'Ilmiy kuzatuv, tajriba, gipoteza'},
+  M:{label:'Matematik',icon:'ti-math-symbols',cls:'M',desc:'Sonlar, shakllar, mantiq, o\'lchov'},
+  Mu:{label:'Muhandislik',icon:'ti-tools',cls:'Mu',desc:'Qurish, loyihalash, muammo yechish'},
+  T:{label:'Texnologiya',icon:'ti-cpu',cls:'T',desc:'Raqamli savodxonlik, algoritmik fikrlash'},
+};
+
+var AGES = [
+  {key:'3-4',label:'3–4 yosh',sub:'Kichik guruh',color:'#10b981',bg:'#f0fdf4'},
+  {key:'4-5',label:'4–5 yosh',sub:'O\'rta guruh',color:'#3b82f6',bg:'#eff6ff'},
+  {key:'5-6',label:'5–6 yosh',sub:'Katta guruh',color:'#8b5cf6',bg:'#f5f3ff'},
+  {key:'6-7',label:'6–7 yosh',sub:'Maktabga tayyorlov',color:'#f59e0b',bg:'#fffbeb'},
+];
+
+var DAYS = {dush:'Dushanba',sesh:'Seshanba',chor:'Chorshanba',pay:'Payshanba',juma:'Juma'};
+
+// Helper shortcuts
+function a(time,icon,ic,name,desc,soha,type,stem,maqsad,mat,rivoj){
+  return{time,icon,ic,name,desc,soha,type,stem,maqsad,mat:mat||'—',rivoj:rivoj||'—'};
+}
+function common(age){
+  var gim={
+    '3-4':'Yirik motorika: yurishda muvozanat, sakrash, to\'p otish. Kichik musiqali ketma-ketlik.',
+    '4-5':'Jismoniy mashqlar: yugurish, sakrash, muvozanat. Nafas olish mashqlari.',
+    '5-6':'Koordinatsiya mashqlari: to\'pni ushlab qolish, bir oyoqda turish, ritm bilan harakat.',
+    '6-7':'Sport elementlari: zig-zag yugurish, gimnastika elementlari, komanda o\'yini.',
+  };
+  return[
+    a('07:30–08:00','ti-sun','amber','Bolalarni qabul qilish','Salomlashish rituali, kayfiyat doirasi, erkin o\'yin','2','main',null,
+      'Bolani MTTga qulay moslashtirib, ijobiy hissiy muhit yaratish.','Kayfiyat kartochkalari, "Salom" qo\'shig\'i','Ijtimoiylashuv, hissiyot ifodalash'),
+    a('08:00–08:20','ti-run','green','Ertalabki gimnastika',gim[age],'1','main',null,
+      'Harakat faolligini oshirish, tana qismlarini uyg\'unlashtirish, tonusni ko\'tarish.','Karimbo yoki doira, musiqali fon','Yirik motorika, koordinatsiya, nafas olish'),
+    a('08:20–08:45','ti-tools-kitchen-2','amber','Nonushta','Mustaqil ovqatlanish, qoshiq/vilka ishlatish, suyuqlikni to\'kmaslik. "Rahmat" demak.','1','meal',null,
+      'Mustaqil ovqatlanish ko\'nikmasini, gigiyena va ovqat madaniyatini shakllantirish.','—','Mustaqillik, xulq-atvor madaniyati'),
+  ];
+}
+function commonPM(){
+  return[
+    a('12:00–12:30','ti-soup','amber','Tushlik','Ovqat madaniyati: stol atrofida tartib, ovqatdan oldin qo\'l yuvish, "Taomingiz muborak" deyish.','1','meal',null,
+      'Ovqatlanish madaniyatini va mustaqillikni mustahkamlash.','—','Gigiyena, madaniyat'),
+    a('12:30–15:00','ti-moon','rest','Kunduzgi uyqu','Dam olish, tana va miyaning tiklanishi. Tinch, qulay muhit.','1','rest',null,
+      'Jismoniy va kognitiv tiklanish uchun uyqu gigijenasini shakllantirish.','—','Jismoniy farovonlik'),
+  ];
+}
+
+// ========== 3-4 YOSH ==========
+var d34 = {
+  dush:[
+    ...common('3-4'),
+    a('09:00–09:20','ti-palette','','1-mashg\'ulot: Sensor — Ranglar dunyosi','4 asosiy rang (qizil, sariq, ko\'k, yashil): predmetlarni rangi bo\'yicha saralash va nomlash.','4','lesson','M',
+      '4 asosiy rangni to\'g\'ri nomlash va predmetlarga tadbiq eta olish. 1.3.12.b indikatori.',
+      'Rangli kubiklar (12ta), rangli kartochkalar, plastik stakanchalar (4 ta har rangdan)',
+      'Klassifikatsiya, sensor qiyoslash, rang nomlarini o\'zlashtirish'),
+    a('09:30–09:50','ti-message-circle','','2-mashg\'ulot: Nutq — Mening oilam','Oila rasmiga qarab hikoya qilish, oila a\'zolari nomlarini aytish (onam, dadam, buvi...).','3','lesson',null,
+      '3–5 gapdan iborat izchil bog\'lanishli nutq. Faol lug\'atni boyitish. 3.1.2.a indikatori.',
+      'Oila suratlari, "oila" qo\'g\'irchog\'i (bola, ota, ona, buvi)',
+      'Bog\'lanishli nutq, lug\'at boyitish, tasviriy tafakkur'),
+    a('10:00–10:30','ti-tree','green','Ertalabki sayr','Bog\'dagi o\'simliklarni hid, rang, shakli bo\'yicha kuzatish. Barglarni terib, to\'plam yasash.','1','main','F',
+      'Sezgi organlarini faollashtirish. Kuzatuv ko\'nikmasi. Tabiat bilan bevosita aloqa.',
+      'Kuzatuv sumkasi, kichik sumkacha (barg yig\'ish)',
+      'Ilmiy kuzatuv, sezgi, tasnif, nutqda ifodalash'),
+    ...commonPM(),
+    a('15:30–16:00','ti-building-factory','slate','Qurilish o\'yini (STEM-Muhandislik)','Katta yog\'och kubiklar bilan minora, ko\'prik qurish. "Qurilmam qulamasligiga qanday erishaman?" — muammo.','4','main','Mu',
+      'Konstruktiv tafakkur, muvozanat tushunchasi, muammoni mustaqil hal qilish. 4.1.1.a.',
+      'Yog\'och/plastik kubiklar (har xil o\'lchov), miniatur mashinalar',
+      'Fazoviy tafakkur, muhandislik fikrlash, bashorat qilish'),
+    a('16:00–16:30','ti-music','purple','Qo\'shiq va raqs','Bolalar qo\'shig\'i bilan ritmik harakatlar, keyin erkin ijod (plastilin yoki bo\'yash).','5','main',null,
+      'Musiqa va harakat uyg\'unligini his etish, ijodiy o\'zini ifodalash.',
+      'Doira, musiqa player, plastilin',
+      'Ritmik sezish, ijodiy ifoda, xarakter ifodalash'),
+  ],
+  sesh:[
+    ...common('3-4'),
+    a('09:00–09:20','ti-math-symbols','','1-mashg\'ulot: FEMP — 1, 2, 3 sonlari','Bitta, ikkita, uchtani predmetlar orqali his qilish. "Ko\'p yoki kam?" — qiyoslash o\'yini.','4','lesson','M',
+      'Sanoqni 1 dan 3 gacha predmetlar bilan bog\'lash, "ko\'p/kam" tushunchasi. 4.2.1.a.',
+      '1-3 dona o\'yinchoqlar (qo\'g\'irchoq, mashincha), raqam kartochkalari 1,2,3',
+      'Son va miqdorni bog\'lash, qiyoslash, sanoq nutqi'),
+    a('09:30–09:50','ti-music','purple','2-mashg\'ulot: Musiqa — Ritm va ovoz','Doira, qoshiq, kaxtalar bilan ritmik chalib ko\'rish. "Eshitish" o\'yini — ovozni tanish.','5','lesson',null,
+      'Eshitish diqqatini rivojlantirish, musiqiy ritm his etish, ijodiy o\'zini ifodalash. 5.1.1.a.',
+      'Doira, yog\'och kaxta, qoshiqlar, audio musiqa',
+      'Ritmik eshitish, ijodiy ifoda, koordinatsiya'),
+    a('10:00–10:30','ti-tree','green','Sayr','Osmonga qarash: bulutlar shaklini topish. "Bulut nimaga o\'xshaydi?" — tasavvur o\'yini.','4','main','F',
+      'Kuzatuv, tasavvur va ijodiy fikrlashni rivojlantirish. Ob-havo kuzatuvi.',
+      'Kuzatuv daftarcha (rasm uchun)',
+      'Kuzatuv, tasavvur, nutqda ifodalash'),
+    ...commonPM(),
+    a('15:30–16:00','ti-puzzle','','Didaktik o\'yin: Shakl-o\'yin','Doira, kvadrat, uchburchak — shakl nomini aytish va saralash. "Qaysi eshikdan o\'tadi?" o\'yini.','4','main','M',
+      'Uch geometrik shaklni farqlash va nomlash. Sensor idrok. 4.2.2.a.',
+      'Shakllar mahkam plastikdan (doira, kvadrat, uchburchak), shakllar sorti',
+      'Geometrik shakl tasavvuri, sensor taqqoslash'),
+    a('16:00–16:30','ti-pencil','','Erkin ijod — Loy va plastilin','Plastilindan dumaloq shakllar, qurt, olma yasash. Qo\'l barmoqlari mayda motorikasi.','5','main',null,
+      'Mayda motorikani rivojlantirish, ijodiy tasavvurni qo\'llab-quvvatlash. 5.2.1.a.',
+      'Plastilin (har xil rang), loy taxtasi, plastik pichakcha',
+      'Mayda motorika, ijodiy tasavvur, material bilan ishlash'),
+  ],
+  chor:[
+    ...common('3-4'),
+    a('09:00–09:20','ti-leaf','green','1-mashg\'ulot: Tabiat — Kuz fasli (STEM-Fan)','Kuz belgilari: barg rangi, havo sovushi. Real barg va rasmdagi bargni taqqoslash. Tajriba: barg suvga solinsa nima bo\'ladi?','4','lesson','F',
+      'Kuz fasli belgilarini bilish, kuzatish va taqqoslash ko\'nikmasini shakllantirish. 4.3.1.a.',
+      'Real kuz barglari, barg rasmi, suv solingan idish',
+      'Ilmiy kuzatuv, mavsumiy o\'zgarishlarni tushunish, taqqoslash'),
+    a('09:30–09:50','ti-cut','purple','2-mashg\'ulot: Applikatsiya — Kuz daraxti','Tayyor yumaloq shakllarni (barg) qog\'ozga yopishtirib, kuz daraxti yasash.','5','lesson',null,
+      'Qaychi va yelimdan foydalanish, kompozitsiya, ijodiy fikrlash. 5.2.1.a.',
+      'Rangli qog\'oz (sariq, qizil, to\'q sariq), yelim, vatman',
+      'Mayda motorika, ijodiy kompozitsiya, rang tanlov'),
+    a('10:00–10:30','ti-walk','green','Sayr — Barg yig\'ish','Barg yig\'ish, ularni rangi va hajmi bo\'yicha saralash. "Eng katta barg" yarishi.','1','main','M',
+      'Tabiiy materiallar orqali hajm va rang tushunchasini mustahkamlash.',
+      'Sumkacha, buyumlar solishtirish uchun joy',
+      'Tasnif, o\'lchov, tabiat bilan muloqot'),
+    ...commonPM(),
+    a('15:30–16:00','ti-masks-theater','pink','Rolli o\'yin: Tabib va bemor','Bola tabib, qo\'g\'irchoq "bemor". Stoskop, termometr o\'yinchoqlari bilan ish. Kasb haqida suhbat.','2','main',null,
+      'Ijtimoiy rollarni o\'rganish, muloqot qilish, hamdardlik (empatiya) tuyg\'usi. 2.3.1.a.',
+      'O\'yinchoq tabib to\'plami (stoskop, termometr), qo\'g\'irchoq',
+      'Ijtimoiy rollar, muloqot, empatiya'),
+    a('16:00–16:30','ti-pencil','','Erkin chizish — Kuz manzarasi','Mavzu bo\'yicha erkin rasm chizish: daraxt, yomg\'ir, barg. Rang tanlash erkin.','5','main',null,
+      'Erkin ijodiy ifodani rag\'batlantirish, rang va shakl bilan ishlash.',
+      'Akvarell yoki guash, cho\'tka, vatman',
+      'Ijodiy ifoda, rang aralash ko\'nikma'),
+  ],
+  pay:[
+    ...common('3-4'),
+    a('09:00–09:20','ti-ball-football','green','1-mashg\'ulot: Jismoniy tarbiya','Harakat muvofiqligi: to\'pni ushlab qolish, maqsadga tashlash, "Tuyoq" o\'yini. Harakatli o\'yinlar.','1','lesson',null,
+      'Harakat koordinatsiyasini rivojlantirish, harakat o\'yinlari orqali qoidalarga rioya qilish. 1.1.1.a.',
+      'Kichik to\'plar (3-4 ta), halqa, belgilangan yo\'lakcha',
+      'Yirik motorika, koordinatsiya, jamoa o\'yini'),
+    a('09:30–09:50','ti-volume','','2-mashg\'ulot: Nutq — Hayvonlar ovozi','Hayvon rasmlarini ko\'rish, ovozini eshitish/taqlid qilish, yashash joyini aytish.','3','lesson',null,
+      'Hayvon nomlarini, ovozlarini va yashash joylarini bog\'lash. 3.1.1.a.',
+      'Hayvon suratlari (mushuk, it, sigir, ot, qo\'y), audio',
+      'Faol lug\'at, eshitish diqqati, nutqda ifodalash'),
+    a('10:00–10:30','ti-walk','green','Sayr — Harakatli o\'yin','Bog\'da "Uchuvchi - uchmaydigan" o\'yini, erkin yugurish. Tabiatni his etish.','1','main',null,
+      'Jismoniy faollik, diqqat, jamoaviy muloqot.',
+      '—','Jismoniy faollik, qoidalarga rioya'),
+    ...commonPM(),
+    a('15:30–16:00','ti-droplet','','Sensor tajriba: Suv bilan o\'yin (STEM-Fan)','Suvga turli narsalar solib, "cho\'kadi yoki suzadi?" kuzatuvi. Natijani tarbiyachi bilan birgalikda yozib borish.','4','main','F',
+      'Ilmiy kuzatuv ko\'nikmasi, gipoteza tuzish, natijani ifodalash. 4.3.2.a.',
+      'Katta idish suv, yog\'och bo\'lak, tosh, plastilin, yeng\'ichka qog\'oz',
+      'Ilmiy tajriba, gipoteza, natijani ifodalash'),
+    a('16:00–16:30','ti-chess','slate','Didaktik o\'yin — "Shakl va rang"','Rangli shakllarni bir vaqtda ikkita belgisi bo\'yicha saralash. Mantiqiy zanjir o\'yini.','4','main','M',
+      'Ikki belgini bir vaqtda hisobga olib tasnif qilish. Mantiqiy fikrlashning boshlang\'ich qadami.',
+      'Rangli geometrik shakllar (har rangdan 3 ta)',
+      'Mantiqiy fikrlash, ko\'p belgili tasnif'),
+  ],
+  juma:[
+    ...common('3-4'),
+    a('09:00–09:20','ti-masks-theater','pink','1-mashg\'ulot: Teatr — "Uchta ayiq" ertak','Ertakni to\'liq eshitish, so\'ngra rolli sahnalashtirish. Har bir bola rol oladi.','5','lesson',null,
+      'Ertak orqali nutq, empatiya va ijodiy ifodani rivojlantirish. Rolli muloqot. 3.1.3.a.',
+      'Uchta ayiq qo\'g\'irchoqlari, Gulzorcha uchun sariq parik',
+      'Nutq, empatiya, rolli muloqot'),
+    a('09:30–09:50','ti-music','purple','2-mashg\'ulot: Musiqa — Hoftalik qo\'shiq','Hafta davomida o\'rganilgan narsalarga oid qo\'shiq. Ritmik harakatlar bilan birga.','5','lesson',null,
+      'Hafta mavzusini musiqa orqali mustahkamlash. Guruh hamjihatligini rivojlantirish.',
+      'Musiqa player, xohlagan zarb asbobi',
+      'Umumlashtirish, musiqa, hamkorlik'),
+    a('10:00–10:30','ti-walk','green','Sayr — Erkin o\'yinlar','Erkin o\'yin: sandbox, harakatli o\'yinlar, kuzatuv. Hafta sarguzashtlari haqida suhbat.','1','main',null,
+      'Mustaqil o\'yin tanlash, ijtimoiy muloqot, haftalik kuzatuvlarni eslash.',
+      '—','Mustaqillik, ijtimoiylashuv'),
+    ...commonPM(),
+    a('15:30–16:30','ti-star','amber','Haftalik refleksiya — "Biz nima o\'rgandik?"','Hafta davomidagi mashg\'ulotlar rasmlarini ko\'rib chiqish. Har bola biror yoqtirgan narsasini aytadi.','2','main',null,
+      'Refleksiya — o\'z tajribasini anglash, guruh muloqoti, haftalik yutuqlarni baholash.',
+      'Hafta rasmlar galereyasi (devorga yopishtirilgan)',
+      'Refleksiya, nutq, guruh birligini his qilish'),
+  ],
+};
+
+// ========== 4-5 YOSH ==========
+var d45 = {
+  dush:[
+    ...common('4-5'),
+    a('09:00–09:25','ti-message-circle','','1-mashg\'ulot: Nutq — Mening oilam','Oila a\'zolari haqida izchil 5-7 gap hikoya qilish. Savol-javob suhbati. Lug\'at: "kasb" so\'zini kiriting.','3','lesson',null,
+      'Dialogik va monologik nutqni rivojlantirish. Oila a\'zolarining kasblari haqida bilim. 3.1.2.b.',
+      'Oila fotosurati, kasb kartochkalari (shifokor, o\'qituvchi, novvoy)',
+      'Bog\'lanishli nutq, lug\'at boyitish, savol tuzish ko\'nikmasi'),
+    a('09:35–10:00','ti-brush','purple','2-mashg\'ulot: Tasviriy san\'at — Oila surati','Oila a\'zolarini chizish: tana qismlari, ranglar. Rasmni guruhga taqdim etish.','5','lesson',null,
+      'Tasviriy ko\'nikmani rivojlantirish, ranglardan foydalanish, nutq orqali taqdimot. 5.2.1.b.',
+      'Rasm qog\'ozi, bo\'yoq yoki rangli qalamlar, cho\'tka',
+      'Ijodiy ifoda, rang tanlash, taqdimot ko\'nikmasi'),
+    a('10:05–10:30','ti-tree','green','Ertalabki sayr','Tabiat kuzatuvi: o\'simliklar, hasharotlar. Bir barg ustida lupa bilan tekshiruv. Natijani aytib berish.','4','main','F',
+      'Ilmiy kuzatuv ko\'nikmasi, kichik tadqiqot. Tabiat ob\'ektlarini og\'zaki tavsiflash.',
+      'Lupa, kuzatuv daftarcha',
+      'Ilmiy kuzatuv, tavsif, so\'z boyitish'),
+    ...commonPM(),
+    a('15:30–16:00','ti-puzzle','','Didaktik o\'yin — "Kim qayerda yashaydi?"','Hayvon suratlarini yashash joyi kartochkalariga joylash. Savol: "Nega u yerda yashaydi?"','4','main','F',
+      'Hayvonlar va yashash muhiti o\'rtasidagi sabab-oqibat aloqasini tushunish. 4.3.1.b.',
+      'Hayvon suratlari (12ta), yashash joyi kartochkalari (o\'rmon, suv, cho\'l, uy)',
+      'Mantiqiy bog\'lash, sababiy tafakkur'),
+    a('16:00–16:30','ti-music','purple','Qo\'shiq va raqs','Mavzuga mos bolalar qo\'shig\'i: "Oilam" yoki "Bizning uyimiz". Ritmik harakat, erkin raqs.','5','main',null,
+      'Musiqa orqali hafta mavzusini mustahkamlash, ijodiy ifoda. 5.1.1.b.',
+      'Audio, bolalar uchun ritmik asboblar',
+      'Musiqa, ritm, ijodiy ifoda'),
+  ],
+  sesh:[
+    ...common('4-5'),
+    a('09:00–09:25','ti-math-symbols','','1-mashg\'ulot: FEMP — 1 dan 5 gacha','Predmetlarni sanash, raqam kartochkalarini moslashtirish. "Qaysi qatorda ko\'proq?" taqqoslash.','4','lesson','M',
+      'Sanoqni 1 dan 5 gacha mustahkamlash, "ko\'proq/kamroq/teng" tushunchalari. 4.2.1.b.',
+      'Raqam kartochkalari 1-5, mayda o\'yinchoqlar (25ta), 5 ta stakanchalik to\'plam',
+      'Sanoq, miqdorni raqam bilan bog\'lash, qiyoslash'),
+    a('09:35–10:00','ti-music','purple','2-mashg\'ulot: Musiqa — Ritm o\'yini','Tarbiyachi ritm beradi, bolalar qaytaradi (doira, qoshiq bilan). She\'r+ritm birlashuvi.','5','lesson',null,
+      'Ritmik eshitish va qaytarishni rivojlantirish. Musiqa orqali nutq ko\'nikmasi. 5.1.1.b.',
+      'Doira, yog\'och kaxta, ritm kartochkalari',
+      'Ritmik sezish, eshitish diqqati, nutq ritmligi'),
+    a('10:05–10:30','ti-tree','green','Sayr','Kuzatuv: bug\'doy yoki daraxt kurtaklarini kuzatish. "Bugun va kecha farqi bormi?" suhbati.','4','main','F',
+      'Doimiy kuzatuv ko\'nikmasi, o\'zgarishlarni farqlash va ifodalash.',
+      'Kuzatuv daftarcha, qalamcha',
+      'Ilmiy kuzatuv, o\'zgarishlarni tavsif qilish'),
+    ...commonPM(),
+    a('15:30–16:00','ti-building-factory','slate','Qurilish (STEM-Muhandislik) — Ko\'prik loyihasi','Kubiklar va taxtacha bilan ko\'prik qurish. Shartlar: ko\'prikdan miniatur mashina o\'tishi kerak.','4','main','Mu',
+      'Muhandislik muammosini yechish: ko\'prik poydevori, barqarorlik. Sinovdan o\'tkazish. 4.1.2.b.',
+      'Yog\'och kubiklar, taxtacha, miniatur mashina',
+      'Muhandislik fikrlash, test qilish, natijani tahlil qilish'),
+    a('16:00–16:30','ti-book-2','','Kitob o\'qish — ertak tinglash','Tarbiyachi ifodalib o\'qiydi (masalan, "Turnip" ertak). So\'ngra bolalar sahnalashtirishadi.','3','main',null,
+      'Eshitish tushunish, ertak tuzilmasini anglash, sahnalashtirish orqali nutq. 3.2.1.b.',
+      'Rasmli kitob, sahnalashtirish uchun atributlar',
+      'Eshitib tushunish, nutq, ijodiy ifoda'),
+  ],
+  chor:[
+    ...common('4-5'),
+    a('09:00–09:25','ti-leaf','green','1-mashg\'ulot: Tabiat — O\'simliklar va yashash sharoiti','O\'simlikga nima kerak? Suv, yorug\'lik, tuproq — tajriba boshlanishi. Kuzatuv jadvali to\'ldirish.','4','lesson','F',
+      'O\'simliklar yashash uchun zarur shartlarni bilish, kuzatuv jadvalini yuritish. 4.3.2.b.',
+      '2 ta bir xil gul (biri suvli, biri suvsiz), kuzatuv jadvali (rasm va belgilar)',
+      'Ilmiy tajriba, kuzatuv, natijani qayd etish'),
+    a('09:35–10:00','ti-cut','purple','2-mashg\'ulot: Applikatsiya — Kapalak','Tayyor qanotlarni kesilgan shakllar bilan bezash, simmetriya tushunchasi: "Ikki qanotimizda bir xil naqsh bo\'lsin."','5','lesson','M',
+      'Simmetriya tushunchasining amaliy ko\'rsatmasi. Ijodiy ifoda. 5.2.1.b.',
+      'Tayyor kapalak shabloni, rangli qog\'oz, yelim, qaychi',
+      'Simmetriya, ijodiy bezash, mayda motorika'),
+    a('10:05–10:30','ti-walk','green','Sayr — Barg yig\'ish va saralash','Kuz barglarini yig\'ib, kattadan kichikka tartiblashtirish. "Nechta?" sanash.','4','main','M',
+      'Hajm bo\'yicha tartiblash, sanoq, tabiat materiallaridan foydalanish. 4.2.1.b.',
+      'Sumkacha',
+      'Tartib, sanoq, tabiatda kuzatuv'),
+    ...commonPM(),
+    a('15:30–16:00','ti-masks-theater','pink','Rolli o\'yin — Do\'kon','Sotuvchi va xaridor rollari. Oddiy "hisob-kitob": 2+1=3 ta narsa oldi. Muloqot madaniyati.','2','main','M',
+      'Ijtimoiy rollarni o\'rganish, muloqot, navbat kutish, oddiy hisob. 2.3.1.b.',
+      'O\'yinchoq mahsulotlar, soxta pul (1,2,5 so\'mlik), savat',
+      'Ijtimoiy muloqot, oddiy arifmetika, navbat'),
+    a('16:00–16:30','ti-pencil','','Erkin ijod — Plastilin manzara','Kuz tabiatini plastilindan yasash: daraxt, quyosh, barg. Guruhda birgalikda kompozitsiya.','5','main',null,
+      'Erkin ijodiy ifoda, guruh hamkorligi, materialni boshqarish.',
+      'Plastilin (har xil rang), loy taxtasi',
+      'Ijodiy hamkorlik, material boshqarish'),
+  ],
+  pay:[
+    ...common('4-5'),
+    a('09:00–09:25','ti-ball-football','green','1-mashg\'ulot: Jismoniy tarbiya','Harakat muvofiqligi: to\'pni maqsadga tashlash, estafeta, "Tuyoq" o\'yini. Qoida va navbat.','1','lesson',null,
+      'Maqsadga yo\'naltirilgan harakat, jamoaviy o\'yin qoidalariga rioya. 1.1.2.b.',
+      'To\'plar, belgilangan chiziq, ko\'tara halqa',
+      'Yirik motorika, maqsadga yo\'naltirish, qoidaga rioya'),
+    a('09:35–10:00','ti-abc','','2-mashg\'ulot: Savodxonlik — Tovush tahlili','So\'zdagi birinchi tovushni ajratish. "A" harfi bilan boshlanadigan narsalar topish o\'yini.','3','lesson','T',
+      'Fonemik eshitish, so\'zning tovush tuzilishini anglash. Harfga qiziqishni uyg\'otish. 3.1.1.b.',
+      'Harfli kartochkalar (A,O,U), rasmli kartochkalar',
+      'Fonemik tahlil, harflarga qiziqish, so\'z tuzilishi'),
+    a('10:05–10:30','ti-walk','green','Sayr — Harakatli o\'yinlar','Erkin o\'yin + "Rang-barang" o\'yini: tarbiyachi rang aytadi, bolalar shu rangdagi predmetga yuguradi.','1','main','M',
+      'Jismoniy faollik, rang bilimini harakat bilan birlashtirish.',
+      '—','Jismoniy faollik, ranglarni esda saqlash'),
+    ...commonPM(),
+    a('15:30–16:00','ti-brush','purple','Tasviriy san\'at — Plastilindan hayvon','Tanlagan hayvonini plastilindan yasash. "Sen qaysi hayvonni yasadingizmiz? Qayerda yashaydi?" suhbat.','5','main',null,
+      'Ijodiy ifoda, materialdan foydalanish, nutq bilan bog\'lash. 5.2.2.b.',
+      'Plastilin, loy taxtasi',
+      'Ijodiy ifoda, mayda motorika, nutq'),
+    a('16:00–16:30','ti-chess','slate','Didaktik o\'yin — Mantiqiy o\'yin','Renbo shakllarini 2 belgisi bo\'yicha (rang + hajm) tartiblash. Navbat bilan.','4','main','M',
+      'Ikki belgini hisobga olib tartiblash, mantiqiy fikrlash. 4.1.1.b.',
+      'Rangli shakllar to\'plami (katta/kichik, har 4 rangdan)',
+      'Mantiqiy tasnif, ko\'p belgili fikrlash'),
+  ],
+  juma:[
+    ...common('4-5'),
+    a('09:00–09:25','ti-masks-theater','pink','1-mashg\'ulot: Teatr — Ertak sahnalashtirish','Tanlangan ertak (masalan "Repa"). Har bola rol oladi. Tarbiyachi ssuflyor. Sahnadan keyin muhokama.','5','lesson',null,
+      'Rolli nutq, ijodiy sahnalashtirish, jamoaviy hamkorlik, ertak tuzilmasini anglash. 3.1.3.b.',
+      'Ertak qahramonlari niqoblari yoki kartochkalari, oddiy dekoratsiya',
+      'Rolli nutq, ijodiy ifoda, hamkorlik'),
+    a('09:35–10:00','ti-music','purple','2-mashg\'ulot: Musiqa — Haftalik qo\'shiq','Hafta davomidagi mavzularga mos qo\'shiq. Ritmik harakat, erkin raqs bilan yakunlash.','5','lesson',null,
+      'Hafta mavzusini musiqa orqali umumlashtirish. 5.1.2.b.',
+      'Audio, zarb asbobi',
+      'Umumlashtirish, musiqa, guruh hamjihatlik'),
+    a('10:05–10:30','ti-walk','green','Sayr — Erkin o\'yinlar','Sandbox, harakatli o\'yinlar, kuzatuv. Hafta yutuqlarini erkin muhokama qilish.','1','main',null,
+      'Mustaqil o\'yin, ijtimoiy muloqot, hafta kuzatuvlarini esga olish.',
+      '—','Mustaqillik, ijtimoiylashuv, refleksiya'),
+    ...commonPM(),
+    a('15:30–16:30','ti-star','amber','Haftalik refleksiya — "Nima o\'rgandik?"','Hafta rasmlari galereyasiga qarash. Har bola bitta "yangi bilim" yoki "sevimli narsa" aytadi. Guruh muhokama.','2','main',null,
+      'Refleksiya, o\'z tajribasini anglash va guruhda ifodalash. Metakognitsiyaning boshlanishi.',
+      'Hafta suratlari va ishlari galereyasi (devor)',
+      'Refleksiya, nutq, guruh birligini his qilish'),
+  ],
+};
+
+// ========== 5-6 YOSH ==========
+var d56 = {
+  dush:[
+    ...common('5-6'),
+    a('09:00–09:25','ti-message-circle','','1-mashg\'ulot: Nutq — Hikoya tuzish','Rasmlar ketma-ketligi bo\'yicha 7-10 gaplik mustaqil hikoya. Bosh qahramon, voqea, xulosa.','3','lesson',null,
+      'Mustaqil izchil hikoya tuzish: bosh, o\'rta, xulosa. Nutqda bog\'lovchilardan foydalanish. 3.1.2.c.',
+      'Ketma-ket 4 ta rasm kartochkasi (syujet), magnit doska',
+      'Bog\'lanishli nutq, hikoya tuzilmasi, nutq mantiqiylik'),
+    a('09:35–10:00','ti-brush','purple','2-mashg\'ulot: San\'at — Millatimiz naqshlari','O\'zbek milliy naqsh elementlarini (zig-zag, rozetka) chizish. Simmetriya va takrorlanish qoidasi.','5','lesson','M',
+      'Milliy naqsh elementlarini o\'rganish, simmetriya, geometrik shakl ketma-ketligi. 5.1.2.c.',
+      'Naqshli namuna kartochkalari, rasm qog\'ozi, karandashlar, rangli qalamlar',
+      'Geometrik naqsh, simmetriya, milliy madaniyat'),
+    a('10:05–10:30','ti-tree','green','Ertalabki sayr','Osmondagi ob-havoni kuzatish. Mini meteorologik kuzatuv: harorat (iliq/sovuq), shamol bor/yo\'q, bulut. Jadvalga belgilash.','4','main','F',
+      'Ob-havo kuzatuvi va qayd etish ko\'nikmasi. Meteoobservatsiya boshlang\'ich ko\'nikmasi. 4.3.3.c.',
+      'Kuzatuv jadvali (haftalik ob-havo jadval), qalamcha',
+      'Ilmiy kuzatuv, o\'lchov, qayd etish'),
+    ...commonPM(),
+    a('15:30–16:00','ti-building-factory','slate','Muhandislik muammosi (STEM) — "Eng baland minora"','Faqat qog\'oz va yelimdan foydalanib eng baland barqaror minorani qurish. Guruhlar musobaqasi.','4','main','Mu',
+      'Muhandislik dizayn jarayoni: reja → qurish → sinash → qayta qurish. 4.1.2.c.',
+      'Qog\'oz varaqlari (10ta/guruh), skoch yoki yelim, chizg\'ich',
+      'Muhandislik fikrlash, guruh hamkorlik, test va tahlil'),
+    a('16:00–16:30','ti-music','purple','Qo\'shiq va milliy o\'yin','O\'zbek xalq o\'yini ("Oq terak ko\'k terak") bilan hafta boshlanishi.','5','main',null,
+      'Milliy madaniyatni sevish, guruh hamkorligi, ritmik harakat. 5.1.1.c.',
+      'Audio/live ashula, davra',
+      'Milliy meros, guruh birlik, ritm'),
+  ],
+  sesh:[
+    ...common('5-6'),
+    a('09:00–09:25','ti-math-symbols','','1-mashg\'ulot: Matematik — 1 dan 10 gacha, teng bo\'lish','Sonlarni 10 gacha saralash, "juft/toq" tushuncha. Predmetlarni 2 ga teng bo\'lish.','4','lesson','M',
+      'Sanoqni 10 gacha mustahkamlash, juft/toq, tenglashtirish. 4.2.2.c.',
+      'Raqam kartochkalari 1-10, 20 ta mayda predmet (guruch, toshcha)',
+      'Sanoq, juft/toq, teng bo\'lish, matematik nutq'),
+    a('09:35–10:00','ti-music','purple','2-mashg\'ulot: Musiqa — Ohang va kayfiyat','Xursand va xafa ohanglarni eshitish, farqlash. Rasm orqali his-tuyg\'ularini ifodalash.','5','lesson',null,
+      'Musiqaning hissiyotga ta\'sirini his etish, kayfiyatni ifodalash. 5.1.2.c.',
+      'Ikki xil kayfiyatdagi audio, oq qog\'oz, bo\'yoq',
+      'Musiqiy his etish, hissiyot ifodalash, ijodiy chizish'),
+    a('10:05–10:30','ti-tree','green','Sayr','Tuproq kuzatuvi: lupa bilan, tuproqda nima bor? Hasharotlar, ildiz, tosh. "Kichik olimlar" ekspeditiyasi.','4','main','F',
+      'Tuproq ekosistemasi haqida dastlabki tushuncha. Lupa bilan ishlash. 4.3.1.c.',
+      'Lupa, kichik belkurak, kuzatuv idishcha',
+      'Ilmiy kuzatuv, mikro-dunyo, ekologik ong'),
+    ...commonPM(),
+    a('15:30–16:00','ti-puzzle','','Mantiqiy o\'yin — "Ketma-ketlik"','Shakllar/ranglar ketma-ketligini davom ettirish: ■○●■○●... Murakkab 5-elementli ketma-ketlik.','4','main','M',
+      'Algoritmik fikrlash boshlang\'ichi. Ketma-ketlikni topish va davom ettirish. 4.1.3.c.',
+      'Rangli shakllar kartochkalari',
+      'Algoritmik fikrlash, naqsh, mantiq'),
+    a('16:00–16:30','ti-book-2','','Kitob o\'qish va tahlil','Tarbiyachi ifodalab o\'qiydi. So\'ngra: "Qahramonning xatosi nima edi?" — tanqidiy tahlil suhbati.','3','main',null,
+      'Eshitib tushunish, tanqidiy fikrlash, baholash. 3.2.1.c.',
+      'Bolalar kitobi (milliy yoki xalqaro)',
+      'Eshitib tushunish, baholash, tanqidiy fikrlash'),
+  ],
+  chor:[
+    ...common('5-6'),
+    a('09:00–09:25','ti-flask','green','1-mashg\'ulot: Fan tajribasi — "Mum, moy, suv"','Suv, moy va mum orasidagi o\'zaro ta\'sir. Gipoteza: "Nima suv bilan aralashadi?" Natijani rasmda ko\'rsatish.','4','lesson','F',
+      'Moddalar o\'rtasidagi farqni ilmiy kuzatuv bilan o\'rganish. Gipoteza va natija. 4.3.2.c.',
+      'Shisha idish, suv, o\'simlik moyi, bo\'yoq (rengdor suv), mum parcha',
+      'Ilmiy metod: savol → gipoteza → tajriba → natija'),
+    a('09:35–10:00','ti-cut','purple','2-mashg\'ulot: Qo\'lda yasash — Qog\'oz haykaltaroshlik','Qog\'ozni buklab, kesilgan shakllardan 3D figura yasash. Origami elementlari.','5','lesson','Mu',
+      '3D fikrlash, qog\'oz bilan ishlash, origami texnikasi. Fazoviy tasavvur. 5.2.2.c.',
+      'Rangli qog\'oz (kvadrat), qaychi',
+      'Fazoviy tafakkur, mayda motorika, 3D tasavvur'),
+    a('10:05–10:30','ti-walk','green','Sayr','Binolar kuzatuvi: "Bu bino nechta qavatli? Nima uchun?" Muhandis sifatida bahslashish.','4','main','Mu',
+      'Muhandislik kuzatuvi: bino, ko\'prik, yo\'l. Muhit bilan bog\'lash. 4.1.3.c.',
+      '—','Muhandislik kuzatuvi, muhit tahlil'),
+    ...commonPM(),
+    a('15:30–16:00','ti-masks-theater','pink','Rolli o\'yin — "Oshxona"','Oshpaz va mijozlar. Oddiy menyu, buyurtma olish, muloqot. "100g nima?" — o\'lchov suhbati.','2','main','M',
+      'Ijtimoiy rollar, muloqot, o\'lchov tushunchasi, kasbga qiziqish. 2.3.2.c.',
+      'O\'yinchoq idishlar, menyu kartochkasi, o\'lchov idishlar',
+      'Ijtimoiy muloqot, kasb, o\'lchov'),
+    a('16:00–16:30','ti-pencil','','Erkin ijod — Kelajak shahri','Birgalikda vatman ustiga "kelajak shahri" chizish: uchuvchi mashina, ko\'prik, bog\'. Guruhda.','5','main','T',
+      'Ijodiy va texnologik tasavvur. Kelajakka oid fikrlash. Guruh hamkorligi. 5.2.1.c.',
+      'Katta vatman, rangli qalamlar, marker',
+      'Texnologik tasavvur, hamkorlik, ijodiy loyiha'),
+  ],
+  pay:[
+    ...common('5-6'),
+    a('09:00–09:25','ti-ball-football','green','1-mashg\'ulot: Jismoniy tarbiya — Koordinatsiya','Murakkab harakat zanjiri: sakra → o\'gir → to\'pni usl → qayt. Vaqtni o\'lchash (sekin/tez).','1','lesson',null,
+      'Murakkab harakat koordinatsiyasi, harakat ketma-ketligi. 1.1.3.c.',
+      'To\'plar, belgilangan maydon, sekundomer (yoki hisoblash)',
+      'Murakkab koordinatsiya, harakat zanjiri, vaqt'),
+    a('09:35–10:00','ti-abc','','2-mashg\'ulot: Savodxonlik — Bo\'g\'in va so\'z','So\'zni bo\'g\'inlarga bo\'lish (qo\'l chapak usuli). 3-4 bo\'g\'inli so\'zlar. Birinchi harf aniqlash.','3','lesson','M',
+      'Bo\'g\'in tuzilishini o\'rganish, fonemik tahlil, harfni so\'z boshida aniqlash. 3.3.1.c.',
+      'Bo\'g\'in kartochkalari, harfli magnit doska, so\'z rasmlar',
+      'Fonemik tahlil, bo\'g\'in, harf-tovush aloqa'),
+    a('10:05–10:30','ti-walk','green','Sayr — Harakatli o\'yinlar','Milliy o\'yin "Ko\'z boqi" yoki "Uch tosh". Guruh belgilar o\'yini.','1','main',null,
+      'Milliy o\'yinlar orqali qoidalarga rioya qilish va guruh hamkorligi.',
+      '—','Milliy meros, qoidaga rioya, guruh birlik'),
+    ...commonPM(),
+    a('15:30–16:00','ti-cpu','','Algoritmik o\'yin (STEM-Texnologiya)','Robot o\'yini: bir bola "robot", ikkinchisi "dasturchi". Dasturchi yo\'riqnomalar beradi: "2 qadam olg\'a, o\'ng bur, to\'xta."','4','main','T',
+      'Algoritmik fikrlash va ketma-ket yo\'riqnomalar. Kodlash tushunchasining birinchi qadami. 4.1.4.c.',
+      'Belgilangan yo\'l (yer ustida skoch), to\'siqlar',
+      'Algoritmik fikrlash, instruksiya berish, yo\'l topish'),
+    a('16:00–16:30','ti-chess','slate','Mantiqiy o\'yin — "Savdo"','2-3 nafar bola "savdo-sotiq" o\'yini. 10 ichida hisob-kitob. Kim to\'g\'ri hisoblaydi?','4','main','M',
+      'Amaliy arifmetika: qo\'shish va ayirish 10 ichida. 4.2.3.c.',
+      'Soxta tangalar, o\'yinchoq mahsulotlar',
+      'Amaliy arifmetika, moliyaviy savodxonlik boshlang\'ich'),
+  ],
+  juma:[
+    ...common('5-6'),
+    a('09:00–09:25','ti-flask','green','1-mashg\'ulot: Mini-proyekt taqdimoti','Hafta davomida yig\'ilgan kuzatuv jadvallari va chizmalar asosida mini-taqdimot. 3-4 gaplik nutq.','4','lesson','F',
+      'Ilmiy natijalarni taqdim etish ko\'nikmasi. Og\'zaki taqdimot. 4.1.4.c.',
+      'Hafta kuzatuv varaqlari, chizmalar',
+      'Ilmiy taqdimot, nutq, o\'z ishini tushuntirish'),
+    a('09:35–10:00','ti-music','purple','2-mashg\'ulot: Musiqa — Konsert tayyorlash','Guruh birgalikda qo\'shiq yoki ritmik ijro tayyorlaydi. Dirigyor va ijrochi rollari.','5','lesson',null,
+      'Guruhda ijodiy hamkorlik, musiqiy asar g\'oyasini birlashtirib ijro etish. 5.1.3.c.',
+      'Zarb asbobi, audio, nota chizmalar (rasm ko\'rinishida)',
+      'Jamoaviy ijod, guruh hamkorligi, liderlik'),
+    a('10:05–10:30','ti-walk','green','Sayr','Erkin o\'yin + haftalik ob-havo jadvalini ko\'rib chiqish: "Bu hafta qaysi kun issiqroq edi?"','4','main','F',
+      'Ob-havo ma\'lumotlarini tahlil qilish, haftalik o\'zgarishlarni baholash. 4.3.3.c.',
+      'Haftalik ob-havo jadvali',
+      'Ma\'lumot tahlili, taqqoslash, xulosalash'),
+    ...commonPM(),
+    a('15:30–16:30','ti-star','amber','Haftalik refleksiya — Portfolio ko\'rish','Bola o\'z portfoliosini ochib, bu haftagi eng yaxshi ishini tanlaydi. Sababini aytadi.','2','main',null,
+      'Refleksiya: o\'z ishini baholash, tanlash va asoslash. Portfolio ko\'nikmasi. 2.1.2.c.',
+      'Bola portfoliosi (papka yoki quti)',
+      'Refleksiya, o\'zini baholash, asoslash'),
+  ],
+};
+
+// ========== 6-7 YOSH ==========
+var d67 = {
+  dush:[
+    ...common('6-7'),
+    a('09:00–09:30','ti-book-2','','1-mashg\'ulot: O\'qishga tayyorlik — Harflar va so\'zlar','7-10 ta harf takrorlash, so\'zni tovushga ajratish, birinchi harf yozish tayyorgarligi. "Harfli o\'yin".','3','lesson',null,
+      'Harflarni tanish, tovush-harf aloqasini mustahkamlash, yozuvga tayyorlik. 3.3.2.d.',
+      'Harfli kartochkalar, magnit alifbo, ko\'zali daftar, qalamcha',
+      'Fonemik tahlil, harf-tovush, yozuvga tayyorlik'),
+    a('09:40–10:05','ti-math-symbols','','2-mashg\'ulot: Matematika — Geometriya va o\'lchov','Geometrik shakllar: doira, to\'rtburchak, uchburchak, ko\'pburchak. Smentr va o\'lchash: "Qaysi uzunroq?"','4','lesson','M',
+      'Geometrik shakllarni klassifikatsiya qilish, o\'lchov tushunchasi, taqqoslash. 4.2.4.d.',
+      'Geometrik shakllar to\'plami, chizg\'ich, ip',
+      'Geometriya, o\'lchov, qiyoslash, matematik nutq'),
+    a('10:10–10:40','ti-tree','green','Ertalabki sayr','Ob-havo jadvalini to\'ldirish: harorat (sovuq/iliq/issiq), yog\'ingarchilik, shamol. Haftalik tendentsiyani muhokama qilish.','4','main','F',
+      'Ob-havo kuzatuvini mustaqil o\'tkazish va qayd etish. Meteorologik savodxonlik. 4.3.3.d.',
+      'Ob-havo kuzatuv daftari, termometr (xavfsiz)',
+      'Ilmiy kuzatuv, o\'lchov, ma\'lumot yig\'ish'),
+    ...commonPM(),
+    a('15:30–16:00','ti-tools','','Muhandislik loyihasi (STEM) — Suv tegirmoni','Qog\'oz, tayoqcha, plastik stakanchadan suv tegirmoni yasash. Suv quyilganda u aylanishi kerak.','4','main','Mu',
+      'Muhandislik dizayn jarayoni: loyiha → qurish → sinash → takomillashtirish. 4.1.5.d.',
+      'Qog\'oz, tayoqcha, plastik stakan, suv, skoch',
+      'Muhandislik fikrlash, loyiha, test, takomillashtirish'),
+    a('16:00–16:30','ti-music','purple','Xor va milliy qo\'shiq','Guruh birgalikda milliy bolalar qo\'shig\'ini o\'rgana boshlaydi. Partitura rasmini ko\'rish.','5','main',null,
+      'Milliy musiqiy meros, ovozni boshqarish, guruh ijodiy hamkorlik. 5.1.3.d.',
+      'Audio, nota rasmi (bolalar uchun saddalashtirilgan)',
+      'Milliy meros, guruh ovoz, hamkorlik'),
+  ],
+  sesh:[
+    ...common('6-7'),
+    a('09:00–09:30','ti-math-symbols','','1-mashg\'ulot: Matematika — Qo\'shish va ayirish (20 ichida)','10 dan 20 gacha sonlarda qo\'shish va ayirish. So\'z masalalari: "5 ta olma edi, 3 ta berdim, nechta qoldi?"','4','lesson','M',
+      'Arifmetik amallarni 20 ichida mustahkamlash. So\'z masalasini yechish. 4.2.5.d.',
+      'Mayda predmetlar (20ta), raqam kartochkalari, daftar',
+      'Arifmetika, so\'z masala, matematik nutq'),
+    a('09:40–10:05','ti-music','purple','2-mashg\'ulot: Musiqa — Musiqiy savodxonlik','Uzun va qisqa nota (ikki xil belgi), ritm o\'yini. Oddiy notali ritmni chalish.','5','lesson','T',
+      'Musiqiy savodxonlik elementlari: uzun/qisqa nota, ritm yozuvi. 5.1.3.d.',
+      'Doira, 2 xil nota belgisi kartochkasi, qoshiq',
+      'Musiqiy savodxonlik, algoritmik ritm, kodlash'),
+    a('10:10–10:40','ti-tree','green','Sayr — Ekologiya kuzatuvi','Yaqin atrofda axlat/ifloslangan joy topish. "Bu muammo qanday yuzaga kelgan? Biz nima qila olamiz?" — guruh suhbati.','4','main','F',
+      'Ekologik mas\'uliyat, muammo aniqlash va yechim topish. 4.3.4.d.',
+      '—','Ekologik ong, muammo yechish, mas\'uliyat'),
+    ...commonPM(),
+    a('15:30–16:00','ti-cpu','','Algoritmik o\'yin (STEM-T) — Labirint dasturlash','Katta labirint (yer ustida) bo\'ylab "robot-inson" boshqarish. Og\'zaki instruksiya berish: "3 qadam, o\'ng, 2 qadam, to\'xta."','4','main','T',
+      'Algoritmik fikrlash, ketma-ket instruksiyalar, xatoni topib tuzatish (debug). 4.1.5.d.',
+      'Skoch bilan yer ustidagi labirint, to\'siqlar',
+      'Algoritmik fikrlash, debug, yo\'nalish'),
+    a('16:00–16:30','ti-book-2','','Mustaqil o\'qish — Birinchi harflar','Tarbiyachi yordamida "A", "O", "U" harflari bilan yozilgan oddiy so\'zlarni hejalash. Katta harflar.','3','main',null,
+      'O\'qishning birinchi qadamlari: harflarni birlashtirib o\'qish. 3.3.3.d.',
+      'Katta harfli oddiy so\'z kartochkalari (OT, AT, OP)',
+      'O\'qish ko\'nikmasi boshlanishi, harf-tovush'),
+  ],
+  chor:[
+    ...common('6-7'),
+    a('09:00–09:30','ti-flask','green','1-mashg\'ulot: Fan tajribasi — Eruvchanlik','Suvga tuz, shakar, qum, un solib kuzatish. "Qaysi eriydi?" Jadvalga "+/-" belgilash.','4','lesson','F',
+      'Eruvchanlik tushunchasi, ilmiy metod: kuzat → belgila → xulosa. 4.3.3.d.',
+      'Shisha idishlar (4ta), suv, tuz, shakar, qum, un, qalamcha, jadval',
+      'Ilmiy metod, eruvchanlik, ma\'lumot yozish, xulosa'),
+    a('09:40–10:05','ti-pencil','','2-mashg\'ulot: Yozuvga tayyorlik — Chiziq va shakl','Ko\'zali daftarda: to\'g\'ri chiziq, egri chiziq, ilmoqlar. Harflarning asosi sifatida.','3','lesson',null,
+      'Qalam ushlab yozish, qo\'l koordinatsiyasi, harf elementlari. 3.3.2.d.',
+      'Ko\'zali daftar, qalam, liniyali doska',
+      'Grafomotor ko\'nikma, qalam ushlab yozish'),
+    a('10:10–10:40','ti-walk','green','Sayr','O\'simliklarni o\'lchash: ip bilan o\'lchab, uzunini qisqasiga nisbatan ifodalash. "3 baravar uzun" tushunchasi.','4','main','M',
+      'O\'lchov bilan ishlash, nisbiy o\'lchov tushunchasi. 4.2.4.d.',
+      'Ip, qaychi, etiket (yozish uchun)',
+      'O\'lchov, nisbiy taqqoslash, matematik kuzatuv'),
+    ...commonPM(),
+    a('15:30–16:00','ti-building-factory','slate','Loyiha: Mini-bog\' qurish','Bir guruh o\'z "mini-bog\'i" uchun reja tuzadi (qog\'ozda rasm), so\'ngra sandbox/idishlarda amalga oshiradi.','5','main','Mu',
+      'Loyihalash jarayoni: reja → amalga oshirish → taqdim etish. Hamkorlik. 4.1.5.d.',
+      'Qog\'oz, qalam, kichik idish, tuproq, urug\' yoki o\'simlik parcha',
+      'Loyihalash, hamkorlik, taqdimot, ekologik ong'),
+    a('16:00–16:30','ti-masks-theater','pink','Rolli o\'yin — "Maktab" simulyatsiyasi','O\'qituvchi va o\'quvchi rollari. "O\'qituvchi" kichik so\'z masalasini tushuntiradi.','2','main',null,
+      'Maktabga tayyorlik: o\'quvchi roli, tartibli o\'tirish, savol berish. 2.3.3.d.',
+      'Doska (yoki katta qog\'oz), bo\'r yoki marker',
+      'Maktabga tayyorlik, rolli muloqot, o\'quvchi xulqi'),
+  ],
+  pay:[
+    ...common('6-7'),
+    a('09:00–09:30','ti-ball-football','green','1-mashg\'ulot: Jismoniy tarbiya — Jamoa o\'yini','Qoidali komanda o\'yini. Kapitan tanlash, taktika muhokamasi. G\'alaba va mag\'lubiyatni munosib qabul qilish.','1','lesson',null,
+      'Jamoaviy o\'yin, qoidalar, do\'stona musobaqa, hissiyotlarni boshqarish. 1.1.4.d.',
+      'To\'plar, maqsad, komanda belgilari',
+      'Jamoaviy o\'yin, qoidaga rioya, hissiyot boshqarish'),
+    a('09:40–10:05','ti-abc','','2-mashg\'ulot: O\'qishga tayyorlik — So\'z va gap','So\'zlardan gap tuzish. "Bu gap to\'g\'ri yozilganmi?" — xato topish o\'yini. Gap boshiga katta harf.','3','lesson',null,
+      'Gap tuzilmasini anglash, bosh harf va nuqta. Xatolarni topish va tuzatish. 3.3.3.d.',
+      'Xato yozilgan gap kartochkalari (katta harflar), magnit doska',
+      'Gap tuzilmasi, bosh harf, punktuatsiya boshlang\'ich'),
+    a('10:10–10:40','ti-walk','green','Sayr — Qo\'ng\'iroq kuzatuvi','Yaqin atrofdagi binolar, yo\'llar, daraxtlarni kuzatish. "Agar bu ko\'cha bo\'lmaganda nima bo\'lardi?" — tanqidiy savol.','4','main','F',
+      'Muhitni tahlil qilish, "agar bo\'lmaganda" tafakkuri — tanqidiy fikrlash. 4.1.5.d.',
+      '—','Tanqidiy fikrlash, muhit tahlili'),
+    ...commonPM(),
+    a('15:30–16:00','ti-cpu','','STEM-T: Koding o\'yini — "Mamont ketidan yur"','Bolalar juftlikda: biri yo\'riqnoma beradi (chapga 1, to\'g\'ri 2, o\'ng 1), ikkinchisi bajaradi. So\'ngra rollar almashadi.','4','main','T',
+      'Algoritmik fikrlash, yo\'nalish, instruksiya aniqligi. Koding konsepti. 4.1.5.d.',
+      'Grid ko\'rinishidagi yer (katak), mamont rasmi',
+      'Algoritmik fikrlash, yo\'nalish, koding boshlang\'ich'),
+    a('16:00–16:30','ti-chess','slate','Matematika o\'yini — "Bingo 20"','20 gacha sonlar bilan "Bingo" o\'yini. Tarbiyachi misol aytadi (7+5), bola javobni kartochkasida topadi.','4','main','M',
+      'Arifmetik amallarni o\'yin orqali mustahkamlash. 4.2.5.d.',
+      'Bingo kartochkalari (sonlar 1-20), chiplar',
+      'Arifmetika o\'yin orqali, diqqat, raqobat'),
+  ],
+  juma:[
+    ...common('6-7'),
+    a('09:00–09:30','ti-presentation','','1-mashg\'ulot: Mini-konferensiya','Har bola hafta davomida eng qiziqarli o\'rganganini 5-6 gap bilan taqdim etadi. Savol-javob sessiyasi.','3','lesson',null,
+      'Nutq taqdimoti, savol-javob, ommaviy gapirish ko\'nikmasi. 3.1.3.d.',
+      'Taqdimot doskasi, bolalar ishlari va kuzatuv varaqlari',
+      'Ommaviy gapirish, savol javob, xulosalash'),
+    a('09:40–10:05','ti-star','amber','2-mashg\'ulot: Maktabga tayyorlik suhbati','Maktab hayoti: dars, tanaffus, o\'qituvchi, sinf. Maktabga qiziqishlar va xavotirlar muhokamasi.','2','lesson',null,
+      'Maktabga hissiy tayyorlik, xavotirlarni ifodalash, ijobiy munosabat shakllantirish. 2.1.3.d.',
+      'Maktab hayoti rasmlari (dars, bolalar, qo\'ng\'iroq)',
+      'Hissiy tayyorlik, maktabga munosabat, o\'zini ifodalash'),
+    a('10:10–10:40','ti-walk','green','Sayr — Erkin o\'yinlar','Erkin o\'yin. Bolalar o\'z tashabbusi bilan o\'yin tashkil qiladi — kimdir boshchilik qiladi.','1','main',null,
+      'Mustaqil o\'yin tashkil qilish, liderlik, ijtimoiylashuv.',
+      '—','Mustaqillik, liderlik, ijtimoiylashuv'),
+    ...commonPM(),
+    a('15:30–16:30','ti-certificate','amber','Haftalik tantana va refleksiya','Haftaning "Kichik olimlari" e\'lon qilinadi. Portfolio yakunlanadi. "Men o\'rgandim..." gapi bilan aylanma.','2','main',null,
+      'Refleksiya, o\'zini baholash, guruh tantanasi, maktabga tayyorlik hissini mustahkamlash. 2.1.3.d.',
+      'Portfolio, "Diplom" qog\'oz, stiker',
+      'Refleksiya, o\'zini baholash, guruh tantanasi'),
+  ],
+};
+
+var allData = {'3-4':d34,'4-5':d45,'5-6':d56,'6-7':d67};
+
+// ============ STATE ============
+var currentAge = '4-5';
+var currentDay = 'dush';
+
+// ============ RENDER AGE TABS ============
+function renderAgeTabs(){
+  var c = document.getElementById('age-tabs');
+  c.innerHTML = AGES.map(ag=>`
+    <button class="age-tab ${ag.key===currentAge?'active':''}" data-age="${ag.key}"
+      style="${ag.key===currentAge?'background:'+ag.color+';border-color:'+ag.color:''}">
+      <span class="age-main">${ag.label}</span>
+      <span class="age-sub">${ag.sub}</span>
+    </button>
+  `).join('');
+  document.querySelectorAll('.age-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      currentAge=btn.dataset.age;
+      renderAgeTabs();
+      renderSchedule();
+      var ag=AGES.find(a=>a.key===currentAge);
+      document.getElementById('age-label-head').textContent=ag.label;
+    });
+  });
+}
+
+// ============ RENDER SCHEDULE ============
+function renderSchedule(){
+  var items = (allData[currentAge]||{})[currentDay]||[];
+  var ag = AGES.find(a=>a.key===currentAge);
+  var lessons = items.filter(i=>i.type==='lesson').length;
+  var stemCount = items.filter(i=>i.stem).length;
+
+  document.getElementById('sec-title-label').innerHTML=
+    `<i class="ti ti-calendar-event" style="color:${ag.color}"></i> <span>${DAYS[currentDay]}</span> dasturi`;
+
+  document.getElementById('day-summary').innerHTML=`
+    <div class="summary-chip"><i class="ti ti-clock"></i>${items[0]?.time.split('–')[0]||''} — ${items[items.length-1]?.time.split('–')[1]||''}</div>
+    <div class="summary-chip"><i class="ti ti-school"></i><b>${lessons}</b> ta mashg'ulot</div>
+    <div class="summary-chip"><i class="ti ti-list-check"></i><b>${items.length}</b> ta faoliyat</div>
+    ${stemCount?`<div class="summary-chip"><i class="ti ti-flask" style="color:var(--stem-f)"></i><b>${stemCount}</b> ta STEM</div>`:''}
+  `;
+
+  var sohaLabels={'1':'Jismoniy','2':'Ijtimoiy-hissiy','3':'Nutq','4':'Bilish','5':'Ijodiy'};
+  var sohaClasses={'1':'soha1','2':'soha2','3':'soha3','4':'soha4','5':'soha5'};
+  var timeCls={meal:'meal',rest:'rest'};
+  var typeTags={
+    lesson:`<span class="tag lesson">Mashg'ulot</span>`,
+    rest:`<span class="tag rest">Dam olish</span>`,
+  };
+
+  document.getElementById('sched-list').innerHTML = items.map((item,idx)=>{
+    var stemHtml = item.stem
+      ? `<span class="stem-badge ${item.stem}"><i class="ti ${STEM[item.stem]?.icon}"></i>${STEM[item.stem]?.label}</span>`
+      : '';
+    var sohaHtml = item.soha
+      ? `<span class="tag ${sohaClasses[item.soha]}">${sohaLabels[item.soha]}</span>`
+      : '';
+    return `
+    <div class="sched-item" onclick="toggleItem(this,${idx})">
+      <div class="time-badge ${timeCls[item.type]||''}">${item.time}</div>
+      <div class="sched-icon-wrap ${item.ic}"><i class="ti ${item.icon}"></i></div>
+      <div class="sched-body">
+        <div class="sched-name">${item.name}</div>
+        <div class="sched-desc">${item.desc}</div>
+      </div>
+      <div class="sched-tags">
+        ${stemHtml}
+        ${sohaHtml}
+        ${typeTags[item.type]||''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleItem(el, idx){
+  var items = (allData[currentAge]||{})[currentDay]||[];
+  var item = items[idx];
+  if(!item||(!item.maqsad && !item.mat && !item.rivoj)) return;
+
+  var open = el.classList.contains('open');
+  document.querySelectorAll('.sched-item').forEach(e=>e.classList.remove('open'));
+  if(!open){
+    el.classList.add('open');
+    // Build expand content inside the item
+    if(!el.querySelector('.sched-expand')){
+      var stemBlock = item.stem ? `
+        <div class="expand-box" style="border-left:3px solid ${STEM[item.stem]?{F:'#10b981',M:'#3b82f6',Mu:'#f59e0b',T:'#8b5cf6'}[item.stem]:'#ccc'}">
+          <div class="expand-box-title"><i class="ti ${STEM[item.stem]?.icon}"></i> STEM: ${STEM[item.stem]?.label}</div>
+          <p>${STEM[item.stem]?.desc}</p>
+        </div>` : '';
+      var sohaFull = item.soha ? SOHA[item.soha]?.label : '';
+      var html = `<div class="sched-expand">
+        <div class="expand-grid">
+          <div class="expand-box">
+            <div class="expand-box-title"><i class="ti ti-target"></i> Mashg'ulot maqsadi</div>
+            <p>${item.maqsad||'—'}</p>
+          </div>
+          <div class="expand-box">
+            <div class="expand-box-title"><i class="ti ti-tool"></i> Kerakli materiallar</div>
+            <p>${item.mat||'—'}</p>
+          </div>
+          ${stemBlock}
+          <div class="expand-box ${item.stem?'':'full'}">
+            <div class="expand-box-title"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</div>
+            <p>${sohaFull}${item.rivoj&&item.rivoj!=='—'?' · '+item.rivoj:''}</p>
+          </div>
+        </div>
+      </div>`;
+      el.insertAdjacentHTML('beforeend', html);
+    }
+  }
+}
+
+// ============ DAY TABS ============
+document.querySelectorAll('.day-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.day-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentDay=btn.dataset.day;
+    renderSchedule();
+  });
+});
+
+// ============ SIDEBAR ============
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closeModal()}});
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
+
+// ============ MODAL ============
+function handleModalBg(e){if(e.target===document.getElementById('modal'))closeModal()}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.body.style.overflow=''}
+
+// ============ ANIMATED BG ============
 (function(){
-  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  let W,H;
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
+  var W,H;
   function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
   resize();window.addEventListener('resize',resize);
-  const types=['star','heart','circle','abc','flower'];
-  const colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
+  var colors=['#93c5fd','#c4b5fd','#fdba74','#86efac','#f9a8d4','#67e8f9','#fde68a'];
   function rnd(a,b){return a+Math.random()*(b-a)}
-  const shapes=[];
-  for(let i=0;i<28;i++)shapes.push({t:types[Math.floor(Math.random()*types.length)],color:colors[Math.floor(Math.random()*colors.length)],size:rnd(14,32),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.3,0.3),vy:rnd(-0.4,-0.1),rot:rnd(0,Math.PI*2),vrot:rnd(-0.008,0.008),op:rnd(0.18,0.45)});
-  function drawStar(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<5;i++){const a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.45)*Math.cos(ia),cy-(r*.45)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
-  function drawHeart(ctx,cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
+  var shapes=[];
+  for(var i=0;i<26;i++)shapes.push({color:colors[Math.floor(Math.random()*colors.length)],size:rnd(12,28),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-0.25,0.25),vy:rnd(-0.35,-0.08),rot:rnd(0,Math.PI*2),vrot:rnd(-0.007,0.007),op:rnd(0.15,0.4),t:Math.floor(Math.random()*3)});
+  function drawStar(cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();for(var i=0;i<5;i++){var a=Math.PI/2+i*Math.PI*2/5,ia=a+Math.PI/5;i===0?ctx.moveTo(cx+r*Math.cos(a),cy-r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy-r*Math.sin(a));ctx.lineTo(cx+(r*.42)*Math.cos(ia),cy-(r*.42)*Math.sin(ia))}ctx.closePath();ctx.fill();ctx.restore()}
+  function drawHeart(cx,cy,r,col,op){ctx.save();ctx.globalAlpha=op;ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(cx,cy+r*.5);ctx.bezierCurveTo(cx-r,cy-r*.3,cx-r*1.3,cy+r*.4,cx,cy+r*1.2);ctx.bezierCurveTo(cx+r*1.3,cy+r*.4,cx+r,cy-r*.3,cx,cy+r*.5);ctx.closePath();ctx.fill();ctx.restore()}
   function frame(){
     ctx.clearRect(0,0,W,H);
     shapes.forEach(s=>{
@@ -203,133 +930,19 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       if(s.y<-60){s.y=H+40;s.x=rnd(0,W)}
       if(s.x<-60)s.x=W+40;if(s.x>W+60)s.x=-40;
       ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);
-      if(s.t==='star')drawStar(ctx,0,0,s.size,s.color,s.op);
-      else if(s.t==='heart')drawHeart(ctx,0,0,s.size*.7,s.color,s.op);
-      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.6,0,Math.PI*2);ctx.fill()}
+      if(s.t===0)drawStar(0,0,s.size,s.color,s.op);
+      else if(s.t===1)drawHeart(0,0,s.size*.65,s.color,s.op);
+      else{ctx.globalAlpha=s.op;ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(0,0,s.size*.55,0,Math.PI*2);ctx.fill()}
       ctx.restore();
     });
     requestAnimationFrame(frame);
   }
   frame();
 })();
-</script>
 
-<script>
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden';}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow='';}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex';}
-checkHamburger();window.addEventListener('resize',checkHamburger);
-</script>
-
-<script>
-// icon: [tabler class, color class]
-var dailyData={
-  dush:[
-    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Salomlashish, Kayfiyat doirasi',type:'main'},
-    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Jismoniy mashqlar (1-soha)',type:'main'},
-    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'ti-message-circle',ic:'',name:"1-mashg'ulot: Nutq o'stirish",desc:"Mening oilam — suhbat (3-soha)",type:'lesson'},
-    {time:'09:35–10:00',icon:'ti-brush',ic:'purple',name:"2-mashg'ulot: Tasviriy san'at",desc:"Oila rasmini chizish (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'ti-tree',ic:'green',name:'Ertalabki sayr',desc:'Tabiat kuzatuvi (1-soha)',type:'main'},
-    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'ti-puzzle',ic:'',name:"Didaktik o'yin",desc:"Kim yashaydi (4-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'ti-music',ic:'purple',name:"Qo'shiq va raqs",desc:'Mavzuga mos (5-soha)',type:'main'},
-  ],
-  sesh:[
-    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
-    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Harakatli mashqlar',type:'main'},
-    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqil ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'ti-math-symbols',ic:'',name:"1-mashg'ulot: FEMP",desc:'Sonlar 1 dan 5 gacha (4-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'ti-music',ic:'purple',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq, ritm, raqs (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'ti-tree',ic:'green',name:'Sayr',desc:'Tabiat kuzatuvi',type:'main'},
-    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'ti-building-factory',ic:'slate',name:"Qurilish o'yini",desc:"Kubiklar, konstruktor (4-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'ti-book-2',ic:'',name:"Kitob o'qish",desc:'Ertak tinglash',type:'main'},
-  ],
-  chor:[
-    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Kayfiyat aniqlash',type:'main'},
-    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Musiqa bilan',type:'main'},
-    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'09:00–09:25',icon:'ti-leaf',ic:'green',name:"1-mashg'ulot: Tabiat",desc:"Kuz fasli, o'simliklar (4-soha)",type:'lesson'},
-    {time:'09:35–10:00',icon:'ti-cut',ic:'purple',name:"2-mashg'ulot: Applikatsiya",desc:'Kuz bargi (1+5-soha)',type:'lesson'},
-    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Barg yig'ish, tabiat",type:'main'},
-    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Mustaqillik',type:'meal'},
-    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'ti-masks-theater',ic:'purple',name:"Rolli o'yin",desc:"Do'kon o'yini (2-soha)",type:'main'},
-    {time:'16:00–16:30',icon:'ti-pencil',ic:'',name:'Erkin ijod',desc:'Chizish, plastilin (5-soha)',type:'main'},
-  ],
-  pay:[
-    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Salomlashish',type:'main'},
-    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Sport mashqlari',type:'main'},
-    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Mustaqillik',type:'meal'},
-    {time:'09:00–09:25',icon:'ti-ball-football',ic:'green',name:"1-mashg'ulot: Jismoniy tarbiya",desc:'Harakat, koordinatsiya (1-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'ti-abc',ic:'',name:"2-mashg'ulot: Savodxonlik",desc:"Tovush, harf, bo'g'im (3-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Harakatli o'yinlar",type:'main'},
-    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:00',icon:'ti-brush',ic:'purple',name:"Tasviriy san'at",desc:'Plastilin (5-soha)',type:'main'},
-    {time:'16:00–16:30',icon:'ti-chess',ic:'slate',name:"Didaktik o'yin",desc:"Mantiqiy o'yin (4-soha)",type:'main'},
-  ],
-  juma:[
-    {time:'07:30–08:00',icon:'ti-sun',ic:'amber',name:'Bolalarni qabul qilish',desc:'Hafta yakunini eslash',type:'main'},
-    {time:'08:00–08:20',icon:'ti-run',ic:'green',name:'Ertalabki gimnastika',desc:'Qiziqarli mashqlar',type:'main'},
-    {time:'08:20–08:45',icon:'ti-tools-kitchen-2',ic:'amber',name:'Nonushta',desc:'Ovqatlanish',type:'meal'},
-    {time:'09:00–09:25',icon:'ti-masks-theater',ic:'purple',name:"1-mashg'ulot: Teatr faoliyati",desc:'Ertak sahnalashtirish (2+5-soha)',type:'lesson'},
-    {time:'09:35–10:00',icon:'ti-music',ic:'purple',name:"2-mashg'ulot: Musiqa",desc:"Qo'shiq va raqs (5-soha)",type:'lesson'},
-    {time:'10:05–10:30',icon:'ti-walk',ic:'green',name:'Sayr',desc:"Erkin o'yinlar",type:'main'},
-    {time:'12:00–12:30',icon:'ti-soup',ic:'amber',name:'Tushlik',desc:'Ovqat madaniyati',type:'meal'},
-    {time:'12:30–15:00',icon:'ti-moon',ic:'rest',name:'Kunduzgi uyqu',desc:'Dam olish',type:'rest'},
-    {time:'15:30–16:30',icon:'ti-star',ic:'amber',name:'Haftalik refleksiya',desc:"Biz nimani o'rgandik",type:'main'},
-  ]
-};
-
-var dayNames={dush:'Dushanba',sesh:'Seshanba',chor:'Chorshanba',pay:'Payshanba',juma:'Juma'};
-
-function showDay(day){
-  var items=dailyData[day];
-  var lessons=items.filter(i=>i.type==='lesson').length;
-  var start=items[0].time.split('–')[0];
-  var end=items[items.length-1].time.split('–')[1];
-
-  document.getElementById('day-label').textContent=dayNames[day];
-  document.getElementById('day-summary').innerHTML=`
-    <div class="summary-chip"><i class="ti ti-map-pin"></i><b>${dayNames[day]}</b></div>
-    <div class="summary-chip"><i class="ti ti-clock"></i>${start} — ${end}</div>
-    <div class="summary-chip"><i class="ti ti-school"></i>${lessons} ta mashg'ulot</div>
-    <div class="summary-chip"><i class="ti ti-list-check"></i>${items.length} ta faoliyat</div>
-  `;
-
-  var timeCls={meal:'meal',rest:'rest'};
-  var tagMap={
-    lesson:'<span class="sched-tag main">Mashg\'ulot</span>',
-    rest:'<span class="sched-tag rest">Dam olish</span>'
-  };
-
-  document.getElementById('day-content').innerHTML=items.map(i=>`
-    <div class="sched-item">
-      <div class="time-badge ${timeCls[i.type]||''}">${i.time}</div>
-      <div class="sched-icon-wrap ${i.ic}"><i class="ti ${i.icon}"></i></div>
-      <div class="sched-body">
-        <div class="sched-name">${i.name}</div>
-        <div class="sched-desc">${i.desc}</div>
-      </div>
-      ${tagMap[i.type]||''}
-    </div>
-  `).join('');
-}
-
-document.querySelectorAll('.day-tab').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    document.querySelectorAll('.day-tab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    showDay(btn.dataset.day);
-  });
-});
-
-showDay('dush');
+// ============ INIT ============
+renderAgeTabs();
+renderSchedule();
 </script>
 </body>
 </html>
