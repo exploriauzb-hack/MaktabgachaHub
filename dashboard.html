@@ -20,7 +20,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
 .sidebar-overlay.show{display:block}
-.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;transition:transform .25s ease}
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow:hidden;transition:transform .25s ease}
+.sidebar-nav{flex:1;overflow-y:auto;min-height:0}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
 .logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
@@ -176,6 +177,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
+  <div class="sidebar-nav">
   <div class="sidebar-section">Asosiy</div>
   <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
   <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
@@ -184,18 +186,18 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
   <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
-  <!-- ✅ YANGI: Vaziyatlar -->
   <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
   <div class="sidebar-section">Professional</div>
-  <a class="nav-item locked"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a class="nav-item locked"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a class="nav-item locked"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
-  <a class="nav-item locked"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a class="nav-item locked"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <a class="nav-item locked" id="side-games"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item locked" id="side-songs"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a class="nav-item locked" id="side-activities"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
+  <a class="nav-item locked" id="side-attestation"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a class="nav-item locked" id="side-portfolio"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
   <div class="sidebar-section">Korporativ</div>
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  </div>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -292,7 +294,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="mod-title">Konspektlar</div>
       <div class="mod-sub">3 ta ko'rish</div>
     </a>
-    <!-- ✅ YANGI: Vaziyatlar mod-card -->
     <a href="pages/vaziyat.html" class="mod-card">
       <div class="icon blue"><i class="ti ti-bulb"></i></div>
       <div class="mod-title">Vaziyatlar</div>
@@ -375,7 +376,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="mf-item"><i class="ti ti-check"></i> Professional portfolio yaratish</div>
       <div class="mf-item"><i class="ti ti-check"></i> Cheksiz test ishlash</div>
       <div class="mf-item"><i class="ti ti-check"></i> Didaktik o'yinlar</div>
-      <!-- ✅ YANGI -->
       <div class="mf-item"><i class="ti ti-check"></i> Vaziyatlar — PRO variantlar (3, 4, 5)</div>
     </div>
     <div class="modal-price">
@@ -489,6 +489,12 @@ window.addEventListener('load',async()=>{
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);if(!el)return;
     if(proUser){const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
+    else{el.onclick=openPremiumModal;}
+  });
+  const sideCards={'side-games':{href:'pages/oyinlar.html'},'side-songs':{href:'pages/qoshiqlar.html'},'side-activities':{href:'pages/mashgulot.html'},'side-attestation':{href:'pages/attestatsiya.html'},'side-portfolio':{href:'pages/portfolio.html'}};
+  Object.entries(sideCards).forEach(([id,cfg])=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(proUser){const b=el.querySelector('.badge');if(b)b.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
     else{el.onclick=openPremiumModal;}
   });
   const xp=profile?.xp||0;
