@@ -185,7 +185,7 @@ function injectPremiumModal() {
           </div>
           <div class="pm-discount">−38%</div>
         </div>
-        <button class="pm-btn-buy" onclick="window.location.href='premium.html'">
+        <button class="pm-btn-buy" onclick="window.location.href=(location.pathname.includes('/pages/')?'../':'')+'premium.html'">
           <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
         </button>
         <button class="pm-btn-skip" onclick="closePremiumModal()">Keyinroq</button>
