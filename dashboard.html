@@ -5,336 +5,187 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0f1117;
-  --surface:#16191f;
-  --surface2:#1c2029;
-  --border:#252933;
-  --border2:#2e3340;
-  --text:#f0f4ff;
-  --text2:#8b92a5;
-  --text3:#5a6072;
-  --accent:#3b82f6;
-  --accent2:#60a5fa;
-  --accent-glow:rgba(59,130,246,.18);
-  --green:#22c55e;
-  --green-dim:rgba(34,197,94,.12);
-  --amber:#f59e0b;
-  --amber-dim:rgba(245,158,11,.12);
-  --red:#ef4444;
-  --pro:#8b5cf6;
-  --pro2:#a78bfa;
-  --pro-glow:rgba(139,92,246,.18);
-  --pro-dim:rgba(139,92,246,.12);
-  --sidebar:252px;
-  --bottomnav:64px;
-  --radius:12px;
-  --radius-sm:8px;
+  --bg:#f5f7ff;
+  --white:#ffffff;
+  --border:#e4e8f0;
+  --border2:#d0d7e8;
+  --text:#1a1f36;
+  --text2:#6b7694;
+  --text3:#9aa3bf;
+  --accent:#1e40af;
+  --accent2:#2563eb;
+  --accent-soft:#eff6ff;
+  --accent-mid:#3b82f6;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --red:#b91c1c;
+  --pro:#7c3aed;
+  --pro2:#8b5cf6;
+  --pro-soft:#f5f3ff;
+  --topnav:62px;
+  --radius:14px;
+  --radius-sm:10px;
+  --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
+  --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
 }
 
-body{
-  font-family:'Inter',sans-serif;
-  color:var(--text);
-  font-size:14px;
-  line-height:1.5;
-  display:flex;
-  min-height:100vh;
-  background:var(--bg);
-  overflow-x:hidden;
-}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
 
-/* ── CANVAS BG ── */
-#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
-
-/* ── SIDEBAR ── */
-.sidebar-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.6);z-index:20;
-  backdrop-filter:blur(4px);
-}
-.sidebar{
-  z-index:30;width:var(--sidebar);
-  background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;height:100vh;
-  overflow-y:auto;
-}
-.sidebar-logo{
-  padding:20px 16px 16px;
+/* ── TOP NAV (replaces sidebar) ── */
+.topnav{
+  position:sticky;top:0;z-index:100;
+  height:var(--topnav);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;
+  padding:0 20px;gap:10px;
 }
-.logo-icon{
-  width:34px;height:34px;
-  background:linear-gradient(135deg,var(--accent),#6366f1);
-  border-radius:9px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:17px;flex-shrink:0;
-  box-shadow:0 0 12px var(--accent-glow);
-}
-.logo-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
-.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--text3);margin-top:2px}
-.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;padding:4px}
+.tn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+.tn-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--accent2),#6366f1);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.tn-logo-text{font-size:13.5px;font-weight:700;color:var(--text);display:none}
+.tn-logo-text span{display:block;font-size:10.5px;font-weight:400;color:var(--text3)}
 
-.sidebar-section{
-  padding:18px 16px 6px;
-  font-size:10px;font-weight:700;
-  color:var(--text3);letter-spacing:.1em;text-transform:uppercase;
-}
-.nav-item{
-  display:flex;align-items:center;gap:9px;
-  padding:8px 10px;border-radius:var(--radius-sm);
-  margin:1px 8px;
-  color:var(--text2);text-decoration:none;
-  font-size:13px;font-weight:500;cursor:pointer;
-  transition:background .15s,color .15s;
-  position:relative;
-}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{
-  background:var(--accent-glow);
-  color:var(--accent2);
-}
-.nav-item.active::before{
-  content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);
-  width:3px;height:60%;background:var(--accent);
-  border-radius:0 3px 3px 0;
-}
-.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
-.nav-item .badge{
-  margin-left:auto;font-size:10px;font-weight:700;
-  padding:2px 7px;border-radius:20px;
-  background:var(--pro-dim);color:var(--pro2);
-}
-.nav-item .badge.soon{background:rgba(255,255,255,.05);color:var(--text3)}
+.tn-links{display:flex;align-items:center;gap:2px;margin-left:8px;flex:1;overflow-x:auto;scrollbar-width:none}
+.tn-links::-webkit-scrollbar{display:none}
+.tn-link{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:99px;text-decoration:none;color:var(--text2);font-size:12.5px;font-weight:600;white-space:nowrap;transition:background .15s,color .15s;flex-shrink:0}
+.tn-link:hover{background:var(--accent-soft);color:var(--accent2)}
+.tn-link.active{background:var(--accent-soft);color:var(--accent2)}
+.tn-link i{font-size:16px}
 
-.sidebar-bottom{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
-.user-card{
-  display:flex;align-items:center;gap:10px;
-  padding:10px;border-radius:var(--radius-sm);
-  background:var(--surface2);
-}
-.avatar{
-  width:32px;height:32px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),#6366f1);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:12px;font-weight:700;flex-shrink:0;
-}
-.user-info .name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
-.user-info .plan{font-size:11px;color:var(--text3)}
-.btn-logout{
-  display:flex;align-items:center;gap:6px;
-  padding:7px 10px;border-radius:var(--radius-sm);
-  border:1px solid var(--border2);background:transparent;
-  color:var(--text2);font-size:12px;font-weight:500;
-  cursor:pointer;width:100%;margin-top:8px;
-  transition:all .15s;
-}
-.btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
+.tn-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.tn-more-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--bg);border:1px solid var(--border);color:var(--text2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.tn-more-btn:hover{background:var(--border)}
+.tn-more-btn i{font-size:16px}
+.tn-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
+
+/* ── MORE SHEET (used on ALL screen sizes now) ── */
+.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.4);z-index:300;backdrop-filter:blur(3px)}
+.more-sheet-overlay.show{display:block}
+.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:310;background:var(--white);border-radius:20px 20px 0 0;max-height:82vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(15,20,50,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
+.more-sheet.show{display:block;transform:translateY(0)}
+.more-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto}
+.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
+.more-sheet-hdr h3{font-size:15px;font-weight:700;color:var(--text)}
+.more-sheet-close{background:var(--bg);border:1px solid var(--border);width:30px;height:30px;border-radius:8px;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
+.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
+.more-item:active{background:var(--bg)}
+.more-item .mi-icon{width:46px;height:46px;border-radius:13px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:21px}
+.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro2)}
+.more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
+.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
+.more-item .mi-badge{position:absolute;top:6px;right:4px;font-size:8px;font-weight:700;padding:2px 5px;border-radius:20px;background:var(--pro2);color:#fff}
+.more-sheet-section{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:10px 18px 4px}
 
 /* ── MAIN ── */
-.main{
-  position:relative;z-index:2;
-  margin-left:var(--sidebar);
-  flex:1;padding:28px 32px;
-  max-width:980px;
-}
+.main{position:relative;z-index:2;padding:20px 20px 50px;max-width:1080px;margin:0 auto}
 
-/* ── TOPBAR ── */
-.topbar{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  margin-bottom:28px;gap:12px;
-}
-.topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.btn-hamburger{
-  display:none;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-sm);width:38px;height:38px;
-  align-items:center;justify-content:center;
-  cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;
-  transition:background .15s;
-}
-.btn-hamburger:hover{background:var(--surface2)}
-.topbar h1{
-  font-size:22px;font-weight:700;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  color:var(--text);
-}
-.topbar h1 span{color:var(--accent2)}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* ── HERO SLIDER ── */
+.hero-slider{position:relative;border-radius:18px;overflow:hidden;margin-bottom:22px;height:240px;box-shadow:var(--shadow-md)}
+.hero-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.65,0,.35,1)}
+.hero-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;background-size:cover;background-position:center}
+.hero-slide::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(15,23,80,.78) 0%,rgba(30,58,138,.55) 45%,rgba(30,58,138,.15) 100%)}
+.hero-slide-content{position:relative;z-index:1;padding:0 36px;max-width:560px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:99px;margin-bottom:12px;backdrop-filter:blur(4px)}
+.hero-title{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hero-desc{font-size:13px;color:rgba(255,255,255,.9);line-height:1.6;margin-bottom:16px;max-width:460px}
+.hero-cta{display:inline-flex;align-items:center;gap:7px;background:#fff;color:var(--accent);font-size:13px;font-weight:700;padding:10px 20px;border-radius:9px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .15s}
+.hero-cta:hover{transform:translateY(-2px)}
+.hero-dots{position:absolute;bottom:16px;left:36px;z-index:2;display:flex;gap:6px}
+.hero-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .2s,width .2s}
+.hero-dot.active{background:#fff;width:22px;border-radius:99px}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .15s}
+.hero-arrow:hover{background:rgba(255,255,255,.3)}
+.hero-arrow.prev{left:14px}
+.hero-arrow.next{right:14px}
 
-.plan-pill{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 13px;border-radius:20px;
-  font-size:12px;font-weight:600;
-  background:rgba(59,130,246,.12);color:var(--accent2);
-  border:1px solid rgba(59,130,246,.2);
-  white-space:nowrap;
-}
-.plan-pill.pro{
-  background:var(--pro-dim);color:var(--pro2);
-  border-color:rgba(139,92,246,.25);
-}
-.level-pill{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 13px;border-radius:20px;
-  font-size:12px;font-weight:500;
-  background:var(--surface2);color:var(--text2);
-  border:1px solid var(--border2);white-space:nowrap;
-}
+/* ── WELCOME ROW ── */
+.welcome-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.welcome-text h1{font-size:18px;font-weight:700;color:var(--text)}
+.welcome-text h1 span{color:var(--accent2)}
+.welcome-text p{font-size:12px;color:var(--text3);margin-top:2px}
+.welcome-badges{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);border:1px solid #bfdbfe;white-space:nowrap}
+.plan-pill.pro{background:var(--pro-soft);color:var(--pro2);border-color:#ddd6fe}
+.level-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
 
 /* ── PREMIUM BANNER ── */
 .premium-banner{
-  background:linear-gradient(135deg,#1e3a8a 0%,#312e81 50%,#4c1d95 100%);
-  border:1px solid rgba(139,92,246,.3);
-  border-radius:var(--radius);
-  padding:22px 26px;
+  background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 60%,#7c3aed 100%);
+  border-radius:var(--radius);padding:22px 26px;
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:24px;gap:16px;
-  position:relative;overflow:hidden;
-  box-shadow:0 4px 24px rgba(139,92,246,.2);
+  margin-bottom:20px;gap:16px;position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(37,99,235,.25);
 }
-.premium-banner::before{
-  content:'';position:absolute;right:-40px;top:-40px;
-  width:160px;height:160px;
-  background:rgba(255,255,255,.04);border-radius:50%;
-}
-.premium-banner::after{
-  content:'';position:absolute;right:80px;bottom:-50px;
-  width:100px;height:100px;
-  background:rgba(255,255,255,.03);border-radius:50%;
-}
+.premium-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%}
+.premium-banner::after{content:'';position:absolute;right:70px;bottom:-40px;width:90px;height:90px;background:rgba(255,255,255,.04);border-radius:50%}
 .premium-banner-left{display:flex;align-items:center;gap:16px;z-index:1}
-.premium-banner-icon{
-  width:46px;height:46px;
-  background:rgba(255,255,255,.1);border-radius:12px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  border:1px solid rgba(255,255,255,.15);
-}
+.premium-banner-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
 .premium-banner-icon i{font-size:22px;color:#fde68a}
 .premium-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
-.premium-banner p{font-size:12px;color:#c7d2fe}
+.premium-banner p{font-size:12px;color:#bfdbfe}
 .premium-features{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
-.pf-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#a5b4fc}
+.pf-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#c7d2fe}
 .pf-item i{font-size:13px;color:#86efac}
-.btn-premium{
-  background:#fff;color:#1e3a8a;
-  font-size:13px;font-weight:700;
-  padding:10px 20px;border-radius:9px;border:none;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;
-  display:flex;align-items:center;gap:6px;
-  transition:transform .15s,box-shadow .15s;
-  box-shadow:0 2px 12px rgba(0,0,0,.2);
-}
-.btn-premium:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
-.btn-premium i{font-size:14px;color:var(--pro)}
+.btn-premium{background:#fff;color:var(--accent);font-size:13px;font-weight:700;padding:10px 22px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.btn-premium:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.btn-premium i{font-size:14px;color:var(--pro2)}
 
 /* ── STATS ── */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
-.stat-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:16px 18px;
-  position:relative;overflow:hidden;
-  transition:border-color .2s,box-shadow .2s;
-}
-.stat-card:hover{border-color:var(--border2);box-shadow:0 4px 16px rgba(0,0,0,.2)}
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--accent),transparent);
-  opacity:.5;
-}
-.stat-card .val{
-  font-size:28px;font-weight:700;color:var(--text);
-  margin-bottom:4px;letter-spacing:-.02em;
-}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.stat-card:hover{box-shadow:var(--shadow-md)}
+.stat-card .val{font-size:30px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.02em}
 .stat-card .lbl{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px}
-.stat-card .lbl i{font-size:14px;color:var(--accent)}
+.stat-card .lbl i{font-size:14px;color:var(--accent-mid)}
 
-/* ── XP CARD ── */
-.xp-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:16px 18px;
-  margin-bottom:28px;
-}
-.xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px;flex-wrap:wrap}
+/* ── XP ── */
+.xp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;box-shadow:var(--shadow)}
+.xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
 .xp-header span{font-size:12px;color:var(--text3)}
 .xp-header strong{font-size:13px;color:var(--text);font-weight:600}
-.xp-bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden}
-.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent),#818cf8);border-radius:99px;transition:width .5s ease}
+.xp-bar{height:7px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#818cf8);border-radius:99px;transition:width .5s ease}
 
-/* ── SECTION TITLES ── */
-.sec-title{
-  font-size:11px;font-weight:700;color:var(--text3);
-  letter-spacing:.09em;text-transform:uppercase;
-  margin-bottom:14px;
-  display:flex;align-items:center;gap:7px;
-}
-.sec-title::after{
-  content:'';flex:1;height:1px;background:var(--border);
-}
-.sec-title i{font-size:14px;color:var(--text3)}
+/* ── SECTION TITLE ── */
+.sec-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-title i{font-size:14px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-title-link{margin-left:auto;font-size:11px;font-weight:600;color:var(--accent2);text-decoration:none;letter-spacing:0;text-transform:none;cursor:pointer;flex:none}
 
-/* ── MODULE CARDS ── */
+/* ── MOD CARDS ── */
 .mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
 .mod-card{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:16px;
-  text-decoration:none;color:inherit;
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;text-decoration:none;color:inherit;
   display:flex;flex-direction:column;gap:3px;
-  transition:border-color .15s,background .15s,box-shadow .15s,transform .15s;
+  transition:border-color .15s,box-shadow .15s,transform .15s;
   cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
 }
-.mod-card:hover{
-  border-color:rgba(59,130,246,.4);
-  background:var(--surface2);
-  box-shadow:0 4px 16px rgba(59,130,246,.1);
-  transform:translateY(-2px);
-}
-.mod-card.locked:hover{
-  border-color:rgba(139,92,246,.35);
-  background:var(--surface2);
-  box-shadow:0 4px 16px var(--pro-glow);
-  transform:translateY(-2px);
-}
-.mod-card .icon{
-  width:34px;height:34px;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:10px;font-size:17px;flex-shrink:0;
-}
-.mod-card .icon.blue{background:rgba(59,130,246,.12);color:var(--accent2)}
-.mod-card .icon.green{background:var(--green-dim);color:var(--green)}
-.mod-card .icon.amber{background:var(--amber-dim);color:var(--amber)}
-.mod-card .icon.purple{background:var(--pro-dim);color:var(--pro2)}
-.mod-card .icon.slate{background:rgba(255,255,255,.05);color:var(--text3)}
-
-.mod-title{font-size:13px;font-weight:600;line-height:1.3;color:var(--text)}
-.mod-sub{font-size:11px;color:var(--text2);line-height:1.3;margin-top:2px}
-.lock-tag{
-  position:absolute;top:10px;right:10px;
-  font-size:9px;font-weight:700;padding:2px 7px;
-  border-radius:20px;background:var(--pro-dim);color:var(--pro2);
-  border:1px solid rgba(139,92,246,.2);
-}
-.lock-tag.soon{
-  background:rgba(255,255,255,.05);color:var(--text3);
-  border-color:var(--border);
-}
+.mod-card:hover{border-color:var(--accent-mid);box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
+.mod-card.locked:hover{border-color:#c4b5fd;box-shadow:0 4px 16px rgba(124,58,237,.1);transform:translateY(-2px)}
+.mod-card .icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px;flex-shrink:0}
+.mod-card .icon.blue{background:var(--accent-soft);color:var(--accent2)}
+.mod-card .icon.green{background:var(--green-soft);color:var(--green)}
+.mod-card .icon.amber{background:var(--amber-soft);color:var(--amber)}
+.mod-card .icon.purple{background:var(--pro-soft);color:var(--pro2)}
+.mod-card .icon.slate{background:#f1f5f9;color:#94a3b8}
+.mod-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
+.mod-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3}
+.lock-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
+.lock-tag.soon{background:#f1f5f9;color:#94a3b8;border-color:#e2e8f0}
 
 /* ── TEST ROWS ── */
-.test-row{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:13px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:8px;transition:border-color .15s;
-}
+.test-row{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;box-shadow:var(--shadow);transition:border-color .15s}
 .test-row:hover{border-color:var(--border2)}
 .test-row .test-name{font-size:13px;font-weight:500;color:var(--text)}
 .test-row .test-date{font-size:11px;color:var(--text3);margin-top:2px}
@@ -343,221 +194,91 @@ body{
 .test-score.mid{color:var(--amber)}
 .test-score.low{color:var(--red)}
 
-.empty-state{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:28px;
-  text-align:center;color:var(--text2);font-size:13px;
-}
+.empty-state{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text2);font-size:13px;box-shadow:var(--shadow)}
 .empty-state a{color:var(--accent2);text-decoration:none;font-weight:500}
 
 /* ── MODAL ── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.7);z-index:200;
-  align-items:center;justify-content:center;
-  padding:16px;backdrop-filter:blur(6px);
-}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.5);z-index:400;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
-.modal{
-  background:var(--surface2);
-  border:1px solid var(--border2);
-  border-radius:16px;padding:28px;
-  max-width:480px;width:100%;
-  position:relative;
-  box-shadow:0 24px 64px rgba(0,0,0,.5);
-}
-.modal-close{
-  position:absolute;top:14px;right:14px;
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:8px;width:30px;height:30px;
-  cursor:pointer;color:var(--text2);font-size:16px;
-  display:flex;align-items:center;justify-content:center;
-}
+.modal{background:var(--white);border-radius:16px;padding:28px;max-width:480px;width:100%;position:relative;box-shadow:0 24px 64px rgba(15,20,50,.2)}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
 .modal-close:hover{background:var(--border)}
-.modal-icon{
-  width:52px;height:52px;
-  background:var(--pro-dim);border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:16px;border:1px solid rgba(139,92,246,.25);
-}
+.modal-icon{width:52px;height:52px;background:var(--pro-soft);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid #ddd6fe}
 .modal-icon i{font-size:26px;color:var(--pro2)}
 .modal h2{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
 .modal p{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.65}
 .modal-features{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
 .mf-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
 .mf-item i{font-size:16px;color:var(--green);flex-shrink:0}
-.modal-price{
-  background:var(--pro-dim);border:1px solid rgba(139,92,246,.2);
-  border-radius:10px;padding:14px 16px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:20px;
-}
-.modal-price .price{font-size:22px;font-weight:700;color:var(--pro2)}
+.modal-price{background:var(--pro-soft);border:1px solid #ddd6fe;border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-price .price{font-size:22px;font-weight:800;color:var(--pro)}
 .modal-price .price span{font-size:13px;font-weight:400;color:var(--text2)}
 .modal-price .old-price{font-size:12px;color:var(--text3);text-decoration:line-through;margin-top:2px}
-.btn-buy{
-  width:100%;padding:13px;
-  background:linear-gradient(135deg,var(--pro),#a855f7);
-  color:#fff;border:none;border-radius:10px;
-  font-size:14px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:transform .15s,box-shadow .15s;
-  box-shadow:0 4px 16px var(--pro-glow);
-}
-.btn-buy:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(139,92,246,.4)}
+.btn-buy{width:100%;padding:13px;background:linear-gradient(135deg,var(--pro),#a855f7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 16px rgba(124,58,237,.25)}
+.btn-buy:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.35)}
 .btn-buy i{font-size:18px}
 
-/* ── BOTTOM NAV ── */
-.bottom-nav{display:none}
-.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:150;backdrop-filter:blur(4px)}
-.more-sheet-overlay.show{display:block}
-.more-sheet{
-  display:none;position:fixed;left:0;right:0;bottom:0;z-index:160;
-  background:var(--surface2);
-  border:1px solid var(--border);
-  border-radius:20px 20px 0 0;
-  max-height:78vh;overflow-y:auto;
-  box-shadow:0 -8px 40px rgba(0,0,0,.4);
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);
-}
-.more-sheet.show{display:block;transform:translateY(0)}
-.more-sheet-handle{width:36px;height:4px;background:var(--border2);border-radius:99px;margin:12px auto}
-.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
-.more-sheet-hdr h3{font-size:15px;font-weight:700;color:var(--text)}
-.more-sheet-close{
-  background:var(--surface);border:1px solid var(--border);
-  width:30px;height:30px;border-radius:8px;
-  color:var(--text2);font-size:15px;
-  display:flex;align-items:center;justify-content:center;
-}
-.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
-.more-item{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:12px 4px;border-radius:12px;
-  text-decoration:none;color:var(--text);
-  position:relative;cursor:pointer;border:none;
-  background:none;font-family:'Inter',sans-serif;
-}
-.more-item:active{background:var(--surface)}
-.more-item .mi-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:rgba(59,130,246,.12);color:var(--accent2);
-  display:flex;align-items:center;justify-content:center;font-size:20px;
-}
-.more-item .mi-icon.pro{background:var(--pro-dim);color:var(--pro2)}
-.more-item .mi-icon.slate{background:rgba(255,255,255,.05);color:var(--text3)}
-.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
-.more-item .mi-badge{
-  position:absolute;top:6px;right:4px;
-  font-size:8px;font-weight:700;padding:2px 5px;
-  border-radius:20px;background:var(--pro);color:#fff;
-}
-.more-sheet-section{
-  font-size:10px;font-weight:700;color:var(--text3);
-  letter-spacing:.08em;text-transform:uppercase;
-  padding:10px 18px 4px;
-}
-
 /* ── RESPONSIVE ── */
+@media(min-width:600px){.tn-logo-text{display:block}}
 @media(max-width:1100px){.mod-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
-  .sidebar{display:none}
-  .sidebar-overlay{display:none!important}
-  .btn-hamburger{display:none!important}
-  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 20px)}
-  .topbar{margin-bottom:16px}
-  .topbar h1{font-size:16px}
-  .topbar-right .level-pill{display:none}
+  .topnav{padding:0 12px}
+  .tn-links{display:none}
+  .main{padding:14px 14px 40px}
+  .hero-slider{height:200px;border-radius:14px}
+  .hero-slide-content{padding:0 20px}
+  .hero-title{font-size:19px}
+  .hero-desc{font-size:12px;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+  .hero-cta{padding:8px 16px;font-size:12px}
+  .hero-dots{left:20px}
+  .welcome-text h1{font-size:16px}
   .premium-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
   .btn-premium{width:100%;justify-content:center}
   .premium-features{display:none}
   .stats-grid{gap:8px}
-  .stat-card{padding:12px}
-  .stat-card .val{font-size:22px}
+  .stat-card{padding:12px 14px}
+  .stat-card .val{font-size:24px}
   .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
-  .bottom-nav{
-    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;
-    height:var(--bottomnav);background:var(--surface);
-    border-top:1px solid var(--border);
-    box-shadow:0 -4px 20px rgba(0,0,0,.3);
-    padding-bottom:env(safe-area-inset-bottom);
-  }
-  .bn-item{
-    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:3px;text-decoration:none;color:var(--text2);
-    font-size:10px;font-weight:600;cursor:pointer;
-    border:none;background:none;font-family:'Inter',sans-serif;position:relative;
-  }
-  .bn-item i{font-size:20px}
-  .bn-item.active{color:var(--accent2)}
-  .bn-item .bn-dot{
-    display:none;position:absolute;top:2px;
-    width:4px;height:4px;border-radius:50%;background:var(--accent);
-  }
-  .bn-item.active .bn-dot{display:block}
-  .bn-item.pro-item.active{color:var(--pro2)}
-  .bn-item.pro-item.active .bn-dot{background:var(--pro)}
-}
-@media(max-width:400px){
-  .main{padding:12px 12px calc(var(--bottomnav) + 16px)}
-  .stat-card .val{font-size:20px}
-  .topbar h1{font-size:14px}
 }
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
-<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon"><i class="ti ti-school"></i></div>
-    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
-    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
+<!-- TOP NAV -->
+<nav class="topnav">
+  <a href="dashboard.html" class="tn-logo">
+    <div class="tn-logo-icon"><i class="ti ti-school"></i></div>
+    <div class="tn-logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
+  </a>
+  <div class="tn-links">
+    <a href="dashboard.html" class="tn-link active"><i class="ti ti-layout-dashboard"></i> Bosh sahifa</a>
+    <a href="pages/haftalik.html" class="tn-link"><i class="ti ti-books"></i> Haftalik</a>
+    <a href="pages/test.html" class="tn-link"><i class="ti ti-flask"></i> Testlar</a>
+    <a href="pages/premium.html" class="tn-link" style="color:var(--pro2)"><i class="ti ti-crown"></i> Premium</a>
   </div>
-
-  <div class="sidebar-section">Asosiy</div>
-  <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-  <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
-  <a href="pages/haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
-  <a href="pages/soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
-  <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
-  <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
-  <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
-  <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
-
-  <div class="sidebar-section">Professional</div>
-  <a href="pages/oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a href="pages/qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a href="pages/mashgulot.html" class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
-  <a href="pages/attestatsiya.html" class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a href="pages/portfolio.html" class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-
-  <div class="sidebar-section">Korporativ</div>
-  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
-
-  <div class="sidebar-bottom">
-    <div class="user-card">
-      <div class="avatar" id="sb-avatar">T</div>
-      <div class="user-info">
-        <div class="name" id="sb-name">Tarbiyachi</div>
-        <div class="plan" id="sb-plan">Bepul tarif</div>
-      </div>
-    </div>
-    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
+  <div class="tn-right">
+    <button class="tn-more-btn" onclick="openMoreSheet()"><i class="ti ti-grid-dots"></i> <span style="display:none" id="moreLabel">Bo'limlar</span></button>
+    <div class="tn-avatar" id="sb-avatar" onclick="openMoreSheet()">T</div>
   </div>
-</aside>
+</nav>
 
 <main class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+
+  <!-- HERO SLIDER (admin tomonidan boshqariladi) -->
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-track" id="heroTrack"></div>
+    <button class="hero-arrow prev" onclick="heroMove(-1)"><i class="ti ti-chevron-left"></i></button>
+    <button class="hero-arrow next" onclick="heroMove(1)"><i class="ti ti-chevron-right"></i></button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+
+  <div class="welcome-row">
+    <div class="welcome-text">
       <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
+      <p>Bugungi faoliyatingizni shu yerdan boshqaring</p>
     </div>
-    <div class="topbar-right">
+    <div class="welcome-badges">
       <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights"></i> Bepul</span>
       <span class="level-pill" id="hero-xp-badge"><i class="ti ti-medal"></i> 1-daraja</span>
     </div>
@@ -603,99 +324,31 @@ body{
     <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar</div>
+  <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar <span class="sec-title-link" onclick="openMoreSheet()">Hammasi →</span></div>
   <div class="mod-grid">
-    <a href="pages/jadval.html" class="mod-card">
-      <div class="icon blue"><i class="ti ti-calendar"></i></div>
-      <div class="mod-title">Kunlik jadval</div>
-      <div class="mod-sub">Soatma-soat reja</div>
-    </a>
-    <a href="pages/haftalik.html" class="mod-card">
-      <div class="icon blue"><i class="ti ti-books"></i></div>
-      <div class="mod-title">Haftalik mavzular</div>
-      <div class="mod-sub">Yillik tematik reja</div>
-    </a>
-    <a href="pages/soha.html" class="mod-card">
-      <div class="icon green"><i class="ti ti-chart-dots-3"></i></div>
-      <div class="mod-title">Rivojlanish sohalari</div>
-      <div class="mod-sub">5 ta asosiy soha</div>
-    </a>
-    <a href="pages/tamoyil.html" class="mod-card">
-      <div class="icon green"><i class="ti ti-pin"></i></div>
-      <div class="mod-title">Tamoyillar</div>
-      <div class="mod-sub">6 ta tamoyil</div>
-    </a>
-    <a href="pages/test.html" class="mod-card">
-      <div class="icon amber"><i class="ti ti-flask"></i></div>
-      <div class="mod-title">Testlar</div>
-      <div class="mod-sub" id="test-limit-txt">5 ta / oy</div>
-    </a>
-    <a href="pages/konspekt.html" class="mod-card">
-      <div class="icon amber"><i class="ti ti-notebook"></i></div>
-      <div class="mod-title">Konspektlar</div>
-      <div class="mod-sub">3 ta ko'rish</div>
-    </a>
-    <a href="pages/vaziyat.html" class="mod-card">
-      <div class="icon blue"><i class="ti ti-bulb"></i></div>
-      <div class="mod-title">Vaziyatlar</div>
-      <div class="mod-sub">5 ta variant</div>
-    </a>
+    <a href="pages/jadval.html" class="mod-card"><div class="icon blue"><i class="ti ti-calendar"></i></div><div class="mod-title">Kunlik jadval</div><div class="mod-sub">Soatma-soat reja</div></a>
+    <a href="pages/haftalik.html" class="mod-card"><div class="icon blue"><i class="ti ti-books"></i></div><div class="mod-title">Haftalik mavzular</div><div class="mod-sub">Yillik tematik reja</div></a>
+    <a href="pages/soha.html" class="mod-card"><div class="icon green"><i class="ti ti-chart-dots-3"></i></div><div class="mod-title">Rivojlanish sohalari</div><div class="mod-sub">5 ta asosiy soha</div></a>
+    <a href="pages/tamoyil.html" class="mod-card"><div class="icon green"><i class="ti ti-pin"></i></div><div class="mod-title">Tamoyillar</div><div class="mod-sub">6 ta tamoyil</div></a>
+    <a href="pages/test.html" class="mod-card"><div class="icon amber"><i class="ti ti-flask"></i></div><div class="mod-title">Testlar</div><div class="mod-sub" id="test-limit-txt">5 ta / oy</div></a>
+    <a href="pages/konspekt.html" class="mod-card"><div class="icon amber"><i class="ti ti-notebook"></i></div><div class="mod-title">Konspektlar</div><div class="mod-sub">3 ta ko'rish</div></a>
+    <a href="pages/vaziyat.html" class="mod-card"><div class="icon blue"><i class="ti ti-bulb"></i></div><div class="mod-title">Vaziyatlar</div><div class="mod-sub">5 ta variant</div></a>
   </div>
 
   <div class="sec-title"><i class="ti ti-crown"></i> Professional</div>
   <div class="mod-grid">
-    <div class="mod-card locked" id="card-games">
-      <div class="icon purple"><i class="ti ti-puzzle"></i></div>
-      <div class="mod-title">Oyinlar</div>
-      <div class="mod-sub">Didaktik oyinlar</div>
-      <span class="lock-tag">PRO</span>
-    </div>
-    <div class="mod-card locked" id="card-songs">
-      <div class="icon purple"><i class="ti ti-music"></i></div>
-      <div class="mod-title">Qo'shiqlar</div>
-      <div class="mod-sub">Mavzuga mos</div>
-      <span class="lock-tag">PRO</span>
-    </div>
-    <div class="mod-card locked" id="card-activities">
-      <div class="icon purple"><i class="ti ti-brush"></i></div>
-      <div class="mod-title">Mashg'ulot</div>
-      <div class="mod-sub">Ijodiy faoliyat</div>
-      <span class="lock-tag">PRO</span>
-    </div>
-    <div class="mod-card locked" id="card-attestation">
-      <div class="icon purple"><i class="ti ti-certificate"></i></div>
-      <div class="mod-title">Attestatsiya</div>
-      <div class="mod-sub">Tayyorgarlik testlari</div>
-      <span class="lock-tag">PRO</span>
-    </div>
-    <div class="mod-card locked" id="card-portfolio">
-      <div class="icon purple"><i class="ti ti-id-badge-2"></i></div>
-      <div class="mod-title">Portfolio</div>
-      <div class="mod-sub">Professional profil</div>
-      <span class="lock-tag">PRO</span>
-    </div>
+    <div class="mod-card locked" id="card-games"><div class="icon purple"><i class="ti ti-puzzle"></i></div><div class="mod-title">Oyinlar</div><div class="mod-sub">Didaktik oyinlar</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-songs"><div class="icon purple"><i class="ti ti-music"></i></div><div class="mod-title">Qo'shiqlar</div><div class="mod-sub">Mavzuga mos</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-activities"><div class="icon purple"><i class="ti ti-brush"></i></div><div class="mod-title">Mashg'ulot</div><div class="mod-sub">Ijodiy faoliyat</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-attestation"><div class="icon purple"><i class="ti ti-certificate"></i></div><div class="mod-title">Attestatsiya</div><div class="mod-sub">Tayyorgarlik testlari</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-portfolio"><div class="icon purple"><i class="ti ti-id-badge-2"></i></div><div class="mod-title">Portfolio</div><div class="mod-sub">Professional profil</div><span class="lock-tag">PRO</span></div>
   </div>
 
   <div class="sec-title"><i class="ti ti-building"></i> Korporativ</div>
   <div class="mod-grid">
-    <div class="mod-card" style="opacity:.4;cursor:default;pointer-events:none">
-      <div class="icon slate"><i class="ti ti-qrcode"></i></div>
-      <div class="mod-title">Davomat</div>
-      <div class="mod-sub">QR bilan belgilash</div>
-      <span class="lock-tag soon">Tez kunda</span>
-    </div>
-    <div class="mod-card" style="opacity:.4;cursor:default;pointer-events:none">
-      <div class="icon slate"><i class="ti ti-users-group"></i></div>
-      <div class="mod-title">Ota-onalar</div>
-      <div class="mod-sub">Xabar va hisobot</div>
-      <span class="lock-tag soon">Tez kunda</span>
-    </div>
-    <div class="mod-card" style="opacity:.4;cursor:default;pointer-events:none">
-      <div class="icon slate"><i class="ti ti-chart-line"></i></div>
-      <div class="mod-title">Bola monitoringi</div>
-      <div class="mod-sub">Rivojlanish grafigi</div>
-      <span class="lock-tag soon">Tez kunda</span>
-    </div>
+    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-qrcode"></i></div><div class="mod-title">Davomat</div><div class="mod-sub">QR bilan belgilash</div><span class="lock-tag soon">Tez kunda</span></div>
+    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-users-group"></i></div><div class="mod-title">Ota-onalar</div><div class="mod-sub">Xabar va hisobot</div><span class="lock-tag soon">Tez kunda</span></div>
+    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-chart-line"></i></div><div class="mod-title">Bola monitoringi</div><div class="mod-sub">Rivojlanish grafigi</div><span class="lock-tag soon">Tez kunda</span></div>
   </div>
 
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
@@ -725,7 +378,7 @@ body{
         <div class="price">49 000 so'm <span>/ oy</span></div>
         <div class="old-price">Avval: 79 000 so'm</div>
       </div>
-      <div style="background:var(--pro);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
+      <div style="background:var(--pro2);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
     </div>
     <button class="btn-buy" onclick="window.location.href='pages/premium.html'">
       <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
@@ -735,28 +388,19 @@ body{
 
 <div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="bn-item active"><span class="bn-dot"></span><i class="ti ti-layout-dashboard"></i>Bosh sahifa</a>
-  <a href="pages/haftalik.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-books"></i>Haftalik</a>
-  <a href="pages/test.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-flask"></i>Testlar</a>
-  <a href="pages/premium.html" class="bn-item pro-item"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</a>
-  <button class="bn-item" onclick="openMoreSheet()"><span class="bn-dot"></span><i class="ti ti-grid-dots"></i>Yana</button>
-</nav>
-
-<!-- MORE SHEET -->
+<!-- MORE SHEET — yagona navigatsiya (mobil + desktop) -->
 <div class="more-sheet-overlay" id="moreOverlay" onclick="closeMoreSheet()"></div>
 <div class="more-sheet" id="moreSheet">
   <div class="more-sheet-handle"></div>
-  <div class="more-sheet-hdr">
-    <h3>Barcha bo'limlar</h3>
-    <button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button>
-  </div>
+  <div class="more-sheet-hdr"><h3>Barcha bo'limlar</h3><button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button></div>
   <div class="more-sheet-section">Asosiy</div>
   <div class="more-grid">
+    <a href="dashboard.html" class="more-item"><div class="mi-icon"><i class="ti ti-layout-dashboard"></i></div><span>Bosh sahifa</span></a>
     <a href="pages/jadval.html" class="more-item"><div class="mi-icon"><i class="ti ti-calendar"></i></div><span>Kunlik jadval</span></a>
-    <a href="pages/soha.html" class="more-item"><div class="mi-icon"><i class="ti ti-chart-dots-3"></i></div><span>Rivojlanish sohalari</span></a>
+    <a href="pages/haftalik.html" class="more-item"><div class="mi-icon"><i class="ti ti-books"></i></div><span>Haftalik</span></a>
+    <a href="pages/soha.html" class="more-item"><div class="mi-icon"><i class="ti ti-chart-dots-3"></i></div><span>Rivojlanish</span></a>
     <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
+    <a href="pages/test.html" class="more-item"><div class="mi-icon"><i class="ti ti-flask"></i></div><span>Testlar</span></a>
     <a href="pages/konspekt.html" class="more-item"><div class="mi-icon"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
     <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
   </div>
@@ -767,12 +411,13 @@ body{
     <a href="pages/mashgulot.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></a>
     <a href="pages/attestatsiya.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></a>
     <a href="pages/portfolio.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></a>
+    <a href="pages/premium.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-crown"></i></div><span>Premium</span></a>
   </div>
   <div class="more-sheet-section">Korporativ</div>
   <div class="more-grid">
-    <div class="more-item" style="opacity:.4"><div class="mi-icon slate"><i class="ti ti-qrcode"></i></div><span>Davomat</span></div>
-    <div class="more-item" style="opacity:.4"><div class="mi-icon slate"><i class="ti ti-users-group"></i></div><span>Ota-onalar</span></div>
-    <div class="more-item" style="opacity:.4"><div class="mi-icon slate"><i class="ti ti-chart-line"></i></div><span>Monitoring</span></div>
+    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-qrcode"></i></div><span>Davomat</span></div>
+    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-users-group"></i></div><span>Ota-onalar</span></div>
+    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-chart-line"></i></div><span>Monitoring</span></div>
   </div>
   <div class="more-sheet-section">Hisob</div>
   <div class="more-grid">
@@ -780,58 +425,109 @@ body{
   </div>
 </div>
 
-<!-- CANVAS ANIMATION: dark particles only -->
 <script>
-(function(){
-  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  let W,H;
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
-  resize();window.addEventListener('resize',resize);
-  const dots=[];
-  for(let i=0;i<60;i++)dots.push({
-    x:Math.random()*window.innerWidth,
-    y:Math.random()*window.innerHeight,
-    r:Math.random()*1.4+.4,
-    vx:(Math.random()-.5)*.25,
-    vy:(Math.random()-.5)*.25,
-    op:Math.random()*.25+.05,
-  });
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    dots.forEach(d=>{
-      d.x+=d.vx;d.y+=d.vy;
-      if(d.x<0)d.x=W;if(d.x>W)d.x=0;
-      if(d.y<0)d.y=H;if(d.y>H)d.y=0;
-      ctx.globalAlpha=d.op;
-      ctx.fillStyle='#60a5fa';
-      ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();
-    });
-    // lines between close dots
-    ctx.globalAlpha=.04;
-    ctx.strokeStyle='#3b82f6';ctx.lineWidth=1;
-    for(let i=0;i<dots.length;i++){
-      for(let j=i+1;j<dots.length;j++){
-        const dx=dots[i].x-dots[j].x,dy=dots[i].y-dots[j].y;
-        const dist=Math.sqrt(dx*dx+dy*dy);
-        if(dist<120){ctx.beginPath();ctx.moveTo(dots[i].x,dots[i].y);ctx.lineTo(dots[j].x,dots[j].y);ctx.stroke()}
-      }
-    }
-    requestAnimationFrame(frame);
-  }
-  frame();
-})();
-</script>
-
-<script>
-function openSidebar(){document.getElementById('sidebar').style.display='flex';document.getElementById('overlay').style.display='block';document.body.style.overflow='hidden'}
-function closeSidebar(){document.getElementById('sidebar').style.display='';document.getElementById('overlay').style.display='';document.body.style.overflow=''}
-function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
-checkHamburger();window.addEventListener('resize',checkHamburger);
-function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
-function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
 function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal();closeMoreSheet()}});
+function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
+function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePremiumModal();closeMoreSheet()}});
+
+/* ── HERO SLIDER LOGIC ─────────────────────────────────────────────
+   Admin shu massivga rasm/video/sarlavha qo'shadi.
+   Keyinchalik bu massiv Supabase'dagi "banners" jadvalidan
+   dinamik tortib olinishi mumkin (loadBanners() funksiyasi pastda
+   misol sifatida tayyorlangan, hozircha demo data ishlatilmoqda). */
+let heroSlides = [
+  {
+    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80',
+    eyebrow: "Ilk Qadam platformasi",
+    title: "Tarbiyachilar uchun yagona yordamchi",
+    desc: "Kunlik rejalar, testlar va metodik materiallar — barchasi bir joyda.",
+    ctaText: "Boshlash",
+    ctaLink: "pages/haftalik.html"
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1587616211892-49b2a7e8e63e?w=1200&q=80',
+    eyebrow: "Yangi imkoniyat",
+    title: "Professional Portfolio yarating",
+    desc: "Yutuqlaringiz, sertifikatlaringiz va kasbiy darajangizni bir joyda saqlang.",
+    ctaText: "Portfolio ochish",
+    ctaLink: "pages/portfolio.html"
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&q=80',
+    eyebrow: "Chegirma −38%",
+    title: "Professional tarifga o'ting",
+    desc: "Attestatsiya testlari, didaktik o'yinlar va cheksiz test ishlash imkoniyati.",
+    ctaText: "Premium olish",
+    ctaLink: "pages/premium.html"
+  }
+];
+
+let heroIdx = 0, heroTimer = null;
+
+function renderHero(){
+  const track = document.getElementById('heroTrack');
+  const dots = document.getElementById('heroDots');
+  track.innerHTML = heroSlides.map(s => `
+    <div class="hero-slide" style="background-image:url('${s.image}')">
+      <div class="hero-slide-content">
+        <span class="hero-eyebrow">${s.eyebrow}</span>
+        <div class="hero-title">${s.title}</div>
+        <div class="hero-desc">${s.desc}</div>
+        <a href="${s.ctaLink}" class="hero-cta">${s.ctaText} <i class="ti ti-arrow-right"></i></a>
+      </div>
+    </div>
+  `).join('');
+  dots.innerHTML = heroSlides.map((_,i) => `<div class="hero-dot ${i===0?'active':''}" onclick="heroGoTo(${i})"></div>`).join('');
+  updateHeroTrack();
+}
+
+function updateHeroTrack(){
+  document.getElementById('heroTrack').style.transform = `translateX(-${heroIdx*100}%)`;
+  document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active', i===heroIdx));
+}
+
+function heroMove(dir){
+  heroIdx = (heroIdx + dir + heroSlides.length) % heroSlides.length;
+  updateHeroTrack();
+  resetHeroTimer();
+}
+function heroGoTo(i){
+  heroIdx = i;
+  updateHeroTrack();
+  resetHeroTimer();
+}
+function resetHeroTimer(){
+  clearInterval(heroTimer);
+  heroTimer = setInterval(()=>heroMove(1), 5500);
+}
+
+renderHero();
+resetHeroTimer();
+
+/* ── (Ixtiyoriy) Supabase'dan banner yuklash ──────────────────────
+   Admin panel "banners" jadvaliga yozsa, shu funksiya ishga tushganda
+   heroSlides massivi o'rniga bazadagi qiymatlar ko'rsatiladi.
+   Jadval ustunlari taklifi: image_url, eyebrow, title, descr, cta_text, cta_link, sort_order, active
+*/
+async function loadBannersFromDB(){
+  try{
+    const { data, error } = await _sb.from('banners').select('*').eq('active', true).order('sort_order');
+    if(error || !data || !data.length) return;
+    heroSlides = data.map(b => ({
+      image: b.image_url,
+      eyebrow: b.eyebrow || '',
+      title: b.title || '',
+      desc: b.descr || '',
+      ctaText: b.cta_text || "Batafsil",
+      ctaLink: b.cta_link || '#'
+    }));
+    heroIdx = 0;
+    renderHero();
+    resetHeroTimer();
+  }catch(e){ /* jadval mavjud bo'lmasa demo data bilan davom etadi */ }
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -840,45 +536,29 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();clos
 <script src="js/premium.js"></script>
 <script>
 async function checkNotifications(){
-  const {data:{user}}=await _sb.auth.getUser();
-  if(!user)return;
+  const {data:{user}}=await _sb.auth.getUser();if(!user)return;
   const {data:prof}=await _sb.from('profiles').select('subscription_tier').eq('id',user.id).single();
   const tier=prof?.subscription_tier||'free';
   const now=new Date().toISOString();
-  const {data}=await _sb.from('notifications').select('*')
-    .or(`target.eq.all,target.eq.${tier}`)
-    .or(`expires_at.is.null,expires_at.gt.${now}`)
-    .order('created_at',{ascending:false}).limit(3);
+  const {data}=await _sb.from('notifications').select('*').or(`target.eq.all,target.eq.${tier}`).or(`expires_at.is.null,expires_at.gt.${now}`).order('created_at',{ascending:false}).limit(3);
   if(!data?.length)return;
-  const clrs={info:'#3b82f6',success:'#22c55e',warning:'#f59e0b'};
+  const clrs={info:'#2563eb',success:'#15803d',warning:'#b45309'};
   const popup=document.getElementById('notifPopup');
   popup.style.display='flex';
-  popup.innerHTML=data.map(n=>`
-    <div style="background:#1c2029;border:1px solid #252933;border-radius:10px;padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,.4);border-left:3px solid ${clrs[n.type]||'#3b82f6'};max-width:320px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <b style="font-size:13px;color:#f0f4ff">${n.title}</b>
-        <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#5a6072;font-size:18px;line-height:1">×</button>
-      </div>
-      <p style="font-size:12px;color:#8b92a5;margin:0">${n.message}</p>
-    </div>
-  `).join('');
+  popup.innerHTML=data.map(n=>`<div style="background:#fff;border:1px solid #e4e8f0;border-radius:10px;padding:14px 16px;box-shadow:0 4px 16px rgba(30,40,115,.1);border-left:3px solid ${clrs[n.type]||'#2563eb'};max-width:320px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-size:13px;color:#1a1f36">${n.title}</b><button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#9aa3bf;font-size:18px;line-height:1">×</button></div><p style="font-size:12px;color:#6b7694;margin:0">${n.message}</p></div>`).join('');
   setTimeout(()=>{popup.style.display='none'},6000);
 }
-
 window.addEventListener('load',async()=>{
-  const auth=await initAuth(true);
-  if(!auth)return;
+  const auth=await initAuth(true);if(!auth)return;
   if(typeof fillNav==='function')fillNav();
   const profile=auth.profile;
   const name=getUserName();
   document.getElementById('hero-name').textContent=name;
-  document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
   const proUser=isPro(),corpUser=isCorporate();
   const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
   document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
   if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
-  document.getElementById('sb-plan').textContent=planLabel+' tarif';
   const banner=document.getElementById('premiumBanner');
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
@@ -891,11 +571,7 @@ window.addEventListener('load',async()=>{
   const xp=profile?.xp||0;
   document.getElementById('stat-xp').textContent=xp;
   const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
-  if(allTests&&allTests.length){
-    const count=allTests.length,avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);
-    document.getElementById('stat-test').textContent=count;
-    document.getElementById('stat-avg').textContent=avg+'%';
-  }
+  if(allTests&&allTests.length){const count=allTests.length,avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);document.getElementById('stat-test').textContent=count;document.getElementById('stat-avg').textContent=avg+'%';}
   const lv=getLevel(xp);
   document.getElementById('xp-label').textContent=lv.lvl+'-daraja: '+lv.title;
   document.getElementById('hero-xp-badge').innerHTML=`<i class="ti ti-medal"></i> ${lv.lvl}-daraja`;
@@ -904,17 +580,9 @@ window.addEventListener('load',async()=>{
   document.getElementById('xp-fill').style.width=pct+'%';
   document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
   const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
-  if(tests&&tests.length){
-    const ul=document.getElementById('lastTests');ul.innerHTML='';
-    tests.forEach(t=>{
-      const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';
-      const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';
-      const row=document.createElement('div');row.className='test-row';
-      row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;
-      ul.appendChild(row);
-    });
-  }
+  if(tests&&tests.length){const ul=document.getElementById('lastTests');ul.innerHTML='';tests.forEach(t=>{const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';const row=document.createElement('div');row.className='test-row';row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;ul.appendChild(row);});}
   await checkNotifications();
+  await loadBannersFromDB();
 });
 </script>
 </body>
