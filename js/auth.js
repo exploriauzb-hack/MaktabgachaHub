@@ -7,12 +7,17 @@
 let _currentUser    = null
 let _currentProfile = null
 
+// pages/ ichidan ishlatiladigan sahifalar uchun path helper
+function _rootPath() {
+  return window.location.pathname.includes('/pages/') ? '../' : ''
+}
+
 // Sahifa yuklanganda sessiyani tekshirish
 async function initAuth(requireAuth = true) {
   const { data: { session } } = await _sb.auth.getSession()
 
   if (!session) {
-    if (requireAuth) window.location.href = 'index.html'
+    if (requireAuth) window.location.href = _rootPath() + 'index.html'
     return null
   }
 
@@ -81,8 +86,8 @@ const MODULE_ACCESS = {
   weekly_plan    : ['free', 'pro', 'corporate'],
   soha           : ['free', 'pro', 'corporate'],
   tamoyil        : ['free', 'pro', 'corporate'],
-  tests          : ['free', 'pro', 'corporate'],  // limitli/cheksiz
-  konspekt       : ['free', 'pro', 'corporate'],  // limitli/cheksiz
+  tests          : ['free', 'pro', 'corporate'],
+  konspekt       : ['free', 'pro', 'corporate'],
   games          : ['pro', 'corporate'],
   songs          : ['pro', 'corporate'],
   activities     : ['pro', 'corporate'],
@@ -120,7 +125,7 @@ async function checkTestLimit() {
 // ── Chiqish ──
 async function doLogout() {
   await _sb.auth.signOut()
-  window.location.href = 'index.html'
+  window.location.href = _rootPath() + 'index.html'
 }
 
 // ── XP qo'shish ──
