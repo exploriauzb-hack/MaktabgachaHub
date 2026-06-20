@@ -38,7 +38,7 @@
 
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
 
-/* ── TOP NAV (replaces sidebar) ── */
+/* ── TOP NAV ── */
 .topnav{
   position:sticky;top:0;z-index:100;
   height:var(--topnav);
@@ -66,7 +66,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .tn-more-btn i{font-size:16px}
 .tn-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
 
-/* ── MORE SHEET (used on ALL screen sizes now) ── */
+/* ── MORE SHEET ── */
 .more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.4);z-index:300;backdrop-filter:blur(3px)}
 .more-sheet-overlay.show{display:block}
 .more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:310;background:var(--white);border-radius:20px 20px 0 0;max-height:82vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(15,20,50,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
@@ -106,6 +106,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .hero-arrow:hover{background:rgba(255,255,255,.3)}
 .hero-arrow.prev{left:14px}
 .hero-arrow.next{right:14px}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* ── WELCOME ROW ── */
 .welcome-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
@@ -265,7 +266,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
 <main class="main">
 
-  <!-- HERO SLIDER (admin tomonidan boshqariladi) -->
+  <!-- HERO SLIDER -->
   <div class="hero-slider" id="heroSlider">
     <div class="hero-track" id="heroTrack"></div>
     <button class="hero-arrow prev" onclick="heroMove(-1)"><i class="ti ti-chevron-left"></i></button>
@@ -388,7 +389,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
 <div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
-<!-- MORE SHEET — yagona navigatsiya (mobil + desktop) -->
+<!-- MORE SHEET -->
 <div class="more-sheet-overlay" id="moreOverlay" onclick="closeMoreSheet()"></div>
 <div class="more-sheet" id="moreSheet">
   <div class="more-sheet-handle"></div>
@@ -419,6 +420,10 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-users-group"></i></div><span>Ota-onalar</span></div>
     <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-chart-line"></i></div><span>Monitoring</span></div>
   </div>
+  <div class="more-sheet-section" id="adminSectionLabel" style="display:none">Boshqaruv</div>
+  <div class="more-grid" id="adminSectionGrid" style="display:none">
+    <a href="pages/admin.html" class="more-item"><div class="mi-icon" style="background:#fef3c7;color:#b45309"><i class="ti ti-settings"></i></div><span>Admin panel</span></a>
+  </div>
   <div class="more-sheet-section">Hisob</div>
   <div class="more-grid">
     <button class="more-item" onclick="doLogout()"><div class="mi-icon slate"><i class="ti ti-logout"></i></div><span>Chiqish</span></button>
@@ -432,11 +437,7 @@ function openPremiumModal(){document.getElementById('premiumModal').classList.ad
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePremiumModal();closeMoreSheet()}});
 
-/* ── HERO SLIDER LOGIC ─────────────────────────────────────────────
-   Admin shu massivga rasm/video/sarlavha qo'shadi.
-   Keyinchalik bu massiv Supabase'dagi "banners" jadvalidan
-   dinamik tortib olinishi mumkin (loadBanners() funksiyasi pastda
-   misol sifatida tayyorlangan, hozircha demo data ishlatilmoqda). */
+/* ── HERO SLIDER LOGIC ── */
 let heroSlides = [
   {
     image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80',
@@ -444,7 +445,8 @@ let heroSlides = [
     title: "Tarbiyachilar uchun yagona yordamchi",
     desc: "Kunlik rejalar, testlar va metodik materiallar — barchasi bir joyda.",
     ctaText: "Boshlash",
-    ctaLink: "pages/haftalik.html"
+    ctaLink: "pages/haftalik.html",
+    isVideo: false
   },
   {
     image: 'https://images.unsplash.com/photo-1587616211892-49b2a7e8e63e?w=1200&q=80',
@@ -452,7 +454,8 @@ let heroSlides = [
     title: "Professional Portfolio yarating",
     desc: "Yutuqlaringiz, sertifikatlaringiz va kasbiy darajangizni bir joyda saqlang.",
     ctaText: "Portfolio ochish",
-    ctaLink: "pages/portfolio.html"
+    ctaLink: "pages/portfolio.html",
+    isVideo: false
   },
   {
     image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&q=80',
@@ -460,7 +463,8 @@ let heroSlides = [
     title: "Professional tarifga o'ting",
     desc: "Attestatsiya testlari, didaktik o'yinlar va cheksiz test ishlash imkoniyati.",
     ctaText: "Premium olish",
-    ctaLink: "pages/premium.html"
+    ctaLink: "pages/premium.html",
+    isVideo: false
   }
 ];
 
@@ -470,7 +474,8 @@ function renderHero(){
   const track = document.getElementById('heroTrack');
   const dots = document.getElementById('heroDots');
   track.innerHTML = heroSlides.map(s => `
-    <div class="hero-slide" style="background-image:url('${s.image}')">
+    <div class="hero-slide" style="${s.isVideo ? '' : `background-image:url('${s.image}')`}">
+      ${s.isVideo ? `<video class="hero-video" src="${s.image}" autoplay muted loop playsinline></video>` : ''}
       <div class="hero-slide-content">
         <span class="hero-eyebrow">${s.eyebrow}</span>
         <div class="hero-title">${s.title}</div>
@@ -506,11 +511,7 @@ function resetHeroTimer(){
 renderHero();
 resetHeroTimer();
 
-/* ── (Ixtiyoriy) Supabase'dan banner yuklash ──────────────────────
-   Admin panel "banners" jadvaliga yozsa, shu funksiya ishga tushganda
-   heroSlides massivi o'rniga bazadagi qiymatlar ko'rsatiladi.
-   Jadval ustunlari taklifi: image_url, eyebrow, title, descr, cta_text, cta_link, sort_order, active
-*/
+/* ── Supabase'dan banner yuklash (admin panel orqali qo'shilgan bannerlar) ── */
 async function loadBannersFromDB(){
   try{
     const { data, error } = await _sb.from('banners').select('*').eq('active', true).order('sort_order');
@@ -521,12 +522,26 @@ async function loadBannersFromDB(){
       title: b.title || '',
       desc: b.descr || '',
       ctaText: b.cta_text || "Batafsil",
-      ctaLink: b.cta_link || '#'
+      ctaLink: b.cta_link || '#',
+      isVideo: b.is_video || false
     }));
     heroIdx = 0;
     renderHero();
     resetHeroTimer();
   }catch(e){ /* jadval mavjud bo'lmasa demo data bilan davom etadi */ }
+}
+
+/* ── Admin bo'limini faqat admin foydalanuvchiga ko'rsatish ── */
+async function checkAdminAccess(){
+  try{
+    const { data: { user } } = await _sb.auth.getUser();
+    if(!user) return;
+    const { data: prof } = await _sb.from('profiles').select('is_admin').eq('id', user.id).single();
+    if(prof && prof.is_admin){
+      document.getElementById('adminSectionLabel').style.display = 'block';
+      document.getElementById('adminSectionGrid').style.display = 'grid';
+    }
+  }catch(e){}
 }
 </script>
 
@@ -583,6 +598,7 @@ window.addEventListener('load',async()=>{
   if(tests&&tests.length){const ul=document.getElementById('lastTests');ul.innerHTML='';tests.forEach(t=>{const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';const row=document.createElement('div');row.className='test-row';row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;ul.appendChild(row);});}
   await checkNotifications();
   await loadBannersFromDB();
+  await checkAdminAccess();
 });
 </script>
 </body>
