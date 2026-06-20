@@ -1,14 +1,11 @@
 // js/profile.js
-// dashboard.html ichidagi <script> taglaridan OLDIN qo'shing:
-// <script src="../js/profile.js"></script>  (pages/ ichida bo'lsa)
-// <script src="js/profile.js"></script>     (root'da bo'lsa)
 
 // ─── Profilni Supabase'dan yuklash ───────────────────────────────────────────
 async function loadProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await _sb.auth.getUser();
   if (!user) return;
 
-  const { data, error } = await supabase
+  const { data, error } = await _sb
     .from('profiles')
     .select('*')
     .eq('id', user.id)
@@ -19,9 +16,8 @@ async function loadProfile() {
     return;
   }
 
-  if (!data) return; // yangi foydalanuvchi — bo'sh profil
+  if (!data) return;
 
-  // ─── Maydonlarga qiymat yozish ─────────────────────────────────────────────
   const fields = [
     'familiya','ism','sharif','telefon','tugilgan',
     'jinsi','viloyat','tuman','dmtt',
@@ -36,7 +32,16 @@ async function loadProfile() {
     if (val) val.textContent = data[f];
   });
 
-  // ─── Ko'nikmalar ───────────────────────────────────────────────────────────
+  // Viloyat tanlanganda tumanlarni yuklash
+  if (data.viloyat) {
+    const vilSel = document.getElementById('i-viloyat');
+    if (vilSel) {
+      vilSel.value = data.viloyat;
+      loadTumanlar(data.tuman);
+    }
+  }
+
+  // Ko'nikmalar
   if (data.skills && data.skills.length > 0) {
     const wrap = document.getElementById('skillsWrap');
     if (wrap) {
@@ -50,7 +55,7 @@ async function loadProfile() {
     }
   }
 
-  // ─── Yutuqlar ──────────────────────────────────────────────────────────────
+  // Yutuqlar
   if (data.yutuqlar && data.yutuqlar.length > 0) {
     const list = document.getElementById('yutuqList');
     if (list) {
@@ -65,24 +70,35 @@ async function loadProfile() {
             <div class="yutuq-name">${y.nomi}</div>
             <div class="yutuq-year">${y.yil || ''}</div>
           </div>
-          <button class="yutuq-del" onclick="delYutuq(this)">🗑</button>`;
+          <button class="yutuq-del" onclick="delYutuq(this)"><i class="ti ti-trash"></i></button>`;
         list.appendChild(li);
       });
     }
   }
 
-  // ─── Profil kartasini yangilash ────────────────────────────────────────────
-  const ism      = data.ism      || '';
-  const fam      = data.familiya || '';
-  const dmtt     = data.dmtt     || '';
-  const tuman    = data.tuman    || '';
-  const toifa    = data.toifa    || '';
-  const staj     = data.staj     || 0;
-  const malumot  = data.malumot  || '';
-  const lavozim  = data.lavozim  || '';
+  // Avatar
+  if (data.avatar_url) {
+    const img = document.getElementById('avatarImg');
+    if (img) {
+      img.src = data.avatar_url;
+      img.style.display = 'block';
+      const avatarEl = document.getElementById('avatarEl');
+      if (avatarEl) avatarEl.childNodes[0].textContent = '';
+    }
+  }
 
-  if (fam || ism)  setEl('dispName',    fam + ' ' + ism);
-  if (lavozim)     setEl('dispRole',    lavozim + ' — ' + dmtt + ', ' + tuman);
+  // Profil kartasini yangilash
+  const fam     = data.familiya || '';
+  const ism     = data.ism      || '';
+  const dmtt    = data.dmtt     || '';
+  const tuman   = data.tuman    || '';
+  const toifa   = data.toifa    || '';
+  const staj    = data.staj     || 0;
+  const malumot = data.malumot  || '';
+  const lavozim = data.lavozim  || '';
+
+  if (fam || ism)  setEl('dispName',    (fam + ' ' + ism).trim());
+  if (lavozim)     setEl('dispRole',    lavozim + (dmtt ? ' — ' + dmtt : '') + (tuman ? ', ' + tuman : ''));
   if (toifa)       setEl('dispToifa',   '🏷️ ' + toifa);
   if (staj)        setEl('dispStaj',    '📅 ' + staj + ' yil staj');
   if (malumot)     setEl('dispMalumot', '🎓 ' + malumot);
@@ -93,7 +109,7 @@ async function loadProfile() {
 
 // ─── Profilni Supabase'ga saqlash ────────────────────────────────────────────
 async function saveProfileToDB() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await _sb.auth.getUser();
   if (!user) { alert('Iltimos, avval tizimga kiring.'); return; }
 
   // Ko'nikmalar
@@ -128,7 +144,7 @@ async function saveProfileToDB() {
     updated_at: new Date().toISOString()
   };
 
-  const { error } = await supabase
+  const { error } = await _sb
     .from('profiles')
     .upsert(payload, { onConflict: 'id' });
 
@@ -140,10 +156,61 @@ async function saveProfileToDB() {
   }
 }
 
+// ─── Avatar yuklash (Supabase Storage) ───────────────────────────────────────
+// Rasm tanlangan zahoti Storage'ga yuklanadi va profiles jadvalida avatar_url
+// darhol yangilanadi — "Saqlash" tugmasini bosishni kutmaydi, shuning uchun
+// yo'qolib qolmaydi.
+async function uploadAvatar(file) {
+  const { data: { user } } = await _sb.auth.getUser();
+  if (!user) { alert('Iltimos, avval tizimga kiring.'); return null; }
+
+  if (!file.type.startsWith('image/')) {
+    showToast('❌ Faqat rasm fayl yuklash mumkin', 'error');
+    return null;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('❌ Rasm hajmi 5MB dan oshmasligi kerak', 'error');
+    return null;
+  }
+
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const filePath = `${user.id}/avatar.${ext}`;
+
+  const { error: uploadError } = await _sb.storage
+    .from('avatars')
+    .upload(filePath, file, { upsert: true, cacheControl: '3600' });
+
+  if (uploadError) {
+    console.error('Avatar yuklashda xato:', uploadError.message);
+    showToast('❌ Rasm yuklashda xato: ' + uploadError.message, 'error');
+    return null;
+  }
+
+  const { data: urlData } = _sb.storage.from('avatars').getPublicUrl(filePath);
+  const publicUrl = urlData.publicUrl + '?t=' + Date.now(); // keshni yangilash uchun
+
+  const { error: dbError } = await _sb
+    .from('profiles')
+    .upsert(
+      { id: user.id, avatar_url: publicUrl, updated_at: new Date().toISOString() },
+      { onConflict: 'id' }
+    );
+
+  if (dbError) {
+    console.error('Avatar URL saqlashda xato:', dbError.message);
+    showToast('❌ Avatar saqlanmadi: ' + dbError.message, 'error');
+    return null;
+  }
+
+  showToast('✅ Avatar saqlandi!', 'success');
+  return publicUrl;
+}
+
 // ─── Yordamchi funksiyalar ────────────────────────────────────────────────────
 function getVal(id) {
   return document.getElementById(id)?.value?.trim() || '';
 }
+
 function setEl(id, val) {
   const el = document.getElementById(id);
   if (el) el.textContent = val;
@@ -163,11 +230,3 @@ function showToast(msg, type) {
   document.body.appendChild(t);
   setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2500);
 }
-
-// ─── Sahifa yuklanganida profilni o'qish ──────────────────────────────────────
-// (dashboard.html ichidagi window.addEventListener('load', ...) ga qo'shing:
-//   const auth = await initAuth(true)
-//   if (!auth) return
-//   fillNav()
-//   await loadProfile()   ← shu qatorni qo'shing
-// )
