@@ -87,6 +87,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .form-group.full{grid-column:1/-1}
 .form-group label{font-size:11px;font-weight:600;color:var(--muted)}
 .form-val{font-size:13px;color:var(--text);padding:8px 0;border-bottom:1px solid transparent;min-height:34px}
+.form-val.placeholder{color:var(--muted);font-style:italic}
+.pbadge.placeholder{opacity:.55;font-style:italic}
 .form-group input,.form-group select,.form-group textarea{border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text);background:var(--bg);outline:none;transition:.2s;display:none;width:100%}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--pro);background:#fff}
 .form-group textarea{resize:vertical;min-height:72px}
@@ -344,6 +346,51 @@ function loadTumanlar(tanlangan){
 }
 loadTumanlar();
 
+// ─── Namunaviy ma'lumotlar (faqat ko'rinish uchun, bazaga yozilmaydi) ───────
+const namunaMalumot = {
+  familiya: 'Muhitdinova', ism: 'Gulmira', sharif: 'Faxriddinova',
+  telefon: '+998 90 123 45 67', tugilgan: '15.05.1995', jinsi: 'Ayol',
+  viloyat: 'Toshkent shahri', tuman: 'Chilonzor', dmtt: '12-sonli DMTT',
+  lavozim: 'Tarbiyachi', toifa: '1-toifa', staj: '5 yil',
+  malumot: "Oliy ma'lumot",
+  bio: "Bolalar bilan ishlashni yaxshi ko'raman, ijodiy va individual yondashuvni qadrlayman."
+};
+
+function applyNamunaPlaceholders(){
+  Object.keys(namunaMalumot).forEach(f=>{
+    const val = document.getElementById('v-' + f);
+    if (val && (!val.textContent.trim() || val.textContent.trim() === '—')) {
+      val.textContent = 'Masalan: ' + namunaMalumot[f];
+      val.classList.add('placeholder');
+    }
+  });
+  const dispName = document.getElementById('dispName');
+  if (dispName.textContent.trim() === '—') {
+    dispName.textContent = 'Masalan: Muhitdinova Gulmira';
+    dispName.classList.add('placeholder');
+  }
+  const dispRole = document.getElementById('dispRole');
+  if (dispRole.textContent.trim() === '—') {
+    dispRole.textContent = 'Masalan: Tarbiyachi — 12-sonli DMTT, Chilonzor';
+    dispRole.classList.add('placeholder');
+  }
+  const dispToifa = document.getElementById('dispToifa');
+  if (dispToifa.textContent.trim() === '—') {
+    dispToifa.innerHTML = '<i class="ti ti-award" style="font-size:11px"></i> Masalan: 1-toifa';
+    dispToifa.classList.add('placeholder');
+  }
+  const dispStaj = document.getElementById('dispStaj');
+  if (dispStaj.textContent.trim() === '—') {
+    dispStaj.innerHTML = '<i class="ti ti-calendar-stats" style="font-size:11px"></i> Masalan: 5 yil staj';
+    dispStaj.classList.add('placeholder');
+  }
+  const dispMalumot = document.getElementById('dispMalumot');
+  if (dispMalumot.textContent.trim() === '—') {
+    dispMalumot.innerHTML = '<i class="ti ti-school" style="font-size:11px"></i> Masalan: Oliy ma\'lumot';
+    dispMalumot.classList.add('placeholder');
+  }
+}
+
 function calcScore(){
   const skills=document.querySelectorAll('.skill-tag').length;
   const yutuqlar=document.querySelectorAll('.yutuq-item').length;
@@ -390,7 +437,7 @@ function exitEditUI(){
 // Saqlash tugmasi bosilganda — Supabase'ga yozadi (profile.js dagi funksiya)
 async function handleSave(){
   const fields=['familiya','ism','sharif','telefon','tugilgan','jinsi','viloyat','tuman','dmtt','lavozim','toifa','staj','malumot','bio'];
-  fields.forEach(f=>{const inp=document.getElementById('i-'+f);const val=document.getElementById('v-'+f);if(inp&&val)val.textContent=inp.value||'—'});
+  fields.forEach(f=>{const inp=document.getElementById('i-'+f);const val=document.getElementById('v-'+f);if(inp&&val){val.textContent=inp.value||'—';val.classList.remove('placeholder');}});
 
   const fam=document.getElementById('i-familiya').value;
   const ism=document.getElementById('i-ism').value;
@@ -432,11 +479,25 @@ function addYutuq(){
 function delYutuq(btn){btn.closest('.yutuq-item').remove()}
 
 document.getElementById('avatarEditBtn').addEventListener('click',()=>document.getElementById('avatarFile').click());
-document.getElementById('avatarFile').addEventListener('change',function(){
-  const file=this.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{const img=document.getElementById('avatarImg');img.src=e.target.result;img.style.display='block';document.getElementById('avatarEl').childNodes[0].textContent=''};
+document.getElementById('avatarFile').addEventListener('change', async function(){
+  const file = this.files[0];
+  if (!file) return;
+
+  // Tezkor lokal preview
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('avatarImg');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    document.getElementById('avatarEl').childNodes[0].textContent = '';
+  };
   reader.readAsDataURL(file);
+
+  // Supabase Storage'ga yuklab, darhol saqlash
+  const publicUrl = await uploadAvatar(file);
+  if (publicUrl) {
+    document.getElementById('avatarImg').src = publicUrl;
+  }
 });
 </script>
 
@@ -461,6 +522,7 @@ window.addEventListener('load', async () => {
   document.getElementById('sb-plan').textContent = planLabel + ' tarif';
 
   await loadProfile();   // ← Supabase'dan saqlangan ma'lumotlarni tortib, formani to'ldiradi
+  applyNamunaPlaceholders();   // ← bo'sh maydonlarga namuna matn (faqat ko'rinish uchun)
 });
 </script>
 </body>
