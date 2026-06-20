@@ -70,7 +70,6 @@ function closePremiumModal() {
 function injectPremiumModal() {
   if (document.getElementById('premium-modal')) return
 
-  // CSS inject — agar sahifada premium modal style yo'q bo'lsa
   if (!document.getElementById('premium-modal-style')) {
     const style = document.createElement('style')
     style.id = 'premium-modal-style'
@@ -274,6 +273,28 @@ async function checkSubscriptionExpiry() {
   } else if (daysLeft <= 3) {
     showToast(`⚠️ Obuna ${daysLeft} kundan keyin tugaydi!`, 'err')
   }
+}
+
+// ── Toast xabarnoma ──
+function showToast(msg, type = 'ok') {
+  const d = document.createElement('div')
+  const bg = type === 'ok' ? '#15803d' : '#b91c1c'
+  d.style.cssText = `
+    position:fixed;top:20px;right:20px;z-index:99999;
+    background:${bg};color:#fff;
+    padding:12px 18px;border-radius:10px;
+    font-size:13px;font-weight:600;
+    box-shadow:0 4px 16px rgba(0,0,0,.2);
+    font-family:'Inter',sans-serif;
+    max-width:300px;line-height:1.4;
+    transition:opacity .3s;
+  `
+  d.textContent = msg
+  document.body.appendChild(d)
+  setTimeout(() => {
+    d.style.opacity = '0'
+    setTimeout(() => d.remove(), 300)
+  }, 3500)
 }
 
 // Sahifa yuklanganda modalni tayyorla va muddatni tekshir
