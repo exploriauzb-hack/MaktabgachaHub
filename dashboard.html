@@ -13,15 +13,13 @@
   --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
   --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
   --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
-  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;
+  --red:#b91c1c;--pro:#7c3aed;--pro-soft:#f5f3ff;--sidebar:240px;--bottomnav:62px;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:#e8f0fe;position:relative;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
 #bg-canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;backdrop-filter:blur(2px)}
-.sidebar-overlay.show{display:block}
-.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow:hidden;transition:transform .25s ease}
-.sidebar-nav{flex:1;overflow-y:auto;min-height:0}
+.sidebar{z-index:30;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto}
 .sidebar-logo{padding:20px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
 .logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
 .logo-text{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
@@ -124,13 +122,34 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .btn-buy:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,58,237,.35)}
 .btn-buy i{font-size:18px}
 #notifPopup{display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px}
+
+/* ═══ MOBIL PASTKI TAB-BAR ═══ */
+.bottom-nav{display:none}
+.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:150;backdrop-filter:blur(2px)}
+.more-sheet-overlay.show{display:block}
+.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:160;background:var(--surface);border-radius:20px 20px 0 0;max-height:78vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.2);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
+.more-sheet.show{display:block;transform:translateY(0)}
+.more-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:10px auto}
+.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
+.more-sheet-hdr h3{font-size:15px;font-weight:700}
+.more-sheet-close{background:var(--bg);border:none;width:30px;height:30px;border-radius:8px;color:var(--muted);font-size:15px;display:flex;align-items:center;justify-content:center}
+.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
+.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
+.more-item:active{background:var(--bg)}
+.more-item .mi-icon{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:19px}
+.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro)}
+.more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
+.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25}
+.more-item .mi-badge{position:absolute;top:6px;right:2px;font-size:8px;font-weight:700;padding:1.5px 5px;border-radius:20px;background:var(--pro);color:#fff}
+.more-sheet-section{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 18px 2px}
+
 @media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .sidebar-close{display:flex}
-  .btn-hamburger{display:flex}
-  .main{margin-left:0;padding:14px 14px 40px}
+  .sidebar{display:none}
+  .sidebar-overlay{display:none!important}
+  .btn-hamburger{display:none!important}
+
+  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 22px)}
   .topbar{margin-bottom:14px}
   .topbar h1{font-size:15px;max-width:180px}
   .topbar-right .level-pill{display:none}
@@ -154,9 +173,25 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .test-row .test-name{font-size:12px}
   .test-score{font-size:14px}
   .empty-state{padding:16px;font-size:12px}
+
+  /* ═ BOTTOM TAB-BAR ═ */
+  .bottom-nav{
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;
+    height:var(--bottomnav);background:var(--surface);
+    border-top:1px solid var(--border);
+    box-shadow:0 -2px 16px rgba(0,0,0,.06);
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;position:relative}
+  .bn-item i{font-size:20px}
+  .bn-item.active{color:var(--accent)}
+  .bn-item.active .bn-dot{display:block}
+  .bn-dot{display:none;position:absolute;top:2px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
+  .bn-item.pro-item.active{color:var(--pro)}
+  .bn-item.pro-item.active .bn-dot{background:var(--pro)}
 }
 @media(max-width:400px){
-  .main{padding:12px 12px 36px}
+  .main{padding:12px 12px calc(var(--bottomnav) + 20px)}
   .stats-grid{gap:6px}
   .stat-card{padding:9px 7px}
   .stat-card .val{font-size:16px}
@@ -164,6 +199,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   .topbar h1{font-size:13px;max-width:140px}
   .mod-grid{gap:7px}
   .mod-card{padding:10px 9px}
+  .bn-item{font-size:9.5px}
+  .bn-item i{font-size:18px}
 }
 </style>
 </head>
@@ -177,7 +214,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="logo-text">MaktabgachaHub<span>Yurakdan yaratilgan</span></div>
     <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
-  <div class="sidebar-nav">
   <div class="sidebar-section">Asosiy</div>
   <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
   <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
@@ -188,16 +224,15 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
   <div class="sidebar-section">Professional</div>
-  <a href="javascript:void(0)" class="nav-item locked" id="side-games"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a href="javascript:void(0)" class="nav-item locked" id="side-songs"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a href="javascript:void(0)" class="nav-item locked" id="side-activities"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
-  <a href="javascript:void(0)" class="nav-item locked" id="side-attestation"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a href="javascript:void(0)" class="nav-item locked" id="side-portfolio"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <a href="pages/oyinlar.html" class="nav-item locked"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a href="pages/qoshiqlar.html" class="nav-item locked"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a href="pages/mashgulot.html" class="nav-item locked"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
+  <a href="pages/attestatsiya.html" class="nav-item locked"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a href="pages/portfolio.html" class="nav-item locked"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
   <div class="sidebar-section">Korporativ</div>
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
-  </div>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -393,6 +428,55 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 <div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
+<!-- ═══ MOBIL PASTKI TAB-BAR ═══ -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="bn-item active"><span class="bn-dot"></span><i class="ti ti-layout-dashboard"></i>Bosh sahifa</a>
+  <a href="pages/haftalik.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-books"></i>Haftalik</a>
+  <a href="pages/test.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-flask"></i>Testlar</a>
+  <a href="pages/premium.html" class="bn-item pro-item"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</a>
+  <button class="bn-item" onclick="openMoreSheet()"><span class="bn-dot"></span><i class="ti ti-grid-dots"></i>Yana</button>
+</nav>
+
+<!-- MORE BOTTOM SHEET -->
+<div class="more-sheet-overlay" id="moreOverlay" onclick="closeMoreSheet()"></div>
+<div class="more-sheet" id="moreSheet">
+  <div class="more-sheet-handle"></div>
+  <div class="more-sheet-hdr">
+    <h3>Barcha bo'limlar</h3>
+    <button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button>
+  </div>
+
+  <div class="more-sheet-section">Asosiy</div>
+  <div class="more-grid">
+    <a href="pages/jadval.html" class="more-item"><div class="mi-icon"><i class="ti ti-calendar"></i></div><span>Kunlik jadval</span></a>
+    <a href="pages/soha.html" class="more-item"><div class="mi-icon"><i class="ti ti-chart-dots-3"></i></div><span>Rivojlanish sohalari</span></a>
+    <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
+    <a href="pages/konspekt.html" class="more-item"><div class="mi-icon"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
+    <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
+  </div>
+
+  <div class="more-sheet-section">Professional</div>
+  <div class="more-grid">
+    <a href="pages/oyinlar.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-puzzle"></i></div><span class="mi-badge">PRO</span><span>Oyinlar</span></a>
+    <a href="pages/qoshiqlar.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-music"></i></div><span class="mi-badge">PRO</span><span>Qo'shiqlar</span></a>
+    <a href="pages/mashgulot.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></a>
+    <a href="pages/attestatsiya.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></a>
+    <a href="pages/portfolio.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></a>
+  </div>
+
+  <div class="more-sheet-section">Korporativ</div>
+  <div class="more-grid">
+    <div class="more-item" style="opacity:.55"><div class="mi-icon slate"><i class="ti ti-qrcode"></i></div><span>Davomat</span></div>
+    <div class="more-item" style="opacity:.55"><div class="mi-icon slate"><i class="ti ti-users-group"></i></div><span>Ota-onalar</span></div>
+    <div class="more-item" style="opacity:.55"><div class="mi-icon slate"><i class="ti ti-chart-line"></i></div><span>Monitoring</span></div>
+  </div>
+
+  <div class="more-sheet-section">Hisob</div>
+  <div class="more-grid">
+    <button class="more-item" onclick="doLogout()"><div class="mi-icon slate"><i class="ti ti-logout"></i></div><span>Chiqish</span></button>
+  </div>
+</div>
+
 <script>
 (function(){
   const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
@@ -431,11 +515,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <script>
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('show');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal()}});
 function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
 checkHamburger();window.addEventListener('resize',checkHamburger);
 function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
+function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal();closeMoreSheet()}});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -471,7 +557,7 @@ async function checkNotifications(){
 window.addEventListener('load',async()=>{
   const auth=await initAuth(true);
   if(!auth)return;
-  if(typeof fillNav==='function')await fillNav();
+  if(typeof fillNav==='function')fillNav();
   const profile=auth.profile;
   const name=getUserName();
   document.getElementById('hero-name').textContent=name;
@@ -489,12 +575,6 @@ window.addEventListener('load',async()=>{
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);if(!el)return;
     if(proUser){const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
-    else{el.onclick=openPremiumModal;}
-  });
-  const sideCards={'side-games':{href:'pages/oyinlar.html'},'side-songs':{href:'pages/qoshiqlar.html'},'side-activities':{href:'pages/mashgulot.html'},'side-attestation':{href:'pages/attestatsiya.html'},'side-portfolio':{href:'pages/portfolio.html'}};
-  Object.entries(sideCards).forEach(([id,cfg])=>{
-    const el=document.getElementById(id);if(!el)return;
-    if(proUser){const b=el.querySelector('.badge');if(b)b.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
     else{el.onclick=openPremiumModal;}
   });
   const xp=profile?.xp||0;
