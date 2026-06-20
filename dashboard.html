@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8"/>
@@ -29,91 +29,76 @@
   --pro:#7c3aed;
   --pro2:#8b5cf6;
   --pro-soft:#f5f3ff;
-  --topnav:62px;
-  --radius:14px;
-  --radius-sm:10px;
+  --sidebar:256px;
+  --bottomnav:62px;
+  --radius:12px;
+  --radius-sm:8px;
   --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
   --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
 }
 
-body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg);overflow-x:hidden}
 
-/* ── TOP NAV ── */
-.topnav{
-  position:sticky;top:0;z-index:100;
-  height:var(--topnav);
-  background:rgba(255,255,255,.92);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;
-  padding:0 20px;gap:10px;
+/* ── SIDEBAR ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.35);z-index:20;backdrop-filter:blur(3px)}
+.sidebar{
+  z-index:30;width:var(--sidebar);
+  background:var(--white);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;
 }
-.tn-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
-.tn-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--accent2),#6366f1);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;box-shadow:0 2px 8px rgba(37,99,235,.3)}
-.tn-logo-text{font-size:13.5px;font-weight:700;color:var(--text);display:none}
-.tn-logo-text span{display:block;font-size:10.5px;font-weight:400;color:var(--text3)}
+.sidebar-logo{
+  padding:20px 18px 18px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:11px;
+}
+.logo-icon{
+  width:36px;height:36px;
+  background:linear-gradient(135deg,var(--accent2),#6366f1);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(37,99,235,.3);
+}
+.logo-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--text3);margin-top:2px}
+.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;padding:4px}
 
-.tn-links{display:flex;align-items:center;gap:2px;margin-left:8px;flex:1;overflow-x:auto;scrollbar-width:none}
-.tn-links::-webkit-scrollbar{display:none}
-.tn-link{display:flex;align-items:center;gap:6px;padding:8px 13px;border-radius:99px;text-decoration:none;color:var(--text2);font-size:12.5px;font-weight:600;white-space:nowrap;transition:background .15s,color .15s;flex-shrink:0}
-.tn-link:hover{background:var(--accent-soft);color:var(--accent2)}
-.tn-link.active{background:var(--accent-soft);color:var(--accent2)}
-.tn-link i{font-size:16px}
+.sidebar-section{padding:18px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-radius:var(--radius-sm);
+  margin:1px 8px;
+  color:var(--text2);text-decoration:none;
+  font-size:13px;font-weight:500;cursor:pointer;
+  transition:background .15s,color .15s;
+}
+.nav-item:hover{background:var(--accent-soft);color:var(--accent)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2)}
+.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
 
-.tn-right{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
-.tn-more-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:var(--bg);border:1px solid var(--border);color:var(--text2);font-size:12.5px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
-.tn-more-btn:hover{background:var(--border)}
-.tn-more-btn i{font-size:16px}
-.tn-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0}
-
-/* ── MORE SHEET ── */
-.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.4);z-index:300;backdrop-filter:blur(3px)}
-.more-sheet-overlay.show{display:block}
-.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:310;background:var(--white);border-radius:20px 20px 0 0;max-height:82vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(15,20,50,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
-.more-sheet.show{display:block;transform:translateY(0)}
-.more-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto}
-.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
-.more-sheet-hdr h3{font-size:15px;font-weight:700;color:var(--text)}
-.more-sheet-close{background:var(--bg);border:1px solid var(--border);width:30px;height:30px;border-radius:8px;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
-.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
-.more-item:active{background:var(--bg)}
-.more-item .mi-icon{width:46px;height:46px;border-radius:13px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:21px}
-.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro2)}
-.more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
-.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
-.more-item .mi-badge{position:absolute;top:6px;right:4px;font-size:8px;font-weight:700;padding:2px 5px;border-radius:20px;background:var(--pro2);color:#fff}
-.more-sheet-section{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:10px 18px 4px}
+.sidebar-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
+.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg)}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.user-info .name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-info .plan{font-size:11px;color:var(--text3)}
+.btn-logout{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:all .15s}
+.btn-logout:hover{background:#fef2f2;color:var(--red);border-color:#fca5a5}
 
 /* ── MAIN ── */
-.main{position:relative;z-index:2;padding:20px 20px 50px;max-width:1080px;margin:0 auto}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:28px 32px;max-width:1020px}
 
-/* ── HERO SLIDER ── */
-.hero-slider{position:relative;border-radius:18px;overflow:hidden;margin-bottom:22px;height:240px;box-shadow:var(--shadow-md)}
-.hero-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.65,0,.35,1)}
-.hero-slide{min-width:100%;height:100%;position:relative;display:flex;align-items:center;background-size:cover;background-position:center}
-.hero-slide::before{content:'';position:absolute;inset:0;background:linear-gradient(100deg,rgba(15,23,80,.78) 0%,rgba(30,58,138,.55) 45%,rgba(30,58,138,.15) 100%)}
-.hero-slide-content{position:relative;z-index:1;padding:0 36px;max-width:560px}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:99px;margin-bottom:12px;backdrop-filter:blur(4px)}
-.hero-title{font-size:24px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:8px;text-shadow:0 2px 12px rgba(0,0,0,.2)}
-.hero-desc{font-size:13px;color:rgba(255,255,255,.9);line-height:1.6;margin-bottom:16px;max-width:460px}
-.hero-cta{display:inline-flex;align-items:center;gap:7px;background:#fff;color:var(--accent);font-size:13px;font-weight:700;padding:10px 20px;border-radius:9px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,.18);transition:transform .15s}
-.hero-cta:hover{transform:translateY(-2px)}
-.hero-dots{position:absolute;bottom:16px;left:36px;z-index:2;display:flex;gap:6px}
-.hero-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .2s,width .2s}
-.hero-dot.active{background:#fff;width:22px;border-radius:99px}
-.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .15s}
-.hero-arrow:hover{background:rgba(255,255,255,.3)}
-.hero-arrow.prev{left:14px}
-.hero-arrow.next{right:14px}
-.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-
-/* ── WELCOME ROW ── */
-.welcome-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
-.welcome-text h1{font-size:18px;font-weight:700;color:var(--text)}
-.welcome-text h1 span{color:var(--accent2)}
-.welcome-text p{font-size:12px;color:var(--text3);margin-top:2px}
-.welcome-badges{display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px}
+.topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.btn-hamburger{display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
+.btn-hamburger:hover{background:var(--bg)}
+.topbar h1{font-size:21px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar h1 span{color:var(--accent2)}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);border:1px solid #bfdbfe;white-space:nowrap}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro2);border-color:#ddd6fe}
 .level-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
@@ -123,7 +108,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 60%,#7c3aed 100%);
   border-radius:var(--radius);padding:22px 26px;
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:20px;gap:16px;position:relative;overflow:hidden;
+  margin-bottom:24px;gap:16px;position:relative;overflow:hidden;
   box-shadow:0 4px 20px rgba(37,99,235,.25);
 }
 .premium-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%}
@@ -160,7 +145,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .sec-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .sec-title i{font-size:14px}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.sec-title-link{margin-left:auto;font-size:11px;font-weight:600;color:var(--accent2);text-decoration:none;letter-spacing:0;text-transform:none;cursor:pointer;flex:none}
 
 /* ── MOD CARDS ── */
 .mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
@@ -199,7 +183,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .empty-state a{color:var(--accent2);text-decoration:none;font-weight:500}
 
 /* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.5);z-index:400;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .modal-overlay.show{display:flex}
 .modal{background:var(--white);border-radius:16px;padding:28px;max-width:480px;width:100%;position:relative;box-shadow:0 24px 64px rgba(15,20,50,.2)}
 .modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
@@ -219,21 +203,35 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .btn-buy:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.35)}
 .btn-buy i{font-size:18px}
 
+/* ── BOTTOM NAV ── */
+.bottom-nav{display:none}
+.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.4);z-index:150;backdrop-filter:blur(3px)}
+.more-sheet-overlay.show{display:block}
+.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:160;background:var(--white);border-radius:20px 20px 0 0;max-height:78vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(15,20,50,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
+.more-sheet.show{display:block;transform:translateY(0)}
+.more-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto}
+.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
+.more-sheet-hdr h3{font-size:15px;font-weight:700;color:var(--text)}
+.more-sheet-close{background:var(--bg);border:1px solid var(--border);width:30px;height:30px;border-radius:8px;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center}
+.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
+.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
+.more-item:active{background:var(--bg)}
+.more-item .mi-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro2)}
+.more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
+.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
+.more-item .mi-badge{position:absolute;top:6px;right:4px;font-size:8px;font-weight:700;padding:2px 5px;border-radius:20px;background:var(--pro2);color:#fff}
+.more-sheet-section{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:10px 18px 4px}
+
 /* ── RESPONSIVE ── */
-@media(min-width:600px){.tn-logo-text{display:block}}
 @media(max-width:1100px){.mod-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
-  .topnav{padding:0 12px}
-  .tn-links{display:none}
-  .main{padding:14px 14px 40px}
-  .hero-slider{height:200px;border-radius:14px}
-  .hero-slide-content{padding:0 20px}
-  .hero-title{font-size:19px}
-  .hero-desc{font-size:12px;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
-  .hero-cta{padding:8px 16px;font-size:12px}
-  .hero-dots{left:20px}
-  .welcome-text h1{font-size:16px}
+  .sidebar{display:none}
+  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 22px)}
+  .topbar{margin-bottom:16px}
+  .topbar h1{font-size:16px}
+  .topbar-right .level-pill{display:none}
   .premium-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
   .btn-premium{width:100%;justify-content:center}
   .premium-features{display:none}
@@ -241,45 +239,64 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   .stat-card{padding:12px 14px}
   .stat-card .val{font-size:24px}
   .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;height:var(--bottomnav);background:var(--white);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(15,20,50,.08);padding-bottom:env(safe-area-inset-bottom)}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;position:relative}
+  .bn-item i{font-size:20px}
+  .bn-item.active{color:var(--accent2)}
+  .bn-dot{display:none;position:absolute;top:2px;width:4px;height:4px;border-radius:50%;background:var(--accent2)}
+  .bn-item.active .bn-dot{display:block}
+  .bn-item.pro-item.active{color:var(--pro2)}
+  .bn-item.pro-item.active .bn-dot{background:var(--pro2)}
 }
 </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- TOP NAV -->
-<nav class="topnav">
-  <a href="dashboard.html" class="tn-logo">
-    <div class="tn-logo-icon"><i class="ti ti-school"></i></div>
-    <div class="tn-logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
-  </a>
-  <div class="tn-links">
-    <a href="dashboard.html" class="tn-link active"><i class="ti ti-layout-dashboard"></i> Bosh sahifa</a>
-    <a href="pages/haftalik.html" class="tn-link"><i class="ti ti-books"></i> Haftalik</a>
-    <a href="pages/test.html" class="tn-link"><i class="ti ti-flask"></i> Testlar</a>
-    <a href="pages/premium.html" class="tn-link" style="color:var(--pro2)"><i class="ti ti-crown"></i> Premium</a>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-school"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
+    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
-  <div class="tn-right">
-    <button class="tn-more-btn" onclick="openMoreSheet()"><i class="ti ti-grid-dots"></i> <span style="display:none" id="moreLabel">Bo'limlar</span></button>
-    <div class="tn-avatar" id="sb-avatar" onclick="openMoreSheet()">T</div>
+  <div class="sidebar-section">Asosiy</div>
+  <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+  <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
+  <a href="pages/haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
+  <a href="pages/soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
+  <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
+  <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
+  <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
+  <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
+  <div class="sidebar-section">Professional</div>
+  <a href="pages/oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a href="pages/qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a href="pages/mashgulot.html" class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
+  <a href="pages/attestatsiya.html" class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a href="pages/portfolio.html" class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar" id="sb-avatar">T</div>
+      <div class="user-info">
+        <div class="name" id="sb-name">Tarbiyachi</div>
+        <div class="plan" id="sb-plan">Bepul tarif</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
   </div>
-</nav>
+</aside>
 
 <main class="main">
-
-  <!-- HERO SLIDER -->
-  <div class="hero-slider" id="heroSlider">
-    <div class="hero-track" id="heroTrack"></div>
-    <button class="hero-arrow prev" onclick="heroMove(-1)"><i class="ti ti-chevron-left"></i></button>
-    <button class="hero-arrow next" onclick="heroMove(1)"><i class="ti ti-chevron-right"></i></button>
-    <div class="hero-dots" id="heroDots"></div>
-  </div>
-
-  <div class="welcome-row">
-    <div class="welcome-text">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
       <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
-      <p>Bugungi faoliyatingizni shu yerdan boshqaring</p>
     </div>
-    <div class="welcome-badges">
+    <div class="topbar-right">
       <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights"></i> Bepul</span>
       <span class="level-pill" id="hero-xp-badge"><i class="ti ti-medal"></i> 1-daraja</span>
     </div>
@@ -325,7 +342,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
   </div>
 
-  <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar <span class="sec-title-link" onclick="openMoreSheet()">Hammasi →</span></div>
+  <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar</div>
   <div class="mod-grid">
     <a href="pages/jadval.html" class="mod-card"><div class="icon blue"><i class="ti ti-calendar"></i></div><div class="mod-title">Kunlik jadval</div><div class="mod-sub">Soatma-soat reja</div></a>
     <a href="pages/haftalik.html" class="mod-card"><div class="icon blue"><i class="ti ti-books"></i></div><div class="mod-title">Haftalik mavzular</div><div class="mod-sub">Yillik tematik reja</div></a>
@@ -389,19 +406,24 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
 <div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
-<!-- MORE SHEET -->
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="bn-item active"><span class="bn-dot"></span><i class="ti ti-layout-dashboard"></i>Bosh sahifa</a>
+  <a href="pages/haftalik.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-books"></i>Haftalik</a>
+  <a href="pages/test.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-flask"></i>Testlar</a>
+  <a href="pages/premium.html" class="bn-item pro-item"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</a>
+  <button class="bn-item" onclick="openMoreSheet()"><span class="bn-dot"></span><i class="ti ti-grid-dots"></i>Yana</button>
+</nav>
+
 <div class="more-sheet-overlay" id="moreOverlay" onclick="closeMoreSheet()"></div>
 <div class="more-sheet" id="moreSheet">
   <div class="more-sheet-handle"></div>
   <div class="more-sheet-hdr"><h3>Barcha bo'limlar</h3><button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button></div>
   <div class="more-sheet-section">Asosiy</div>
   <div class="more-grid">
-    <a href="dashboard.html" class="more-item"><div class="mi-icon"><i class="ti ti-layout-dashboard"></i></div><span>Bosh sahifa</span></a>
     <a href="pages/jadval.html" class="more-item"><div class="mi-icon"><i class="ti ti-calendar"></i></div><span>Kunlik jadval</span></a>
-    <a href="pages/haftalik.html" class="more-item"><div class="mi-icon"><i class="ti ti-books"></i></div><span>Haftalik</span></a>
     <a href="pages/soha.html" class="more-item"><div class="mi-icon"><i class="ti ti-chart-dots-3"></i></div><span>Rivojlanish</span></a>
     <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
-    <a href="pages/test.html" class="more-item"><div class="mi-icon"><i class="ti ti-flask"></i></div><span>Testlar</span></a>
     <a href="pages/konspekt.html" class="more-item"><div class="mi-icon"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
     <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
   </div>
@@ -412,17 +434,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/mashgulot.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></a>
     <a href="pages/attestatsiya.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></a>
     <a href="pages/portfolio.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></a>
-    <a href="pages/premium.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-crown"></i></div><span>Premium</span></a>
-  </div>
-  <div class="more-sheet-section">Korporativ</div>
-  <div class="more-grid">
-    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-qrcode"></i></div><span>Davomat</span></div>
-    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-users-group"></i></div><span>Ota-onalar</span></div>
-    <div class="more-item" style="opacity:.5"><div class="mi-icon slate"><i class="ti ti-chart-line"></i></div><span>Monitoring</span></div>
-  </div>
-  <div class="more-sheet-section" id="adminSectionLabel" style="display:none">Boshqaruv</div>
-  <div class="more-grid" id="adminSectionGrid" style="display:none">
-    <a href="pages/admin.html" class="more-item"><div class="mi-icon" style="background:#fef3c7;color:#b45309"><i class="ti ti-settings"></i></div><span>Admin panel</span></a>
   </div>
   <div class="more-sheet-section">Hisob</div>
   <div class="more-grid">
@@ -431,118 +442,15 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 </div>
 
 <script>
-function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
-function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
+function openSidebar(){document.getElementById('sidebar').style.display='flex';document.getElementById('overlay').style.display='block';document.body.style.overflow='hidden'}
+function closeSidebar(){document.getElementById('sidebar').style.display='';document.getElementById('overlay').style.display='';document.body.style.overflow=''}
+function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
+checkHamburger();window.addEventListener('resize',checkHamburger);
 function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePremiumModal();closeMoreSheet()}});
-
-/* ── HERO SLIDER LOGIC ── */
-let heroSlides = [
-  {
-    image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80',
-    eyebrow: "Ilk Qadam platformasi",
-    title: "Tarbiyachilar uchun yagona yordamchi",
-    desc: "Kunlik rejalar, testlar va metodik materiallar — barchasi bir joyda.",
-    ctaText: "Boshlash",
-    ctaLink: "pages/haftalik.html",
-    isVideo: false
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1587616211892-49b2a7e8e63e?w=1200&q=80',
-    eyebrow: "Yangi imkoniyat",
-    title: "Professional Portfolio yarating",
-    desc: "Yutuqlaringiz, sertifikatlaringiz va kasbiy darajangizni bir joyda saqlang.",
-    ctaText: "Portfolio ochish",
-    ctaLink: "pages/portfolio.html",
-    isVideo: false
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&q=80',
-    eyebrow: "Chegirma −38%",
-    title: "Professional tarifga o'ting",
-    desc: "Attestatsiya testlari, didaktik o'yinlar va cheksiz test ishlash imkoniyati.",
-    ctaText: "Premium olish",
-    ctaLink: "pages/premium.html",
-    isVideo: false
-  }
-];
-
-let heroIdx = 0, heroTimer = null;
-
-function renderHero(){
-  const track = document.getElementById('heroTrack');
-  const dots = document.getElementById('heroDots');
-  track.innerHTML = heroSlides.map(s => `
-    <div class="hero-slide" style="${s.isVideo ? '' : `background-image:url('${s.image}')`}">
-      ${s.isVideo ? `<video class="hero-video" src="${s.image}" autoplay muted loop playsinline></video>` : ''}
-      <div class="hero-slide-content">
-        <span class="hero-eyebrow">${s.eyebrow}</span>
-        <div class="hero-title">${s.title}</div>
-        <div class="hero-desc">${s.desc}</div>
-        <a href="${s.ctaLink}" class="hero-cta">${s.ctaText} <i class="ti ti-arrow-right"></i></a>
-      </div>
-    </div>
-  `).join('');
-  dots.innerHTML = heroSlides.map((_,i) => `<div class="hero-dot ${i===0?'active':''}" onclick="heroGoTo(${i})"></div>`).join('');
-  updateHeroTrack();
-}
-
-function updateHeroTrack(){
-  document.getElementById('heroTrack').style.transform = `translateX(-${heroIdx*100}%)`;
-  document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active', i===heroIdx));
-}
-
-function heroMove(dir){
-  heroIdx = (heroIdx + dir + heroSlides.length) % heroSlides.length;
-  updateHeroTrack();
-  resetHeroTimer();
-}
-function heroGoTo(i){
-  heroIdx = i;
-  updateHeroTrack();
-  resetHeroTimer();
-}
-function resetHeroTimer(){
-  clearInterval(heroTimer);
-  heroTimer = setInterval(()=>heroMove(1), 5500);
-}
-
-renderHero();
-resetHeroTimer();
-
-/* ── Supabase'dan banner yuklash (admin panel orqali qo'shilgan bannerlar) ── */
-async function loadBannersFromDB(){
-  try{
-    const { data, error } = await _sb.from('banners').select('*').eq('active', true).order('sort_order');
-    if(error || !data || !data.length) return;
-    heroSlides = data.map(b => ({
-      image: b.image_url,
-      eyebrow: b.eyebrow || '',
-      title: b.title || '',
-      desc: b.descr || '',
-      ctaText: b.cta_text || "Batafsil",
-      ctaLink: b.cta_link || '#',
-      isVideo: b.is_video || false
-    }));
-    heroIdx = 0;
-    renderHero();
-    resetHeroTimer();
-  }catch(e){ /* jadval mavjud bo'lmasa demo data bilan davom etadi */ }
-}
-
-/* ── Admin bo'limini faqat admin foydalanuvchiga ko'rsatish ── */
-async function checkAdminAccess(){
-  try{
-    const { data: { user } } = await _sb.auth.getUser();
-    if(!user) return;
-    const { data: prof } = await _sb.from('profiles').select('is_admin').eq('id', user.id).single();
-    if(prof && prof.is_admin){
-      document.getElementById('adminSectionLabel').style.display = 'block';
-      document.getElementById('adminSectionGrid').style.display = 'grid';
-    }
-  }catch(e){}
-}
+function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
+function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal();closeMoreSheet()}});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -569,11 +477,13 @@ window.addEventListener('load',async()=>{
   const profile=auth.profile;
   const name=getUserName();
   document.getElementById('hero-name').textContent=name;
+  document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
   const proUser=isPro(),corpUser=isCorporate();
   const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
   document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
   if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
+  document.getElementById('sb-plan').textContent=planLabel+' tarif';
   const banner=document.getElementById('premiumBanner');
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
@@ -597,8 +507,6 @@ window.addEventListener('load',async()=>{
   const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
   if(tests&&tests.length){const ul=document.getElementById('lastTests');ul.innerHTML='';tests.forEach(t=>{const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';const row=document.createElement('div');row.className='test-row';row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;ul.appendChild(row);});}
   await checkNotifications();
-  await loadBannersFromDB();
-  await checkAdminAccess();
 });
 </script>
 </body>
