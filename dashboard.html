@@ -304,6 +304,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
+  <a href="pages/qarorlar.html" class="nav-item"><i class="ti ti-gavel"></i> Qarorlar</a>
   <div class="sidebar-section">Professional</div>
   <a href="pages/oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a href="pages/qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
@@ -389,6 +390,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/tamoyil.html" class="mod-card extra" data-group="main"><div class="icon green"><i class="ti ti-pin"></i></div><div class="mod-title">Tamoyillar</div><div class="mod-sub">6 ta tamoyil</div></a>
     <a href="pages/konspekt.html" class="mod-card extra" data-group="main"><div class="icon amber"><i class="ti ti-notebook"></i></div><div class="mod-title">Konspektlar</div><div class="mod-sub">3 ta ko'rish</div></a>
     <a href="pages/vaziyat.html" class="mod-card extra" data-group="main"><div class="icon blue"><i class="ti ti-bulb"></i></div><div class="mod-title">Vaziyatlar</div><div class="mod-sub">5 ta variant</div></a>
+    <a href="pages/qarorlar.html" class="mod-card extra" data-group="main"><div class="icon blue"><i class="ti ti-gavel"></i></div><div class="mod-title">Qarorlar</div><div class="mod-sub">Pedagogik qarorlar</div></a>
   </div>
   <button class="btn-seeall" data-group="main" onclick="toggleGroup('main')"><span>Barchasini ko'rish</span><i class="ti ti-chevron-down"></i></button>
 
@@ -474,6 +476,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon c-teal"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
     <a href="pages/konspekt.html" class="more-item"><div class="mi-icon c-amber"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
     <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon c-pink"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
+    <a href="pages/qarorlar.html" class="more-item"><div class="mi-icon c-blue"><i class="ti ti-gavel"></i></div><span>Qarorlar</span></a>
   </div>
   <div class="more-sheet-section">Professional</div>
   <div class="more-grid">
@@ -503,7 +506,6 @@ function closePremiumModal(){document.getElementById('premiumModal').classList.r
 function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
 
-// Bottom nav Premium tugmasi
 function handlePremiumNav(){
   if(typeof isPro==='function' && isPro()){
     window.location.href='premium.html';
@@ -512,7 +514,6 @@ function handlePremiumNav(){
   }
 }
 
-// More sheet PRO bo'limlari
 function handleProNav(url){
   closeMoreSheet();
   if(typeof isPro==='function' && isPro()){
