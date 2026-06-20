@@ -6,7 +6,7 @@
 <title>MaktabgachaHub — Qarorlar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/@tabler/icons-webfont/2.44.0/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -69,11 +69,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .dc-badge.pro{background:var(--pro-soft);color:var(--pro)}
 .dc-actions{display:flex;gap:8px;margin-top:auto}
 .dc-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;text-decoration:none;transition:transform .12s}
-.dc-btn.pdf{background:var(--bg);color:var(--text);border:1px solid var(--border)}
-.dc-btn.pdf:hover{background:#e2e8f0}
-.dc-btn.test{background:var(--accent);color:#fff}
+.dc-btn.test{background:var(--accent);color:#fff;width:100%}
 .dc-btn.test:hover{transform:translateY(-1px)}
-.dc-btn.lockbtn{background:var(--pro-soft);color:var(--pro);grid-column:1/-1;width:100%}
+.dc-btn.lockbtn{background:var(--pro-soft);color:var(--pro);width:100%}
 .lock-overlay{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55);backdrop-filter:blur(1px);cursor:pointer}
 .lock-overlay i{font-size:26px;color:var(--pro)}
 .test-screen{display:none}
@@ -202,7 +200,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   </div>
 
   <div class="doc-screen" id="docScreen">
-    <div class="info-box"><i class="ti ti-info-circle"></i> Maktabgacha ta'lim sohasiga oid rasmiy buyruq va qarorlar bilan tanishing, PDF holida yuklab oling va bilimingizni testda sinab ko'ring.</div>
+    <div class="info-box"><i class="ti ti-info-circle"></i> Maktabgacha ta'lim sohasiga oid rasmiy buyruq va qarorlar mazmuni bo'yicha bilimingizni testda sinab ko'ring.</div>
     <div class="doc-grid" id="docGrid"></div>
   </div>
 
@@ -228,9 +226,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <button class="modal-close" onclick="closeProModal()"><i class="ti ti-x"></i></button>
     <div class="modal-icon"><i class="ti ti-crown"></i></div>
     <h2>Professional tarif kerak</h2>
-    <p>Bu hujjat va testi faqat PRO foydalanuvchilar uchun. Barcha hujjatlarga to'liq kirish uchun obuna bo'ling.</p>
+    <p>Bu hujjat testi faqat PRO foydalanuvchilar uchun. Barcha hujjatlarga to'liq kirish uchun obuna bo'ling.</p>
     <div class="modal-feats">
-      <div class="mf"><i class="ti ti-circle-check"></i> Barcha qarorlar va buyruqlar (5 ta hujjat)</div>
+      <div class="mf"><i class="ti ti-circle-check"></i> Barcha qarorlar va buyruqlar bo'yicha testlar</div>
       <div class="mf"><i class="ti ti-circle-check"></i> Har bir hujjatga oid bilim testlari</div>
       <div class="mf"><i class="ti ti-circle-check"></i> Attestatsiya, portfolio, oyinlar</div>
       <div class="mf"><i class="ti ti-circle-check"></i> Cheksiz testlar va konspektlar</div>
@@ -251,7 +249,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <script>
 // ───────────────────────────────────────────────────────────
 // HUJJATLAR RO'YXATI
-// PDF fayllarni repo ichidagi "docs/" papkasiga joylashtirib, yo'lni shu yerga yozing
+// PDF funksiyasi olib tashlandi — endi faqat test ishlaydi.
 // free:true => hammaga ochiq, free:false => faqat PRO
 // ───────────────────────────────────────────────────────────
 var DOCS=[
@@ -259,15 +257,13 @@ var DOCS=[
     id:1,
     name:"Uzluksiz metodik xizmat ko'rsatish ishlarini rivojlantirish to'g'risida",
     sub:"128-son buyruq • 2021-yil 12-iyul • MTV",
-    file:"../docs/128-buyruq.pdf",
     free:true,
     qrange:[0,15]
   },
   {
     id:2,
-    name:"2-hujjat",
-    sub:"Tez kunda qo'shiladi",
-    file:null,
+    name:"Maktabgacha ta'lim va tarbiyaning davlat standartini tasdiqlash to'g'risida",
+    sub:"802-son qaror • 2020-yil 22-dekabr • Vazirlar Mahkamasi",
     free:false,
     qrange:[15,30]
   },
@@ -275,7 +271,6 @@ var DOCS=[
     id:3,
     name:"3-hujjat",
     sub:"Tez kunda qo'shiladi",
-    file:null,
     free:false,
     qrange:[30,45]
   },
@@ -283,7 +278,6 @@ var DOCS=[
     id:4,
     name:"4-hujjat",
     sub:"Tez kunda qo'shiladi",
-    file:null,
     free:false,
     qrange:[45,60]
   },
@@ -291,7 +285,6 @@ var DOCS=[
     id:5,
     name:"5-hujjat",
     sub:"Tez kunda qo'shiladi",
-    file:null,
     free:false,
     qrange:[60,75]
   }
@@ -299,7 +292,7 @@ var DOCS=[
 
 // ───────────────────────────────────────────────────────────
 // SAVOLLAR BAZASI — har bir hujjat uchun 15 tadan savol (4 variant javob)
-// 1-hujjat (128-son buyruq) savollari to'liq tayyor.
+// 1-hujjat: 128-son buyruq. 2-hujjat: 802-son qaror (Davlat standarti).
 // ───────────────────────────────────────────────────────────
 var ALL_Q=[
   {q:"Vazirlikning «Maktabgacha ta'lim tizimida uzluksiz metodik xizmat ko'rsatish ishlarini yanada rivojlantirish to'g'risida»gi buyrug'i necha-son?",opts:["125-son","128-son","130-son","802-son"],ans:1},
@@ -316,7 +309,23 @@ var ALL_Q=[
   {q:"Pedagogik Kengash kun tartibida ko'riladigan masalalar soni nechtadan oshmasligi zarur?",opts:["Ikkitadan","Uchtadan","Beshtadan","Cheklov yo'q"],ans:1},
   {q:"2-ilova («Uslubiy birlashmalar to'g'risida»gi Nizom)ga ko'ra, Uslubiy birlashma rahbari qachon va qanday saylanadi?",opts:["Har o'quv yili, yashirin ovoz berish yo'li bilan dekabr oyida","Har o'quv yili, avgust oyining oxirgi 10 kunligida ochiq ovoz berish yo'li bilan","Faqat bir marta, doimiy ravishda","Tuman maktabgacha ta'lim bo'limi tomonidan tayinlanadi"],ans:1},
   {q:"Har bir Uslubiy birlashma o'quv yili davomida har chorakda kamida necha marta yig'ilish o'tkazishi shart?",opts:["1 marta","2 marta","4 marta","6 marta"],ans:1},
-  {q:"3-ilovaga ko'ra, «Pedagogik-kouching» hamkorligida Koucher tomonidan yosh yoki metodik yordamga muhtoj mutaxassisga kamida qancha muddatga biriktiriladi?",opts:["6 oydan kam bo'lmagan muddatga","1 yildan kam bo'lmagan muddatga","2 yildan kam bo'lmagan muddatga","Muddat belgilanmagan"],ans:1}
+  {q:"3-ilovaga ko'ra, «Pedagogik-kouching» hamkorligida Koucher tomonidan yosh yoki metodik yordamga muhtoj mutaxassisga kamida qancha muddatga biriktiriladi?",opts:["6 oydan kam bo'lmagan muddatga","1 yildan kam bo'lmagan muddatga","2 yildan kam bo'lmagan muddatga","Muddat belgilanmagan"],ans:1},
+
+  {q:"Vazirlar Mahkamasining «Maktabgacha ta'lim va tarbiyaning davlat standartini tasdiqlash to'g'risida»gi qarori necha-son?",opts:["391-son","754-son","802-son","929-son"],ans:2},
+  {q:"Mazkur qaror qachon qabul qilingan?",opts:["2019-yil 13-may","2020-yil 22-dekabr","2017-yil 9-sentyabr","2021-yil 12-iyul"],ans:1},
+  {q:"Qarorga O'zbekiston Respublikasining Bosh vaziri sifatida kim imzo qo'ygan?",opts:["B.A. Musayev","U.N. Tashkenbayev","A. ARIPOV","A.V. Shin"],ans:2},
+  {q:"Davlat standarti necha yilda kamida bir marta qayta ko'rib chiqiladi?",opts:["Uch yilda","Besh yilda","Yetti yilda","O'n yilda"],ans:1},
+  {q:"Davlat standartining tarkibiy qismlariga ko'ra, 1-ilova nimaga bag'ishlangan?",opts:["Maktabgacha ta'lim tashkilotining davlat o'quv dasturi","Ilk va maktabgacha yoshdagi bolalar rivojlanishiga qo'yiladigan davlat talablari","Jihozlash me'yorlari","Ishchi guruh tarkibi"],ans:1},
+  {q:"Davlat talablarida bolalar rivojlanishi nechta asosiy sohaga bo'lingan?",opts:["Uchta","To'rtta","Beshta","Oltita"],ans:2},
+  {q:"Davlat talablarida belgilangan yosh davrlaridan biri «kichik maktabgacha yosh» qaysi davrni o'z ichiga oladi?",opts:["1 yoshdan 3 yoshgacha","3 yoshdan 4 yoshgacha","4 yoshdan 5 yoshgacha","5 yoshdan 6 yoshgacha"],ans:1},
+  {q:"Maktabgacha ta'lim tashkilotining davlat o'quv dasturiga ko'ra, o'quv yili qaysi sanada boshlanadi?",opts:["1-sentyabrda","2-sentyabrda","1-oktyabrda","15-avgustda"],ans:1},
+  {q:"Yozgi sog'lomlashtirish davri qaysi oylarni qamrab oladi?",opts:["1-iyundan 31-avgustgacha","1-iyuldan 31-avgustgacha","15-mayidan 1-sentyabrgacha","1-iyundan 1-oktyabrgacha"],ans:0},
+  {q:"O‘quv-tarbiyaviy faoliyatda qanday rejalashtirish turlari mavjud?",opts:["Kunlik va oylik","Yillik mavzuli va haftalik","Choraklik va yillik","Haftalik va oylik"],ans:1},
+  {q:"Bolaning rivojlanish xaritasi necha marta to'ldiriladi?",opts:["Yiliga bir marta","Yiliga ikki marta","Yiliga uch marta","Har chorakda"],ans:2},
+  {q:"6-7 yoshdagi bitiruvchilar uchun qanday alohida hujjat to'ldiriladi?",opts:["Sog'liq xaritasi","Maktabga tayyorlik xaritasi","Ovqatlanish jadvali","Davomat varaqasi"],ans:1},
+  {q:"Davlat o'quv dasturi tuzilishida Dastur nechta asosiy bo'limni qamrab oladi?",opts:["Ikkita","Uchta","To'rtta","Beshta"],ans:1},
+  {q:"Maktabgacha ta'lim tashkilotining ishchi o'quv dasturi kim tomonidan tuziladi va qanday tasdiqlanadi?",opts:["Faqat direktor tomonidan tuziladi va vazirlik tomonidan tasdiqlanadi","Pedagoglar tomonidan ota-onalarni jalb etgan holda tuziladi va belgilangan tartibda tasdiqlanadi","Tuman bo'limi tomonidan tuziladi va viloyat boshqarmasi tasdiqlaydi","Faqat metodist tomonidan tuziladi"],ans:1},
+  {q:"Davlat standarti talablarining buzilishida aybdor bo'lgan shaxslar qanday javobgarlikka tortiladi?",opts:["Faqat ogohlantirish beriladi","Qonun hujjatlarida belgilangan tartibda javob beradilar","Javobgarlik nazarda tutilmagan","Faqat moddiy jarima qo'llaniladi"],ans:1}
 ];
 
 var curDoc=null,questions=[],curIdx=0,score=0,answered=false,timerSec=0,timerInt=null;
@@ -360,14 +369,14 @@ function buildDocGrid(proUser){
   g.innerHTML=DOCS.map(function(d,i){
     var locked=!d.free&&!proUser;
     var iconCls=locked?'purple':'blue';
+    var hasQuestions=d.qrange&&ALL_Q.slice(d.qrange[0],d.qrange[1]).length>0;
     var actions='';
     if(locked){
       actions='<button class="dc-btn lockbtn" onclick="openProModal()"><i class="ti ti-crown"></i> PRO orqali ochish</button>';
-    }else if(!d.file){
-      actions='<button class="dc-btn pdf" disabled style="opacity:.5;cursor:default"><i class="ti ti-clock"></i> Tez kunda</button>';
+    }else if(!hasQuestions){
+      actions='<button class="dc-btn test" disabled style="opacity:.5;cursor:default"><i class="ti ti-clock"></i> Tez kunda</button>';
     }else{
-      actions='<a class="dc-btn pdf" href="'+d.file+'" target="_blank" rel="noopener"><i class="ti ti-file-download"></i> PDF</a>'+
-        '<button class="dc-btn test" onclick="startDoc('+i+')"><i class="ti ti-flask"></i> Testni boshlash</button>';
+      actions='<button class="dc-btn test" onclick="startDoc('+i+')"><i class="ti ti-flask"></i> Testni boshlash</button>';
     }
     return '<div class="doc-card'+(locked?' locked':'')+'">'+
       '<span class="dc-badge '+(locked?'pro':'free')+'">'+(locked?'<i class="ti ti-crown"></i> PRO':"<i class=\"ti ti-lock-open\"></i> Bepul")+'</span>'+
