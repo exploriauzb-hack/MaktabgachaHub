@@ -471,7 +471,7 @@ async function checkNotifications(){
 window.addEventListener('load',async()=>{
   const auth=await initAuth(true);
   if(!auth)return;
-  if(typeof fillNav==='function')fillNav();
+  if(typeof fillNav==='function')await fillNav();
   const profile=auth.profile;
   const name=getUserName();
   document.getElementById('hero-name').textContent=name;
