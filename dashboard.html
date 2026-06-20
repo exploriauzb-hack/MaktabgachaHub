@@ -304,12 +304,13 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
+  <a href="pages/qarorlar.html" class="nav-item"><i class="ti ti-gavel"></i> Qarorlar</a>
   <div class="sidebar-section">Professional</div>
-  <a href="pages/oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a href="pages/qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a href="pages/mashgulot.html" class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
-  <a href="pages/attestatsiya.html" class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a href="pages/portfolio.html" class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
+  <a href="pages/oyinlar.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/oyinlar.html')"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a href="pages/qoshiqlar.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/qoshiqlar.html')"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a href="pages/mashgulot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot.html')"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
+  <a href="pages/attestatsiya.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/attestatsiya.html')"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a href="pages/portfolio.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/portfolio.html')"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
   <div class="sidebar-section">Korporativ</div>
   <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
   <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
@@ -389,6 +390,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/tamoyil.html" class="mod-card extra" data-group="main"><div class="icon green"><i class="ti ti-pin"></i></div><div class="mod-title">Tamoyillar</div><div class="mod-sub">6 ta tamoyil</div></a>
     <a href="pages/konspekt.html" class="mod-card extra" data-group="main"><div class="icon amber"><i class="ti ti-notebook"></i></div><div class="mod-title">Konspektlar</div><div class="mod-sub">3 ta ko'rish</div></a>
     <a href="pages/vaziyat.html" class="mod-card extra" data-group="main"><div class="icon blue"><i class="ti ti-bulb"></i></div><div class="mod-title">Vaziyatlar</div><div class="mod-sub">5 ta variant</div></a>
+    <a href="pages/qarorlar.html" class="mod-card extra" data-group="main"><div class="icon green"><i class="ti ti-gavel"></i></div><div class="mod-title">Qarorlar</div><div class="mod-sub">Hujjatlar va qarorlar</div></a>
   </div>
   <button class="btn-seeall" data-group="main" onclick="toggleGroup('main')"><span>Barchasini ko'rish</span><i class="ti ti-chevron-down"></i></button>
 
@@ -474,6 +476,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon c-teal"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
     <a href="pages/konspekt.html" class="more-item"><div class="mi-icon c-amber"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
     <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon c-pink"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
+    <a href="pages/qarorlar.html" class="more-item"><div class="mi-icon c-teal"><i class="ti ti-gavel"></i></div><span>Qarorlar</span></a>
   </div>
   <div class="more-sheet-section">Professional</div>
   <div class="more-grid">
@@ -512,7 +515,7 @@ function handlePremiumNav(){
   }
 }
 
-// More sheet PRO bo'limlari
+// PRO bo'limlari (sidebar + more sheet ikkalasida ham ishlatiladi)
 function handleProNav(url){
   closeMoreSheet();
   if(typeof isPro==='function' && isPro()){
@@ -580,6 +583,11 @@ window.addEventListener('load',async()=>{
       el.onclick=openPremiumModal;
     }
   });
+  if(proUser){
+    document.querySelectorAll('#sidebar .nav-item .badge').forEach(b=>{
+      if(!b.classList.contains('soon')) b.style.display='none';
+    });
+  }
   const xp=profile?.xp||0;
   document.getElementById('stat-xp').textContent=xp;
   const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
