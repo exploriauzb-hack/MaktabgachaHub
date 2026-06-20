@@ -6,7 +6,7 @@
 <title>MaktabgachaHub — Qarorlar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/@tabler/icons-webfont/2.44.0/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -247,53 +247,14 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <a href="../dashboard.html" class="fab-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
 
 <script>
-// ───────────────────────────────────────────────────────────
-// HUJJATLAR RO'YXATI
-// PDF funksiyasi olib tashlandi — endi faqat test ishlaydi.
-// free:true => hammaga ochiq, free:false => faqat PRO
-// ───────────────────────────────────────────────────────────
 var DOCS=[
-  {
-    id:1,
-    name:"Uzluksiz metodik xizmat ko'rsatish ishlarini rivojlantirish to'g'risida",
-    sub:"128-son buyruq • 2021-yil 12-iyul • MTV",
-    free:true,
-    qrange:[0,15]
-  },
-  {
-    id:2,
-    name:"Maktabgacha ta'lim va tarbiyaning davlat standartini tasdiqlash to'g'risida",
-    sub:"802-son qaror • 2020-yil 22-dekabr • Vazirlar Mahkamasi",
-    free:false,
-    qrange:[15,30]
-  },
-  {
-    id:3,
-    name:"Vazirlik markaziy apparati, hududiy bo'linmalari nizomlari va xodimlarning lavozim yo'riqnomalarini yangidan tasdiqlash to'g'risida",
-    sub:"334-son buyruq • 2024-yil 16-oktabr • Maktabgacha va maktab ta'limi vaziri",
-    free:false,
-    qrange:[30,45]
-  },
-  {
-    id:4,
-    name:"Davlat maktabgacha ta'lim tashkiloti xodimlarining lavozim yo'riqnomalari",
-    sub:"334-son buyruq, 44-ilova • 2024-yil 16-oktabr • MMTV",
-    free:false,
-    qrange:[45,60]
-  },
-  {
-    id:5,
-    name:"5-hujjat",
-    sub:"Tez kunda qo'shiladi",
-    free:false,
-    qrange:[60,75]
-  }
+  {id:1,name:"Uzluksiz metodik xizmat ko'rsatish ishlarini rivojlantirish to'g'risida",sub:"128-son buyruq • 2021-yil 12-iyul • MTV",free:true,qrange:[0,15]},
+  {id:2,name:"Maktabgacha ta'lim va tarbiyaning davlat standartini tasdiqlash to'g'risida",sub:"802-son qaror • 2020-yil 22-dekabr • Vazirlar Mahkamasi",free:false,qrange:[15,30]},
+  {id:3,name:"Vazirlik markaziy apparati, hududiy bo'linmalari nizomlari va xodimlarning lavozim yo'riqnomalarini yangidan tasdiqlash to'g'risida",sub:"334-son buyruq • 2024-yil 16-oktabr • Maktabgacha va maktab ta'limi vaziri",free:false,qrange:[30,45]},
+  {id:4,name:"Davlat maktabgacha ta'lim tashkiloti xodimlarining lavozim yo'riqnomalari",sub:"334-son buyruq, 44-ilova • 2024-yil 16-oktabr • MMTV",free:false,qrange:[45,60]},
+  {id:5,name:"5-hujjat",sub:"Tez kunda qo'shiladi",free:false,qrange:[60,75]}
 ];
 
-// ───────────────────────────────────────────────────────────
-// SAVOLLAR BAZASI — har bir hujjat uchun 15 tadan savol (4 variant javob)
-// 1-hujjat: 128-son buyruq. 2-hujjat: 802-son qaror (Davlat standarti).
-// ───────────────────────────────────────────────────────────
 var ALL_Q=[
   {q:"Vazirlikning «Maktabgacha ta'lim tizimida uzluksiz metodik xizmat ko'rsatish ishlarini yanada rivojlantirish to'g'risida»gi buyrug'i necha-son?",opts:["125-son","128-son","130-son","802-son"],ans:1},
   {q:"Mazkur buyruq qachon qabul qilingan?",opts:["2021-yil 12-iyun","2021-yil 12-iyul","2020-yil 22-dekabr","2018-yil 30-sentyabr"],ans:1},
@@ -310,7 +271,6 @@ var ALL_Q=[
   {q:"2-ilova («Uslubiy birlashmalar to'g'risida»gi Nizom)ga ko'ra, Uslubiy birlashma rahbari qachon va qanday saylanadi?",opts:["Har o'quv yili, yashirin ovoz berish yo'li bilan dekabr oyida","Har o'quv yili, avgust oyining oxirgi 10 kunligida ochiq ovoz berish yo'li bilan","Faqat bir marta, doimiy ravishda","Tuman maktabgacha ta'lim bo'limi tomonidan tayinlanadi"],ans:1},
   {q:"Har bir Uslubiy birlashma o'quv yili davomida har chorakda kamida necha marta yig'ilish o'tkazishi shart?",opts:["1 marta","2 marta","4 marta","6 marta"],ans:1},
   {q:"3-ilovaga ko'ra, «Pedagogik-kouching» hamkorligida Koucher tomonidan yosh yoki metodik yordamga muhtoj mutaxassisga kamida qancha muddatga biriktiriladi?",opts:["6 oydan kam bo'lmagan muddatga","1 yildan kam bo'lmagan muddatga","2 yildan kam bo'lmagan muddatga","Muddat belgilanmagan"],ans:1},
-
   {q:"Vazirlar Mahkamasining «Maktabgacha ta'lim va tarbiyaning davlat standartini tasdiqlash to'g'risida»gi qarori necha-son?",opts:["391-son","754-son","802-son","929-son"],ans:2},
   {q:"Mazkur qaror qachon qabul qilingan?",opts:["2019-yil 13-may","2020-yil 22-dekabr","2017-yil 9-sentyabr","2021-yil 12-iyul"],ans:1},
   {q:"Qarorga O'zbekiston Respublikasining Bosh vaziri sifatida kim imzo qo'ygan?",opts:["B.A. Musayev","U.N. Tashkenbayev","A. ARIPOV","A.V. Shin"],ans:2},
@@ -326,7 +286,6 @@ var ALL_Q=[
   {q:"Davlat o'quv dasturi tuzilishida Dastur nechta asosiy bo'limni qamrab oladi?",opts:["Ikkita","Uchta","To'rtta","Beshta"],ans:1},
   {q:"Ishchi o'quv dastur kimlar tomonidan, kimni jalb etgan holda tuziladi?",opts:["Faqat direktor, vazirlikni jalb etgan holda","Pedagoglar, ota-onalarni jalb etgan holda","Tuman bo'limi, viloyatni jalb etgan holda","Faqat metodist, psixologni jalb etgan holda"],ans:1},
   {q:"Davlat standarti talablarining buzilishida aybdor shaxslar qanday tartibda javobgarlikka tortiladi?",opts:["Faqat og'zaki ogohlantiriladi","Qonun hujjatlarida belgilangan tartibda","Faqat moddiy jarima qo'llaniladi","Javobgarlik nazarda tutilmagan"],ans:1},
-
   {q:"Maktabgacha va maktab ta'limi vazirining «...lavozim yo'riqnomalarini yangitdan tasdiqlash to'g'risida»gi buyrug'i necha-son?",opts:["269-son","334-son","345-son","802-son"],ans:1},
   {q:"Mazkur buyruq qachon qabul qilingan?",opts:["2024-yil 21-iyun","2024-yil 30-sentyabr","2024-yil 16-oktabr","2023-yil 21-dekabr"],ans:2},
   {q:"Buyruqqa vazir sifatida kim imzo qo'ygan?",opts:["A. Shin","B.A. Musayev","X. Umarova","U.N. Tashkenbayev"],ans:2},
@@ -342,7 +301,6 @@ var ALL_Q=[
   {q:"Buyruqning 5-bandiga ko'ra, buyruqni tegishli tashkilotlarga yetkazish vazifasi qaysi bo'linmaga yuklatilgan?",opts:["Devonxona","Nazorat-tahlil boshqarmasi","Yuridik xizmat","Kadrlar bo'limi"],ans:0},
   {q:"Buyruqning ijrosini nazorat qilish kim zimmasiga yuklatilgan?",opts:["Vazir o'rinbosari","Devonxona boshlig'i","Vazirning o'zi","Agentlik rahbari"],ans:2},
   {q:"Buyruqqa ko'ra, oldingi ayrim buyruqlar qaysi ilova asosida o'z kuchini yo'qotgan deb hisoblangan?",opts:["47-ilova","48-ilova","49-ilova","50-ilova"],ans:2},
-
   {q:"334-son buyruqning 44-ilovasiga ko'ra, davlat MTT xodimlarining lavozim yo'riqnomalari nechanchi ilova hisoblanadi?",opts:["38-ilova","41-ilova","43-ilova","44-ilova"],ans:3},
   {q:"Tashkilotga bolalarni qabul qilish va yosh guruhlarni shakllantirish buyrug'i har yilning qaysi oyida chiqariladi?",opts:["Yanvar oyida","Avgust oyida","Sentyabr oyida","May oyida"],ans:1},
   {q:"Direktor o'rinbosari mehnat ta'tiliga chiqqanda uning lavozim majburiyatlarini kim bajaradi?",opts:["Tarbiyachi-metodist","Direktor","Psixolog","Xo'jalik mudiri"],ans:0},
@@ -363,7 +321,6 @@ var ALL_Q=[
 var curDoc=null,questions=[],curIdx=0,score=0,answered=false,timerSec=0,timerInt=null;
 var LETTERS=['A','B','C','D'];
 
-// BG animatsiya
 (function(){
   var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d'),W,H;
   function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
@@ -394,9 +351,7 @@ function checkHamburger(){document.getElementById('hamburger').style.display=win
 checkHamburger();window.addEventListener('resize',checkHamburger);
 function openProModal(){document.getElementById('proModal').classList.add('show');document.body.style.overflow='hidden'}
 function closeProModal(){document.getElementById('proModal').classList.remove('show');document.body.style.overflow=''}
-function goToPremium(){
-  window.location.href=window.location.origin+'/premium.html';
-}
+function goToPremium(){window.location.href='../premium.html';}
 
 function buildDocGrid(proUser){
   proUser=proUser||false;
@@ -414,7 +369,7 @@ function buildDocGrid(proUser){
       actions='<button class="dc-btn test" onclick="startDoc('+i+')"><i class="ti ti-flask"></i> Testni boshlash</button>';
     }
     return '<div class="doc-card'+(locked?' locked':'')+'">'+
-      '<span class="dc-badge '+(locked?'pro':'free')+'">'+(locked?'<i class="ti ti-crown"></i> PRO':"<i class=\"ti ti-lock-open\"></i> Bepul")+'</span>'+
+      '<span class="dc-badge '+(locked?'pro':'free')+'">'+(locked?'<i class="ti ti-crown"></i> PRO':'<i class="ti ti-lock-open"></i> Bepul')+'</span>'+
       '<div class="doc-top">'+
         '<div class="dc-icon '+iconCls+'"><i class="ti ti-file-text"></i></div>'+
         '<div class="dc-info">'+
@@ -520,18 +475,22 @@ function goDocs(){clearInterval(timerInt);document.getElementById('resultScreen'
 <script>
 window.addEventListener('load', async function() {
   var proUser = false;
-  if (typeof initAuth !== 'undefined') {
-    var auth = await initAuth(true);
-    if (!auth) return;
-    var name = getUserName();
-    document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
-    document.getElementById('sb-name').textContent = name;
-    proUser = isPro() || isCorporate();
-    var planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
-    document.getElementById('sb-plan').textContent = planLabel + ' tarif';
-    var pill = document.getElementById('planPill');
-    pill.className = 'plan-pill' + (proUser ? ' pro' : '');
-    pill.innerHTML = (proUser ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
+  try {
+    if (typeof initAuth !== 'undefined') {
+      var auth = await initAuth(true);
+      if (!auth) return;
+      var name = getUserName();
+      document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('sb-name').textContent = name;
+      proUser = isPro() || isCorporate();
+      var planLabel = isCorporate() ? 'Korporativ' : isPro() ? 'Professional' : 'Bepul';
+      document.getElementById('sb-plan').textContent = planLabel + ' tarif';
+      var pill = document.getElementById('planPill');
+      pill.className = 'plan-pill' + (proUser ? ' pro' : '');
+      pill.innerHTML = (proUser ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
+    }
+  } catch(e) {
+    console.error('Auth xato:', e);
   }
   buildDocGrid(proUser);
 });
