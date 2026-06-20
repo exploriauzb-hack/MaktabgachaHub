@@ -240,7 +240,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       </div>
       <div style="background:var(--pro);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
     </div>
-    <button class="btn-buy" onclick="window.location.href='premium.html'"><i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish</button>
+    <button class="btn-buy" onclick="goToPremium()"><i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish</button>
   </div>
 </div>
 
@@ -362,6 +362,9 @@ function checkHamburger(){document.getElementById('hamburger').style.display=win
 checkHamburger();window.addEventListener('resize',checkHamburger);
 function openProModal(){document.getElementById('proModal').classList.add('show');document.body.style.overflow='hidden'}
 function closeProModal(){document.getElementById('proModal').classList.remove('show');document.body.style.overflow=''}
+function goToPremium(){
+  window.location.href=window.location.origin+'/premium.html';
+}
 
 function buildDocGrid(proUser){
   proUser=proUser||false;
