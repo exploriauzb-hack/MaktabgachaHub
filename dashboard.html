@@ -311,10 +311,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <a href="pages/mashgulot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot.html')"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
   <a href="pages/attestatsiya.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/attestatsiya.html')"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a href="pages/portfolio.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/portfolio.html')"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-  <div class="sidebar-section">Korporativ</div>
-  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <a href="pages/mashgulot-rejalari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot-rejalari.html')"><i class="ti ti-clipboard-list"></i> Mashgulot rejalari<span class="badge">PRO</span></a>
+  <a href="pages/tadbir-ssenariylari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/tadbir-ssenariylari.html')"><i class="ti ti-mask"></i> Tadbir ssenariy<span class="badge">PRO</span></a>
+  <a href="pages/yillik-hisobot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/yillik-hisobot.html')"><i class="ti ti-report"></i> Yillik hisobot<span class="badge">PRO</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -406,9 +405,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
   <div class="sec-title"><i class="ti ti-building"></i> Korporativ</div>
   <div class="mod-grid">
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-qrcode"></i></div><div class="mod-title">Davomat</div><div class="mod-sub">QR bilan belgilash</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-users-group"></i></div><div class="mod-title">Ota-onalar</div><div class="mod-sub">Xabar va hisobot</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-chart-line"></i></div><div class="mod-title">Bola monitoringi</div><div class="mod-sub">Rivojlanish grafigi</div><span class="lock-tag soon">Tez kunda</span></div>
+    <div class="mod-card locked" id="card-lessonplans"><div class="icon purple"><i class="ti ti-clipboard-list"></i></div><div class="mod-title">Mashgulot rejalari</div><div class="mod-sub">Yoshga mos ochiq darslar</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-scenarios"><div class="icon purple"><i class="ti ti-mask"></i></div><div class="mod-title">Tadbir ssenariylari</div><div class="mod-sub">Bayram va tadbirlar uchun</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-reports"><div class="icon purple"><i class="ti ti-report"></i></div><div class="mod-title">Yillik hisobotlar</div><div class="mod-sub">Yil yakuni shabloni</div><span class="lock-tag">PRO</span></div>
   </div>
 
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
@@ -432,6 +431,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       <div class="mf-item"><i class="ti ti-check"></i> Cheksiz test ishlash</div>
       <div class="mf-item"><i class="ti ti-check"></i> Didaktik o'yinlar</div>
       <div class="mf-item"><i class="ti ti-check"></i> Vaziyatlar — PRO variantlar</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Mashgulot rejalari, ssenariylar va hisobotlar</div>
     </div>
     <div class="modal-price">
       <div>
@@ -485,6 +485,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <button class="more-item" onclick="handleProNav('pages/mashgulot.html')"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></button>
     <button class="more-item" onclick="handleProNav('pages/attestatsiya.html')"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></button>
     <button class="more-item" onclick="handleProNav('pages/portfolio.html')"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></button>
+    <button class="more-item" onclick="handleProNav('pages/mashgulot-rejalari.html')"><div class="mi-icon pro"><i class="ti ti-clipboard-list"></i></div><span class="mi-badge">PRO</span><span>Reja</span></button>
+    <button class="more-item" onclick="handleProNav('pages/tadbir-ssenariylari.html')"><div class="mi-icon pro"><i class="ti ti-mask"></i></div><span class="mi-badge">PRO</span><span>Ssenariy</span></button>
+    <button class="more-item" onclick="handleProNav('pages/yillik-hisobot.html')"><div class="mi-icon pro"><i class="ti ti-report"></i></div><span class="mi-badge">PRO</span><span>Hisobot</span></button>
   </div>
   <div class="more-sheet-section">Hisob</div>
   <div class="more-grid">
@@ -567,11 +570,14 @@ window.addEventListener('load',async()=>{
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
   const proCards={
-    'card-games'      :{href:'pages/oyinlar.html'},
-    'card-songs'      :{href:'pages/qoshiqlar.html'},
-    'card-activities' :{href:'pages/mashgulot.html'},
-    'card-attestation':{href:'pages/attestatsiya.html'},
-    'card-portfolio'  :{href:'pages/portfolio.html'}
+    'card-games'        :{href:'pages/oyinlar.html'},
+    'card-songs'        :{href:'pages/qoshiqlar.html'},
+    'card-activities'   :{href:'pages/mashgulot.html'},
+    'card-attestation'  :{href:'pages/attestatsiya.html'},
+    'card-portfolio'    :{href:'pages/portfolio.html'},
+    'card-lessonplans'  :{href:'pages/mashgulot-rejalari.html'},
+    'card-scenarios'    :{href:'pages/tadbir-ssenariylari.html'},
+    'card-reports'      :{href:'pages/yillik-hisobot.html'}
   };
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);if(!el)return;
