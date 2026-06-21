@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Mashg'ulot rejalari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7ff;
+  --white:#ffffff;
+  --border:#e4e8f0;
+  --border2:#d0d7e8;
+  --text:#1a1f36;
+  --text2:#6b7694;
+  --text3:#9aa3bf;
+  --accent:#1e40af;
+  --accent2:#2563eb;
+  --accent-soft:#eff6ff;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --pro:#7c3aed;
+  --pro2:#8b5cf6;
+  --pro-soft:#f5f3ff;
+  --sidebar:256px;
+  --bottomnav:62px;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
+  --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg)}
+
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:30}
+.sidebar-logo{padding:20px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),#6366f1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--text3);margin-top:2px}
+.sidebar-section{padding:18px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);margin:1px 8px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--accent-soft);color:var(--accent)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2)}
+.back-link{display:flex;align-items:center;gap:8px;padding:14px 18px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;border-bottom:1px solid var(--border)}
+.back-link:hover{color:var(--accent2)}
+
+.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1100px}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
+.page-head h1 i{color:var(--pro2);font-size:24px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:4px}
+.pro-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
+
+.age-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.age-tab{padding:9px 16px;border-radius:20px;border:1px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
+.age-tab:hover{border-color:var(--accent2);color:var(--accent2)}
+.age-tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+
+.plan-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.plan-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px}
+.plan-head:hover{background:var(--bg)}
+.plan-head-left{display:flex;align-items:center;gap:12px;min-width:0}
+.plan-icon{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.plan-title{font-size:14.5px;font-weight:700;color:var(--text)}
+.plan-meta{font-size:11.5px;color:var(--text3);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap}
+.plan-meta span{display:flex;align-items:center;gap:4px}
+.plan-toggle{color:var(--text3);font-size:18px;transition:transform .2s;flex-shrink:0}
+.plan-card.open .plan-toggle{transform:rotate(180deg)}
+.plan-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border)}
+.plan-card.open .plan-body{display:block}
+
+.plan-section{margin-top:16px}
+.plan-section h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.plan-section h4 i{font-size:14px;color:var(--accent2)}
+.plan-section p, .plan-section li{font-size:13px;color:var(--text);line-height:1.6}
+.plan-section ul{padding-left:18px;margin-top:4px}
+.plan-section ul li{margin-bottom:4px}
+.comp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.comp-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--green-soft);color:var(--green);border:1px solid #bbf7d0}
+.steps-grid{display:grid;gap:10px;margin-top:6px}
+.step-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.step-num{width:22px;height:22px;border-radius:6px;background:var(--accent2);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text b{display:block;font-size:12.5px;color:var(--text);margin-bottom:2px}
+.step-text span{font-size:12px;color:var(--text2)}
+
+.print-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:14px}
+.print-btn:hover{background:var(--accent)}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:16px 14px 80px}
+}
+@media print{
+  .sidebar,.age-tabs,.print-btn,.plan-toggle{display:none}
+  .plan-body{display:block!important}
+  .main{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <a href="../dashboard.html" class="back-link"><i class="ti ti-arrow-left"></i> Bosh sahifaga</a>
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-clipboard-list"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Korporativ bo'lim</span></div>
+  </div>
+  <div class="sidebar-section">Korporativ</div>
+  <a href="mashgulot-rejalari.html" class="nav-item active"><i class="ti ti-clipboard-list"></i> Mashgulot rejalari</a>
+  <a href="tadbir-ssenariylari.html" class="nav-item"><i class="ti ti-mask"></i> Tadbir ssenariy</a>
+  <a href="yillik-hisobot.html" class="nav-item"><i class="ti ti-report"></i> Yillik hisobot</a>
+</aside>
+
+<main class="main">
+  <div class="page-head">
+    <div>
+      <h1><i class="ti ti-clipboard-list"></i> Mashg'ulot rejalari</h1>
+      <p class="page-sub">"Ilk qadam" milliy o'quv dasturi asosida yoshga mos ochiq darslar va mashg'ulot ishlanmalari</p>
+    </div>
+    <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
+  </div>
+
+  <div class="age-tabs">
+    <button class="age-tab active" data-age="all">Barchasi</button>
+    <button class="age-tab" data-age="3-4">3–4 yosh</button>
+    <button class="age-tab" data-age="4-5">4–5 yosh</button>
+    <button class="age-tab" data-age="5-6">5–6 yosh</button>
+    <button class="age-tab" data-age="6-7">6–7 yosh</button>
+  </div>
+
+  <div id="plansContainer"></div>
+</main>
+
+<script>
+const plans = [
+  {
+    age:"3-4",
+    title:"Sensor o'yinlar orqali rang va shaklni tanish",
+    soha:"Bilish jarayonlarini rivojlantirish",
+    duration:"20–25 daqiqa",
+    code:"4.1.2.a",
+    goal:"Bolalarda asosiy ranglar (qizil, sariq, ko'k, yashil) va sodda geometrik shakllarni (doira, kvadrat, uchburchak) tanish ko'nikmasini shakllantirish, sensomotorika va mayda motorikani rivojlantirish.",
+    comps:["Bilish","Kommunikativ"],
+    resources:"Rangli kublar, sensor quti (qum, don, tugmalar), shakl bo'yicha saralagich, rangli kartochkalar.",
+    steps:[
+      {t:"Ertalabki davra suhbati",d:"Bolalar bilan kunni boshlash, kayfiyatni so'rash, kun rejasi haqida sodda tilda gaplashish (3–4 daqiqa)."},
+      {t:"Kirish — o'yin-sehrgar quti",d:"Tarbiyachi sensor qutidan turli rangdagi va shakldagi predmetlarni navbat bilan chiqarib, bolalarni qiziqtiradi (5 daqiqa)."},
+      {t:"Asosiy faoliyat — saralash o'yini",d:"Bolalar kichik guruhlarda predmetlarni rangi va shakli bo'yicha saralashadi, tarbiyachi nomlarni takrorlashga undaydi (10 daqiqa)."},
+      {t:"Mustahkamlash — harakatli o'yin",d:"'Ranglar bo'yicha to'planamiz' o'yini: tarbiyachi rang aytadi, bolalar shu rangdagi predmetga yugurib boradi (5 daqiqa)."},
+      {t:"Yakuniy davra suhbati",d:"Bugun nimani o'rgandik, eng yoqqan qismi haqida sodda savol-javob (2–3 daqiqa)."}
+    ]
+  },
+  {
+    age:"4-5",
+    title:"Oilamiz va men — rolli o'yin orqali ijtimoiy-hissiy rivojlanish",
+    soha:"Ijtimoiy-hissiy rivojlanish",
+    duration:"25–30 daqiqa",
+    code:"2.1.2.b",
+    goal:"Bolalarda oila a'zolari haqida tasavvurni mustahkamlash, his-tuyg'ularni so'z va harakat bilan ifoda etish, tengdoshlari bilan rolli muloqotga kirishish ko'nikmasini rivojlantirish.",
+    comps:["Ijtimoiy","Shaxsiy (\"Men\" konsepsiyasi)"],
+    resources:"\"Oila\" burchagi atributlari (qo'g'irchoqlar, oshxona idishlari), oila a'zolari rasmlari, hissiyot kartochkalari (quvonch, xafalik, hayrat).",
+    steps:[
+      {t:"Ertalabki davra suhbati",d:"Bolalardan oila a'zolari haqida bittadan gap so'rash, mavzuga kirish (4 daqiqa)."},
+      {t:"Suhbat va hikoya",d:"Tarbiyachi oila haqida qisqa hikoya o'qiydi, hissiyot kartochkalari yordamida qahramonlarning his-tuyg'ularini muhokama qiladi (7 daqiqa)."},
+      {t:"Rolli o'yin — \"Oila\"",d:"Bolalar kichik guruhlarga bo'linib, ona, ota, farzand rollarini o'ynashadi, kunlik vaziyatlarni (nonushta, sayr) sahnalashtirishadi (12 daqiqa)."},
+      {t:"Ijodiy faoliyat",d:"Har bir bola o'z oilasi rasmini chizadi va kim ekanini aytib beradi (5 daqiqa)."},
+      {t:"Yakuniy refleksiya",d:"\"Bugun kim bilan o'ynaganingiz yoqdi?\" savoli orqali kunni yakunlash."}
+    ]
+  },
+  {
+    age:"5-6",
+    title:"Tabiat sirlari — kichik tajribalar orqali tadqiqotchilik",
+    soha:"Bilish jarayonlarini rivojlantirish",
+    duration:"30 daqiqa",
+    code:"4.1.2.c",
+    goal:"Bolalarda kuzatish, taxmin qilish va oddiy xulosa chiqarish ko'nikmalarini rivojlantirish, suvning xususiyatlari (erish, cho'kish, suzish) haqida tasavvur hosil qilish.",
+    comps:["Bilish","Tanqidiy fikrlash"],
+    resources:"Shaffof idishlar, suv, turli og'irlikdagi predmetlar (tosh, yog'och, plastik qopqoq, metall qoshiq), muz bo'lakchalari, kuzatuv varaqasi.",
+    steps:[
+      {t:"Muammoli vaziyat",d:"\"Qaysi predmet suzadi, qaysi biri cho'kadi?\" savoli bilan qiziqish uyg'otish, bolalardan taxmin so'rash (5 daqiqa)."},
+      {t:"Tajriba o'tkazish",d:"Har bir bola navbat bilan predmetlarni suvga tashlab, natijani kuzatadi va kuzatuv varaqasiga belgi qo'yadi (15 daqiqa)."},
+      {t:"Muhokama va xulosa",d:"Nima uchun ba'zi predmetlar suzadi, ba'zilari cho'kadi — sabab-oqibat bog'lanishini sodda tilda tushuntirish (7 daqiqa)."},
+      {t:"Qo'shimcha tajriba — muz",d:"Muz bo'lagi suvga solinadi, eriy boshlashi kuzatiladi, \"nega muz eriydi?\" savoli muhokama qilinadi (5 daqiqa)."},
+      {t:"Yakunlash",d:"Bolalar o'z kashfiyotlarini bir-biriga gapirib berishadi."}
+    ]
+  },
+  {
+    age:"6-7",
+    title:"Mening Vatanim — milliy qadriyatlar va ijodiy ifoda",
+    soha:"Ijodiy rivojlanish",
+    duration:"30–35 daqiqa",
+    code:"5.1.2.d",
+    goal:"Bolalarda Vatanga muhabbat, milliy ramzlar (bayroq, gerb) haqida tasavvurni shakllantirish, ijodiy faoliyat orqali milliy g'oyani ifoda etish ko'nikmasini rivojlantirish.",
+    comps:["Bilish","Shaxsiy","Tanqidiy fikrlash"],
+    resources:"O'zbekiston bayrog'i va gerbi tasvirlari, milliy naqshlar namunalari, rangli qog'oz, qaychi, yelim, audio — milliy kuylar.",
+    steps:[
+      {t:"Ertalabki davra suhbati",d:"Bolalar bilan \"Vatan nima?\" mavzusida sodda muloqot, milliy bayroq ranglari haqida savol-javob (5 daqiqa)."},
+      {t:"Taqdimot",d:"Tarbiyachi O'zbekiston bayrog'i va gerbidagi ramzlar ma'nosini tushuntiradi, taniqli madaniy obidalar rasmlarini ko'rsatadi (8 daqiqa)."},
+      {t:"Ijodiy amaliy faoliyat",d:"Bolalar guruh bo'lib katta qog'ozga O'zbekiston bayrog'ini yasashadi (applikatsiya usulida) (15 daqiqa)."},
+      {t:"Taqdimot va muhokama",d:"Har bir guruh o'z ishini taqdim etadi, nega bu ranglarni tanlaganini tushuntiradi (5 daqiqa)."},
+      {t:"Yakuniy refleksiya",d:"\"Vatanimiz uchun nimadan faxrlanasiz?\" savoli bilan kunni yakunlash."}
+    ]
+  },
+  {
+    age:"4-5",
+    title:"So'z boyligimiz — ertak orqali nutq rivojlantirish",
+    soha:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+    duration:"25 daqiqa",
+    code:"3.1.2.b",
+    goal:"Bolalarning faol so'z boyligini kengaytirish, ertakni tinglab tushunish va qayta hikoya qilish ko'nikmalarini shakllantirish.",
+    comps:["Kommunikativ","Bilish"],
+    resources:"\"Tulki va bo'ri\" o'zbek xalq ertagi matni, qahramonlar niqoblari yoki barmoq qo'g'irchoqlari, illyustratsiyalar.",
+    steps:[
+      {t:"Kirish",d:"Qahramonlar niqoblarini ko'rsatib, qiziqish uyg'otish, ertak nomini taxmin qilishga taklif etish (3 daqiqa)."},
+      {t:"Ertakni tinglash",d:"Tarbiyachi ifodali tarzda ertakni o'qiydi, illyustratsiyalarni ko'rsatib boradi (8 daqiqa)."},
+      {t:"Savol-javob",d:"Mazmun bo'yicha sodda savollar: \"Kim bosh qahramon?\", \"Nima bo'ldi keyin?\" (6 daqiqa)."},
+      {t:"Sahnalashtirish",d:"Bolalar niqob kiyib, ertakning qisqa parchasini o'zlari ijro etishadi (6 daqiqa)."},
+      {t:"Yakunlash",d:"Ertakdan qanday saboq olganimiz haqida qisqa xulosa."}
+    ]
+  },
+  {
+    age:"5-6",
+    title:"Sanoq olami — 10 ichida hisob mashqlari",
+    soha:"Bilish jarayonlarini rivojlantirish",
+    duration:"25–30 daqiqa",
+    code:"4.2.2.c",
+    goal:"10 ichida sonlarni tanish, sanash va oddiy qo'shish-ayirish amallarini bajarish ko'nikmasini shakllantirish.",
+    comps:["Bilish","Tanqidiy fikrlash"],
+    resources:"Raqamli kartochkalar (1–10), hisoblash uchun tayoqchalar yoki kublar, sanoq daraxti plakati, ish varaqlari.",
+    steps:[
+      {t:"Qizg'in boshlanish",d:"\"Sanoq mehmoni\" — qo'g'irchoq orqali bolalarni sanashga taklif etish (4 daqiqa)."},
+      {t:"Asosiy mashg'ulot",d:"Kublar yordamida 1–10 gacha sanash, raqamlarni kartochka bilan moslashtirish (10 daqiqa)."},
+      {t:"Amaliy mashqlar",d:"Oddiy qo'shish-ayirish misollari kublar yordamida ko'rgazmali yechiladi (8 daqiqa)."},
+      {t:"O'yin — \"Kim tezroq sanaydi\"",d:"Juftликда musobaqa tarzida sanoq mashqi (5 daqiqa)."},
+      {t:"Yakunlash",d:"Bugun nechtagacha sanay olishni o'rgandik — qisqa xulosa."}
+    ]
+  }
+];
+
+const container = document.getElementById('plansContainer');
+
+function compTagColor(c){
+  return c;
+}
+
+function renderPlans(filter){
+  container.innerHTML = '';
+  const filtered = filter === 'all' ? plans : plans.filter(p => p.age === filter);
+  if(!filtered.length){
+    container.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px">Bu yosh guruhi uchun reja topilmadi.</div>';
+    return;
+  }
+  filtered.forEach((p, idx) => {
+    const card = document.createElement('div');
+    card.className = 'plan-card';
+    card.innerHTML = `
+      <div class="plan-head" onclick="this.closest('.plan-card').classList.toggle('open')">
+        <div class="plan-head-left">
+          <div class="plan-icon"><i class="ti ti-notebook"></i></div>
+          <div>
+            <div class="plan-title">${p.title}</div>
+            <div class="plan-meta">
+              <span><i class="ti ti-users"></i> ${p.age} yosh</span>
+              <span><i class="ti ti-clock"></i> ${p.duration}</span>
+              <span><i class="ti ti-hash"></i> ${p.code}</span>
+            </div>
+          </div>
+        </div>
+        <i class="ti ti-chevron-down plan-toggle"></i>
+      </div>
+      <div class="plan-body">
+        <div class="plan-section">
+          <h4><i class="ti ti-chart-dots-3"></i> Rivojlanish sohasi</h4>
+          <p>${p.soha}</p>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-target"></i> Maqsad</h4>
+          <p>${p.goal}</p>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-puzzle"></i> Shakllanadigan kompetensiyalar</h4>
+          <div class="comp-tags">${p.comps.map(c=>`<span class="comp-tag">${c}</span>`).join('')}</div>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-tools"></i> Kerakli vositalar</h4>
+          <p>${p.resources}</p>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-list-numbers"></i> Mashg'ulot bosqichlari</h4>
+          <div class="steps-grid">
+            ${p.steps.map((s,i)=>`
+              <div class="step-row">
+                <div class="step-num">${i+1}</div>
+                <div class="step-text"><b>${s.t}</b><span>${s.d}</span></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <button class="print-btn" onclick="event.stopPropagation();window.print()"><i class="ti ti-printer"></i> Chop etish</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+document.querySelectorAll('.age-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.age-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderPlans(tab.dataset.age);
+  });
+});
+
+renderPlans('all');
+</script>
+</body>
+</html>
