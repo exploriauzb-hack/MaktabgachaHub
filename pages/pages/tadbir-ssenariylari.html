@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Tadbir ssenariylari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7ff;
+  --white:#ffffff;
+  --border:#e4e8f0;
+  --border2:#d0d7e8;
+  --text:#1a1f36;
+  --text2:#6b7694;
+  --text3:#9aa3bf;
+  --accent:#1e40af;
+  --accent2:#2563eb;
+  --accent-soft:#eff6ff;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --pro:#7c3aed;
+  --pro2:#8b5cf6;
+  --pro-soft:#f5f3ff;
+  --pink:#db2777;
+  --pink-soft:#fce7f3;
+  --sidebar:256px;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
+  --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg)}
+
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:30}
+.sidebar-logo{padding:20px 18px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),#6366f1);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.logo-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--text3);margin-top:2px}
+.sidebar-section{padding:18px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);margin:1px 8px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--accent-soft);color:var(--accent)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.back-link{display:flex;align-items:center;gap:8px;padding:14px 18px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;border-bottom:1px solid var(--border)}
+.back-link:hover{color:var(--accent2)}
+
+.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1100px}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.page-head h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
+.page-head h1 i{color:var(--pro2);font-size:24px}
+.page-sub{font-size:13px;color:var(--text2);margin-top:4px}
+.pro-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
+
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:24px}
+.event-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s;text-align:left}
+.event-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent2)}
+.event-card.active{border-color:var(--pro2);background:var(--pro-soft)}
+.event-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
+.event-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.event-meta{font-size:11.5px;color:var(--text3);margin-top:3px}
+
+.detail-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;display:none}
+.detail-card.show{display:block}
+.detail-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.detail-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.detail-head h2{font-size:18px;font-weight:800}
+.detail-meta{font-size:12px;color:var(--text2);margin-top:4px;display:flex;gap:14px;flex-wrap:wrap}
+.detail-meta span{display:flex;align-items:center;gap:4px}
+
+.scene{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
+.scene:last-child{border-bottom:none}
+.scene-num{width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent2);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.scene-content h4{font-size:13.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.scene-content h4 i{font-size:14px;color:var(--pro2)}
+.scene-content p{font-size:13px;color:var(--text);line-height:1.65}
+.scene-tag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--amber-soft);color:var(--amber);margin-top:6px}
+
+.props-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-top:18px}
+.props-box h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.props-box p{font-size:13px;color:var(--text)}
+
+.print-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:18px}
+.print-btn:hover{background:var(--accent)}
+.empty-hint{text-align:center;color:var(--text3);font-size:13px;padding:50px 20px}
+.empty-hint i{font-size:32px;display:block;margin-bottom:10px;color:var(--border2)}
+
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:16px 14px 80px}
+}
+@media print{
+  .sidebar,.event-grid,.print-btn{display:none}
+  .detail-card{display:block!important}
+  .main{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <a href="../dashboard.html" class="back-link"><i class="ti ti-arrow-left"></i> Bosh sahifaga</a>
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="ti ti-mask"></i></div>
+    <div class="logo-text">MaktabgachaHub<span>Korporativ bo'lim</span></div>
+  </div>
+  <div class="sidebar-section">Korporativ</div>
+  <a href="mashgulot-rejalari.html" class="nav-item"><i class="ti ti-clipboard-list"></i> Mashgulot rejalari</a>
+  <a href="tadbir-ssenariylari.html" class="nav-item active"><i class="ti ti-mask"></i> Tadbir ssenariy</a>
+  <a href="yillik-hisobot.html" class="nav-item"><i class="ti ti-report"></i> Yillik hisobot</a>
+</aside>
+
+<main class="main">
+  <div class="page-head">
+    <div>
+      <h1><i class="ti ti-mask"></i> Tadbir ssenariylari</h1>
+      <p class="page-sub">Bayram va tadbirlar uchun tayyor ssenariylar, sahna rejasi va kerakli atributlar ro'yxati</p>
+    </div>
+    <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
+  </div>
+
+  <div class="event-grid" id="eventGrid"></div>
+  <div class="detail-card" id="detailCard"></div>
+  <div class="empty-hint" id="emptyHint"><i class="ti ti-pointer"></i>Ssenariyni ko'rish uchun yuqoridagi tadbirlardan birini tanlang</div>
+</main>
+
+<script>
+const events = [
+  {
+    id:"navroz",
+    title:"Navro'z bayrami",
+    date:"21-mart",
+    duration:"40–45 daqiqa",
+    color:"green",
+    icon:"ti-flower",
+    intro:"Bahor kelishi va yangi yil boshlanishini nishonlovchi milliy bayram tantanasi. Bolalar milliy liboslarda, raqs va qo'shiqlar bilan ishtirok etadi.",
+    scenes:[
+      {title:"Saf tortish va kirish marshi", icon:"ti-walk", text:"Bolalar guruh-guruh bo'lib musiqa ostida zalga kirib keladi, atrofni bayramona bezatilgan joyga joylashadi.", tag:"5 daqiqa"},
+      {title:"Tabriknoma so'zi", icon:"ti-microphone", text:"Tarbiyachi yoki muassasa rahbari Navro'z bayrami tarixi va ahamiyati haqida sodda, bolalarga tushunarli tilda qisqa nutq so'zlaydi.", tag:"4 daqiqa"},
+      {title:"\"Bahor kelmoqda\" she'rxonligi", icon:"ti-book", text:"3–4 nafar bola navbat bilan bahor mavzusidagi she'rlarni yod aytadi.", tag:"5 daqiqa"},
+      {title:"Milliy raqs — \"Lazgi\"", icon:"ti-music", text:"Katta guruh bolalari milliy kiyimda lazgi raqsini ijro etadi.", tag:"6 daqiqa"},
+      {title:"\"Sumalak\" o'yin-sahnasi", icon:"ti-theater", text:"Bolalar sumalak tayyorlash jarayonini o'yin orqali namoyish etadi — bug'doy ekish, qaynatish harakatlarini taqlid qiladi.", tag:"7 daqiqa"},
+      {title:"Tortishuvli o'yinlar", icon:"ti-ball-american-football", text:"\"Kim tezroq\", \"Halqa tashlash\" kabi xalq o'yinlari tashkil etiladi, barcha bolalar ishtirok etadi.", tag:"10 daqiqa"},
+      {title:"Yakuniy qo'shiq va sovrinlar", icon:"ti-gift", text:"Barcha bolalar birgalikda bayram qo'shig'ini kuylaydi, kichik sovg'alar tarqatiladi.", tag:"5 daqiqa"}
+    ],
+    props:"Milliy liboslar, sumalak uchun rekvizit (idish, bug'doy maketlari), bayroqchalar, gulchambar, audio tizim, mikrofon."
+  },
+  {
+    id:"mustaqillik",
+    title:"Mustaqillik kuni",
+    date:"1-sentyabr",
+    duration:"35–40 daqiqa",
+    color:"blue",
+    icon:"ti-flag",
+    intro:"O'zbekiston Mustaqillik kuniga bag'ishlangan vatanparvarlik tadbiri. Bolalarda Vatanga muhabbat va milliy g'urur tuyg'usini tarbiyalashga qaratilgan.",
+    scenes:[
+      {title:"Bayroq ko'tarish marosimi", icon:"ti-flag-3", text:"Tadbir Davlat madhiyasi ostida bayroq ko'tarish bilan boshlanadi, barcha bolalar tik turib hurmat bildiradi.", tag:"4 daqiqa"},
+      {title:"Vatan haqida hikoya", icon:"ti-book", text:"Tarbiyachi Mustaqillik kuni tarixi va ahamiyati haqida bolalarga moslashtirilgan qisqa hikoya so'zlaydi.", tag:"5 daqiqa"},
+      {title:"\"Mening Vatanim\" she'rxonligi", icon:"ti-feather", text:"Bolalar Vatan, bayroq va ona yurt mavzusidagi she'rlarni navbat bilan o'qiydi.", tag:"6 daqiqa"},
+      {title:"Milliy ramzlar bilan tanishuv", icon:"ti-shield", text:"Davlat bayrog'i va gerbi ko'rgazmali tarzda ko'rsatiladi, ranglar va belgilarning ma'nosi sodda tilda tushuntiriladi.", tag:"5 daqiqa"},
+      {title:"\"Do'stlik gullari\" applikatsiyasi", icon:"ti-flower", text:"Bolalar guruh bo'lib katta plakatga bayroq ranglarida gullar yopishtiradi — birlik va do'stlik g'oyasini ifodalaydi.", tag:"10 daqiqa"},
+      {title:"Vatanga bag'ishlangan qo'shiq", icon:"ti-music", text:"Barcha bolalar birgalikda Vatan haqidagi qo'shiqni kuylab, tadbirni yakunlaydi.", tag:"5 daqiqa"}
+    ],
+    props:"Davlat bayrog'i va gerbi maketlari, rangli qog'oz va yelim, audio tizim, bayroq ranglarida shar va lentalar."
+  },
+  {
+    id:"ustozlar",
+    title:"O'qituvchi va murabbiylar kuni",
+    date:"1-oktyabr",
+    duration:"30 daqiqa",
+    color:"amber",
+    icon:"ti-school",
+    intro:"Tarbiyachi va pedagoglarga bag'ishlangan minnatdorlik tadbiri. Bolalar o'z tarbiyachilariga hurmat va mehr izhor qiladilar.",
+    scenes:[
+      {title:"Tabrik so'zi", icon:"ti-microphone", text:"Guruh rahbari yoki bolalardan biri tarbiyachilarga atalgan tabrik so'zini aytadi.", tag:"3 daqiqa"},
+      {title:"\"Mening tarbiyachim\" rasm ko'rgazmasi", icon:"ti-palette", text:"Bolalar oldindan chizgan rasmlarini namoyish etadilar va nima uchun tarbiyachisini yaxshi ko'rishini aytib beradi.", tag:"7 daqiqa"},
+      {title:"She'r va qo'shiqlar", icon:"ti-feather", text:"Bolalar tarbiyachilarga bag'ishlangan kichik she'r va qo'shiqlarni ijro etadi.", tag:"8 daqiqa"},
+      {title:"Qo'lda yasalgan sovg'alar topshirish", icon:"ti-gift", text:"Har bir bola o'zi tayyorlagan kichik hunarmandchilik buyumini (kartochka, gulchambar) tarbiyachiga taqdim etadi.", tag:"8 daqiqa"},
+      {title:"Umumiy fotosurat", icon:"ti-camera", text:"Guruh va tarbiyachilar birgalikda esda qolar fotosuratga tushadi.", tag:"4 daqiqa"}
+    ],
+    props:"Rangli qog'oz, oldindan chizilgan rasmlar, applikatsiya materiallari, gulchambar uchun rekvizit."
+  },
+  {
+    id:"yangi-yil",
+    title:"Yangi yil bayrami",
+    date:"25–31 dekabr",
+    duration:"45–50 daqiqa",
+    color:"pink",
+    icon:"ti-christmas-tree",
+    intro:"Bolalarning sevimli qish bayrami. Qor qiz va Ayozbobo ishtirokidagi sahna tomoshasi, raqs va o'yinlar bilan boyitilgan tantanali tadbir.",
+    scenes:[
+      {title:"Bayramona kirish", icon:"ti-sparkles", text:"Bolalar qishga oid kostyumlarda musiqa ostida zalga kirib, archa atrofida joylashadi.", tag:"5 daqiqa"},
+      {title:"Ayozbobo va Qor qizni chaqirish", icon:"ti-bell", text:"Bolalar birgalikda baland ovozda Ayozbobo va Qor qizni chaqiradi, ular sahnaga kirib keladi.", tag:"4 daqiqa"},
+      {title:"Qish she'rlari va topishmoqlar", icon:"ti-book", text:"Ayozbobo bolalarga qish haqida topishmoqlar beradi, bolalar esa qish mavzusidagi she'rlarni aytadi.", tag:"7 daqiqa"},
+      {title:"Archa atrofida o'yin va raqslar", icon:"ti-music", text:"\"Qorbobo, qorbobo\" qo'shig'i ostida bolalar archa atrofida aylanma o'yin o'ynaydi.", tag:"8 daqiqa"},
+      {title:"Sahna tomoshasi", icon:"ti-theater", text:"Tayyorlangan qisqa ertak-sahna (masalan, \"Qor qizning sarguzashtlari\") namoyish etiladi.", tag:"10 daqiqa"},
+      {title:"O'yin-tortishmalar", icon:"ti-ball-american-football", text:"\"Qor to'pini ushla\", \"Muzlatib qo'yaman\" kabi harakatli o'yinlar o'tkaziladi.", tag:"8 daqiqa"},
+      {title:"Sovg'alar tarqatish", icon:"ti-gift", text:"Ayozbobo har bir bolaga kichik sovg'a ulashadi, umumiy fotosurat olinadi.", tag:"5 daqiqa"}
+    ],
+    props:"Ayozbobo va Qor qiz kostyumlari, archa bezaklari, soxta qor to'plari, sovg'a qutilari, audio tizim, sahna dekoratsiyasi."
+  },
+  {
+    id:"bitiruv",
+    title:"Bitiruv bayrami (\"Alvido, bog'cha!\")",
+    date:"May oxiri",
+    duration:"40 daqiqa",
+    color:"purple",
+    icon:"ti-certificate",
+    intro:"Maktabgacha ta'lim tashkilotini tugatib, maktabga boradigan bitiruvchi bolalar uchun tantanali xayrlashuv tadbiri.",
+    scenes:[
+      {title:"Tantanali kirish marshi", icon:"ti-walk", text:"Bitiruvchi bolalar maxsus tantanali liboslarda musiqa ostida zalga kirib keladi.", tag:"5 daqiqa"},
+      {title:"Tarbiyachining xayrlashuv nutqi", icon:"ti-microphone", text:"Tarbiyachi bolalarning bog'chadagi yutuqlari haqida iliq so'zlar aytadi, ularni maktabga yo'llaydi.", tag:"5 daqiqa"},
+      {title:"\"Bog'cha xotiralari\" slayd-ko'rsatuv", icon:"ti-photo", text:"Bolalarning bog'chadagi rasmlari va videolaridan tashkil etilgan qisqa ko'rsatuv namoyish etiladi.", tag:"5 daqiqa"},
+      {title:"She'r va minnatdorlik so'zlari", icon:"ti-feather", text:"Bitiruvchi bolalar tarbiyachilar va bog'chaga bag'ishlangan she'rlarni aytadi.", tag:"7 daqiqa"},
+      {title:"\"Maktabga qadam\" sahnasi", icon:"ti-theater", text:"Bolalar maktab hayotidan kichik sahna ko'rinishini o'ynab ko'rsatishadi (qiziqarli, hazilomuz tarzda).", tag:"8 daqiqa"},
+      {title:"Guvohnoma topshirish", icon:"ti-certificate", text:"Har bir bitiruvchiga maktabgacha ta'limni tugatganligi haqida kichik diplom-guvohnoma topshiriladi.", tag:"6 daqiqa"},
+      {title:"Yakuniy raqs va fotosurat", icon:"ti-camera", text:"Umumiy quvonchli raqs va esda qolar fotosurat bilan tadbir yakunlanadi.", tag:"4 daqiqa"}
+    ],
+    props:"Bitiruvchilar uchun maxsus liboslar (lenta, shapka), diplom-guvohnomalar, slayd-ko'rsatuv uchun proyektor, audio tizim."
+  },
+  {
+    id:"8mart",
+    title:"8-mart Xalqaro xotin-qizlar kuni",
+    date:"8-mart",
+    duration:"30–35 daqiqa",
+    color:"pink",
+    icon:"ti-heart",
+    intro:"Onalar, buvilar va ayol tarbiyachilarga bag'ishlangan mehr-muhabbat tadbiri. Bolalar o'zlarining ona va buvilariga bo'lgan hurmatini namoyon etadilar.",
+    scenes:[
+      {title:"Tabriknoma kirish so'zi", icon:"ti-microphone", text:"Tarbiyachi bayram tarixi va ahamiyati haqida bolalarga sodda tilda gapirib beradi.", tag:"4 daqiqa"},
+      {title:"\"Mening onam\" she'rlari", icon:"ti-feather", text:"Bolalar onalariga bag'ishlangan she'rlarni navbat bilan aytib beradi.", tag:"6 daqiqa"},
+      {title:"Qo'shiq va raqs", icon:"ti-music", text:"Bolalar onalar haqidagi qo'shiqni kuylaydi, qiz bolalar kichik raqs namoyish etadi.", tag:"7 daqiqa"},
+      {title:"Qo'lda yasalgan tabriknoma", icon:"ti-gift", text:"Bolalar oldindan tayyorlagan tabrik kartochkalari va gullarni onalariga (yoki rasmiy ravishda yig'ib qo'yiladi) taqdim etadi.", tag:"8 daqiqa"},
+      {title:"Yakuniy fotosurat", icon:"ti-camera", text:"Barcha bolalar onalar bilan birga esda qolar fotosuratga tushadi.", tag:"5 daqiqa"}
+    ],
+    props:"Qog'ozdan yasalgan gullar, tabrik kartochkalari, rangli qog'oz va bo'yoqlar, audio tizim."
+  }
+];
+
+const colorMap = {
+  green:{bg:"var(--green-soft)",fg:"var(--green)"},
+  blue:{bg:"var(--accent-soft)",fg:"var(--accent2)"},
+  amber:{bg:"var(--amber-soft)",fg:"var(--amber)"},
+  pink:{bg:"var(--pink-soft)",fg:"var(--pink)"},
+  purple:{bg:"var(--pro-soft)",fg:"var(--pro2)"}
+};
+
+const grid = document.getElementById('eventGrid');
+const detail = document.getElementById('detailCard');
+const emptyHint = document.getElementById('emptyHint');
+
+events.forEach(ev => {
+  const c = colorMap[ev.color];
+  const card = document.createElement('button');
+  card.className = 'event-card';
+  card.id = 'card-'+ev.id;
+  card.style.border = '1px solid var(--border)';
+  card.innerHTML = `
+    <div class="event-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
+    <div class="event-title">${ev.title}</div>
+    <div class="event-meta">${ev.date} · ${ev.duration}</div>
+  `;
+  card.addEventListener('click', () => showEvent(ev.id));
+  grid.appendChild(card);
+});
+
+function showEvent(id){
+  const ev = events.find(e => e.id === id);
+  if(!ev) return;
+  document.querySelectorAll('.event-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-'+id).classList.add('active');
+  const c = colorMap[ev.color];
+  emptyHint.style.display = 'none';
+  detail.classList.add('show');
+  detail.innerHTML = `
+    <div class="detail-head">
+      <div class="detail-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
+      <div>
+        <h2>${ev.title}</h2>
+        <div class="detail-meta">
+          <span><i class="ti ti-calendar"></i> ${ev.date}</span>
+          <span><i class="ti ti-clock"></i> ${ev.duration}</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:13.5px;color:var(--text2);margin-bottom:18px;line-height:1.65">${ev.intro}</p>
+    ${ev.scenes.map((s,i)=>`
+      <div class="scene">
+        <div class="scene-num">${i+1}</div>
+        <div class="scene-content">
+          <h4><i class="ti ${s.icon}"></i> ${s.title}</h4>
+          <p>${s.text}</p>
+          <span class="scene-tag">${s.tag}</span>
+        </div>
+      </div>
+    `).join('')}
+    <div class="props-box">
+      <h4><i class="ti ti-tools"></i> Kerakli rekvizit va atributlar</h4>
+      <p>${ev.props}</p>
+    </div>
+    <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Chop etish</button>
+  `;
+}
+</script>
+</body>
+</html>
