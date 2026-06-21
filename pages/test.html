@@ -70,7 +70,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .tc-pbar{height:5px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:6px}
 .tc-pfill{height:100%;background:var(--accent-mid);border-radius:99px}
 .tc-status{font-size:11px;color:var(--muted);font-weight:500}
-/* SUB-CARDS (Ertaklar uslubi) */
 .sub-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
 .sub-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative}
 .sub-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.1);transform:translateY(-2px)}
@@ -230,7 +229,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="tc-grid" id="test-grid"></div>
   </div>
 
-  <!-- ADABIYOTLAR SUB VIEW -->
   <div id="adabiyotlar-view" style="display:none">
     <button class="sub-back" onclick="showMainView()"><i class="ti ti-arrow-left"></i> Orqaga</button>
     <div class="sec-title"><i class="ti ti-bookmarks"></i> Adabiyotlar — bo'limni tanlang</div>
@@ -301,9 +299,6 @@ function showToast(msg,type){
 <script src="../js/premium.js"></script>
 <script>
 
-// ═══════════════════════════════════════════
-// TEST KATEGORIYALARI
-// ═══════════════════════════════════════════
 var TEST_CATS = [
   { id:'ilk_qadam',    icon:'ti-book-2',       title:"Ilk Qadam Dasturi",      desc:'Milliy dastur asoslari, tamoyillar' },
   { id:'soha',         icon:'ti-chart-dots-3', title:'Rivojlanish Sohalari',    desc:'5 ta soha, indikatorlar' },
@@ -311,431 +306,421 @@ var TEST_CATS = [
   { id:'psixolog',     icon:'ti-brain',        title:'Bolalar Psixologiyasi',   desc:'4-5 yosh rivojlanishi' },
   { id:'qonun',        icon:'ti-scale',        title:'Qonunchilik va Meyor',    desc:'Qonunlar, DTS, tartib-qoidalar' },
   { id:'sanitar',      icon:'ti-vaccine',      title:'Sanitariya va Gigiyena',  desc:'MTT sanitariya meyorlari' },
-  { id:'adabiyotlar',  icon:'ti-bookmarks',    title:'Adabiyotlar',             desc:'Normativ hujjatlar va tavsiya adabiyotlar', hasSub:true },
-]
+  { id:'adabiyotlar',  icon:'ti-bookmarks',    title:'Adabiyotlar',             desc:'Normativ hujjatlar va tavsiya adabiyotlar', hasSub:true }
+];
 
-// ADABIYOTLAR ichidagi bo'limlar
 var ADAB_SUBS = [
-  { id:'adab_normativ', icon:'ti-file-certificate', title:'Normativ Hujjatlar',         desc:"Qonunlar, qarorlar, buyruqlar ro'yxati" },
-  { id:'adab_yer',      icon:'ti-world',            title:'Yer Sayyorasi – Umumiy Uyimiz', desc:'Ekologik ta\'lim parsial dasturi' },
-  { id:'adab_tasviriy', icon:'ti-palette',          title:'Tasviriy Faoliyat',          desc:'O\'rgatish nazariyasi va metodikasi', pro:true },
-  { id:'adab_sokmoq',   icon:'ti-route',            title:'Ekologik So\'qmoq',          desc:'MTM hududida tashkil etish boʻyicha qoʻllanma', pro:true },
-]
+  { id:'adab_normativ', icon:'ti-file-certificate', title:'Normativ Hujjatlar',            desc:"Qonunlar, qarorlar, buyruqlar ro'yxati" },
+  { id:'adab_yer',      icon:'ti-world',            title:'Yer Sayyorasi - Umumiy Uyimiz',  desc:'Ekologik talim parsial dasturi' },
+  { id:'adab_tasviriy', icon:'ti-palette',          title:'Tasviriy Faoliyat',              desc:'Orgatish nazariyasi va metodikasi', pro:true },
+  { id:'adab_sokmoq',   icon:'ti-route',            title:'Ekologik Soqmoq',                desc:'MTM hududida tashkil etish boyicha qollanma', pro:true }
+];
 
-// ═══════════════════════════════════════════
-// SAVOLLAR
-// ═══════════════════════════════════════════
-var QUESTIONS = {
-  ilk_qadam: [
-    { q:"Ilk Qadam dasturining nechanchi nashri 2026 yilda joriy etildi?", opts:['1-nashr','2-nashr','3-nashr','4-nashr'], ans:2, exp:"2026 yilda Ilk Qadam ning uchinchi (3-nashr) nashri joriy etildi." },
-    { q:"Ilk Qadam dasturida majburiy tarkib qancha foiz?", opts:['60%','70%','80%','90%'], ans:2, exp:"Dasturning 80 foizi majburiy tarkib, 20 foizi hududiy komponent." },
-    { q:"Ilk Qadam dasturidagi rivojlanish sohalarining soni?", opts:['3','4','5','6'], ans:2, exp:"Dasturda 5 ta rivojlanish sohasi belgilangan." },
-    { q:"4-5 yoshli bola guruhi qaysi kod bilan belgilanadi?", opts:['a kodi','b kodi','c kodi','d kodi'], ans:1, exp:"4-5 yoshli bolalar b kodi bilan belgilanadi." },
-    { q:"Ilk Qadam dasturining asosiy maqsadi nima?", opts:['Maktabga tayyorlash','Har tomonlama rivojlanish','Savodxonlikni oshirish','Intizomni shakllantirish'], ans:1, exp:"Asosiy maqsad bolaning har tomonlama rivojlanishini ta'minlash." },
-    { q:"Hududiy komponent ulushi necha foiz?", opts:['10%','15%','20%','25%'], ans:2, exp:"Hududiy komponent 20 foizni tashkil etadi." },
-    { q:"Ilk Qadam dasturining 6-tamoyili nima?", opts:['Inklyuzivlik','Ota-onalar hamkorligi','Hayoti davomida ta\'lim','O\'yinga asoslangan ta\'lim'], ans:2, exp:"6-tamoyil: Hayoti davomida ta'lim olishga tayyorgarlik." },
-    { q:"MTT deb nima ataladi?", opts:['Maktab ta\'lim tashkiloti','Maktabgacha ta\'lim tashkiloti','Malakali ta\'lim tizimi','Maxsus ta\'lim tizimi'], ans:1, exp:"MTT - Maktabgacha Ta'lim Tashkiloti." },
-    { q:"4-5 yoshli bola indikator kodi qanday?", opts:['1.2.3.a','1.2.3.b','1.2.3.c','1.2.3.d'], ans:1, exp:"4-5 yosh guruhi b kodi bilan belgilanadi." },
-    { q:"Dasturda nechta asosiy tamoyil?", opts:['4','5','6','7'], ans:2, exp:"Ilk Qadam dasturida 6 ta asosiy tamoyil." },
-    { q:"O'yinga asoslangan ta'lim nechanchi tamoyil?", opts:['1-tamoyil','2-tamoyil','3-tamoyil','4-tamoyil'], ans:2, exp:"3-tamoyil: Bola shaxsiga yo'naltirilgan va o'yinga asoslangan ta'lim." },
-    { q:"6-7 yoshli bolalar uchun nechta tayanch kompetensiya?", opts:['3','4','5','6'], ans:2, exp:"6-7 yoshli bolalar uchun 5 ta tayanch kompetensiya." },
-    { q:"Inklyuziv ta'lim tamoyili nechanchi?", opts:['2-tamoyil','3-tamoyil','4-tamoyil','5-tamoyil'], ans:2, exp:"Inklyuziv va teng huquqli ta'lim 4-tamoyil." },
-    { q:"O'zbekiston MMV qisqartmasi nimani anglatadi?", opts:['Maktab va muassasalar vazirligi','Maktabgacha va maktab ta\'limi vazirligi','Malaka va mehnat vazirligi','Milliy ma\'lumot vazirligi'], ans:1, exp:"MMV - Maktabgacha va Maktab Ta'limi Vazirligi." },
-    { q:"Tayanch kompetensiyalar qaysi yoshdan?", opts:['4-5 yosh','5-6 yosh','6-7 yosh','7-8 yosh'], ans:2, exp:"Tayanch kompetensiyalar 6-7 yoshli bolalar uchun." },
-    { q:"Integratsiyalashgan ta'lim nima?", opts:['Faqat bitta sohaga e\'tibor','Barcha sohalarni o\'zaro bog\'lab o\'rgatish','Bolalarni alohida guruhlarga ajratish','Faqat o\'yin orqali o\'rgatish'], ans:1, exp:"Integratsiyalashgan ta'lim - barcha 5 ta soha o'zaro bog'liq holda rivojlantiriladi." },
-    { q:"MTT tarbiyachisining asosiy roli?", opts:['Boshqaruvchi','Fasilitator va qo\'llab-quvvatlovchi','Nazoratchi','Baholovchi'], ans:1, exp:"Tarbiyachi bolaning rivojlanishini qo'llab-quvvatlovchi sifatida ishlaydi." },
-    { q:"Dastur kim tomonidan tasdiqlangan?", opts:['O\'zbekiston Prezidenti','O\'zbekiston MMV','O\'zbekiston Kengashi','Xalq ta\'limi vazirligi'], ans:1, exp:"Ilk Qadam O'zbekiston Maktabgacha va Maktab Ta'limi vazirligi tomonidan tasdiqlangan." },
-    { q:"Boshlang'ich ta'lim necha yoshdan boshlanadi?", opts:['5','6','7','8'], ans:2, exp:"O'zbekistonda boshlang'ich ta'lim 7 yoshdan boshlanadi." },
-    { q:"Ilk Qadam dasturi qanday yondashuvga asoslangan?", opts:['Faqat akademik','Integratsiyalashgan va bolaga yo\'naltirilgan','Qattiq tartibli','Ananаviy ta\'lim'], ans:1, exp:"Dastur integratsiyalashgan va bolaga yo'naltirilgan yondashuvga asoslangan." }
-  ],
-  soha: [
-    { q:"Jismoniy rivojlanish qaysi soha?", opts:['2-soha','3-soha','1-soha','4-soha'], ans:2, exp:"Jismoniy rivojlanish - 1-soha." },
-    { q:"Nutq va muloqot qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"Nutq, muloqot, o'qish va yozish - 3-soha." },
-    { q:"Ijodiy rivojlanish qaysi soha?", opts:['3-soha','4-soha','5-soha','2-soha'], ans:2, exp:"Ijodiy rivojlanish - 5-soha." },
-    { q:"Men konsepsiyasini shakllantirish qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Men konsepsiyasi - 2-soha (Ijtimoiy-hissiy rivojlanish)." },
-    { q:"Elementar matematika (FEMP) qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Elementar matematika - 4-soha (Bilish jarayonlari)." },
-    { q:"4-5 yoshli bola nechagacha sana olishi kutiladi?", opts:['1 dan 3 gacha','1 dan 5 gacha','1 dan 7 gacha','1 dan 10 gacha'], ans:1, exp:"4-5 yoshda bola 1 dan 5 gacha sanashni o'rganadi." },
-    { q:"Mayda motorika qaysi soha?", opts:['2-soha','1-soha','4-soha','5-soha'], ans:1, exp:"Mayda motorika 1-soha - Jismoniy rivojlanish." },
-    { q:"O'qishga tayyorgarlik qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"O'qishga tayyorgarlik - 3-soha." },
-    { q:"Teatr va dramatizatsiya qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:3, exp:"Teatr va dramatizatsiya - 5-soha (Ijodiy rivojlanish)." },
-    { q:"Tabiat bilan tanishuv qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Tabiat bilan tanishuv - 4-soha." },
-    { q:"Indikator kodi 2.1.4.b da 2 neni anglatadi?", opts:['Kichik soha','Rivojlanish sohasi raqami','Indikator raqami','Yosh guruhi'], ans:1, exp:"2.1.4.b - 2=2-soha, 1=kichik soha, 4=indikator, b=4-5 yosh." },
-    { q:"Gigiyena ko'nikmasi qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:0, exp:"Shaxsiy gigiyena ko'nikmasi - 1-soha." },
-    { q:"Hissiy nazorat ko'nikmasi qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Hissiy rivojlanish - 2-soha." },
-    { q:"Raqamli savodxonlik asoslari qaysi soha?", opts:['3-soha','4-soha','5-soha','1-soha'], ans:1, exp:"Raqamli savodxonlik - 4-soha." },
-    { q:"Milliy an'analarga qiziqish qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:3, exp:"Milliy an'analarga qiziqish - 5-soha." },
-    { q:"Geometrik shakllarni farqlash qaysi soha?", opts:['3-soha','4-soha','5-soha','2-soha'], ans:1, exp:"Geometrik shakllar - 4-soha." },
-    { q:"Nizolarni tinch hal etish qaysi soha?", opts:['1-soha','2-soha','3-soha','4-soha'], ans:1, exp:"Nizolarni hal etish - 2-soha." },
-    { q:"Lug'at boyligini kengaytirish qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:1, exp:"Lug'at boyligini kengaytirish - 3-soha." },
-    { q:"Kuzatish va tadqiqot qaysi soha?", opts:['2-soha','3-soha','4-soha','5-soha'], ans:2, exp:"Kuzatish va tadqiqot - 4-soha." },
-    { q:"Yirik motorika qaysi soha?", opts:['1-soha','2-soha','3-soha','5-soha'], ans:0, exp:"Yirik motorika - 1-soha." }
-  ],
-  metodika: [
-    { q:"Tarbiyachi qo'llanadigan asosiy ta'lim metodi?", opts:['Faqat namoyish','Tushuntirish, namoyish, amaliyot','Faqat o\'yin','Faqat kuzatish'], ans:1, exp:"Asosiy metodlar: tushuntirish, namoyish, amaliyot va o'yin." },
-    { q:"Didaktik o'yin nima?", opts:['Erkin o\'yin','Ta\'lim maqsadiga ega qoidali o\'yin','Raqobatli o\'yin','Jismoniy mashq'], ans:1, exp:"Didaktik o'yin - ta'lim maqsadiga ega va qoidalari bor o'yin." },
-    { q:"MTTda bir kunlik mashg'ulot necha daqiqa (4-5 yosh)?", opts:['10 daq','15 daq','20-25 daq','40 daq'], ans:2, exp:"4-5 yoshli bolalar uchun mashg'ulot 20-25 daqiqa." },
-    { q:"Kayfiyat doirasi qanday vosita?", opts:['O\'yin turi','Refleksiya va his-tuyg\'u aniqlash','Jismoniy mashq','Matematik topshiriq'], ans:1, exp:"Kayfiyat doirasi - bolalarning kundalik his-tuyg'usini aniqlash metodikasi." },
-    { q:"Ijodiy tafakkurni rivojlantirishda eng samarali usul?", opts:['Yodlash','Qoida o\'rgatish','Muammoli vaziyat yaratish','Test o\'tkazish'], ans:2, exp:"Muammoli vaziyat bolaning mustaqil fikrlashini rag'batlantiradi." },
-    { q:"Jismoniy daqiqa nimaga xizmat qiladi?", opts:['Vaqtni to\'ldirish','Ovqatlantirishga tayyorlash','Charchoqni kamaytirish','Baholash'], ans:2, exp:"Jismoniy daqiqa bolaning charchoqini kamaytiradi." },
-    { q:"FEMP qisqartmasi nimani anglatadi?", opts:['Fizik va Estetik Mashg\'ulotlar Plani','Faol Erkin Mashg\'ulotlar','Elementar Matematik Tushunchalarni Shakllantirish','Fizik Emosional Mashg\'ulotlar'], ans:2, exp:"FEMP - Elementar Matematik Tushunchalarni Shakllantirish." },
-    { q:"Refleksiya darsning qaysi qismida?", opts:['Boshida','O\'rtasida','Asosiy qismida','Oxirida'], ans:3, exp:"Refleksiya darsning oxirida - bolalar o'rganganlari haqida fikr yuritadi." },
-    { q:"Induktiv usul nima?", opts:['Umumiydan xususiyga','Xususiydan umumiyga','Savol berish','Namoyish'], ans:1, exp:"Induktiv usul - xususiy misollardan umumiy xulosaga o'tish." },
-    { q:"MTTda frontal mashg'ulot nima?", opts:['Bir bola bilan','Kichik guruh','Butun guruh bilan','Mustaqil ishlash'], ans:2, exp:"Frontal mashg'ulot - tarbiyachi butun guruh bilan ishlaydi." },
-    { q:"Individual yondashuv nima uchun muhim?", opts:['Vaqtni tejash','Har bola o\'ziga xos sur\'atda','Tartibni saqlash','Baholashni osonlashtirish'], ans:1, exp:"Har bir bola o'ziga xos. Individual yondashuv har bolaning ehtiyojiga mos ta'lim beradi." },
-    { q:"Ko'rgazmali metod nimaga asoslanadi?", opts:['Verbal','Ko\'rish orqali o\'rganish','Amaliy','O\'yinli'], ans:1, exp:"Ko'rgazmali metod - suratlar, modellar ko'rsatish orqali o'rgatish." },
-    { q:"Loyihaviy ta'lim nima?", opts:['Bolaga vazifa berish','Uzoq muddatli tadqiqot olib borish','Tarbiyachi tushuntirish','Bolani sinash'], ans:1, exp:"Loyihaviy ta'lim - bolalar birgalikda mavzuda uzoq muddatli tadqiqot qiladilar." },
-    { q:"Erkin o'yin nima uchun muhim?", opts:['Bolaning mustaqil rivojlanishi','Tarbiyachi dam olishi','Tartibni saqlash','Vaqtni to\'ldirish'], ans:0, exp:"Erkin o'yin - mustaqillik, ijodkorlik va ijtimoiy ko'nikmalarni rivojlantiradi." },
-    { q:"Kuzatish metodiga mos faoliyat?", opts:['FEMP darsi','Tabiat sayri','Musiqa darsi','Jismoniy tarbiya'], ans:1, exp:"Kuzatish metodi tabiat sayrida eng yaxshi qo'llaniladi." },
-    { q:"Bolani rag'batlantirishda eng samarali usul?", opts:['Moddiy sovg\'a','Jazo','Og\'zaki maqtov va tabassum','E\'tibor bermaslik'], ans:2, exp:"Bolalarni og'zaki maqtash eng kuchli rag'bat." },
-    { q:"KN konspekti qanday hujjat?", opts:['Bolalar reytingi','Kunlik dars rejalashtirilgan hujjat','Ota-ona uchun xabar','Rahbar uchun hisobot'], ans:1, exp:"KN Konspekti - tarbiyachining har kunlik darsini rejalashtiradigan pedagogik hujjat." },
-    { q:"Suhbat metodining asosiy maqsadi?", opts:['Bolani baholash','Mavjud bilimlarni faollashtirish','Vaqt o\'tkazish','Tartib saqlash'], ans:1, exp:"Suhbat - bolaning avvalgi bilimlari asosida yangi ma'lumotni muloqot orqali o'zlashtirish." },
-    { q:"Darsning kirish qismi necha daqiqa?", opts:['1-2 daq','3-5 daq','10-12 daq','15 daq'], ans:1, exp:"Kirish qismi 3-5 daqiqa - motivatsiya va qiziqish uyg'otish uchun." },
-    { q:"Integratsiyalashgan dars nima?", opts:['Faqat bitta fanga bag\'ishlangan','Bir nechta sohani birlashgan dars','Faqat o\'yindan iborat','Kompyuter yordamida'], ans:1, exp:"Integratsiyalashgan dars - bir mavzu asosida bir nechta sohani birgalikda o'tish." }
-  ],
-  psixolog: [
-    { q:"4-5 yoshli bolaning xotirasi qanday?", opts:['Uzoq muddatli va mustahkam','Ko\'rgazmali-hissiy va ixtiyorsiz','Mantiqiy va tizimli','Faqat eshitish orqali'], ans:1, exp:"4-5 yoshda bola ko'rgazmali va hissiy xotiraga ega." },
-    { q:"Bu yoshda diqqat qanday?", opts:['Uzoq ushlab turadi','Ixtiyorsiz, tez chalg\'iydi','Juda barqaror','Bir joyda uzoq qoladi'], ans:1, exp:"4-5 yoshda diqqat ixtiyorsiz - yorqin narsalarga osongina chalg'iydi." },
-    { q:"Bu yoshda fikrlash asosan qanday?", opts:['Abstrakt-mantiqiy','Ko\'rgazmali-obrazli','Og\'zaki-mantiqiy','Nazariy'], ans:1, exp:"4-5 yoshda bola ko'rgazmali-obrazli fikrlaydi." },
-    { q:"Hissiy rivojlanishda eng muhim omil?", opts:['O\'yinlar soni','Xavfsizlik va sevgi hissi','Darslar soni','Raqobat'], ans:1, exp:"Bolaning emosional rivojlanishida xavfsizlik va sevgi hissi asosiy rol o'ynaydi." },
-    { q:"4-5 yoshda ijtimoiy rivojlanishning asosiy belgisi?", opts:['Yolg\'iz o\'ynashni afzal ko\'radi','Tengdoshlari bilan o\'ynaydi va hamkorlik qiladi','Kattalarga qo\'shilmaydi','Faqat bajaradi'], ans:1, exp:"Bu yoshda bola tengdoshlari bilan o'ynashni boshlaydi." },
-    { q:"Krizis 3 yosh qaysi yoshda kuchayadi?", opts:['2 yoshda','3-4 yoshda','5-6 yoshda','7 yoshda'], ans:1, exp:"Krizis 3 yosh 3-4 yoshda kuchayadi - bola mustaqillikka intiladi." },
-    { q:"O'yinning etakchi faoliyat roli qachon?", opts:['1-2 yoshda','3-7 yoshda','7-10 yoshda','10 yoshdan keyin'], ans:1, exp:"3-7 yosh - bolaning etakchi faoliyati o'yin." },
-    { q:"Bola so'zni tushunmasligini bildirsa nima qilish kerak?", opts:['Baland ovozda takrorlash','Oddiyroq so\'z va ko\'rgazma','E\'tibor bermaslik','Uni qo\'yib yuborish'], ans:1, exp:"Oddiy til va ko'rgazmali materialdan foydalanish tavsiya etiladi." },
-    { q:"Zona yaqin rivojlanish kim tomonidan kiritilgan?", opts:['Piaje','Freyd','Vigotskiy','Montessori'], ans:2, exp:"Zona yaqin rivojlanish konsepsiyasi L.S.Vigotskiy tomonidan kiritilgan." },
-    { q:"4-5 yoshda bolaning lug'at boyligi taxminan?", opts:['200-400','800-1500','2000-3000','5000+'], ans:1, exp:"4-5 yoshda bolaning faol lug'ati taxminan 800-1500 so'z." },
-    { q:"Bola yolg'on gapirmasa ham noto'g'ri aytsa bu nima?", opts:['Yolg\'onchilik','Tasavvur va fantaziya','Xotira muammosi','Rivojlanish kechikishi'], ans:1, exp:"Bu yoshda bolalar fantaziya va haqiqatni aralashtirib yuborishi normal." },
-    { q:"Bola tengdoshi bilan mushtlashsa birinchi qadam?", opts:['Jazolamoq','Hissiyotlarini nom bilan atash','E\'tibor bermaslik','Ota-onasiga xabar'], ans:1, exp:"Bolaning hissiyotini nom bilan atash birinchi qadam." },
-    { q:"Egosentrizm 4-5 yoshda nima?", opts:['Bola o\'zini juda sevadi','Bola faqat o\'z nuqtai nazaridan fikrlaydi','Bola boshqalarni xafa qiladi','Bola o\'zi haqida gapirmaydi'], ans:1, exp:"Piaje bo'yicha egosentrizm - bola faqat o'z nuqtai nazaridan fikrlaydi." },
-    { q:"4-5 yoshda qo'rquv qayerdan?", opts:['Faqat tashqi ta\'sirdan','Tasavvur rivojlanishi bilan bog\'liq','Faqat ota-onadan','Genetik'], ans:1, exp:"Tasavvur rivojlanishi bilan xayoliy qo'rquvlar paydo bo'ladi." },
-    { q:"Temperament tug'ma ekanini kim isbotladi?", opts:['Piaje','Vigotskiy','Tomas va Chess','Freyd'], ans:2, exp:"Tomas va Chessning tadqiqoti bolaning temperamenti tug'ma ekanini ko'rsatdi." },
-    { q:"Bolalarda o'z-o'zini baholash qachon shakllanadi?", opts:['1-2 yoshda','3-5 yoshda','6-7 yoshda','Maktab yoshida'], ans:1, exp:"O'z-o'zini baholash 3-5 yoshda kattalar munosabati asosida shakllanadi." },
-    { q:"Rolli o'yin qaysi rivojlanishga yordam beradi?", opts:['Faqat jismoniy','Ijtimoiy, hissiy va kognitiv','Faqat nutq','Faqat matematik'], ans:1, exp:"Rolli o'yin ijtimoiy rollarni o'rganish va hissiyotni tartibga solishga yordam beradi." },
-    { q:"Bola qo'rqsa tarbiyachi nima qilishi kerak?", opts:['Hissiyotlarini inkor etish','Jazolamoq','Tinchlantirish va xavfsizlik berish','E\'tibor bermaslik'], ans:2, exp:"Bolaning xavotirini tasdiqlash va xavfsizlikni ta'minlash eng to'g'ri yondashuv." },
-    { q:"Bola kattalar oldida yig'lashdan uyalsa bu nima?", opts:['Muammo','Ijtimoiy-hissiy kamolot belgisi','Kasallik','Rivojlanish kechikishi'], ans:1, exp:"Bu bola ijtimoiy normalarni o'rganayotganligining belgisi." },
-    { q:"4-5 yoshda bola qancha vaqt diqqatini ushlab tura oladi?", opts:['2-3 daqiqa','5-10 daqiqa','20-30 daqiqa','1 soat'], ans:1, exp:"4-5 yoshda bola 5-10 daqiqa diqqatini bir joyga ushlab tura oladi." }
-  ],
-  qonun: [
-    { q:"O'zbekistonda maktabgacha ta'limni tartibga soluvchi qonun?", opts:['Ta\'lim to\'g\'risida Qonun','Maktabgacha ta\'lim qonuni','Oila kodeksi','Bolalar huquqlari'], ans:0, exp:"Ta'lim to'g'risida Qonun maktabgacha ta'limni tartibga soladi." },
-    { q:"MTTda bir guruhda necha bola?", opts:['10 ta','15 ta','20 ta','25 ta'], ans:2, exp:"Sanitariya me'yorlariga ko'ra bir guruhda 20 tagacha bola." },
-    { q:"Litsenziyalash nima uchun kerak?", opts:['Soliq to\'lash','Qonuniy faoliyat huquqi','Ota-onalardan to\'lov','Bino qurish'], ans:1, exp:"Litsenziya MTTning qonuniy faoliyat huquqini tasdiqlovchi hujjat." },
-    { q:"BMT Bola huquqlari konvensiyasi nechanchi yil?", opts:['1979','1989','1999','2009'], ans:1, exp:"BMT Bola huquqlari konvensiyasi 1989 yilda qabul qilingan." },
-    { q:"DTS qisqartmasi?", opts:['Davlat Ta\'lim Standarti','Dars Ta\'lim Strategiyasi','Didaktik Ta\'lim Sifati','Davlat Tarbiya Standarti'], ans:0, exp:"DTS - Davlat Ta'lim Standarti." },
-    { q:"MTT tarbiyachisi uchun minimal ta'lim?", opts:['O\'rta ta\'lim','O\'rta maxsus (pedagogika kollej)','Oliy ta\'lim','Kurs sertifikati'], ans:1, exp:"Tarbiyachi uchun minimal talab - pedagogika kollej." },
-    { q:"Attestatsiya maqsadi?", opts:['Soliq to\'lash','Kasbiy malakani baholash','Bino tekshirish','Ota-onalarni xabardor qilish'], ans:1, exp:"Attestatsiya - tarbiyachining kasbiy bilim va malakasini baholash." },
-    { q:"Tarbiyachi necha yilda bir attestatsiya?", opts:['Har yil','Har 3 yilda','Har 5 yilda','Faqat so\'ralganda'], ans:2, exp:"O'zbekistonda tarbiyachilar har 5 yilda bir attestatsiyadan o'tadilar." },
-    { q:"Bolalarni jismoniy jazolaydigan tarbiyachi?", opts:['Ogohlantiriladi','Jarima to\'laydi','Jinoyat yoki majburiy javobgarlik','Faqat kuzatuv'], ans:2, exp:"Jismoniy jazo - majburiy yoki jinoiy javobgarlik va ishdan ozod etish." },
-    { q:"MTTda mehnat xavfsizligi uchun kim javobgar?", opts:['Tarbiyachi','Ota-onalar','Muassasa rahbari','Viloyat bo\'limi'], ans:2, exp:"Mehnat xavfsizligi uchun muassasa rahbari (direktori) javobgar." },
-    { q:"Bolaning shaxsiy ma'lumotlarini oshkor qilish?", opts:['Ha, har doim','Yo\'q, rozilik bo\'lmasdan mumkin emas','Faqat ota-onaga','Har qanday holatda'], ans:1, exp:"Ota-onaning roziligisiz ma'lumot oshkor etib bo'lmaydi." },
-    { q:"MTT direktori uchun asosiy talab?", opts:['Faqat tajriba','Oliy pedagogika va boshqaruv tajribasi','Faqat moliya bilimlari','Davlat xizmatida ishlash'], ans:1, exp:"Direktor uchun oliy pedagogika va boshqaruv tajribasi talab etiladi." },
-    { q:"Ekstremal vaziyatlarda birinchi harakat?", opts:['Avval ota-onalarga','Avval direktorg\'a','101/102/103 ga, keyin rahbariyatga','Avval viloyat bo\'limiga'], ans:2, exp:"Ekstremal holatda birinchi 101/102/103 ga murojaat, keyin rahbariyatga." },
-    { q:"MTT to'lovlari qanday belgilanadi?", opts:['Tarbiyachi belgilaydi','Viloyat bo\'limi','Qonun va hukumat qarorlari','Ota-onalar kengashi'], ans:2, exp:"MTT to'lovlari qonun va hukumat qarorlari asosida belgilanadi." },
-    { q:"Bola MTTda shikastlansa kim javobgar?", opts:['Faqat bola','Faqat ota-ona','MTT muassasasi','Faqat sug\'urta'], ans:2, exp:"MTT muassasasi bolaning xavfsizligi uchun mas'ul." },
-    { q:"Malaka oshirish kurslarining minimal davomiyligi?", opts:['10 soat','36 soat','72 soat','144 soat'], ans:2, exp:"Malaka oshirish kurslari kamida 72 akademik soat." },
-    { q:"Ichki tartib-intizom qoidalari kim tasdiqlaydi?", opts:['Viloyat bo\'limi','Muassasa kengashi va direktori','Faqat tarbiyachilar','Ota-onalar kengashi'], ans:1, exp:"Ichki tartib-intizom qoidalari muassasa kengashi va direktori tomonidan tasdiqlanadi." },
-    { q:"Bola MTTga qabul hujjatlari?", opts:['Faqat pasport','Tug\'ilganlik, tibbiy hujjatlar, ariza','Faqat ariza','Faqat tibbiy'], ans:1, exp:"MTTga qabul: tug'ilganlik guvohnomasi, tibbiy ma'lumot, ariza." },
-    { q:"Inklyuziv ta'lim qonuniy asosi?", opts:['Nogironlar huquqlari to\'g\'risida qonun','Faqat MMV buyrug\'i','Faqat bolalar konvensiyasi','Mahalliy tartib-qoida'], ans:0, exp:"Nogironlar huquqlari to'g'risida qonun inklyuziv ta'limni ta'minlaydi." },
-    { q:"MTT tarbiyachisining mehnat shartnomasi?", opts:['1 yil','3 yil','Muddatsiz yoki muddatli','5 yil'], ans:2, exp:"Mehnat Kodeksiga ko'ra shartnoma muddatsiz yoki belgilangan muddatga tuzilishi mumkin." }
-  ],
-  sanitar: [
-    { q:"MTTda bolalar ovqatlanish necha marta?", opts:['2 marta','3 marta','4 marta','5 marta'], ans:1, exp:"MTTda bolalar odatda 3 marta ovqatlanadi." },
-    { q:"Bir bola uchun minimal xona maydoni?", opts:['1 m2','2 m2','4 m2','6 m2'], ans:2, exp:"Sanitariya me'yorlariga ko'ra bir bola uchun kamida 4 m2." },
-    { q:"Qo'l yuvish nechta qadam?", opts:['3 qadam','5 qadam','6 qadam','8 qadam'], ans:1, exp:"DSM bo'yicha qo'l yuvish 5 bosqichli." },
-    { q:"Bolalar uchun maqbul xona harorati?", opts:['16-18 daraja','20-22 daraja','25-27 daraja','28-30 daraja'], ans:1, exp:"Guruh xonasida optimal harorat 20-22 daraja." },
-    { q:"Xonalar qancha vaqtda shamollatiladi?", opts:['Aytilmagan','Har 2 soatda bir marta','Shamollatish mumkin emas','Faqat yozda'], ans:1, exp:"Xonalar har 2 soatda (bolalar yo'qligida) shamollatilishi kerak." },
-    { q:"Ovqat saqlash harorati?", opts:['0 daraja','2-6 daraja (sovutgich)','10-15 daraja','Xona haroratida'], ans:1, exp:"Tez buziladigan mahsulotlar 2-6 darajada saqlanishi kerak." },
-    { q:"Bolalar uchun ichimlik suvi?", opts:['Xona haroratida ariq suvi','Qaynagan yoki tozalangan suv','Faqat filtr kerak','Biron talabi yo\'q'], ans:1, exp:"Bolalarga faqat qaynagan yoki tozalangan ichimlik suvi berilishi kerak." },
-    { q:"Yangi va eski ovqatlarni aralashtirish?", opts:['Ha, agar toza bo\'lsa','Faqat sutli taomlar','Yo\'q, mumkin emas','Faqat kichik miqdorda'], ans:2, exp:"Yangi va o'tgan ovqatlarni aralashtirish mutlaqo taqiqlangan." },
-    { q:"MTTda pedikulos topilsa birinchi harakat?", opts:['Bolani uyga yuboring','Ota-onaga va tibbiy xodimga xabar','Bolani o\'zingiz davolang','Dorilar bilan guruhni davolang'], ans:1, exp:"Pedikulos aniqlanganda ota-onaga va tibbiy xodimga xabar berish kerak." },
-    { q:"Qo'lqop ishlatish qachon majburiy?", opts:['Hech qachon','Faqat oshxonada','Infeksiya xavfi bo\'lganda','Har doim'], ans:2, exp:"Qo'lqop infeksiya xavfi bo'lganda majburiy." },
-    { q:"Yuqumli kasalik aniqlangan bola guruhga?", opts:['Ha, yengilroq bo\'lsa','Faqat niqob bilan','Yo\'q, sog\'om bo\'lmaguncha','Faqat antibiotik ichsa'], ans:2, exp:"Yuqumli kasalik aniqlanganida bola to'liq sog'ayib, tibbiy ma'lumot olguncha MTTga qabul qilinmaydi." },
-    { q:"Xona havo namligi qanday bo'lishi kerak?", opts:['20-30%','40-60%','70-80%','90%+'], ans:1, exp:"Optimal havo namligi 40-60%." },
-    { q:"Dezinfeksiya eritmasi tayyorlash kim vazifasi?", opts:['Tarbiyachi','Texnik xodim yoki hamshira','Ota-onalar','Bolalar'], ans:1, exp:"Dezinfeksiya eritmalarini tayyorlash texnik xodim yoki tibbiy xodim vazifalari." },
-    { q:"Ovqat taqsimotida idishlar qanday bo'lishi kerak?", opts:['Istalgan holatda','Tozalangan, ammo sterillanmagan','Belgilangan, dezinfeksiya qilingan','Birgalikda'], ans:2, exp:"Alohida belgilangan, tozalangan va dezinfeksiya qilingan idishlar ishlatilishi kerak." },
-    { q:"Bola dorisi kim tomonidan beriladi?", opts:['Tarbiyachi o\'zi beradi','Faqat ota-onalar','Tibbiy xodim ota-ona yozma topshirig\'i bilan','Bolaning o\'zi'], ans:2, exp:"Dori faqat tibbiy xodim va ota-onaning yozma talabnomasi asosida beriladi." },
-    { q:"O'yin xonasiga qanday kiriladi?", opts:['Ha, har doim oyoq kiyimda','Faqat uy shippagi bilan','Faqat yozda','Tarbiyachi qaroriga bog\'liq'], ans:1, exp:"O'yin xonalariga faqat uy shippagi bilan kiriladi." },
-    { q:"Choyshab qachon almashtiriladi?", opts:['Har kuni','Har hafta','Har 10 kunda','Har oy'], ans:1, exp:"Bolalar choyshabi kamida haftada bir marta almashtiriladi." },
-    { q:"MTT hududida tutun chekish?", opts:['Atrofdan uzoqda ruxsat','Taqiqlangan (mutlaqo)','Faqat kechasi','Bolalar yo\'qligida'], ans:1, exp:"MTT hududida tutun chekish mutlaqo taqiqlangan." },
-    { q:"Ovqat yetkazishda nima ishlatiladi?", opts:['Ochiq idish','Yopiq termo-konteyner','Istalgan idish','Bolalar olib keladi'], ans:1, exp:"Ovqat yopiq termo-konteynerda yetkaziladi." },
-    { q:"Bola MTTga kelganda birinchi tibbiy tekshiruv?", opts:['Xona harorati olish','Teri va ko\'z tekshiruvi','Qon tahlili','Bino tekshiruvi'], ans:1, exp:"Bola MTTga kelganda hamshira tomonidan teri va ko'z tekshiruvi o'tkaziladi." }
-  ],
+var QUESTIONS = {};
 
-  // ─── ADABIYOTLAR BO'LIMLARI ───────────────────────────────────────
-  adab_normativ: [
-    { q:"Maktabgacha ta'lim va tarbiya to'g'risidagi O'zbekiston Respublikasi qonuni qaysi sanada qabul qilingan?", opts:['16.12.2018','16.12.2019','16.12.2020','16.12.2021'], ans:1, exp:"Qonun 16.12.2019 yilda qabul qilingan, ORQ-595-son." },
-    { q:"Maktabgacha ta'lim va tarbiya to'g'risidagi qonunning raqami qanday?", opts:['ORQ-495-son','ORQ-595-son','ORQ-695-son','ORQ-995-son'], ans:1, exp:"Qonun raqami ORQ-595-son." },
-    { q:"Bolalarni zo'ravonlikning barcha shakllaridan himoya qilish to'g'risidagi qonun qachon qabul qilingan?", opts:['14.11.2022','14.11.2023','14.11.2024','14.11.2025'], ans:2, exp:"Qonun 14.11.2024 yilda qabul qilingan, ORQ-996-son." },
-    { q:"Bolalarni zo'ravonlikdan himoya qilish to'g'risidagi qonunning raqami?", opts:['ORQ-896-son','ORQ-996-son','ORQ-696-son','ORQ-796-son'], ans:1, exp:"Qonun raqami ORQ-996-son." },
-    { q:"Maktabgacha ta'lim-tarbiyaning Davlat standarti to'g'risidagi Vazirlar Mahkamasi qarori qaysi raqamga ega?", opts:['702-son','802-son','902-son','602-son'], ans:1, exp:"Qaror 802-son, 22.12.2020 yilda qabul qilingan." },
-    { q:"Davlat standarti to'g'risidagi qaror qachon qabul qilingan?", opts:['22.12.2019','22.12.2020','22.12.2021','22.12.2022'], ans:1, exp:"Qaror 22.12.2020 yilda qabul qilingan." },
-    { q:"MTT pedagogining kasbiy standartini tasdiqlash to'g'risidagi qaror qachon?", opts:['08.07.2023','08.07.2024','08.07.2025','08.07.2026'], ans:2, exp:"Qaror 08.07.2025 yilda qabul qilingan, 423-son." },
-    { q:"Kasbiy standartni tasdiqlash to'g'risidagi qarorning raqami?", opts:['323-son','423-son','523-son','156-son'], ans:1, exp:"Qaror raqami 423-son." },
-    { q:"Takomillashtirilgan Ilk Qadam davlat o'quv dasturi qachon tasdiqlangan?", opts:['2021-yil 4-fevral','2022-yil 4-fevral','2023-yil 4-fevral','2020-yil 4-fevral'], ans:1, exp:"Dastur 2022-yil 4-fevralda tasdiqlangan." },
-    { q:"'Ilm yo'li' qanday hujjat va qaysi yilda?", opts:['Davlat standarti, 2019-yil','Variativ dastur, 2020-yil','Qonun, 2021-yil','Nizom, 2022-yil'], ans:1, exp:"Ilm yo'li 2020-yilda qabul qilingan variativ dastur." },
-    { q:"156-sonli buyruq qachon chiqarilgan va nimaga bag'ishlangan?", opts:['2025-yil 16-may, nizomlar va lavozim yo\'riqnomalari','2025-yil 29-avgust, ish hujjatlari','2024-yil 16-may, kasbiy standart','2025-yil 16-may, ish hujjatlari'], ans:0, exp:"156-son buyruq 2025-yil 16-mayda chiqarilgan va nizomlar hamda lavozim yo'riqnomalarini tasdiqlashga bag'ishlangan." },
-    { q:"MTT pedagoglarining ish hujjatlarini tasdiqlash buyrug'i qaysi raqam bilan?", opts:['2025-yil 16-may, 156-son','2025-yil 29-avgust, 323-son','2024-yil 29-avgust, 423-son','2025-yil 8-iyul, 802-son'], ans:1, exp:"Buyruq 2025-yil 29-avgustda 323-son bilan chiqarilgan." },
-    { q:"Bolalarning hayoti va sog'ligini muhofaza qilish tartibi to'g'risidagi nizom qaysi vazirliklar tomonidan?", opts:['MTT vazirligi va Xalq ta\'limi vazirligi','MTT vazirligi va Sog\'liqni saqlash vazirligi','Sog\'liqni saqlash va Ichki ishlar vazirligi','MTT vazirligi va Adliya vazirligi'], ans:1, exp:"Nizom MTT vazirligi va Sog'liqni saqlash vazirligi tomonidan 2018-yil 30-aprelda qo'shma qabul qilingan." },
-    { q:"Maktabgacha pedagogika darsligi qaysi nashriyotda chop etilgan?", opts:['O\'qituvchi, 1995-yil','Tafakkur bo\'stoni, Toshkent-2019','Barkamol Fayz media, 2018-yil','Tafakkur, Toshkent-2020'], ans:1, exp:"Darslik Tafakkur bo'stoni nashriyotida, Toshkent-2019 yilda chop etilgan." },
-    { q:"Nutq o'stirish nazariyasi va metodikasi darsligining muallifi kim?", opts:['F.R.Qodirova','D.R.Babayeva','Shaxnoza Xasanova','N.U.Bikbayeva'], ans:1, exp:"Muallif D.R.Babayeva, Barkamol Fayz media nashriyoti, 2018-yil." },
-    { q:"Elementar matematik tasavvurlarni shakllantirish qo'llanmasi qaysi yilda?", opts:['1990-yil','1995-yil','2000-yil','2005-yil'], ans:1, exp:"Qo'llanma 1995-yilda O'qituvchi nashriyotida chop etilgan." },
-    { q:"Bolalarni sahnalashtirish va ijodiy faoliyatga o'rgatish darsligi qaysi shaharda?", opts:['Toshkent-2022','Namangan-2024','Samarqand-2023','Buxoro-2025'], ans:1, exp:"Darslik Namangan shahrida, 2024-yilda nashr etilgan." },
-    { q:"Tasviriy faoliyatga o'rgatish metodikasi qo'llanmasining muallifi kim?", opts:['D.R.Babayeva','Shaxnoza Xasanova','Z.S.Qodirova','M.R.Ishoqova'], ans:1, exp:"Muallif Shaxnoza Xasanova, Tafakkur nashriyoti, Toshkent-2020." },
-    { q:"Adabiyotlar ro'yxatidagi ustoz kim?", opts:['Shaxnoza Xasanova','D.R.Babayeva','Saidabonu Bozorova','Z.S.Qodirova'], ans:2, exp:"Ro'yxat oxirida Ustoz: Saidabonu Bozorova ko'rsatilgan." },
-    { q:"Maktabgacha pedagogika darsligining mualliflari qatorida kim yo'q?", opts:['F.R.Qodirova','Sh.Q.Toshpolatova','D.R.Babayeva','N.M.Kayumova'], ans:2, exp:"D.R.Babayeva Maktabgacha pedagogika darsligi muallifi emas, balki Nutq o'stirish darsligi muallifi." }
-  ],
+QUESTIONS.ilk_qadam = [
+  { q:"Ilk Qadam dasturining nechanchi nashri 2026 yilda joriy etildi?", opts:["1-nashr","2-nashr","3-nashr","4-nashr"], ans:2, exp:"2026 yilda Ilk Qadam ning uchinchi (3-nashr) nashri joriy etildi." },
+  { q:"Ilk Qadam dasturida majburiy tarkib qancha foiz?", opts:["60%","70%","80%","90%"], ans:2, exp:"Dasturning 80 foizi majburiy tarkib, 20 foizi hududiy komponent." },
+  { q:"Ilk Qadam dasturidagi rivojlanish sohalarining soni?", opts:["3","4","5","6"], ans:2, exp:"Dasturda 5 ta rivojlanish sohasi belgilangan." },
+  { q:"4-5 yoshli bola guruhi qaysi kod bilan belgilanadi?", opts:["a kodi","b kodi","c kodi","d kodi"], ans:1, exp:"4-5 yoshli bolalar b kodi bilan belgilanadi." },
+  { q:"Ilk Qadam dasturining asosiy maqsadi nima?", opts:["Maktabga tayyorlash","Har tomonlama rivojlanish","Savodxonlikni oshirish","Intizomni shakllantirish"], ans:1, exp:"Asosiy maqsad bolaning har tomonlama rivojlanishini taminlash." },
+  { q:"Hududiy komponent ulushi necha foiz?", opts:["10%","15%","20%","25%"], ans:2, exp:"Hududiy komponent 20 foizni tashkil etadi." },
+  { q:"Ilk Qadam dasturining 6-tamoyili nima?", opts:["Inklyuzivlik","Ota-onalar hamkorligi","Hayoti davomida talim","Oyinga asoslangan talim"], ans:2, exp:"6-tamoyil: Hayoti davomida talim olishga tayyorgarlik." },
+  { q:"MTT deb nima ataladi?", opts:["Maktab talim tashkiloti","Maktabgacha talim tashkiloti","Malakali talim tizimi","Maxsus talim tizimi"], ans:1, exp:"MTT - Maktabgacha Talim Tashkiloti." },
+  { q:"4-5 yoshli bola indikator kodi qanday?", opts:["1.2.3.a","1.2.3.b","1.2.3.c","1.2.3.d"], ans:1, exp:"4-5 yosh guruhi b kodi bilan belgilanadi." },
+  { q:"Dasturda nechta asosiy tamoyil?", opts:["4","5","6","7"], ans:2, exp:"Ilk Qadam dasturida 6 ta asosiy tamoyil." },
+  { q:"Oyinga asoslangan talim nechanchi tamoyil?", opts:["1-tamoyil","2-tamoyil","3-tamoyil","4-tamoyil"], ans:2, exp:"3-tamoyil: Bola shaxsiga yonaltirilgan va oyinga asoslangan talim." },
+  { q:"6-7 yoshli bolalar uchun nechta tayanch kompetensiya?", opts:["3","4","5","6"], ans:2, exp:"6-7 yoshli bolalar uchun 5 ta tayanch kompetensiya." },
+  { q:"Inklyuziv talim tamoyili nechanchi?", opts:["2-tamoyil","3-tamoyil","4-tamoyil","5-tamoyil"], ans:2, exp:"Inklyuziv va teng huquqli talim 4-tamoyil." },
+  { q:"Ozbekiston MMV qisqartmasi nimani anglatadi?", opts:["Maktab va muassasalar vazirligi","Maktabgacha va maktab talimi vazirligi","Malaka va mehnat vazirligi","Milliy malumot vazirligi"], ans:1, exp:"MMV - Maktabgacha va Maktab Talimi Vazirligi." },
+  { q:"Tayanch kompetensiyalar qaysi yoshdan?", opts:["4-5 yosh","5-6 yosh","6-7 yosh","7-8 yosh"], ans:2, exp:"Tayanch kompetensiyalar 6-7 yoshli bolalar uchun." },
+  { q:"Integratsiyalashgan talim nima?", opts:["Faqat bitta sohaga etibor","Barcha sohalarni ozaro boglab orgatish","Bolalarni alohida guruhlarga ajratish","Faqat oyin orqali orgatish"], ans:1, exp:"Integratsiyalashgan talim - barcha 5 ta soha ozaro boglik holda rivojlantiriladi." },
+  { q:"MTT tarbiyachisining asosiy roli?", opts:["Boshqaruvchi","Fasilitator va qollab-quvvatlovchi","Nazoratchi","Baholovchi"], ans:1, exp:"Tarbiyachi bolaning rivojlanishini qollab-quvvatlovchi sifatida ishlaydi." },
+  { q:"Dastur kim tomonidan tasdiqlangan?", opts:["Ozbekiston Prezidenti","Ozbekiston MMV","Ozbekiston Kengashi","Xalq talimi vazirligi"], ans:1, exp:"Ilk Qadam Ozbekiston Maktabgacha va Maktab Talimi vazirligi tomonidan tasdiqlangan." },
+  { q:"Boshlangich talim necha yoshdan boshlanadi?", opts:["5","6","7","8"], ans:2, exp:"Ozbekistonda boshlangich talim 7 yoshdan boshlanadi." },
+  { q:"Ilk Qadam dasturi qanday yondashuvga asoslangan?", opts:["Faqat akademik","Integratsiyalashgan va bolaga yonaltirilgan","Qattiq tartibli","Ananaviy talim"], ans:1, exp:"Dastur integratsiyalashgan va bolaga yonaltirilgan yondashuvga asoslangan." }
+];
 
-  adab_yer: [
-    { q:"'Yer sayyorasi – Umumiy uyimiz' dasturi qaysi turdagi dastur hisoblanadi?", opts:['Davlat o\'quv dasturi','Parsial (qisman) dastur','Variativ to\'liq dastur','Xususiy metodika'], ans:1, exp:"Dastur maktabgacha ta'lim tashkilotlari uchun parsial (qisman) dastur hisoblanadi." },
-    { q:"Dastur qachon tasdiqlangan?", opts:['17 may 2022 yil','27 may 2022 yil','17 mart 2022 yil','27 mart 2022 yil'], ans:1, exp:"Dastur O'zbekiston MTT vazirligi Muvofiqlashtiruvchi kengash qarori bilan 27 may 2022-yilda tasdiqlangan." },
-    { q:"Dastur uch qismdan tashkil topgan, qaysilar?", opts:['O\'simliklar, hayvonlar, inson','Jonsiz tabiat, jonli tabiat, insonning tabiat bilan o\'zaro munosabati','Havo, suv, tuproq','Quyosh, shamol, yomg\'ir'], ans:1, exp:"Dastur uch qismdan: jonsiz tabiat; jonli tabiat; insonning tabiat bilan o'zaro munosabati va ekologik xavfsizlik." },
-    { q:"Barri Kommonerning ekologiyaning birinchi qonuni qanday?", opts:["Hech bir narsa izsiz yo'qolmaydi","Tabiatda hamma narsa o'zaro bog'liq","Tabiat nima qilishni yaxshiroq biladi","Hech narsa shunchaki berilmaydi"], ans:1, exp:"Birinchi qonun: 'Tabiatda hamma narsa o'zaro bog'liq'." },
-    { q:"Ekologiyaning ikkinchi qonuni qanday?", opts:["Tabiatda hamma narsa o'zaro bog'liq","Hech bir narsa izsiz yo'qolmaydi","Hech narsa shunchaki berilmaydi","Tabiat nima qilishni yaxshiroq biladi"], ans:1, exp:"Ikkinchi qonun: 'Hech bir narsa izsiz yo'qolmaydi'." },
-    { q:"Ekologiyaning to'rtinchi (oltin qoida) qonuni qanday?", opts:["Hech bir narsa izsiz yo'qolmaydi","Hamma narsa o'zaro bog'liq","Tabiat nima qilishni yaxshiroq biladi","Hech narsa shunchaki berilmaydi"], ans:2, exp:"To'rtinchi qonun: 'Tabiat nima qilishni yaxshiroq biladi' — ekologiyaning 'oltin qoidasi'." },
-    { q:"'Jonsiz tabiat' bo'limiga qaysilar kiradi?", opts:['O\'simliklar, hayvonlar, hasharotlar','Quyosh, suv, havo, tosh-qum-loy, tuproq','Inson, hayvon, tabiat','O\'rmon, daryo, dengiz'], ans:1, exp:"Jonsiz tabiat bo'limiga: Quyosh, Suv, Havo, Tosh-qum-loy, Tuproq mavzulari kiradi." },
-    { q:"Dasturda MTT 'Fan va tabiat' markazida qaysi hayvon boqish tavsiya etiladi?", opts:['Qushlar va baliqlar','To\'lqinsimon to\'tiqushlar, kanareykalar, manzarali baliqlar','Quyon va toshbaqa','Hasharotlar kolleksiyasi'], ans:1, exp:"MTT ekologik xonasida to'lqinsimon to'tiqushlar, kanareykalar va manzarali baliqlar boqish tavsiya etiladi." },
-    { q:"Maktabgacha ta'limda ekologik ta'limning asosiy 3 yondashuvi?", opts:['Prezentativ, munosabatga oid, xulq-atvorga ko\'ra','Amaliy, nazariy, badiiy','O\'yin, mehnat, kuzatish','Frontal, guruhli, individual'], ans:0, exp:"Ekologik psixopedagogika: prezentativ, munosabatga oid (aksiologik) va xulq-atvorga ko'ra (texnologik) yondashuvlar." },
-    { q:"Dasturda MTT hududining necha foizi ekish uchun ajratilishi mumkin?", opts:['10%','20%','30%','50%'], ans:2, exp:"Me'yorlarga (SanQvaM) muvofiq, umumiy maydonning 30% dan ko'p bo'lmagan qismi ekish uchun ajratiladi." },
-    { q:"3-4 yoshli bola uchun MTTda tavsiya etiladigan xonaki o'simliklar?", opts:['Monstera','Begoniya, Balzamin, Aspidistra, Tradeskansiya','Fikus','Diffenbaxiya'], ans:1, exp:"3-4 yoshli bolalar uchun Begoniya, Balzamin, Aspidistra va Tradeskansiya tavsiya etiladi." },
-    { q:"MTT guruhlaridagi xonaki o'simliklardan qaysi biri TAQIQLANGAN?", opts:['Aspidistra','Koleus','Diffenbaxiya','Tradeskansiya'], ans:2, exp:"Diffenbaxiya poyasining shirasi kuchli zahar bo'lgani uchun MTT guruhlarida o'stirish taqiqlangan." },
-    { q:"Dasturda 'Ekologik aksiya'ga misol?", opts:['Rasm chizish musobaqasi','Toza shahar, Daraxt ekish, Yer kuni, Qushlar kuni','Teatr tomoshasi','Musiqiy bayram'], ans:1, exp:"Ekologik aksiyalar: 'Toza shahar', 'Daraxt ekish', 'Yer kuni', 'Atrof-muhitni muhofaza qilish kuni', 'Qushlar kuni'." },
-    { q:"'Maftunkor chiqindi' metodi qaysi konsepsiyaga asoslanadi?", opts:['Montessori','Bixeviorizm','Vigotskiy','Freyd'], ans:1, exp:"'Maftunkor chiqindi' metodi bixeviorizm konsepsiyasiga asoslangan — rag'batlantirish orqali ijobiy xulq shakllantirish." },
-    { q:"Dasturda mintaqaviylik tamoyili nimani anglatadi?", opts:['Global muammolarga e\'tibor','Faqat mahalliy tabiat va o\'lka bilan ishlash','Barcha mamlakatlar tajribasi','Xalqaro standartlar'], ans:1, exp:"Mintaqaviylik tamoyili — bolalar avvalo o'z mahalliy tabiat, tarix va geografiyasi bilan tanishishi." },
-    { q:"6-7 yoshli bola 'Bilish jarayoni' sohasida qaysi ko'nikmani namoyon etishi kutiladi?", opts:['Faqat sanash','Mustaqil ma\'lumot izlash va kuzatishlar asosida xulosa chiqarish','Faqat rasm chizish','Faqat she\'r yodlash'], ans:1, exp:"6-7 yoshli bola atrof-muhit haqidagi ma'lumotlarni mustaqil izlaydi va kuzatishlari asosida xulosalar chiqaradi." },
-    { q:"Dasturda oilalar bilan ekologik hamkorlik shakllaridan biri?", opts:['Faqat ota-onalar yig\'ilishi','Bolalar va ota-onalar bilan birgalikda daraxt ekish va ekologik aksiyalar','Faqat xat yuborish','Faqat anketa to\'ldirish'], ans:1, exp:"Oilalar bilan hamkorlik: birgalikda daraxt ekish, 'Toza shahar' aksiyalari, ekologik loyihalar." },
-    { q:"Dastur muallif jamoasiga kim kirmaydi?", opts:['Grosheva I.V.','Mirziyoyeva Sh.Sh.','Rizayeva X.U.','Vigotskiy L.S.'], ans:3, exp:"Vigotskiy L.S. dastur muallifi emas. Mualliflar: Grosheva I.V., Mirziyoyeva Sh.Sh., Rizayeva X.U., Kuryayeva I.V., Nekrasova Y.A., Shivaldova N.S., Xaziyeva L.Z." },
-    { q:"Dasturda ekologik madaniyat qaysi belgida namoyon bo'ladi?", opts:['Bolaning yaxshi xulqi','Tabiatga barqaror tushunchalar, sog\'lom turmush tarzi va hayvonlarga hissiy munosabatda','Faqat bilim miqdorida','Rasm chizish mahoratida'], ans:1, exp:"Ekologik madaniyatning shakllanganligi — tabiatga barqaror tushunchalar, sog'lom turmush tarzi qoidalari va hayvonlarga hissiy munosabatda namoyon bo'ladi." },
-    { q:"'Yer sayyorasi – Umumiy uyimiz' dasturi qaysi tashkilotlar hamkorligida ishlab chiqilgan?", opts:['Faqat MTT vazirligi','MTT vazirligi va YXHT hamkorligida','Faqat Bilim makon','UNESCO va MMV'], ans:1, exp:"Dastur MTT vazirligi va YXHTning O'zbekistondagi loyihalar koordinatori ofisi hamkorligida ishlab chiqilgan." }
-  ],
+QUESTIONS.soha = [
+  { q:"Jismoniy rivojlanish qaysi soha?", opts:["2-soha","3-soha","1-soha","4-soha"], ans:2, exp:"Jismoniy rivojlanish - 1-soha." },
+  { q:"Nutq va muloqot qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:1, exp:"Nutq, muloqot, oqish va yozish - 3-soha." },
+  { q:"Ijodiy rivojlanish qaysi soha?", opts:["3-soha","4-soha","5-soha","2-soha"], ans:2, exp:"Ijodiy rivojlanish - 5-soha." },
+  { q:"Men konsepsiyasini shakllantirish qaysi soha?", opts:["1-soha","2-soha","3-soha","4-soha"], ans:1, exp:"Men konsepsiyasi - 2-soha (Ijtimoiy-hissiy rivojlanish)." },
+  { q:"Elementar matematika (FEMP) qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:2, exp:"Elementar matematika - 4-soha (Bilish jarayonlari)." },
+  { q:"4-5 yoshli bola nechagacha sana olishi kutiladi?", opts:["1 dan 3 gacha","1 dan 5 gacha","1 dan 7 gacha","1 dan 10 gacha"], ans:1, exp:"4-5 yoshda bola 1 dan 5 gacha sanashni organadi." },
+  { q:"Mayda motorika qaysi soha?", opts:["2-soha","1-soha","4-soha","5-soha"], ans:1, exp:"Mayda motorika 1-soha - Jismoniy rivojlanish." },
+  { q:"Oqishga tayyorgarlik qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:1, exp:"Oqishga tayyorgarlik - 3-soha." },
+  { q:"Teatr va dramatizatsiya qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:3, exp:"Teatr va dramatizatsiya - 5-soha (Ijodiy rivojlanish)." },
+  { q:"Tabiat bilan tanishuv qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:2, exp:"Tabiat bilan tanishuv - 4-soha." },
+  { q:"Indikator kodi 2.1.4.b da 2 neni anglatadi?", opts:["Kichik soha","Rivojlanish sohasi raqami","Indikator raqami","Yosh guruhi"], ans:1, exp:"2.1.4.b - 2=2-soha, 1=kichik soha, 4=indikator, b=4-5 yosh." },
+  { q:"Gigiyena konikmasi qaysi soha?", opts:["1-soha","2-soha","3-soha","4-soha"], ans:0, exp:"Shaxsiy gigiyena konikmasi - 1-soha." },
+  { q:"Hissiy nazorat konikmasi qaysi soha?", opts:["1-soha","2-soha","3-soha","4-soha"], ans:1, exp:"Hissiy rivojlanish - 2-soha." },
+  { q:"Raqamli savodxonlik asoslari qaysi soha?", opts:["3-soha","4-soha","5-soha","1-soha"], ans:1, exp:"Raqamli savodxonlik - 4-soha." },
+  { q:"Milliy ananalarga qiziqish qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:3, exp:"Milliy ananalarga qiziqish - 5-soha." },
+  { q:"Geometrik shakllarni farqlash qaysi soha?", opts:["3-soha","4-soha","5-soha","2-soha"], ans:1, exp:"Geometrik shakllar - 4-soha." },
+  { q:"Nizolarni tinch hal etish qaysi soha?", opts:["1-soha","2-soha","3-soha","4-soha"], ans:1, exp:"Nizolarni hal etish - 2-soha." },
+  { q:"Lugat boyligini kengaytirish qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:1, exp:"Lugat boyligini kengaytirish - 3-soha." },
+  { q:"Kuzatish va tadqiqot qaysi soha?", opts:["2-soha","3-soha","4-soha","5-soha"], ans:2, exp:"Kuzatish va tadqiqot - 4-soha." },
+  { q:"Yirik motorika qaysi soha?", opts:["1-soha","2-soha","3-soha","5-soha"], ans:0, exp:"Yirik motorika - 1-soha." }
+];
 
-  adab_tasviriy: [
-    { q:"Tasviriy faoliyatga o'rgatish nazariyasi va metodikasi o'quv qollanmasining muallifi kim?", opts:["D.R.Babayeva","Shaxnoza Xasanova","F.R.Qodirova","N.M.Kayumova"], ans:1, exp:"Qollanma muallifi Shaxnoza Xasanova, Tafakkur nashriyoti, Toshkent-2020." },
-    { q:"Tasviriy faoliyat mashgulotlari necha turni oz ichiga oladi?", opts:["2 ta: rasm, loy","3 ta: rasm, loy, applikatsiya","4 ta: rasm, loy, applikatsiya, qurish-yasash","5 ta"], ans:2, exp:"Tasviriy faoliyat rasm chizish, loydan buyum yasash, applikatsiya va qurish-yasashni oz ichiga oladi." },
-    { q:"Yu.B.Babanskiy tasviriy sanat metodlarini necha guruhga klassifikatsiyalagan?", opts:["2 guruhga","3 guruhga","4 guruhga","5 guruhga"], ans:1, exp:"Babanskiy metodlarni 3 guruhga: oquv-bilish faoliyatini tashkil qilish, stimullashtirish va nazorat metodlariga ajratgan." },
-    { q:"Sensor madaniyat tushunchasini maktabgacha tarbiya pedagogikasiga kim olib kelgan?", opts:["Vigotskiy","M.Montessori","Piaje","Suxomlinskiy"], ans:1, exp:"Sensor madaniyat tushunchasini M.Montessori olib kelgan." },
-    { q:"Naturadan foydalanish orgatish metodi sifatida nimani oz ichiga oladi?", opts:["Faqat predmetni korsatish","Predmetning birlamchi tahlili, taqqoslash, baholash","Faqat rangini aytish","Faqat nomini aytish"], ans:1, exp:"Naturadan foydalanish predmetning birlamchi tahlili, tasvirni naturaga taqqoslash va natijani baholashni oz ichiga oladi." },
-    { q:"Bolalarda naturadan foydalanib ishlash konikmalari necha yoshda rivojlana boshlaydi?", opts:["3-4 yoshda","5-6 yoshda","6-7 yoshda","2-3 yoshda"], ans:1, exp:"Naturaga nisbatan taqqoslash konikmalari 5-6 yoshda rivojlana boshlaydi." },
-    { q:"Oyin usullarini kichik guruh uchun birinchi marta kim tashkil qilgan?", opts:["A.A.Volkova","Ye.A.Flerina","T.G.Kazakova","N.P.Sakulina"], ans:1, exp:"Oyin usullarini kichik guruh uchun birinchi marta Ye.A.Flerina tashkil qilgan." },
-    { q:"Evristika sozi qaysi tildan olingan va nimani anglatadi?", opts:["Lotincha, qurish","Grekcha, haqiqatni topish sanati","Lotincha, joylashtirish","Grekcha, chizish"], ans:1, exp:"Evristika grekcha soz bolib, haqiqatni topish sanatini anglatadi." },
-    { q:"Rasm chizish necha turni oz ichiga oladi?", opts:["2 ta","3 ta: predmetli, mazmunli, dekorativ","4 ta","5 ta"], ans:1, exp:"Rasm chizish predmetli, mazmunli va dekorativ rasm chizishni oz ichiga oladi." },
-    { q:"Ala-buji davri qaysi yoshga togri keladi va nimani anglatadi?", opts:["3 yosh, qalam ushlashni bilish davri","2 yoshgacha, qogozdagi tasodifiy izlardan xursand bolish davri","4 yosh, shakl chizish davri","5 yosh, rang tanlash davri"], ans:1, exp:"Bola qogoz betiga tushirilgan turli izlarni korib xursand boladigan davr Ala-buji davri deyiladi." },
-    { q:"Loy va plastilindan oyinchoq yasashda halqachalar usuli qaysi guruhda orgatiladi?", opts:["Kichik guruh","Orta guruh","Katta guruh","Tayyorlov guruh"], ans:3, exp:"Halqachalar hosil qilib idish yasash usuli tayyorlov guruhida orgatiladi." },
-    { q:"Applikatsiya sozi qaysi tildan olingan?", opts:["Grekcha","Lotincha","Arabcha","Forscha"], ans:1, exp:"Applikatsiya sozi lotincha bolib, joylashtirish degan manoni anglatadi." },
-    { q:"Katta guruhda applikatsiyada qogozni garmoshka usulida buklab qirqish nima uchun ishlatiladi?", opts:["Faqat bitta shakl olish uchun","Ratsional - bir yola bir nechta bir xil shakl olish uchun","Rangni aralashtirish uchun","Qogozni tejash uchun emas"], ans:1, exp:"Garmoshka usulida buklab qirqish ratsional usul bolib, bir vaqtning ozida bir nechta bir xil shakl olish imkonini beradi." },
-    { q:"Qurish-yasash sozi qaysi tildan olingan?", opts:["Grekcha","Lotin tilidan","Ingliz tilidan","Rus tilidan"], ans:1, exp:"Qurish-yasash lotin tilidan olingan bolib, qism va elementlarni malum holatga keltirish degan manoni bildiradi." },
-    { q:"Kichik guruhda qurish-yasash mashguloti necha daqiqadan oshmasligi kerak?", opts:["5-7 daqiqa","10-12 daqiqa","15-20 daqiqa","25-30 daqiqa"], ans:1, exp:"Qurish-yasash mashguloti 10-12 daqiqadan oshmasligi kerak." },
-    { q:"Tasviriy faoliyat boyicha bolalar ishini hisobga olish necha shaklda olib boriladi?", opts:["1 shaklda","2 shaklda: matn va korgazmali","3 shaklda","4 shaklda"], ans:1, exp:"Hisobga olish matn shaklida (hisobotlar) va korgazmali shaklda (ishlarni saqlash) olib boriladi." },
-    { q:"Hisobot turlariga nimalar kiradi?", opts:["Faqat kundalik hisobot","Dastlabki, kundalik, yakuniy hisobot","Faqat yakuniy hisobot","Haftalik va oylik hisobot"], ans:1, exp:"Hisobot dastlabki, kundalik va yakuniy turlarga bolinadi." },
-    { q:"Bolalarning loy ishlarini saqlashda har bir bolaning nechta ishi 1 yilda saqlanishi tavsiya etiladi?", opts:["1 ta","2 ta","3 ta","5 ta"], ans:2, exp:"Oquv yilining boshi, ortasi va oxiri boyicha har bir bolaning 3 ta ishini saqlash maqsadga muvofiq." },
-    { q:"Maktabgacha talim tashkilotida tasviriy faoliyat mashgulotlari maktabdagi qaysi predmetga tayyorgarlik vazifasini bajaradi?", opts:["Matematika","Tasviriy sanat va qol mehnati","Ona tili","Jismoniy tarbiya"], ans:1, exp:"MTT tasviriy faoliyat mashgulotlari maktabdagi tasviriy sanat va qol mehnati darslariga tayyorgarlik koradi." },
-    { q:"1-sinfda oquvchilar qaysi geometrik shakllarga ega predmetlarni aniqlashga organadilar (MTT dasturi davomi sifatida)?", opts:["Faqat uchburchak","Doira, kvadrat, tortburchak, oval","Faqat doira","Faqat kvadrat"], ans:1, exp:"1-sinfda bolalar doira, kvadrat, tortburchak, oval shaklidagi predmetlarni aniqlashni davom ettiradilar." }
-  ],
+QUESTIONS.metodika = [
+  { q:"Tarbiyachi qollanadigan asosiy talim metodi?", opts:["Faqat namoyish","Tushuntirish, namoyish, amaliyot","Faqat oyin","Faqat kuzatish"], ans:1, exp:"Asosiy metodlar: tushuntirish, namoyish, amaliyot va oyin." },
+  { q:"Didaktik oyin nima?", opts:["Erkin oyin","Talim maqsadiga ega qoidali oyin","Raqobatli oyin","Jismoniy mashq"], ans:1, exp:"Didaktik oyin - talim maqsadiga ega va qoidalari bor oyin." },
+  { q:"MTTda bir kunlik mashgulot necha daqiqa (4-5 yosh)?", opts:["10 daq","15 daq","20-25 daq","40 daq"], ans:2, exp:"4-5 yoshli bolalar uchun mashgulot 20-25 daqiqa." },
+  { q:"Kayfiyat doirasi qanday vosita?", opts:["Oyin turi","Refleksiya va his-tuygu aniqlash","Jismoniy mashq","Matematik topshiriq"], ans:1, exp:"Kayfiyat doirasi - bolalarning kundalik his-tuygusini aniqlash metodikasi." },
+  { q:"Ijodiy tafakkurni rivojlantirishda eng samarali usul?", opts:["Yodlash","Qoida orgatish","Muammoli vaziyat yaratish","Test otkazish"], ans:2, exp:"Muammoli vaziyat bolaning mustaqil fikrlashini ragbatlantiradi." },
+  { q:"Jismoniy daqiqa nimaga xizmat qiladi?", opts:["Vaqtni toldirish","Ovqatlantirishga tayyorlash","Charchoqni kamaytirish","Baholash"], ans:2, exp:"Jismoniy daqiqa bolaning charchogini kamaytiradi." },
+  { q:"FEMP qisqartmasi nimani anglatadi?", opts:["Fizik va Estetik Mashgulotlar Plani","Faol Erkin Mashgulotlar","Elementar Matematik Tushunchalarni Shakllantirish","Fizik Emosional Mashgulotlar"], ans:2, exp:"FEMP - Elementar Matematik Tushunchalarni Shakllantirish." },
+  { q:"Refleksiya darsning qaysi qismida?", opts:["Boshida","Ortasida","Asosiy qismida","Oxirida"], ans:3, exp:"Refleksiya darsning oxirida - bolalar organganlari haqida fikr yuritadi." },
+  { q:"Induktiv usul nima?", opts:["Umumiydan xususiyga","Xususiydan umumiyga","Savol berish","Namoyish"], ans:1, exp:"Induktiv usul - xususiy misollardan umumiy xulosaga otish." },
+  { q:"MTTda frontal mashgulot nima?", opts:["Bir bola bilan","Kichik guruh","Butun guruh bilan","Mustaqil ishlash"], ans:2, exp:"Frontal mashgulot - tarbiyachi butun guruh bilan ishlaydi." },
+  { q:"Individual yondashuv nima uchun muhim?", opts:["Vaqtni tejash","Har bola oziga xos suratda","Tartibni saqlash","Baholashni osonlashtirish"], ans:1, exp:"Har bir bola oziga xos. Individual yondashuv har bolaning ehtiyojiga mos talim beradi." },
+  { q:"Korgazmali metod nimaga asoslanadi?", opts:["Verbal","Korish orqali organish","Amaliy","Oyinli"], ans:1, exp:"Korgazmali metod - suratlar, modellar korsatish orqali orgatish." },
+  { q:"Loyihaviy talim nima?", opts:["Bolaga vazifa berish","Uzoq muddatli tadqiqot olib borish","Tarbiyachi tushuntirish","Bolani sinash"], ans:1, exp:"Loyihaviy talim - bolalar birgalikda mavzuda uzoq muddatli tadqiqot qiladilar." },
+  { q:"Erkin oyin nima uchun muhim?", opts:["Bolaning mustaqil rivojlanishi","Tarbiyachi dam olishi","Tartibni saqlash","Vaqtni toldirish"], ans:0, exp:"Erkin oyin - mustaqillik, ijodkorlik va ijtimoiy konikmalarni rivojlantiradi." },
+  { q:"Kuzatish metodiga mos faoliyat?", opts:["FEMP darsi","Tabiat sayri","Musiqa darsi","Jismoniy tarbiya"], ans:1, exp:"Kuzatish metodi tabiat sayrida eng yaxshi qollaniladi." },
+  { q:"Bolani ragbatlantirishda eng samarali usul?", opts:["Moddiy sovga","Jazo","Ogzaki maqtov va tabassum","Etibor bermaslik"], ans:2, exp:"Bolalarni ogzaki maqtash eng kuchli ragbat." },
+  { q:"KN konspekti qanday hujjat?", opts:["Bolalar reytingi","Kunlik dars rejalashtirilgan hujjat","Ota-ona uchun xabar","Rahbar uchun hisobot"], ans:1, exp:"KN Konspekti - tarbiyachining har kunlik darsini rejalashtiradigan pedagogik hujjat." },
+  { q:"Suhbat metodining asosiy maqsadi?", opts:["Bolani baholash","Mavjud bilimlarni faollashtirish","Vaqt otkazish","Tartib saqlash"], ans:1, exp:"Suhbat - bolaning avvalgi bilimlari asosida yangi malumotni muloqot orqali ozlashtirish." },
+  { q:"Darsning kirish qismi necha daqiqa?", opts:["1-2 daq","3-5 daq","10-12 daq","15 daq"], ans:1, exp:"Kirish qismi 3-5 daqiqa - motivatsiya va qiziqish uygotish uchun." },
+  { q:"Integratsiyalashgan dars nima?", opts:["Faqat bitta fanga bagishlangan","Bir nechta sohani birlashgan dars","Faqat oyindan iborat","Kompyuter yordamida"], ans:1, exp:"Integratsiyalashgan dars - bir mavzu asosida bir nechta sohani birgalikda otish." }
+];
 
-  adab_sokmoq: [
-    { q:"MTM hududida ekologik soqmoq tashkil etish uslubiy qollanmasi qaysi parsial dasturga ilova sifatida yaratilgan?", opts:["Ilk Qadam","Ilm yoli","Yer sayyorasi - bizning umumiy uyimiz","Bolajon"], ans:2, exp:"Qollanma Yer sayyorasi - bizning umumiy uyimiz ekologik talim-tarbiya parsial dasturiga ilova bolib yaratilgan." },
-    { q:"Qollanma qaysi tashkilot loyihasi doirasida ishlab chiqilgan?", opts:["UNESCO","YXHTning Maktabgacha yoshdagi bolalarning ekologik talimi loyihasi","Bilim makon mustaqil loyihasi","Jahon banki loyihasi"], ans:1, exp:"Qollanma YXHT (Yevropada Xavfsizlik va Hamkorlik Tashkiloti)ning tegishli loyihasi doirasida ishlab chiqilgan." },
-    { q:"Qollanmaning birinchi nashri qaysi yilda chop etilgan?", opts:["2020-yil","2021-yil","2022-yil","2023-yil"], ans:2, exp:"Qollanma Toshkent - 2022-yilda, birinchi nashr sifatida chop etilgan." },
-    { q:"Ekologik soqmoq tarifiga kora, u nima hisoblanadi?", opts:["Faqat gulzor","MTM maydonidagi maxsus jihozlangan talim-tarbiyaviy yonalish","Sport maydonchasi","Oshxona hududi"], ans:1, exp:"Ekologik soqmoq - talim-tarbiyaviy faoliyatni amalga oshiradigan, MTM maydonidagi maxsus jihozlangan yonalish." },
-    { q:"Ekologik soqmoqning asosiy funksiyalariga nimalar kiradi?", opts:["Faqat malumot beruvchi","Malumot beruvchi, soglomlashtiruvchi, rivojlantiruvchi, tanishtiruvchi","Faqat soglomlashtiruvchi","Faqat tanishtiruvchi"], ans:1, exp:"Ekologik soqmoq tortta asosiy funksiyani bajaradi: malumot beruvchi, soglomlashtiruvchi, rivojlantiruvchi va tanishtiruvchi." },
-    { q:"MTM da ekologik soqmoq tashkil etish necha bosqichda otkaziladi?", opts:["2 bosqich","3 bosqich","4 bosqich","5 bosqich"], ans:2, exp:"Ekologik soqmoq tashkil etish 4 bosqichda: tashkiliy, yonalish va xarita-chizma tuzish, bezatish-obodonlashtirish va ishga tushirish bosqichlarida otkaziladi." },
-    { q:"Ekologik soqmoq tashkil etishning birinchi bosqichi qanday nomlanadi?", opts:["Bezatish","Tashkiliy","Xarita tuzish","Ishga tushirish"], ans:1, exp:"Birinchi bosqich - tashkiliy bosqich bolib, unda tashabbuskor guruh tuziladi va umumiy reja ishlab chiqiladi." },
-    { q:"Ekologik soqmoq yonalishini tanlashning asosiy sharti nima?", opts:["Faqat uzunligi","Qulaylik, xavfsizlik va tashrif uchun ochiqlik","Faqat narxi","Faqat rangi"], ans:1, exp:"Yonalish tanlashning asosiy sharti - qulaylik, xavfsizlik va tashrif buyurish uchun ochiq bolishi." },
-    { q:"Ekologik soqmoqdagi namoyish obyektlari necha turga bolinadi?", opts:["1 tur","2 tur: tabiiy va suniy","3 tur","4 tur"], ans:1, exp:"Namoyish obyektlari tabiiy (osimlik, hayvonot, relyef) va suniy (taxtachalar, andozalar) turlarga bolinadi." },
-    { q:"Ekologik soqmoq pasportiga nimalar kiritiladi?", opts:["Faqat nomi","Nomi, maqsad-vazifalari, joylashuvi, obyektlar tavsifi, masullar","Faqat xarita","Faqat masullar royxati"], ans:1, exp:"Pasportga soqmoq nomi, maqsad-vazifalari, joylashuvi, yonalish tarifi, obyektlar tavsifi, jihozlar royxati va masullar kiritiladi." },
-    { q:"Ekologik ekskursiya necha bosqichdan iborat?", opts:["2 bosqich","3 bosqich","4 bosqich","5 bosqich"], ans:2, exp:"Ekologik ekskursiya tayyorlanish, otkazish, xulosa chiqarish va materialni keyingi ishlash bosqichlaridan iborat." },
-    { q:"Mayda obyektlarni (hasharot, urug, barg) namoyish qilishda pedagog atrofida qanday hajmdagi xoli aylana hosil qilishi tavsiya etiladi?", opts:["1 metr","2 metr","3 metr","5 metr"], ans:1, exp:"Namoyishga kirishishdan oldin pedagog atrofida diametri ikki metr bolgan xoli aylana hosil qilishi tavsiya etiladi." },
-    { q:"Glossariyga kora qaysi tushuncha yer yuzasining tashqi korinishi, shakli deb tariflangan?", opts:["Landshaft","Relyef","Ekotizim","Fitosenoz"], ans:1, exp:"Relyef - yer yuzasining tashqi korinishi, shakli, kelib chiqishi va rivojlanish tarixiga kora notekisliklar yigindisi." },
-    { q:"Glossariyga kora fitosenoz sozining manosi nima?", opts:["Yakka osimlik","Bir jamoa bolib yashaydigan osimliklar majmuasi","Hayvonlar guruhi","Tuproq turi"], ans:1, exp:"Fitosenoz - qadimiy yunoncha soz bolib, bir jamoa bolib yashaydigan osimliklar majmuasini anglatadi." },
-    { q:"3-4 yoshli bolalar ekologik soqmoqda qanday usullar orqali atrof-muhit bilan tanishadilar?", opts:["Faqat mustaqil tadqiqot","Kuzatuv, ekskursiya, didaktik oyinlar, badiiy adabiyot orqali kattalar yordamida","Faqat kitob oqish","Faqat test topshirish"], ans:1, exp:"3-4 yoshlilar kattalar yordamida kuzatuv, ekskursiya, didaktik oyinlar va badiiy adabiyot oqish orqali tanishadilar." },
-    { q:"6-7 yoshli bolalar ekologik soqmoqda qanday rolni bajara oladilar?", opts:["Faqat tomoshabin","Soqmoqning haqiqiy hojayini va ekskursiya rahbari","Hech qanday faollik korsatmaydilar","Faqat rasm chizadilar"], ans:1, exp:"6-7 yoshli bolalar ekologik soqmoqning haqiqiy hojayiniga aylanib, ekskursiya rahbari rolida ham bola oladilar." },
-    { q:"Tabiatga masuliyat bilan yondoshishni tarbiyalashda katta yoshdagi guruhlarda qanday nuqta yaratish tavsiya etiladi?", opts:["Qizil patrul","Yashil patrul kuzatuv nuqtasi","Kok patrul","Sariq patrul"], ans:1, exp:"Yashil patrul kuzatuv nuqtasini yaratish tabiatga masuliyatli yondoshishni tarbiyalashda yordam beradi." },
-    { q:"Ota-onalar bilan ekologik soqmoq doirasidagi hamkorlikning shakllaridan biri sifatida qaysi aksiya korsatilmagan?", opts:["Daraxt ek","Qishda qushlarni oziqlantir","Yer kuni","Chiqindilarni kopaytir"], ans:3, exp:"Chiqindilarni kopaytir aksiyasi mavjud emas. Hamkorlik shakllariga Daraxt ek, Qishda qushlarni oziqlantir, Yer kuni, Osimliklar ostir kiradi." },
-    { q:"Ekologik soqmoqdagi taxminiy axloq qoidalariga kora, bolalar nima qilishi tavsiya etilmaydi?", opts:["Kuzatish va zavqlanish","Tabiat suvenirlarini (masalan, toshlarni) olib ketish","Tozalikka rioya qilish","Axloq qoidalariga amal qilish"], ans:1, exp:"Qoidalarga kora, MTM ekologik soqmogidagi chiroyli toshlar kabi tabiat suvenirlarini olib ketish tavsiya etilmaydi." },
-    { q:"Qollanma muallifligiga kim/kimlar kiradi?", opts:["Faqat Grosheva I.V.","Grosheva I.V., Shivaldova N.S., Kuryayeva I.V.","Faqat Abdullayeva N.Sh.","Faqat Pak S.V."], ans:1, exp:"Qollanma mualliflari: Grosheva I.V., Shivaldova N.S., Kuryayeva I.V. Qolganlari taqrizchilar hisoblanadi." }
-  ]
-}
+QUESTIONS.psixolog = [
+  { q:"4-5 yoshli bolaning xotirasi qanday?", opts:["Uzoq muddatli va mustahkam","Korgazmali-hissiy va ixtiyorsiz","Mantiqiy va tizimli","Faqat eshitish orqali"], ans:1, exp:"4-5 yoshda bola korgazmali va hissiy xotiraga ega." },
+  { q:"Bu yoshda diqqat qanday?", opts:["Uzoq ushlab turadi","Ixtiyorsiz, tez chalgiydi","Juda barqaror","Bir joyda uzoq qoladi"], ans:1, exp:"4-5 yoshda diqqat ixtiyorsiz - yorqin narsalarga osongina chalgiydi." },
+  { q:"Bu yoshda fikrlash asosan qanday?", opts:["Abstrakt-mantiqiy","Korgazmali-obrazli","Ogzaki-mantiqiy","Nazariy"], ans:1, exp:"4-5 yoshda bola korgazmali-obrazli fikrlaydi." },
+  { q:"Hissiy rivojlanishda eng muhim omil?", opts:["Oyinlar soni","Xavfsizlik va sevgi hissi","Darslar soni","Raqobat"], ans:1, exp:"Bolaning emosional rivojlanishida xavfsizlik va sevgi hissi asosiy rol oynaydi." },
+  { q:"4-5 yoshda ijtimoiy rivojlanishning asosiy belgisi?", opts:["Yolgiz oynashni afzal koradi","Tengdoshlari bilan oynaydi va hamkorlik qiladi","Kattalarga qoshilmaydi","Faqat bajaradi"], ans:1, exp:"Bu yoshda bola tengdoshlari bilan oynashni boshlaydi." },
+  { q:"Krizis 3 yosh qaysi yoshda kuchayadi?", opts:["2 yoshda","3-4 yoshda","5-6 yoshda","7 yoshda"], ans:1, exp:"Krizis 3 yosh 3-4 yoshda kuchayadi - bola mustaqillikka intiladi." },
+  { q:"Oyinning etakchi faoliyat roli qachon?", opts:["1-2 yoshda","3-7 yoshda","7-10 yoshda","10 yoshdan keyin"], ans:1, exp:"3-7 yosh - bolaning etakchi faoliyati oyin." },
+  { q:"Bola sozni tushunmasligini bildirsa nima qilish kerak?", opts:["Baland ovozda takrorlash","Oddiyroq soz va korgazma","Etibor bermaslik","Uni qoyib yuborish"], ans:1, exp:"Oddiy til va korgazmali materialdan foydalanish tavsiya etiladi." },
+  { q:"Zona yaqin rivojlanish kim tomonidan kiritilgan?", opts:["Piaje","Freyd","Vigotskiy","Montessori"], ans:2, exp:"Zona yaqin rivojlanish konsepsiyasi L.S.Vigotskiy tomonidan kiritilgan." },
+  { q:"4-5 yoshda bolaning lugat boyligi taxminan?", opts:["200-400","800-1500","2000-3000","5000+"], ans:1, exp:"4-5 yoshda bolaning faol lugati taxminan 800-1500 soz." },
+  { q:"Bola yolgon gapirmasa ham notogri aytsa bu nima?", opts:["Yolgonchilik","Tasavvur va fantaziya","Xotira muammosi","Rivojlanish kechikishi"], ans:1, exp:"Bu yoshda bolalar fantaziya va haqiqatni aralashtirib yuborishi normal." },
+  { q:"Bola tengdoshi bilan mushtlashsa birinchi qadam?", opts:["Jazolamoq","Hissiyotlarini nom bilan atash","Etibor bermaslik","Ota-onasiga xabar"], ans:1, exp:"Bolaning hissiyotini nom bilan atash birinchi qadam." },
+  { q:"Egosentrizm 4-5 yoshda nima?", opts:["Bola ozini juda sevadi","Bola faqat oz nuqtai nazaridan fikrlaydi","Bola boshqalarni xafa qiladi","Bola ozi haqida gapirmaydi"], ans:1, exp:"Piaje boyicha egosentrizm - bola faqat oz nuqtai nazaridan fikrlaydi." },
+  { q:"4-5 yoshda qorquv qayerdan?", opts:["Faqat tashqi tasirdan","Tasavvur rivojlanishi bilan boglik","Faqat ota-onadan","Genetik"], ans:1, exp:"Tasavvur rivojlanishi bilan xayoliy qorquvlar paydo boladi." },
+  { q:"Temperament tugma ekanini kim isbotladi?", opts:["Piaje","Vigotskiy","Tomas va Chess","Freyd"], ans:2, exp:"Tomas va Chessning tadqiqoti bolaning temperamenti tugma ekanini korsatdi." },
+  { q:"Bolalarda oz-ozini baholash qachon shakllanadi?", opts:["1-2 yoshda","3-5 yoshda","6-7 yoshda","Maktab yoshida"], ans:1, exp:"Oz-ozini baholash 3-5 yoshda kattalar munosabati asosida shakllanadi." },
+  { q:"Rolli oyin qaysi rivojlanishga yordam beradi?", opts:["Faqat jismoniy","Ijtimoiy, hissiy va kognitiv","Faqat nutq","Faqat matematik"], ans:1, exp:"Rolli oyin ijtimoiy rollarni organish va hissiyotni tartibga solishga yordam beradi." },
+  { q:"Bola qorqsa tarbiyachi nima qilishi kerak?", opts:["Hissiyotlarini inkor etish","Jazolamoq","Tinchlantirish va xavfsizlik berish","Etibor bermaslik"], ans:2, exp:"Bolaning xavotirini tasdiqlash va xavfsizlikni taminlash eng togri yondashuv." },
+  { q:"Bola kattalar oldida yiglashdan uyalsa bu nima?", opts:["Muammo","Ijtimoiy-hissiy kamolot belgisi","Kasallik","Rivojlanish kechikishi"], ans:1, exp:"Bu bola ijtimoiy normalarni organayotganligining belgisi." },
+  { q:"4-5 yoshda bola qancha vaqt diqqatini ushlab tura oladi?", opts:["2-3 daqiqa","5-10 daqiqa","20-30 daqiqa","1 soat"], ans:1, exp:"4-5 yoshda bola 5-10 daqiqa diqqatini bir joyga ushlab tura oladi." }
+];
 
-var testState = {}
+QUESTIONS.qonun = [
+  { q:"Ozbekistonda maktabgacha talimni tartibga soluvchi qonun?", opts:["Talim togrisida Qonun","Maktabgacha talim qonuni","Oila kodeksi","Bolalar huquqlari"], ans:0, exp:"Talim togrisida Qonun maktabgacha talimni tartibga soladi." },
+  { q:"MTTda bir guruhda necha bola?", opts:["10 ta","15 ta","20 ta","25 ta"], ans:2, exp:"Sanitariya meyorlariga kora bir guruhda 20 tagacha bola." },
+  { q:"Litsenziyalash nima uchun kerak?", opts:["Soliq tolash","Qonuniy faoliyat huquqi","Ota-onalardan tolov","Bino qurish"], ans:1, exp:"Litsenziya MTTning qonuniy faoliyat huquqini tasdiqlovchi hujjat." },
+  { q:"BMT Bola huquqlari konvensiyasi nechanchi yil?", opts:["1979","1989","1999","2009"], ans:1, exp:"BMT Bola huquqlari konvensiyasi 1989 yilda qabul qilingan." },
+  { q:"DTS qisqartmasi?", opts:["Davlat Talim Standarti","Dars Talim Strategiyasi","Didaktik Talim Sifati","Davlat Tarbiya Standarti"], ans:0, exp:"DTS - Davlat Talim Standarti." },
+  { q:"MTT tarbiyachisi uchun minimal talim?", opts:["Orta talim","Orta maxsus (pedagogika kollej)","Oliy talim","Kurs sertifikati"], ans:1, exp:"Tarbiyachi uchun minimal talab - pedagogika kollej." },
+  { q:"Attestatsiya maqsadi?", opts:["Soliq tolash","Kasbiy malakani baholash","Bino tekshirish","Ota-onalarni xabardor qilish"], ans:1, exp:"Attestatsiya - tarbiyachining kasbiy bilim va malakasini baholash." },
+  { q:"Tarbiyachi necha yilda bir attestatsiya?", opts:["Har yil","Har 3 yilda","Har 5 yilda","Faqat soralganda"], ans:2, exp:"Ozbekistonda tarbiyachilar har 5 yilda bir attestatsiyadan otadilar." },
+  { q:"Bolalarni jismoniy jazolaydigan tarbiyachi?", opts:["Ogohlantiriladi","Jarima tolaydi","Jinoyat yoki majburiy javobgarlik","Faqat kuzatuv"], ans:2, exp:"Jismoniy jazo - majburiy yoki jinoiy javobgarlik va ishdan ozod etish." },
+  { q:"MTTda mehnat xavfsizligi uchun kim javobgar?", opts:["Tarbiyachi","Ota-onalar","Muassasa rahbari","Viloyat bolimi"], ans:2, exp:"Mehnat xavfsizligi uchun muassasa rahbari (direktori) javobgar." },
+  { q:"Bolaning shaxsiy malumotlarini oshkor qilish?", opts:["Ha, har doim","Yoq, rozilik bolmasdan mumkin emas","Faqat ota-onaga","Har qanday holatda"], ans:1, exp:"Ota-onaning roziligisiz malumot oshkor etib bolmaydi." },
+  { q:"MTT direktori uchun asosiy talab?", opts:["Faqat tajriba","Oliy pedagogika va boshqaruv tajribasi","Faqat moliya bilimlari","Davlat xizmatida ishlash"], ans:1, exp:"Direktor uchun oliy pedagogika va boshqaruv tajribasi talab etiladi." },
+  { q:"Ekstremal vaziyatlarda birinchi harakat?", opts:["Avval ota-onalarga","Avval direktorga","101/102/103 ga, keyin rahbariyatga","Avval viloyat bolimiga"], ans:2, exp:"Ekstremal holatda birinchi 101/102/103 ga murojaat, keyin rahbariyatga." },
+  { q:"MTT tolovlari qanday belgilanadi?", opts:["Tarbiyachi belgilaydi","Viloyat bolimi","Qonun va hukumat qarorlari","Ota-onalar kengashi"], ans:2, exp:"MTT tolovlari qonun va hukumat qarorlari asosida belgilanadi." },
+  { q:"Bola MTTda shikastlansa kim javobgar?", opts:["Faqat bola","Faqat ota-ona","MTT muassasasi","Faqat sugurta"], ans:2, exp:"MTT muassasasi bolaning xavfsizligi uchun masul." },
+  { q:"Malaka oshirish kurslarining minimal davomiyligi?", opts:["10 soat","36 soat","72 soat","144 soat"], ans:2, exp:"Malaka oshirish kurslari kamida 72 akademik soat." },
+  { q:"Ichki tartib-intizom qoidalari kim tasdiqlaydi?", opts:["Viloyat bolimi","Muassasa kengashi va direktori","Faqat tarbiyachilar","Ota-onalar kengashi"], ans:1, exp:"Ichki tartib-intizom qoidalari muassasa kengashi va direktori tomonidan tasdiqlanadi." },
+  { q:"Bola MTTga qabul hujjatlari?", opts:["Faqat pasport","Tugilganlik, tibbiy hujjatlar, ariza","Faqat ariza","Faqat tibbiy"], ans:1, exp:"MTTga qabul: tugilganlik guvohnomasi, tibbiy malumot, ariza." },
+  { q:"Inklyuziv talim qonuniy asosi?", opts:["Nogironlar huquqlari togrisida qonun","Faqat MMV buyrugi","Faqat bolalar konvensiyasi","Mahalliy tartib-qoida"], ans:0, exp:"Nogironlar huquqlari togrisida qonun inklyuziv talimni taminlaydi." },
+  { q:"MTT tarbiyachisining mehnat shartnomasi?", opts:["1 yil","3 yil","Muddatsiz yoki muddatli","5 yil"], ans:2, exp:"Mehnat Kodeksiga kora shartnoma muddatsiz yoki belgilangan muddatga tuziladi." }
+];
 
-// ═══════════════════════════════════════════
-// VIEW MANAGEMENT
-// ═══════════════════════════════════════════
+QUESTIONS.sanitar = [
+  { q:"MTTda bolalar ovqatlanish necha marta?", opts:["2 marta","3 marta","4 marta","5 marta"], ans:1, exp:"MTTda bolalar odatda 3 marta ovqatlanadi." },
+  { q:"Bir bola uchun minimal xona maydoni?", opts:["1 m2","2 m2","4 m2","6 m2"], ans:2, exp:"Sanitariya meyorlariga kora bir bola uchun kamida 4 m2." },
+  { q:"Qol yuvish nechta qadam?", opts:["3 qadam","5 qadam","6 qadam","8 qadam"], ans:1, exp:"DSM boyicha qol yuvish 5 bosqichli." },
+  { q:"Bolalar uchun maqbul xona harorati?", opts:["16-18 daraja","20-22 daraja","25-27 daraja","28-30 daraja"], ans:1, exp:"Guruh xonasida optimal harorat 20-22 daraja." },
+  { q:"Xonalar qancha vaqtda shamollatiladi?", opts:["Aytilmagan","Har 2 soatda bir marta","Shamollatish mumkin emas","Faqat yozda"], ans:1, exp:"Xonalar har 2 soatda (bolalar yoqligida) shamollatilishi kerak." },
+  { q:"Ovqat saqlash harorati?", opts:["0 daraja","2-6 daraja (sovutgich)","10-15 daraja","Xona haroratida"], ans:1, exp:"Tez buziladigan mahsulotlar 2-6 darajada saqlanishi kerak." },
+  { q:"Bolalar uchun ichimlik suvi?", opts:["Xona haroratida ariq suvi","Qaynagan yoki tozalangan suv","Faqat filtr kerak","Biron talabi yoq"], ans:1, exp:"Bolalarga faqat qaynagan yoki tozalangan ichimlik suvi berilishi kerak." },
+  { q:"Yangi va eski ovqatlarni aralashtirish?", opts:["Ha, agar toza bolsa","Faqat sutli taomlar","Yoq, mumkin emas","Faqat kichik miqdorda"], ans:2, exp:"Yangi va otgan ovqatlarni aralashtirish mutlaqo taqiqlangan." },
+  { q:"MTTda pedikulos topilsa birinchi harakat?", opts:["Bolani uyga yuboring","Ota-onaga va tibbiy xodimga xabar","Bolani ozingiz davolang","Dorilar bilan guruhni davolang"], ans:1, exp:"Pedikulos aniqlanganda ota-onaga va tibbiy xodimga xabar berish kerak." },
+  { q:"Qolqop ishlatish qachon majburiy?", opts:["Hech qachon","Faqat oshxonada","Infeksiya xavfi bolganda","Har doim"], ans:2, exp:"Qolqop infeksiya xavfi bolganda majburiy." },
+  { q:"Yuqumli kasalik aniqlangan bola guruhga?", opts:["Ha, yengilroq bolsa","Faqat niqob bilan","Yoq, sogom bolmaguncha","Faqat antibiotik ichsa"], ans:2, exp:"Yuqumli kasalik aniqlanganida bola toliq sogayib, tibbiy malumot olguncha MTTga qabul qilinmaydi." },
+  { q:"Xona havo namligi qanday bolishi kerak?", opts:["20-30%","40-60%","70-80%","90%+"], ans:1, exp:"Optimal havo namligi 40-60%." },
+  { q:"Dezinfeksiya eritmasi tayyorlash kim vazifasi?", opts:["Tarbiyachi","Texnik xodim yoki hamshira","Ota-onalar","Bolalar"], ans:1, exp:"Dezinfeksiya eritmalarini tayyorlash texnik xodim yoki tibbiy xodim vazifalari." },
+  { q:"Ovqat taqsimotida idishlar qanday bolishi kerak?", opts:["Istalgan holatda","Tozalangan, ammo sterillanmagan","Belgilangan, dezinfeksiya qilingan","Birgalikda"], ans:2, exp:"Alohida belgilangan, tozalangan va dezinfeksiya qilingan idishlar ishlatilishi kerak." },
+  { q:"Bola dorisi kim tomonidan beriladi?", opts:["Tarbiyachi ozi beradi","Faqat ota-onalar","Tibbiy xodim ota-ona yozma topshirigi bilan","Bolaning ozi"], ans:2, exp:"Dori faqat tibbiy xodim va ota-onaning yozma talabnomasi asosida beriladi." },
+  { q:"Oyin xonasiga qanday kiriladi?", opts:["Ha, har doim oyoq kiyimda","Faqat uy shippagi bilan","Faqat yozda","Tarbiyachi qaroriga boglik"], ans:1, exp:"Oyin xonalariga faqat uy shippagi bilan kiriladi." },
+  { q:"Choyshab qachon almashtiriladi?", opts:["Har kuni","Har hafta","Har 10 kunda","Har oy"], ans:1, exp:"Bolalar choyshabi kamida haftada bir marta almashtiriladi." },
+  { q:"MTT hududida tutun chekish?", opts:["Atrofdan uzoqda ruxsat","Taqiqlangan (mutlaqo)","Faqat kechasi","Bolalar yoqligida"], ans:1, exp:"MTT hududida tutun chekish mutlaqo taqiqlangan." },
+  { q:"Ovqat yetkazishda nima ishlatiladi?", opts:["Ochiq idish","Yopiq termo-konteyner","Istalgan idish","Bolalar olib keladi"], ans:1, exp:"Ovqat yopiq termo-konteynerda yetkaziladi." },
+  { q:"Bola MTTga kelganda birinchi tibbiy tekshiruv?", opts:["Xona harorati olish","Teri va koz tekshiruvi","Qon tahlili","Bino tekshiruvi"], ans:1, exp:"Bola MTTga kelganda hamshira tomonidan teri va koz tekshiruvi otkaziladi." }
+];
+
+QUESTIONS.adab_normativ = [
+  { q:"Maktabgacha talim va tarbiya togrisidagi Ozbekiston Respublikasi qonuni qaysi sanada qabul qilingan?", opts:["16.12.2018","16.12.2019","16.12.2020","16.12.2021"], ans:1, exp:"Qonun 16.12.2019 yilda qabul qilingan, ORQ-595-son." },
+  { q:"Maktabgacha talim va tarbiya togrisidagi qonunning raqami qanday?", opts:["ORQ-495-son","ORQ-595-son","ORQ-695-son","ORQ-995-son"], ans:1, exp:"Qonun raqami ORQ-595-son." },
+  { q:"Bolalarni zoravonlikning barcha shakllaridan himoya qilish togrisidagi qonun qachon qabul qilingan?", opts:["14.11.2022","14.11.2023","14.11.2024","14.11.2025"], ans:2, exp:"Qonun 14.11.2024 yilda qabul qilingan, ORQ-996-son." },
+  { q:"Bolalarni zoravonlikdan himoya qilish togrisidagi qonunning raqami?", opts:["ORQ-896-son","ORQ-996-son","ORQ-696-son","ORQ-796-son"], ans:1, exp:"Qonun raqami ORQ-996-son." },
+  { q:"Maktabgacha talim-tarbiyaning Davlat standarti togrisidagi Vazirlar Mahkamasi qarori qaysi raqamga ega?", opts:["702-son","802-son","902-son","602-son"], ans:1, exp:"Qaror 802-son, 22.12.2020 yilda qabul qilingan." },
+  { q:"Davlat standarti togrisidagi qaror qachon qabul qilingan?", opts:["22.12.2019","22.12.2020","22.12.2021","22.12.2022"], ans:1, exp:"Qaror 22.12.2020 yilda qabul qilingan." },
+  { q:"MTT pedagogining kasbiy standartini tasdiqlash togrisidagi qaror qachon?", opts:["08.07.2023","08.07.2024","08.07.2025","08.07.2026"], ans:2, exp:"Qaror 08.07.2025 yilda qabul qilingan, 423-son." },
+  { q:"Kasbiy standartni tasdiqlash togrisidagi qarorning raqami?", opts:["323-son","423-son","523-son","156-son"], ans:1, exp:"Qaror raqami 423-son." },
+  { q:"Takomillashtirilgan Ilk Qadam davlat oquv dasturi qachon tasdiqlangan?", opts:["2021-yil 4-fevral","2022-yil 4-fevral","2023-yil 4-fevral","2020-yil 4-fevral"], ans:1, exp:"Dastur 2022-yil 4-fevralda tasdiqlangan." },
+  { q:"Ilm yoli qanday hujjat va qaysi yilda?", opts:["Davlat standarti, 2019-yil","Variativ dastur, 2020-yil","Qonun, 2021-yil","Nizom, 2022-yil"], ans:1, exp:"Ilm yoli 2020-yilda qabul qilingan variativ dastur." },
+  { q:"156-sonli buyruq qachon chiqarilgan va nimaga bagishlangan?", opts:["2025-yil 16-may, nizomlar va lavozim yoriqnomalari","2025-yil 29-avgust, ish hujjatlari","2024-yil 16-may, kasbiy standart","2025-yil 16-may, ish hujjatlari"], ans:0, exp:"156-son buyruq 2025-yil 16-mayda chiqarilgan va nizomlar hamda lavozim yoriqnomalarini tasdiqlashga bagishlangan." },
+  { q:"MTT pedagoglarining ish hujjatlarini tasdiqlash buyrugi qaysi raqam bilan?", opts:["2025-yil 16-may, 156-son","2025-yil 29-avgust, 323-son","2024-yil 29-avgust, 423-son","2025-yil 8-iyul, 802-son"], ans:1, exp:"Buyruq 2025-yil 29-avgustda 323-son bilan chiqarilgan." },
+  { q:"Bolalarning hayoti va sogligini muhofaza qilish tartibi togrisidagi nizom qaysi vazirliklar tomonidan?", opts:["MTT vazirligi va Xalq talimi vazirligi","MTT vazirligi va Sogliqni saqlash vazirligi","Sogliqni saqlash va Ichki ishlar vazirligi","MTT vazirligi va Adliya vazirligi"], ans:1, exp:"Nizom MTT vazirligi va Sogliqni saqlash vazirligi tomonidan 2018-yil 30-aprelda qoshma qabul qilingan." },
+  { q:"Maktabgacha pedagogika darsligi qaysi nashriyotda chop etilgan?", opts:["Oqituvchi, 1995-yil","Tafakkur bostoni, Toshkent-2019","Barkamol Fayz media, 2018-yil","Tafakkur, Toshkent-2020"], ans:1, exp:"Darslik Tafakkur bostoni nashriyotida, Toshkent-2019 yilda chop etilgan." },
+  { q:"Nutq ostirish nazariyasi va metodikasi darsligining muallifi kim?", opts:["F.R.Qodirova","D.R.Babayeva","Shaxnoza Xasanova","N.U.Bikbayeva"], ans:1, exp:"Muallif D.R.Babayeva, Barkamol Fayz media nashriyoti, 2018-yil." },
+  { q:"Elementar matematik tasavvurlarni shakllantirish qollanmasi qaysi yilda?", opts:["1990-yil","1995-yil","2000-yil","2005-yil"], ans:1, exp:"Qollanma 1995-yilda Oqituvchi nashriyotida chop etilgan." },
+  { q:"Bolalarni sahnalashtirish va ijodiy faoliyatga orgatish darsligi qaysi shaharda?", opts:["Toshkent-2022","Namangan-2024","Samarqand-2023","Buxoro-2025"], ans:1, exp:"Darslik Namangan shahrida, 2024-yilda nashr etilgan." },
+  { q:"Tasviriy faoliyatga orgatish metodikasi qollanmasining muallifi kim?", opts:["D.R.Babayeva","Shaxnoza Xasanova","Z.S.Qodirova","M.R.Ishoqova"], ans:1, exp:"Muallif Shaxnoza Xasanova, Tafakkur nashriyoti, Toshkent-2020." },
+  { q:"Adabiyotlar royxatidagi ustoz kim?", opts:["Shaxnoza Xasanova","D.R.Babayeva","Saidabonu Bozorova","Z.S.Qodirova"], ans:2, exp:"Royxat oxirida Ustoz: Saidabonu Bozorova korsatilgan." },
+  { q:"Maktabgacha pedagogika darsligining mualliflari qatorida kim yoq?", opts:["F.R.Qodirova","Sh.Q.Toshpolatova","D.R.Babayeva","N.M.Kayumova"], ans:2, exp:"D.R.Babayeva Maktabgacha pedagogika darsligi muallifi emas, balki Nutq ostirish darsligi muallifi." }
+];
+
+QUESTIONS.adab_yer = [
+  { q:"Yer sayyorasi - Umumiy uyimiz dasturi qaysi turdagi dastur hisoblanadi?", opts:["Davlat oquv dasturi","Parsial (qisman) dastur","Variativ tolik dastur","Xususiy metodika"], ans:1, exp:"Dastur maktabgacha talim tashkilotlari uchun parsial (qisman) dastur hisoblanadi." },
+  { q:"Dastur qachon tasdiqlangan?", opts:["17 may 2022 yil","27 may 2022 yil","17 mart 2022 yil","27 mart 2022 yil"], ans:1, exp:"Dastur Ozbekiston MTT vazirligi Muvofiqlashtiruvchi kengash qarori bilan 27 may 2022-yilda tasdiqlangan." },
+  { q:"Dastur uch qismdan tashkil topgan, qaysilar?", opts:["Osimliklar, hayvonlar, inson","Jonsiz tabiat, jonli tabiat, insonning tabiat bilan ozaro munosabati","Havo, suv, tuproq","Quyosh, shamol, yomgir"], ans:1, exp:"Dastur uch qismdan: jonsiz tabiat; jonli tabiat; insonning tabiat bilan ozaro munosabati va ekologik xavfsizlik." },
+  { q:"Barri Kommonerning ekologiyaning birinchi qonuni qanday?", opts:["Hech bir narsa izsiz yoqolmaydi","Tabiatda hamma narsa ozaro boglik","Tabiat nima qilishni yaxshiroq biladi","Hech narsa shunchaki berilmaydi"], ans:1, exp:"Birinchi qonun: Tabiatda hamma narsa ozaro boglik." },
+  { q:"Ekologiyaning ikkinchi qonuni qanday?", opts:["Tabiatda hamma narsa ozaro boglik","Hech bir narsa izsiz yoqolmaydi","Hech narsa shunchaki berilmaydi","Tabiat nima qilishni yaxshiroq biladi"], ans:1, exp:"Ikkinchi qonun: Hech bir narsa izsiz yoqolmaydi." },
+  { q:"Ekologiyaning tortinchi (oltin qoida) qonuni qanday?", opts:["Hech bir narsa izsiz yoqolmaydi","Hamma narsa ozaro boglik","Tabiat nima qilishni yaxshiroq biladi","Hech narsa shunchaki berilmaydi"], ans:2, exp:"Tortinchi qonun: Tabiat nima qilishni yaxshiroq biladi - ekologiyaning oltin qoidasi." },
+  { q:"Jonsiz tabiat bolimiga qaysilar kiradi?", opts:["Osimliklar, hayvonlar, hasharotlar","Quyosh, suv, havo, tosh-qum-loy, tuproq","Inson, hayvon, tabiat","Ormon, daryo, dengiz"], ans:1, exp:"Jonsiz tabiat bolimiga: Quyosh, Suv, Havo, Tosh-qum-loy, Tuproq mavzulari kiradi." },
+  { q:"Dasturda MTT Fan va tabiat markazida qaysi hayvon boqish tavsiya etiladi?", opts:["Qushlar va baliqlar","Tolqinsimon totiqushlar, kanareykalar, manzarali baliqlar","Quyon va toshbaqa","Hasharotlar kolleksiyasi"], ans:1, exp:"MTT ekologik xonasida tolqinsimon totiqushlar, kanareykalar va manzarali baliqlar boqish tavsiya etiladi." },
+  { q:"Maktabgacha talimda ekologik talimning asosiy 3 yondashuvi?", opts:["Prezentativ, munosabatga oid, xulq-atvorga kora","Amaliy, nazariy, badiiy","Oyin, mehnat, kuzatish","Frontal, guruhli, individual"], ans:0, exp:"Ekologik psixopedagogika: prezentativ, munosabatga oid (aksiologik) va xulq-atvorga kora (texnologik) yondashuvlar." },
+  { q:"Dasturda MTT hududining necha foizi ekish uchun ajratilishi mumkin?", opts:["10%","20%","30%","50%"], ans:2, exp:"Meyorlarga muvofiq, umumiy maydonning 30% dan kop bolmagan qismi ekish uchun ajratiladi." },
+  { q:"3-4 yoshli bola uchun MTTda tavsiya etiladigan xonaki osimliklar?", opts:["Monstera","Begoniya, Balzamin, Aspidistra, Tradeskansiya","Fikus","Diffenbaxiya"], ans:1, exp:"3-4 yoshli bolalar uchun Begoniya, Balzamin, Aspidistra va Tradeskansiya tavsiya etiladi." },
+  { q:"MTT guruhlaridagi xonaki osimliklardan qaysi biri TAQIQLANGAN?", opts:["Aspidistra","Koleus","Diffenbaxiya","Tradeskansiya"], ans:2, exp:"Diffenbaxiya poyasining shirasi kuchli zahar bolgani uchun MTT guruhlarida ostirish taqiqlangan." },
+  { q:"Dasturda Ekologik aksiyaga misol?", opts:["Rasm chizish musobaqasi","Toza shahar, Daraxt ekish, Yer kuni, Qushlar kuni","Teatr tomoshasi","Musiqiy bayram"], ans:1, exp:"Ekologik aksiyalar: Toza shahar, Daraxt ekish, Yer kuni, Atrof-muhitni muhofaza qilish kuni, Qushlar kuni." },
+  { q:"Maftunkor chiqindi metodi qaysi konsepsiyaga asoslanadi?", opts:["Montessori","Bixeviorizm","Vigotskiy","Freyd"], ans:1, exp:"Maftunkor chiqindi metodi bixeviorizm konsepsiyasiga asoslangan - ragbatlantirish orqali ijobiy xulq shakllantirish." },
+  { q:"Dasturda mintaqaviylik tamoyili nimani anglatadi?", opts:["Global muammolarga etibor","Faqat mahalliy tabiat va olka bilan ishlash","Barcha mamlakatlar tajribasi","Xalqaro standartlar"], ans:1, exp:"Mintaqaviylik tamoyili - bolalar avvalo oz mahalliy tabiat, tarix va geografiyasi bilan tanishishi." },
+  { q:"6-7 yoshli bola Bilish jarayoni sohasida qaysi konikmani namoyon etishi kutiladi?", opts:["Faqat sanash","Mustaqil malumot izlash va kuzatishlar asosida xulosa chiqarish","Faqat rasm chizish","Faqat sher yodlash"], ans:1, exp:"6-7 yoshli bola atrof-muhit haqidagi malumotlarni mustaqil izlaydi va kuzatishlari asosida xulosalar chiqaradi." },
+  { q:"Dasturda oilalar bilan ekologik hamkorlik shakllaridan biri?", opts:["Faqat ota-onalar yigilishi","Bolalar va ota-onalar bilan birgalikda daraxt ekish va ekologik aksiyalar","Faqat xat yuborish","Faqat anketa toldirish"], ans:1, exp:"Oilalar bilan hamkorlik: birgalikda daraxt ekish, Toza shahar aksiyalari, ekologik loyihalar." },
+  { q:"Dastur muallif jamoasiga kim kirmaydi?", opts:["Grosheva I.V.","Mirziyoyeva Sh.Sh.","Rizayeva X.U.","Vigotskiy L.S."], ans:3, exp:"Vigotskiy L.S. dastur muallifi emas. Mualliflar: Grosheva I.V., Mirziyoyeva Sh.Sh., Rizayeva X.U., Kuryayeva I.V., Nekrasova Y.A., Shivaldova N.S., Xaziyeva L.Z." },
+  { q:"Dasturda ekologik madaniyat qaysi belgida namoyon boladi?", opts:["Bolaning yaxshi xulqi","Tabiatga barqaror tushunchalar, soglom turmush tarzi va hayvonlarga hissiy munosabatda","Faqat bilim miqdorida","Rasm chizish mahoratida"], ans:1, exp:"Ekologik madaniyatning shakllanganligi - tabiatga barqaror tushunchalar, soglom turmush tarzi qoidalari va hayvonlarga hissiy munosabatda namoyon boladi." },
+  { q:"Yer sayyorasi - Umumiy uyimiz dasturi qaysi tashkilotlar hamkorligida ishlab chiqilgan?", opts:["Faqat MTT vazirligi","MTT vazirligi va YXHT hamkorligida","Faqat Bilim makon","UNESCO va MMV"], ans:1, exp:"Dastur MTT vazirligi va YXHTning Ozbekistondagi loyihalar koordinatori ofisi hamkorligida ishlab chiqilgan." }
+];
+
+QUESTIONS.adab_tasviriy = [
+  { q:"Tasviriy faoliyatga orgatish nazariyasi va metodikasi oquv qollanmasining muallifi kim?", opts:["D.R.Babayeva","Shaxnoza Xasanova","F.R.Qodirova","N.M.Kayumova"], ans:1, exp:"Qollanma muallifi Shaxnoza Xasanova, Tafakkur nashriyoti, Toshkent-2020." },
+  { q:"Tasviriy faoliyat mashgulotlari necha turni oz ichiga oladi?", opts:["2 ta: rasm, loy","3 ta: rasm, loy, applikatsiya","4 ta: rasm, loy, applikatsiya, qurish-yasash","5 ta"], ans:2, exp:"Tasviriy faoliyat rasm chizish, loydan buyum yasash, applikatsiya va qurish-yasashni oz ichiga oladi." },
+  { q:"Yu.B.Babanskiy tasviriy sanat metodlarini necha guruhga klassifikatsiyalagan?", opts:["2 guruhga","3 guruhga","4 guruhga","5 guruhga"], ans:1, exp:"Babanskiy metodlarni 3 guruhga: oquv-bilish faoliyatini tashkil qilish, stimullashtirish va nazorat metodlariga ajratgan." },
+  { q:"Sensor madaniyat tushunchasini maktabgacha tarbiya pedagogikasiga kim olib kelgan?", opts:["Vigotskiy","M.Montessori","Piaje","Suxomlinskiy"], ans:1, exp:"Sensor madaniyat tushunchasini M.Montessori olib kelgan." },
+  { q:"Naturadan foydalanish orgatish metodi sifatida nimani oz ichiga oladi?", opts:["Faqat predmetni korsatish","Predmetning birlamchi tahlili, taqqoslash, baholash","Faqat rangini aytish","Faqat nomini aytish"], ans:1, exp:"Naturadan foydalanish predmetning birlamchi tahlili, tasvirni naturaga taqqoslash va natijani baholashni oz ichiga oladi." },
+  { q:"Bolalarda naturadan foydalanib ishlash konikmalari necha yoshda rivojlana boshlaydi?", opts:["3-4 yoshda","5-6 yoshda","6-7 yoshda","2-3 yoshda"], ans:1, exp:"Naturaga nisbatan taqqoslash konikmalari 5-6 yoshda rivojlana boshlaydi." },
+  { q:"Oyin usullarini kichik guruh uchun birinchi marta kim tashkil qilgan?", opts:["A.A.Volkova","Ye.A.Flerina","T.G.Kazakova","N.P.Sakulina"], ans:1, exp:"Oyin usullarini kichik guruh uchun birinchi marta Ye.A.Flerina tashkil qilgan." },
+  { q:"Evristika sozi qaysi tildan olingan va nimani anglatadi?", opts:["Lotincha, qurish","Grekcha, haqiqatni topish sanati","Lotincha, joylashtirish","Grekcha, chizish"], ans:1, exp:"Evristika grekcha soz bolib, haqiqatni topish sanatini anglatadi." },
+  { q:"Rasm chizish necha turni oz ichiga oladi?", opts:["2 ta","3 ta: predmetli, mazmunli, dekorativ","4 ta","5 ta"], ans:1, exp:"Rasm chizish predmetli, mazmunli va dekorativ rasm chizishni oz ichiga oladi." },
+  { q:"Ala-buji davri qaysi yoshga togri keladi va nimani anglatadi?", opts:["3 yosh, qalam ushlashni bilish davri","2 yoshgacha, qogozdagi tasodifiy izlardan xursand bolish davri","4 yosh, shakl chizish davri","5 yosh, rang tanlash davri"], ans:1, exp:"Bola qogoz betiga tushirilgan turli izlarni korib xursand boladigan davr Ala-buji davri deyiladi." },
+  { q:"Loy va plastilindan oyinchoq yasashda halqachalar usuli qaysi guruhda orgatiladi?", opts:["Kichik guruh","Orta guruh","Katta guruh","Tayyorlov guruh"], ans:3, exp:"Halqachalar hosil qilib idish yasash usuli tayyorlov guruhida orgatiladi." },
+  { q:"Applikatsiya sozi qaysi tildan olingan?", opts:["Grekcha","Lotincha","Arabcha","Forscha"], ans:1, exp:"Applikatsiya sozi lotincha bolib, joylashtirish degan manoni anglatadi." },
+  { q:"Katta guruhda applikatsiyada qogozni garmoshka usulida buklab qirqish nima uchun ishlatiladi?", opts:["Faqat bitta shakl olish uchun","Ratsional - bir yola bir nechta bir xil shakl olish uchun","Rangni aralashtirish uchun","Qogozni tejash uchun emas"], ans:1, exp:"Garmoshka usulida buklab qirqish ratsional usul bolib, bir vaqtning ozida bir nechta bir xil shakl olish imkonini beradi." },
+  { q:"Qurish-yasash sozi qaysi tildan olingan?", opts:["Grekcha","Lotin tilidan","Ingliz tilidan","Rus tilidan"], ans:1, exp:"Qurish-yasash lotin tilidan olingan bolib, qism va elementlarni malum holatga keltirish degan manoni bildiradi." },
+  { q:"Kichik guruhda qurish-yasash mashguloti necha daqiqadan oshmasligi kerak?", opts:["5-7 daqiqa","10-12 daqiqa","15-20 daqiqa","25-30 daqiqa"], ans:1, exp:"Qurish-yasash mashguloti 10-12 daqiqadan oshmasligi kerak." },
+  { q:"Tasviriy faoliyat boyicha bolalar ishini hisobga olish necha shaklda olib boriladi?", opts:["1 shaklda","2 shaklda: matn va korgazmali","3 shaklda","4 shaklda"], ans:1, exp:"Hisobga olish matn shaklida (hisobotlar) va korgazmali shaklda (ishlarni saqlash) olib boriladi." },
+  { q:"Hisobot turlariga nimalar kiradi?", opts:["Faqat kundalik hisobot","Dastlabki, kundalik, yakuniy hisobot","Faqat yakuniy hisobot","Haftalik va oylik hisobot"], ans:1, exp:"Hisobot dastlabki, kundalik va yakuniy turlarga bolinadi." },
+  { q:"Bolalarning loy ishlarini saqlashda har bir bolaning nechta ishi 1 yilda saqlanishi tavsiya etiladi?", opts:["1 ta","2 ta","3 ta","5 ta"], ans:2, exp:"Oquv yilining boshi, ortasi va oxiri boyicha har bir bolaning 3 ta ishini saqlash maqsadga muvofiq." },
+  { q:"Maktabgacha talim tashkilotida tasviriy faoliyat mashgulotlari maktabdagi qaysi predmetga tayyorgarlik vazifasini bajaradi?", opts:["Matematika","Tasviriy sanat va qol mehnati","Ona tili","Jismoniy tarbiya"], ans:1, exp:"MTT tasviriy faoliyat mashgulotlari maktabdagi tasviriy sanat va qol mehnati darslariga tayyorgarlik koradi." },
+  { q:"1-sinfda oquvchilar qaysi geometrik shakllarga ega predmetlarni aniqlashga organadilar (MTT dasturi davomi sifatida)?", opts:["Faqat uchburchak","Doira, kvadrat, tortburchak, oval","Faqat doira","Faqat kvadrat"], ans:1, exp:"1-sinfda bolalar doira, kvadrat, tortburchak, oval shaklidagi predmetlarni aniqlashni davom ettiradilar." }
+];
+
+QUESTIONS.adab_sokmoq = [
+  { q:"MTM hududida ekologik soqmoq tashkil etish uslubiy qollanmasi qaysi parsial dasturga ilova sifatida yaratilgan?", opts:["Ilk Qadam","Ilm yoli","Yer sayyorasi - bizning umumiy uyimiz","Bolajon"], ans:2, exp:"Qollanma Yer sayyorasi - bizning umumiy uyimiz ekologik talim-tarbiya parsial dasturiga ilova bolib yaratilgan." },
+  { q:"Qollanma qaysi tashkilot loyihasi doirasida ishlab chiqilgan?", opts:["UNESCO","YXHTning Maktabgacha yoshdagi bolalarning ekologik talimi loyihasi","Bilim makon mustaqil loyihasi","Jahon banki loyihasi"], ans:1, exp:"Qollanma YXHT (Yevropada Xavfsizlik va Hamkorlik Tashkiloti)ning tegishli loyihasi doirasida ishlab chiqilgan." },
+  { q:"Qollanmaning birinchi nashri qaysi yilda chop etilgan?", opts:["2020-yil","2021-yil","2022-yil","2023-yil"], ans:2, exp:"Qollanma Toshkent - 2022-yilda, birinchi nashr sifatida chop etilgan." },
+  { q:"Ekologik soqmoq tarifiga kora, u nima hisoblanadi?", opts:["Faqat gulzor","MTM maydonidagi maxsus jihozlangan talim-tarbiyaviy yonalish","Sport maydonchasi","Oshxona hududi"], ans:1, exp:"Ekologik soqmoq - talim-tarbiyaviy faoliyatni amalga oshiradigan, MTM maydonidagi maxsus jihozlangan yonalish." },
+  { q:"Ekologik soqmoqning asosiy funksiyalariga nimalar kiradi?", opts:["Faqat malumot beruvchi","Malumot beruvchi, soglomlashtiruvchi, rivojlantiruvchi, tanishtiruvchi","Faqat soglomlashtiruvchi","Faqat tanishtiruvchi"], ans:1, exp:"Ekologik soqmoq tortta asosiy funksiyani bajaradi: malumot beruvchi, soglomlashtiruvchi, rivojlantiruvchi va tanishtiruvchi." },
+  { q:"MTM da ekologik soqmoq tashkil etish necha bosqichda otkaziladi?", opts:["2 bosqich","3 bosqich","4 bosqich","5 bosqich"], ans:2, exp:"Ekologik soqmoq tashkil etish 4 bosqichda: tashkiliy, yonalish va xarita-chizma tuzish, bezatish-obodonlashtirish va ishga tushirish bosqichlarida otkaziladi." },
+  { q:"Ekologik soqmoq tashkil etishning birinchi bosqichi qanday nomlanadi?", opts:["Bezatish","Tashkiliy","Xarita tuzish","Ishga tushirish"], ans:1, exp:"Birinchi bosqich - tashkiliy bosqich bolib, unda tashabbuskor guruh tuziladi va umumiy reja ishlab chiqiladi." },
+  { q:"Ekologik soqmoq yonalishini tanlashning asosiy sharti nima?", opts:["Faqat uzunligi","Qulaylik, xavfsizlik va tashrif uchun ochiqlik","Faqat narxi","Faqat rangi"], ans:1, exp:"Yonalish tanlashning asosiy sharti - qulaylik, xavfsizlik va tashrif buyurish uchun ochiq bolishi." },
+  { q:"Ekologik soqmoqdagi namoyish obyektlari necha turga bolinadi?", opts:["1 tur","2 tur: tabiiy va suniy","3 tur","4 tur"], ans:1, exp:"Namoyish obyektlari tabiiy (osimlik, hayvonot, relyef) va suniy (taxtachalar, andozalar) turlarga bolinadi." },
+  { q:"Ekologik soqmoq pasportiga nimalar kiritiladi?", opts:["Faqat nomi","Nomi, maqsad-vazifalari, joylashuvi, obyektlar tavsifi, masullar","Faqat xarita","Faqat masullar royxati"], ans:1, exp:"Pasportga soqmoq nomi, maqsad-vazifalari, joylashuvi, yonalish tarifi, obyektlar tavsifi, jihozlar royxati va masullar kiritiladi." },
+  { q:"Ekologik ekskursiya necha bosqichdan iborat?", opts:["2 bosqich","3 bosqich","4 bosqich","5 bosqich"], ans:2, exp:"Ekologik ekskursiya tayyorlanish, otkazish, xulosa chiqarish va materialni keyingi ishlash bosqichlaridan iborat." },
+  { q:"Mayda obyektlarni namoyish qilishda pedagog atrofida qanday hajmdagi xoli aylana hosil qilishi tavsiya etiladi?", opts:["1 metr","2 metr","3 metr","5 metr"], ans:1, exp:"Namoyishga kirishishdan oldin pedagog atrofida diametri ikki metr bolgan xoli aylana hosil qilishi tavsiya etiladi." },
+  { q:"Glossariyga kora qaysi tushuncha yer yuzasining tashqi korinishi, shakli deb tariflangan?", opts:["Landshaft","Relyef","Ekotizim","Fitosenoz"], ans:1, exp:"Relyef - yer yuzasining tashqi korinishi, shakli, kelib chiqishi va rivojlanish tarixiga kora notekisliklar yigindisi." },
+  { q:"Glossariyga kora fitosenoz sozining manosi nima?", opts:["Yakka osimlik","Bir jamoa bolib yashaydigan osimliklar majmuasi","Hayvonlar guruhi","Tuproq turi"], ans:1, exp:"Fitosenoz - qadimiy yunoncha soz bolib, bir jamoa bolib yashaydigan osimliklar majmuasini anglatadi." },
+  { q:"3-4 yoshli bolalar ekologik soqmoqda qanday usullar orqali atrof-muhit bilan tanishadilar?", opts:["Faqat mustaqil tadqiqot","Kuzatuv, ekskursiya, didaktik oyinlar, badiiy adabiyot orqali kattalar yordamida","Faqat kitob oqish","Faqat test topshirish"], ans:1, exp:"3-4 yoshlilar kattalar yordamida kuzatuv, ekskursiya, didaktik oyinlar va badiiy adabiyot oqish orqali tanishadilar." },
+  { q:"6-7 yoshli bolalar ekologik soqmoqda qanday rolni bajara oladilar?", opts:["Faqat tomoshabin","Soqmoqning haqiqiy hojayini va ekskursiya rahbari","Hech qanday faollik korsatmaydilar","Faqat rasm chizadilar"], ans:1, exp:"6-7 yoshli bolalar ekologik soqmoqning haqiqiy hojayiniga aylanib, ekskursiya rahbari rolida ham bola oladilar." },
+  { q:"Tabiatga masuliyat bilan yondoshishni tarbiyalashda katta yoshdagi guruhlarda qanday nuqta yaratish tavsiya etiladi?", opts:["Qizil patrul","Yashil patrul kuzatuv nuqtasi","Kok patrul","Sariq patrul"], ans:1, exp:"Yashil patrul kuzatuv nuqtasini yaratish tabiatga masuliyatli yondoshishni tarbiyalashda yordam beradi." },
+  { q:"Ota-onalar bilan ekologik soqmoq doirasidagi hamkorlikning shakllaridan biri sifatida qaysi aksiya korsatilmagan?", opts:["Daraxt ek","Qishda qushlarni oziqlantir","Yer kuni","Chiqindilarni kopaytir"], ans:3, exp:"Chiqindilarni kopaytir aksiyasi mavjud emas. Hamkorlik shakllariga Daraxt ek, Qishda qushlarni oziqlantir, Yer kuni, Osimliklar ostir kiradi." },
+  { q:"Ekologik soqmoqdagi taxminiy axloq qoidalariga kora, bolalar nima qilishi tavsiya etilmaydi?", opts:["Kuzatish va zavqlanish","Tabiat suvenirlarini olib ketish","Tozalikka rioya qilish","Axloq qoidalariga amal qilish"], ans:1, exp:"Qoidalarga kora, MTM ekologik soqmogidagi chiroyli toshlar kabi tabiat suvenirlarini olib ketish tavsiya etilmaydi." },
+  { q:"Qollanma muallifligiga kim yoki kimlar kiradi?", opts:["Faqat Grosheva I.V.","Grosheva I.V., Shivaldova N.S., Kuryayeva I.V.","Faqat Abdullayeva N.Sh.","Faqat Pak S.V."], ans:1, exp:"Qollanma mualliflari: Grosheva I.V., Shivaldova N.S., Kuryayeva I.V. Qolganlari taqrizchilar hisoblanadi." }
+];
+
+var testState = {};
+
 function showMainView() {
-  document.getElementById('main-view').style.display = 'block'
-  document.getElementById('adabiyotlar-view').style.display = 'none'
+  document.getElementById('main-view').style.display = 'block';
+  document.getElementById('adabiyotlar-view').style.display = 'none';
 }
 
 function showAdabiyotlarView() {
-  document.getElementById('main-view').style.display = 'none'
-  document.getElementById('adabiyotlar-view').style.display = 'block'
-  renderAdabSubs()
+  document.getElementById('main-view').style.display = 'none';
+  document.getElementById('adabiyotlar-view').style.display = 'block';
+  renderAdabSubs();
 }
 
 function renderAdabSubs() {
-  document.getElementById('adab-sub-grid').innerHTML = ADAB_SUBS.map(s => {
-    const qCount = QUESTIONS[s.id] ? QUESTIONS[s.id].length : 0
-    const lockBadge = s.pro && !isPro()
-      ? `<div class="pro-lock"><i class="ti ti-crown"></i> PRO</div>`
-      : `<div class="tc-count">${qCount} savol</div>`
-    return `<div class="sub-card" onclick="startTest('${s.id}','${s.title}')">
-      ${lockBadge}
-      <div class="tc-icon" style="margin-bottom:8px"><i class="ti ${s.icon}"></i></div>
-      <h4>${s.title}</h4>
-      <p>${s.desc}</p>
-    </div>`
-  }).join('')
+  document.getElementById('adab-sub-grid').innerHTML = ADAB_SUBS.map(function(s) {
+    var qCount = QUESTIONS[s.id] ? QUESTIONS[s.id].length : 0;
+    var lockBadge = (s.pro && !isPro())
+      ? '<div class="pro-lock"><i class="ti ti-crown"></i> PRO</div>'
+      : '<div class="tc-count">' + qCount + ' savol</div>';
+    return '<div class="sub-card" onclick="startTest(\'' + s.id + '\',\'' + s.title + '\')">' +
+      lockBadge +
+      '<div class="tc-icon" style="margin-bottom:8px"><i class="ti ' + s.icon + '"></i></div>' +
+      '<h4>' + s.title + '</h4>' +
+      '<p>' + s.desc + '</p>' +
+      '</div>';
+  }).join('');
 }
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-window.addEventListener('load', async () => {
-  const auth = await initAuth(true)
-  if (!auth) return
-  if (typeof fillNav === 'function') fillNav()
+window.addEventListener('load', async function() {
+  const auth = await initAuth(true);
+  if (!auth) return;
+  if (typeof fillNav === 'function') fillNav();
 
-  const name = getUserName()
-  document.getElementById('sb-name').textContent = name
-  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase()
-  const proUser0 = isPro()
-  const corpUser0 = isCorporate()
-  document.getElementById('sb-plan').textContent = (corpUser0?'Korporativ':proUser0?'Professional':'Bepul') + ' tarif'
+  const name = getUserName();
+  document.getElementById('sb-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = name.charAt(0).toUpperCase();
+  const proUser0 = isPro();
+  const corpUser0 = isCorporate();
+  document.getElementById('sb-plan').textContent = (corpUser0 ? 'Korporativ' : proUser0 ? 'Professional' : 'Bepul') + ' tarif';
 
   if (!isPro()) {
-    const limit = await checkTestLimit()
+    const limit = await checkTestLimit();
     if (!limit.allowed) {
-      document.getElementById('limit-box').style.display = 'block'
-      document.getElementById('limit-text').textContent = `Bu oy ${limit.count}/${limit.limit} test ishlandi`
+      document.getElementById('limit-box').style.display = 'block';
+      document.getElementById('limit-text').textContent = 'Bu oy ' + limit.count + '/' + limit.limit + ' test ishlandi';
     }
   }
 
-  renderTestGrid()
-})
+  renderTestGrid();
+});
 
 async function renderTestGrid() {
-  let bestScores = {}
+  let bestScores = {};
   const { data: tests } = await _sb
     .from('test_results')
     .select('category, percentage')
-    .eq('user_id', _currentUser.id)
+    .eq('user_id', _currentUser.id);
 
   if (tests) {
-    tests.forEach(t => {
+    tests.forEach(function(t) {
       if (!bestScores[t.category] || t.percentage > bestScores[t.category]) {
-        bestScores[t.category] = t.percentage
+        bestScores[t.category] = t.percentage;
       }
-    })
+    });
   }
 
-  document.getElementById('test-grid').innerHTML = TEST_CATS.map(c => {
-    const best = bestScores[c.id]
+  document.getElementById('test-grid').innerHTML = TEST_CATS.map(function(c) {
+    const best = bestScores[c.id];
     const stars = best === undefined ? "Hali ishlanmagan"
-      : best >= 90 ? "A'lo (3 yulduz)"
+      : best >= 90 ? "Alo (3 yulduz)"
       : best >= 70 ? "Yaxshi (2 yulduz)"
       : best >= 50 ? "Qoniqarli (1 yulduz)"
-      : "Qayta ishlang"
+      : "Qayta ishlang";
     const bar = best !== undefined
-      ? `<div class="tc-pbar"><div class="tc-pfill" style="width:${best}%"></div></div>` : ''
+      ? '<div class="tc-pbar"><div class="tc-pfill" style="width:' + best + '%"></div></div>' : '';
     const qCount = c.hasSub
-      ? ADAB_SUBS.reduce((a,s)=>a+(QUESTIONS[s.id]?QUESTIONS[s.id].length:0),0)
-      : QUESTIONS[c.id].length
-    const clickFn = c.hasSub ? `showAdabiyotlarView()` : `startTest('${c.id}','${c.title}')`
-    return `<div class="tc-card" onclick="${clickFn}">
-      <div class="tc-count">${qCount} savol</div>
-      <div class="tc-icon"><i class="ti ${c.icon}"></i></div>
-      <h3>${c.title}</h3>
-      <p>${c.desc}</p>
-      ${bar}
-      <div class="tc-status">${stars}${best !== undefined ? ' (' + best + '%)' : ''}</div>
-    </div>`
-  }).join('')
+      ? ADAB_SUBS.reduce(function(a, s) { return a + (QUESTIONS[s.id] ? QUESTIONS[s.id].length : 0); }, 0)
+      : QUESTIONS[c.id].length;
+    const clickFn = c.hasSub ? 'showAdabiyotlarView()' : ('startTest(\'' + c.id + '\',\'' + c.title + '\')');
+    return '<div class="tc-card" onclick="' + clickFn + '">' +
+      '<div class="tc-count">' + qCount + ' savol</div>' +
+      '<div class="tc-icon"><i class="ti ' + c.icon + '"></i></div>' +
+      '<h3>' + c.title + '</h3>' +
+      '<p>' + c.desc + '</p>' +
+      bar +
+      '<div class="tc-status">' + stars + (best !== undefined ? ' (' + best + '%)' : '') + '</div>' +
+      '</div>';
+  }).join('');
 }
 
-// ═══════════════════════════════════════════
-// TEST LOGIC
-// ═══════════════════════════════════════════
 async function startTest(catId, catTitle) {
-  const subInfo = ADAB_SUBS.find(s => s.id === catId)
+  const subInfo = ADAB_SUBS.find(function(s) { return s.id === catId; });
   if (subInfo && subInfo.pro && !isPro()) {
-    showToast('Bu bo\'lim faqat Premium foydalanuvchilar uchun!', 'err')
-    return
+    showToast('Bu bolim faqat Premium foydalanuvchilar uchun!', 'err');
+    return;
   }
 
   if (!isPro()) {
-    const limit = await checkTestLimit()
+    const limit = await checkTestLimit();
     if (!limit.allowed) {
-      showToast('Oylik test limitiga yetdingiz! Premium oling.', 'err')
-      return
+      showToast('Oylik test limitiga yetdingiz! Premium oling.', 'err');
+      return;
     }
   }
 
-  const qs = QUESTIONS[catId].slice().sort(() => Math.random() - 0.5)
-  testState = { catId, catTitle, qs, cur: 0, answers: [], answered: false }
-  document.getElementById('test-modal-title').textContent = catTitle
-  document.getElementById('test-modal').classList.add('show')
-  renderQ()
+  const qs = QUESTIONS[catId].slice().sort(function() { return Math.random() - 0.5; });
+  testState = { catId: catId, catTitle: catTitle, qs: qs, cur: 0, answers: [], answered: false };
+  document.getElementById('test-modal-title').textContent = catTitle;
+  document.getElementById('test-modal').classList.add('show');
+  renderQ();
 }
 
 function closeTest() {
-  document.getElementById('test-modal').classList.remove('show')
+  document.getElementById('test-modal').classList.remove('show');
 }
 
 function renderQ() {
-  const s = testState
-  if (s.cur >= s.qs.length) { showResult(); return }
-  const q = s.qs[s.cur]
-  const pct = Math.round((s.cur / s.qs.length) * 100)
-  const optsHtml = q.opts.map((o, i) =>
-    `<button class="topt" id="opt-${i}" onclick="selectOpt(${i})">${o}</button>`
-  ).join('')
+  const s = testState;
+  if (s.cur >= s.qs.length) { showResult(); return; }
+  const q = s.qs[s.cur];
+  const pct = Math.round((s.cur / s.qs.length) * 100);
+  const optsHtml = q.opts.map(function(o, i) {
+    return '<button class="topt" id="opt-' + i + '" onclick="selectOpt(' + i + ')">' + o + '</button>';
+  }).join('');
 
-  document.getElementById('test-body').innerHTML = `
-    <div style="font-size:11.5px;color:var(--muted);margin-bottom:6px">${s.cur+1} / ${s.qs.length} savol</div>
-    <div class="tpbar"><div class="tpfill" style="width:${pct}%"></div></div>
-    <div class="tq">${q.q}</div>
-    <div class="topts">${optsHtml}</div>
-    <div class="texpl" id="texpl"></div>
-    <div class="q-footer">
-      <span>${s.answers.filter(Boolean).length} to'g'ri</span>
-      <button class="btn-next" id="tnext" onclick="nextQ()" disabled>Keyingi</button>
-    </div>
-  `
+  document.getElementById('test-body').innerHTML =
+    '<div style="font-size:11.5px;color:var(--muted);margin-bottom:6px">' + (s.cur + 1) + ' / ' + s.qs.length + ' savol</div>' +
+    '<div class="tpbar"><div class="tpfill" style="width:' + pct + '%"></div></div>' +
+    '<div class="tq">' + q.q + '</div>' +
+    '<div class="topts">' + optsHtml + '</div>' +
+    '<div class="texpl" id="texpl"></div>' +
+    '<div class="q-footer">' +
+      '<span>' + s.answers.filter(Boolean).length + ' togri</span>' +
+      '<button class="btn-next" id="tnext" onclick="nextQ()" disabled>Keyingi</button>' +
+    '</div>';
 }
 
 function selectOpt(i) {
-  if (testState.answered) return
-  testState.answered = true
-  const q = testState.qs[testState.cur]
-  const correct = i === q.ans
-  testState.answers.push(correct)
+  if (testState.answered) return;
+  testState.answered = true;
+  const q = testState.qs[testState.cur];
+  const correct = i === q.ans;
+  testState.answers.push(correct);
 
-  document.querySelectorAll('.topt').forEach((b, idx) => {
-    b.classList.add('disabled')
-    if (idx === q.ans) b.classList.add('correct')
-    else if (idx === i) b.classList.add('wrong')
-  })
+  document.querySelectorAll('.topt').forEach(function(b, idx) {
+    b.classList.add('disabled');
+    if (idx === q.ans) b.classList.add('correct');
+    else if (idx === i) b.classList.add('wrong');
+  });
 
-  const exp = document.getElementById('texpl')
-  exp.textContent = (correct ? "To'g'ri! " : "Noto'g'ri. ") + q.exp
-  exp.className = 'texpl show' + (correct ? '' : ' werr')
-  document.getElementById('tnext').disabled = false
+  const exp = document.getElementById('texpl');
+  exp.textContent = (correct ? "Togri! " : "Notogri. ") + q.exp;
+  exp.className = 'texpl show' + (correct ? '' : ' werr');
+  document.getElementById('tnext').disabled = false;
 }
 
 function nextQ() {
-  testState.cur++
-  testState.answered = false
-  renderQ()
+  testState.cur++;
+  testState.answered = false;
+  renderQ();
 }
 
 async function showResult() {
-  const s = testState
-  const correct = s.answers.filter(Boolean).length
-  const pct = Math.round((correct / s.qs.length) * 100)
-  const xpEarned = correct * 5
+  const s = testState;
+  const correct = s.answers.filter(Boolean).length;
+  const pct = Math.round((correct / s.qs.length) * 100);
+  const xpEarned = correct * 5;
 
-  let grade, gradeColor, stars, advice
-  if (pct >= 90) { grade='ALO'; gradeColor='rc-gold'; stars="Mukammal!"; advice="Ajoyib! Bu mavzuni yaxshi bilasiz." }
-  else if (pct >= 70) { grade='YAXSHI'; gradeColor='rc-green'; stars="Yaxshi!"; advice="Yaxshi natija." }
-  else if (pct >= 50) { grade='QONIQARLI'; gradeColor='rc-blue'; stars="Qoniqarli"; advice="Mavzuni chuqurroq o'rganish kerak." }
-  else { grade='PAST'; gradeColor='rc-red'; stars="Qayta ishlang"; advice="Mavzuni qayta o'qib, testni takrorlang." }
+  let grade, gradeColor, stars, advice;
+  if (pct >= 90) { grade = 'ALO'; gradeColor = 'rc-gold'; stars = "Mukammal!"; advice = "Ajoyib! Bu mavzuni yaxshi bilasiz."; }
+  else if (pct >= 70) { grade = 'YAXSHI'; gradeColor = 'rc-green'; stars = "Yaxshi!"; advice = "Yaxshi natija."; }
+  else if (pct >= 50) { grade = 'QONIQARLI'; gradeColor = 'rc-blue'; stars = "Qoniqarli"; advice = "Mavzuni chuqurroq organish kerak."; }
+  else { grade = 'PAST'; gradeColor = 'rc-red'; stars = "Qayta ishlang"; advice = "Mavzuni qayta oqib, testni takrorlang."; }
 
   await _sb.from('test_results').insert({
     user_id: _currentUser.id,
@@ -744,28 +729,27 @@ async function showResult() {
     total: s.qs.length,
     percentage: pct,
     xp_earned: xpEarned
-  })
+  });
 
-  await addXP(xpEarned)
+  await addXP(xpEarned);
 
-  document.getElementById('test-body').innerHTML = `
-    <div class="res-wrap">
-      <div class="res-circle ${gradeColor}">${pct}%<div style="font-size:10px;margin-top:2px">${grade}</div></div>
-      <div class="res-grade">${stars}</div>
-      <div class="res-advice">${advice}</div>
-      <div class="res-bd">
-        <div class="rb-row"><span>To'g'ri javoblar</span><b style="color:var(--green)">${correct} ta</b></div>
-        <div class="rb-row"><span>Noto'g'ri javoblar</span><b style="color:var(--red)">${s.qs.length-correct} ta</b></div>
-        <div class="rb-row"><span>Jami savollar</span><b>${s.qs.length} ta</b></div>
-        <div class="rb-row"><span>XP qo'shildi</span><b style="color:var(--amber)">+${xpEarned} XP</b></div>
-      </div>
-      <div class="res-actions">
-        <button class="btn-next" onclick="startTest('${s.catId}','${s.catTitle}')">Qayta ishlash</button>
-        <button class="btn-secondary" onclick="closeTest()">Yopish</button>
-      </div>
-    </div>
-  `
-  renderTestGrid()
+  document.getElementById('test-body').innerHTML =
+    '<div class="res-wrap">' +
+      '<div class="res-circle ' + gradeColor + '">' + pct + '%<div style="font-size:10px;margin-top:2px">' + grade + '</div></div>' +
+      '<div class="res-grade">' + stars + '</div>' +
+      '<div class="res-advice">' + advice + '</div>' +
+      '<div class="res-bd">' +
+        '<div class="rb-row"><span>Togri javoblar</span><b style="color:var(--green)">' + correct + ' ta</b></div>' +
+        '<div class="rb-row"><span>Notogri javoblar</span><b style="color:var(--red)">' + (s.qs.length - correct) + ' ta</b></div>' +
+        '<div class="rb-row"><span>Jami savollar</span><b>' + s.qs.length + ' ta</b></div>' +
+        '<div class="rb-row"><span>XP qoshildi</span><b style="color:var(--amber)">+' + xpEarned + ' XP</b></div>' +
+      '</div>' +
+      '<div class="res-actions">' +
+        '<button class="btn-next" onclick="startTest(\'' + s.catId + '\',\'' + s.catTitle + '\')">Qayta ishlash</button>' +
+        '<button class="btn-secondary" onclick="closeTest()">Yopish</button>' +
+      '</div>' +
+    '</div>';
+  renderTestGrid();
 }
 </script>
 </body>
