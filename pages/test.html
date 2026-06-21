@@ -354,6 +354,7 @@ var TEST_CATS = [
   { id:'psixolog',  icon:'ti-brain', title:'Bolalar Psixologiyasi', desc:'4-5 yosh rivojlanishi' },
   { id:'qonun',     icon:'ti-scale', title:'Qonunchilik va Meyor', desc:'Qonunlar, DTS, tartib-qoidalar' },
   { id:'sanitar',   icon:'ti-vaccine', title:'Sanitariya va Gigiyena', desc:'MTT sanitariya meyorlari' },
+  { id:'adabiyotlar', icon:'ti-bookmarks', title:'Adabiyotlar', desc:'Norma-hujjatlar va tavsiya etilgan adabiyotlar royxati' },
 ]
 
 var QUESTIONS = {
@@ -488,6 +489,28 @@ var QUESTIONS = {
     { q:"MTT hududida tutun chekish?", opts:['Atrofdan uzoqda ruxsat','Taqiqlangan (mutlaqo)','Faqat kechasi','Bolalar yogligida'], ans:1, exp:"MTT hududida tutun chekish mutlaqo taqiqlangan." },
     { q:"Ovqat yetkazishda nima ishlatiladi?", opts:['Ochiq idish','Yopiq termo-konteyner','Istalgan idish','Bolalar olib keladi'], ans:1, exp:"Ovqat yopiq termo-konteynerda yetkaziladi." },
     { q:"Bola MTTga kelganda birinchi tibbiy tekshiruv?", opts:['Xona harorati olish','Teri va koz tekshiruvi','Qon tahlili','Bino tekshiruvi'], ans:1, exp:"Bola MTTga kelganda hamshira tomonidan teri va koz tekshiruvi otkaziladi." }
+  ],
+  adabiyotlar: [
+    { q:"Maktabgacha talim va tarbiya togrisidagi Ozbekiston Respublikasi qonuni qaysi sanada qabul qilingan?", opts:['16.12.2018','16.12.2019','16.12.2020','16.12.2021'], ans:1, exp:"Qonun 16.12.2019 yilda qabul qilingan, ORQ-595-son." },
+    { q:"Maktabgacha talim va tarbiya togrisidagi qonunning raqami qanday?", opts:['ORQ-495-son','ORQ-595-son','ORQ-695-son','ORQ-995-son'], ans:1, exp:"Qonun raqami ORQ-595-son." },
+    { q:"Bolalarni zoravonlikning barcha shakllaridan himoya qilish togrisidagi qonun qachon qabul qilingan?", opts:['14.11.2022','14.11.2023','14.11.2024','14.11.2025'], ans:2, exp:"Qonun 14.11.2024 yilda qabul qilingan, ORQ-996-son." },
+    { q:"Bolalarni zoravonlikdan himoya qilish togrisidagi qonunning raqami nechi?", opts:['ORQ-896-son','ORQ-996-son','ORQ-696-son','ORQ-796-son'], ans:1, exp:"Qonun raqami ORQ-996-son." },
+    { q:"Maktabgacha talim-tarbiyaning Davlat standarti togrisidagi Vazirlar Mahkamasi qarori qaysi raqamga ega?", opts:['702-son','802-son','902-son','602-son'], ans:1, exp:"Qaror 802-son, 22.12.2020 yilda qabul qilingan." },
+    { q:"Davlat standarti togrisidagi qaror qachon qabul qilingan?", opts:['22.12.2019','22.12.2020','22.12.2021','22.12.2022'], ans:1, exp:"Qaror 22.12.2020 yilda qabul qilingan." },
+    { q:"Maktabgacha talim tashkiloti pedagogining kasbiy standartini tasdiqlash togrisidagi qaror qachon qabul qilingan?", opts:['08.07.2023','08.07.2024','08.07.2025','08.07.2026'], ans:2, exp:"Qaror 08.07.2025 yilda qabul qilingan, 423-son." },
+    { q:"Kasbiy standartni tasdiqlash togrisidagi qarorning raqami nechi?", opts:['323-son','423-son','523-son','156-son'], ans:1, exp:"Qaror raqami 423-son." },
+    { q:"Takomillashtirilgan Ilk Qadam davlat oquv dasturi qachon tasdiqlangan?", opts:['2021-yil 4-fevral','2022-yil 4-fevral','2023-yil 4-fevral','2020-yil 4-fevral'], ans:1, exp:"Dastur 2022-yil 4-fevralda tasdiqlangan." },
+    { q:"Ilm yoli qanday hujjat hisoblanadi va qaysi yilda qabul qilingan?", opts:['Davlat standarti, 2019-yil','Variativ dastur, 2020-yil','Qonun, 2021-yil','Nizom, 2022-yil'], ans:1, exp:"Ilm yoli 2020-yilda qabul qilingan variativ dastur." },
+    { q:"156-sonli buyruq qachon chiqarilgan va nimaga bagishlangan?", opts:['2025-yil 16-may, nizomlar va lavozim yoriqnomalari','2025-yil 29-avgust, ish hujjatlari','2024-yil 16-may, kasbiy standart','2025-yil 16-may, ish hujjatlari'], ans:0, exp:"156-son buyruq 2025-yil 16-mayda chiqarilgan va nizomlar hamda lavozim yoriqnomalarini tasdiqlashga bagishlangan." },
+    { q:"Maktabgacha talim tashkiloti va pedagoglarining ish hujjatlarini tasdiqlash togrisidagi buyruq qachon va qaysi raqam bilan chiqarilgan?", opts:['2025-yil 16-may, 156-son','2025-yil 29-avgust, 323-son','2024-yil 29-avgust, 423-son','2025-yil 8-iyul, 802-son'], ans:1, exp:"Buyruq 2025-yil 29-avgustda 323-son bilan chiqarilgan." },
+    { q:"Bolalarning hayoti va sogligini muhofaza qilish tartibi togrisidagi nizom qaysi ikki vazirlik tomonidan va qachon qabul qilingan?", opts:['Maktabgacha talim va Xalq talimi vazirligi, 2018-yil','Maktabgacha talim va Sogliqni saqlash vazirligi, 2018-yil','Sogliqni saqlash va Ichki ishlar vazirligi, 2019-yil','Maktabgacha talim va Adliya vazirligi, 2020-yil'], ans:1, exp:"Nizom 2018-yil 30-aprelda Maktabgacha talim vazirligi va Sogliqni saqlash vazirligi tomonidan qoshma qabul qilingan." },
+    { q:"Maktabgacha pedagogika darsligining mualliflari qatorida kim yoq?", opts:['F.R.Qodirova','Sh.Q.Toshpolatova','D.R.Babayeva','N.M.Kayumova'], ans:2, exp:"D.R.Babayeva Maktabgacha pedagogika darsligi muallifi emas, balki Nutq ostirish darsligi muallifi." },
+    { q:"Maktabgacha pedagogika darsligi qaysi nashriyotda va qaysi yilda chop etilgan?", opts:['Oqituvchi, 1995-yil','Tafakkur bostoni, Toshkent-2019','Barkamol Fayz media, 2018-yil','Tafakkur, Toshkent-2020'], ans:1, exp:"Darslik Tafakkur bostoni nashriyotida, Toshkent-2019 yilda chop etilgan." },
+    { q:"Nutq ostirish nazariyasi va metodikasi darsligining muallifi kim va qaysi nashriyotda chop etilgan?", opts:['F.R.Qodirova, Tafakkur bostoni','D.R.Babayeva, Barkamol Fayz media','Shaxnoza Xasanova, Tafakkur','N.U.Bikbayeva, Oqituvchi'], ans:1, exp:"Muallif D.R.Babayeva, nashriyoti Barkamol Fayz media, 2018-yil." },
+    { q:"Elementar matematik tasavvurlarni shakllantirish qollanmasi qaysi yilda va qaysi nashriyotda nashr etilgan?", opts:['1990-yil, Tafakkur','1995-yil, Oqituvchi','2000-yil, Barkamol Fayz media','2005-yil, Tafakkur bostoni'], ans:1, exp:"Qollanma 1995-yilda Oqituvchi nashriyotida chop etilgan." },
+    { q:"Bolalarni sahnalashtirish va ijodiy faoliyatga orgatish darsligi qaysi shaharda va qaysi yilda nashr etilgan?", opts:['Toshkent-2022','Namangan-2024','Samarqand-2023','Buxoro-2025'], ans:1, exp:"Darslik Namangan shahrida, 2024-yilda nashr etilgan." },
+    { q:"Tasviriy faoliyatga orgatish nazariyasi va metodikasi qollanmasining muallifi kim va qaysi nashriyotda chop etilgan?", opts:['D.R.Babayeva, Barkamol Fayz media','Shaxnoza Xasanova, Tafakkur, Toshkent-2020','Z.S.Qodirova, Tafakkur bostoni','M.R.Ishoqova, Oqituvchi'], ans:1, exp:"Muallif Shaxnoza Xasanova, Tafakkur nashriyoti, Toshkent-2020." },
+    { q:"Adabiyotlar royxatida korsatilgan ustoz kim?", opts:['Shaxnoza Xasanova','D.R.Babayeva','Saidabonu Bozorova','Z.S.Qodirova'], ans:2, exp:"Royxat oxirida Ustoz: Saidabonu Bozorova korsatilgan." }
   ]
 }
 
