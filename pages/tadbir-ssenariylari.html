@@ -29,6 +29,8 @@
   --pro-soft:#f5f3ff;
   --pink:#db2777;
   --pink-soft:#fce7f3;
+  --teal:#0d9488;
+  --teal-soft:#ccfbf1;
   --sidebar:256px;
   --radius:12px;
   --radius-sm:8px;
@@ -50,52 +52,80 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .back-link{display:flex;align-items:center;gap:8px;padding:14px 18px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;border-bottom:1px solid var(--border)}
 .back-link:hover{color:var(--accent2)}
 
-.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1100px}
+.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1180px}
 .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .page-head h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
 .page-head h1 i{color:var(--pro2);font-size:24px}
 .page-sub{font-size:13px;color:var(--text2);margin-top:4px}
 .pro-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
 
-.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:24px}
-.event-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s;text-align:left}
+.event-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:24px}
+.event-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s;text-align:left;position:relative}
 .event-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent2)}
 .event-card.active{border-color:var(--pro2);background:var(--pro-soft)}
 .event-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
 .event-title{font-size:13.5px;font-weight:700;color:var(--text)}
 .event-meta{font-size:11.5px;color:var(--text3);margin-top:3px}
+.full-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--green-soft);color:var(--green)}
 
-.detail-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;display:none}
+.toc{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow);display:none}
+.toc.show{display:block}
+.toc-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.toc-list{display:flex;flex-wrap:wrap;gap:6px}
+.toc-link{font-size:12px;font-weight:600;color:var(--accent2);background:var(--accent-soft);padding:5px 10px;border-radius:8px;text-decoration:none;cursor:pointer;border:none;font-family:inherit}
+.toc-link:hover{background:var(--accent2);color:#fff}
+
+.detail-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 32px;display:none}
 .detail-card.show{display:block}
-.detail-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.detail-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.detail-head h2{font-size:18px;font-weight:800}
+.detail-head{display:flex;align-items:center;gap:14px;margin-bottom:8px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.detail-icon{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.detail-head h2{font-size:19px;font-weight:800}
 .detail-meta{font-size:12px;color:var(--text2);margin-top:4px;display:flex;gap:14px;flex-wrap:wrap}
 .detail-meta span{display:flex;align-items:center;gap:4px}
 
-.scene{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
-.scene:last-child{border-bottom:none}
-.scene-num{width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent2);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.scene-content h4{font-size:13.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:6px}
-.scene-content h4 i{font-size:14px;color:var(--pro2)}
-.scene-content p{font-size:13px;color:var(--text);line-height:1.65}
-.scene-tag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--amber-soft);color:var(--amber);margin-top:6px}
+.intro-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:var(--radius-sm);padding:14px 16px;margin:16px 0;font-size:13.3px;line-height:1.7;color:var(--text)}
+.intro-box b{color:var(--accent)}
 
-.props-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-top:18px}
-.props-box h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.rep-section{scroll-margin-top:20px}
+.rep-section h4{font-size:14px;font-weight:700;color:var(--accent2);margin:24px 0 14px;display:flex;align-items:center;gap:7px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rep-section h4 i{font-size:16px}
+
+.scene{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--border)}
+.scene:last-child{border-bottom:none}
+.scene-num{width:32px;height:32px;border-radius:9px;background:var(--accent-soft);color:var(--accent2);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.scene-content{flex:1;min-width:0}
+.scene-content h5{font-size:14px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.scene-content h5 i{font-size:15px;color:var(--pro2)}
+.scene-tag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--amber-soft);color:var(--amber)}
+.stage-direction{font-size:12px;color:var(--text3);font-style:italic;background:var(--bg);border-left:3px solid var(--border2);padding:6px 10px;border-radius:0 6px 6px 0;margin:8px 0}
+.dialogue-line{margin:8px 0;font-size:13.3px;line-height:1.6}
+.dialogue-line b{color:var(--accent2);font-weight:700}
+.poem-box{background:linear-gradient(135deg,#fafaff,#f5f3ff);border:1px solid #e9e4fb;border-radius:10px;padding:12px 16px;margin:10px 0}
+.poem-box .poem-speaker{font-size:11.5px;font-weight:700;color:var(--pro2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.poem-box p{font-style:italic;font-size:13.3px;line-height:1.85;color:var(--text);white-space:pre-line}
+.scene-text{font-size:13.3px;color:var(--text);line-height:1.7;margin-top:6px}
+
+.props-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-top:10px}
+.props-box h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;border:none;padding:0}
 .props-box p{font-size:13px;color:var(--text)}
+
+.role-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin:10px 0 6px}
+.role-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px}
+.role-card b{font-size:12.3px;color:var(--text);display:block}
+.role-card span{font-size:11.3px;color:var(--text3)}
 
 .print-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:18px}
 .print-btn:hover{background:var(--accent)}
 .empty-hint{text-align:center;color:var(--text3);font-size:13px;padding:50px 20px}
 .empty-hint i{font-size:32px;display:block;margin-bottom:10px;color:var(--border2)}
 
-@media(max-width:900px){
+@media(max-width:980px){
   .sidebar{display:none}
   .main{margin-left:0;padding:16px 14px 80px}
+  .detail-card{padding:18px 16px}
 }
 @media print{
-  .sidebar,.event-grid,.print-btn{display:none}
+  .sidebar,.event-grid,.print-btn,.toc{display:none}
   .detail-card{display:block!important}
   .main{margin-left:0}
 }
@@ -119,44 +149,386 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="page-head">
     <div>
       <h1><i class="ti ti-mask"></i> Tadbir ssenariylari</h1>
-      <p class="page-sub">Bayram va tadbirlar uchun tayyor ssenariylar, sahna rejasi va kerakli atributlar ro'yxati</p>
+      <p class="page-sub">Bayram va tadbirlar uchun to'liq sahna ssenariylari — kirish so'zlari, she'rlar, dialoglar va rekvizit ro'yxati</p>
     </div>
     <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
   </div>
 
   <div class="event-grid" id="eventGrid"></div>
+  <div class="toc" id="tocBox">
+    <div class="toc-title">Ssenariy bo'limlari</div>
+    <div class="toc-list" id="tocList"></div>
+  </div>
   <div class="detail-card" id="detailCard"></div>
   <div class="empty-hint" id="emptyHint"><i class="ti ti-pointer"></i>Ssenariyni ko'rish uchun yuqoridagi tadbirlardan birini tanlang</div>
 </main>
 
 <script>
-const events = [
-  {
-    id:"navroz",
-    title:"Navro'z bayrami",
-    date:"21-mart",
-    duration:"40–45 daqiqa",
-    color:"green",
-    icon:"ti-flower",
-    intro:"Bahor kelishi va yangi yil boshlanishini nishonlovchi milliy bayram tantanasi. Bolalar milliy liboslarda, raqs va qo'shiqlar bilan ishtirok etadi.",
-    scenes:[
-      {title:"Saf tortish va kirish marshi", icon:"ti-walk", text:"Bolalar guruh-guruh bo'lib musiqa ostida zalga kirib keladi, atrofni bayramona bezatilgan joyga joylashadi.", tag:"5 daqiqa"},
-      {title:"Tabriknoma so'zi", icon:"ti-microphone", text:"Tarbiyachi yoki muassasa rahbari Navro'z bayrami tarixi va ahamiyati haqida sodda, bolalarga tushunarli tilda qisqa nutq so'zlaydi.", tag:"4 daqiqa"},
-      {title:"\"Bahor kelmoqda\" she'rxonligi", icon:"ti-book", text:"3–4 nafar bola navbat bilan bahor mavzusidagi she'rlarni yod aytadi.", tag:"5 daqiqa"},
-      {title:"Milliy raqs — \"Lazgi\"", icon:"ti-music", text:"Katta guruh bolalari milliy kiyimda lazgi raqsini ijro etadi.", tag:"6 daqiqa"},
-      {title:"\"Sumalak\" o'yin-sahnasi", icon:"ti-theater", text:"Bolalar sumalak tayyorlash jarayonini o'yin orqali namoyish etadi — bug'doy ekish, qaynatish harakatlarini taqlid qiladi.", tag:"7 daqiqa"},
-      {title:"Tortishuvli o'yinlar", icon:"ti-ball-american-football", text:"\"Kim tezroq\", \"Halqa tashlash\" kabi xalq o'yinlari tashkil etiladi, barcha bolalar ishtirok etadi.", tag:"10 daqiqa"},
-      {title:"Yakuniy qo'shiq va sovrinlar", icon:"ti-gift", text:"Barcha bolalar birgalikda bayram qo'shig'ini kuylaydi, kichik sovg'alar tarqatiladi.", tag:"5 daqiqa"}
-    ],
-    props:"Milliy liboslar, sumalak uchun rekvizit (idish, bug'doy maketlari), bayroqchalar, gulchambar, audio tizim, mikrofon."
-  },
-  {
-    id:"mustaqillik",
+const colorMap = {
+  green:{bg:"var(--green-soft)",fg:"var(--green)"},
+  blue:{bg:"var(--accent-soft)",fg:"var(--accent2)"},
+  amber:{bg:"var(--amber-soft)",fg:"var(--amber)"},
+  pink:{bg:"var(--pink-soft)",fg:"var(--pink)"},
+  purple:{bg:"var(--pro-soft)",fg:"var(--pro2)"},
+  teal:{bg:"var(--teal-soft)",fg:"var(--teal)"}
+};
+
+/* ============== FULL SCENARIOS (Navro'z, Yangi yil, Bitiruv, 8-mart) ============== */
+
+const fullEvents = {
+
+navroz: {
+  title:"Navro'z bayrami",
+  date:"21-mart",
+  duration:"45–50 daqiqa",
+  color:"green",
+  icon:"ti-flower",
+  full:true,
+  intro:`Bahor faslining kelishi, tabiatning uyg'onishi va yangilanishni anglatuvchi qadimiy va sevimli milliy bayramimiz — Navro'z. Mazkur tadbir bolalarda milliy qadriyatlarga hurmat, tabiatga muhabbat va do'stlik tuyg'ularini tarbiyalashga xizmat qiladi. Zal bahor ranglarida — yashil, sariq va qizil rangdagi bezaklar, qog'ozdan yasalgan lolaqizg'aldoqlar va boychechaklar bilan bezatiladi.`,
+  roles:[
+    ["Olib boruvchi (Tarbiyachi)","Tantanani boshqaradi"],
+    ["Bahor-opa","Bahorni olib keluvchi qahramon"],
+    ["4 nafar bola","\"Bahor\" she'rxonlari"],
+    ["Raqs guruhi (6–8 bola)","Lazgi raqsi ijrochilari"],
+    ["2 nafar bola","Sumalak sahnasi ishtirokchilari"]
+  ],
+  scenes:[
+    {
+      title:"Tantanali kirish va olib boruvchining nutqi",
+      icon:"ti-microphone-2", tag:"5 daqiqa",
+      direction:"Zalda bayramona kuy yangraydi. Bolalar guruh bo'lib, qo'llarida rangli sharlar va bahor gullari tasvirlangan kartochkalar bilan zalga kirib, yarim doira shaklida joylashadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Assalomu alaykum, aziz mehmonlar, mehribon ota-onalar va bizning quvnoq, sevimli bolalarimiz! Bugun katta bayram — bahorning birinchi kuni, ajdodlarimizdan bizga meros bo'lib qolgan eng go'zal va qadimiy bayramimiz — Navro'z bayramini nishonlamoqdamiz!"},
+        {speaker:"Olib boruvchi", text:"Navro'z so'zi \"yangi kun\" degan ma'noni bildiradi. Bu kunda tabiat uyg'onadi, qor erib, yer yuzi yashil libos kiyadi, qushlar sayraydi va hamma narsa yangilanadi. Kelinglar, biz ham bugun shu go'zal bayramni katta shodlik bilan nishonlaymiz!"}
+      ]
+    },
+    {
+      title:"\"Bahor-opa\"ni kutib olish",
+      icon:"ti-sun", tag:"4 daqiqa",
+      direction:"Musiqa ostida Bahor-opa (tarbiyachi yoki katta yoshli ishtirokchi, yashil-sariq libosda, qo'lida gul savatchasi bilan) zalga kirib keladi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Mana, eshitinglar — kim kelayotganini bilasizlarmi? Bu — bizning aziz mehmonimiz, hammamiz kutgan Bahor-opa keldi!"},
+        {speaker:"Bahor-opa", text:"Assalomu alaykum, mehribon bolajonlar! Men sizlarga iliq quyosh, yam-yashil maysalar va xushbo'y gullar olib keldim. Endi qish ortda qoldi, mening navbatim keldi!"},
+        {speaker:"Bahor-opa", text:"Aytinglar-chi, mening kelishimni qanday bilib oldingiz? (bolalar javob beradi: gullar ochildi, qush sayradi, kun isidi). To'g'ri aytasizlar! Endi men sizlar bilan birga bayram qilmoqchiman."}
+      ]
+    },
+    {
+      title:"\"Bahor keldi\" she'rxonligi",
+      icon:"ti-book", tag:"6 daqiqa",
+      direction:"4 nafar bola navbat bilan oldinga chiqib, quyidagi she'rlarni ifodali tarzda aytib beradi. Har bir bola she'rni aytgandan so'ng o'z joyiga qaytadi.",
+      poems:[
+        {speaker:"1-bola", text:"Qor erib, suv bo'ldi,\nYer yuzi gul to'ldi.\nQushcha uchib keldi,\nBahor, bahor keldi!"},
+        {speaker:"2-bola", text:"Lolaqizg'aldoq ochildi,\nDalada rang sochildi.\nKapalaklar uchadi,\nBahor bizga qo'shiladi!"},
+        {speaker:"3-bola", text:"Quyosh chiqdi yam-yashil,\nDalalarga yoyildi nur.\nBolalar quvonchda,\nNavro'zni kutib olamiz, hur!"},
+        {speaker:"4-bola", text:"Sumalagim qaynaydi,\nXush bo'y ifor taraladi.\nKelinglar, qo'lni ushlab,\nNavro'zni baxtli qaytaymiz!"}
+      ]
+    },
+    {
+      title:"\"Sumalak\" sahnasi",
+      icon:"ti-theater", tag:"7 daqiqa",
+      direction:"Sahna o'rtasiga katta soxta qozon (rekvizit) qo'yiladi. 2 nafar bola navbat bilan \"bug'doy ekish\" va \"aralashtirish\" harakatlarini bajaradi, qolgan bolalar doira bo'lib aylanib, qo'shiq kuylaydi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Navro'zning eng asosiy taomi — bu sumalak. Sumalak yashil bug'doy ko'saklaridan tayyorlanadi va u baraka, sog'lik va to'kinlik ramzi hisoblanadi. Keling, biz ham qanday qilib sumalak tayyorlanishini ko'rsatib beraylik!"},
+        {speaker:"1-bola (sumalak tayyorlovchi)", text:"Mana, men bug'doyni qozonga solyapman..."},
+        {speaker:"2-bola (sumalak tayyorlovchi)", text:"Men esa uni asta-sekin aralashtiryapman, sumalagim shirin bo'lsin!"}
+      ],
+      stageNote:"Barcha bolalar birgalikda qo'llarini aylantirib, \"qaynayotgan qozon\" harakatini taqlid qiladi va kuylaydi:",
+      poems:[
+        {speaker:"Barcha bolalar (birga)", text:"Qaynagin, qaynagin sumalagim,\nShirin bo'lgin, totli bo'lgin.\nBarakangni hammaga ber,\nNavro'z bilan baxt kelsin!"}
+      ]
+    },
+    {
+      title:"Milliy raqs — \"Lazgi\"",
+      icon:"ti-music", tag:"6 daqiqa",
+      direction:"6–8 nafar bola milliy liboslarda sahnaga chiqadi. Lazgi musiqasi yoqiladi, bolalar oldindan o'rgatilgan harakatlar bilan raqsga tushadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Endi navbat bizning chaqqon raqqosalarimizga keldi! Ular sizlarga ona yurtimizning sevimli milliy raqsi — Lazgini taqdim etadilar!"}
+      ]
+    },
+    {
+      title:"Xalq o'yinlari",
+      icon:"ti-ball-american-football", tag:"10 daqiqa",
+      direction:"\"Halqa tashlash\", \"Tortishmachoq\" va \"Kim tezroq\" kabi an'anaviy xalq o'yinlari tashkil etiladi. Barcha bolalar kichik guruhlarga bo'linib, navbat bilan ishtirok etadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Navro'zda eng sevimli mashg'ulotlardan biri — bu xalq o'yinlari! Keling, kuchimizni va chaqqonligimizni sinab ko'raylik!"}
+      ]
+    },
+    {
+      title:"Yakuniy qo'shiq va xayrlashuv",
+      icon:"ti-gift", tag:"5 daqiqa",
+      direction:"Barcha bolalar zalning o'rtasiga to'planib, doira hosil qiladi. Bahor-opa har bir bolaga kichik shirinlik yoki gulchambar ulashadi.",
+      lines:[
+        {speaker:"Bahor-opa", text:"Sizlar bilan birga bo'lgan bu quvonchli kunni hech qachon unutmayman! Sizlarga sog'lik, baxt va omad tilab, endi xayrlashish vaqti keldi."},
+        {speaker:"Olib boruvchi", text:"Aziz bolalar, Navro'z bayramingiz muborak bo'lsin! Kelinglar, hammamiz birga qo'l ushlashib, bayram qo'shig'ini kuylaylik!"}
+      ],
+      poems:[
+        {speaker:"Barcha bolalar (birga)", text:"Navro'z keldi, bahor keldi,\nDillarimizga g'ulom keldi.\nQutlug' bo'lsin bu ayyom,\nBaxt-saodat doim bo'lsin!"}
+      ]
+    }
+  ],
+  props:"Milliy liboslar (lazgi raqsi uchun), sumalak uchun rekvizit (soxta qozon, bug'doy maketlari), qog'ozdan yasalgan lolaqizg'aldoq va boychechaklar, rangli bayroqchalar, Bahor-opa kostyumi va gul savatchasi, audio tizim, mikrofon, halqa tashlash uchun rekvizit, kichik shirinliklar."
+},
+
+yangiyil: {
+  title:"Yangi yil bayrami",
+  date:"25–31 dekabr",
+  duration:"45–50 daqiqa",
+  color:"pink",
+  icon:"ti-christmas-tree",
+  full:true,
+  intro:`Bolalarning eng sevimli va sehrli qish bayrami — Yangi yil. Archa atrofida o'tkaziladigan bu tantanali tadbirda Ayozbobo va Qor qiz ishtirokida sahna tomoshasi, qo'shiqlar, raqslar va quvnoq o'yinlar tashkil etiladi. Zal qish mavzusida — qor parchalari, archa bezaklari va rangli chiroqlar bilan bezatiladi.`,
+  roles:[
+    ["Olib boruvchi (Tarbiyachi)","Tantanani boshqaradi"],
+    ["Ayozbobo","Sovg'a olib keluvchi bosh qahramon"],
+    ["Qor qiz","Ayozboboning nevarasi"],
+    ["3 nafar bola","Qish she'rxonlari"],
+    ["Qor parchalari guruhi (5–6 qiz bola)","Raqs ijrochilari"]
+  ],
+  scenes:[
+    {
+      title:"Bayramona kirish va archani yoritish",
+      icon:"ti-sparkles", tag:"5 daqiqa",
+      direction:"Bolalar qish mavzusidagi kostyumlarda (qor parchasi, ayiqcha, quyoncha) musiqa ostida zalga kirib, bezatilgan archa atrofida yarim doira hosil qiladi. Archaning chiroqlari hali yonmagan.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Assalomu alaykum, mehribon mehmonlar va bizning quvnoq bolajonlarimiz! Bugun yilning eng sehrli va kutilgan kuni — Yangi yil bayrami! Qarang, archamiz qanchalik chiroyli bezatilgan, lekin uning chiroqlari hali yonmagan. Keling, birgalikda sehrli so'zlarni aytib, archamizni yoritaylik!"},
+        {speaker:"Barcha bolalar (birga, baland ovozda)", text:"Archa-archa, charaqla! Bir, ikki, uch!"}
+      ],
+      stageNote:"Shu so'zlar aytilgandan so'ng archa chiroqlari yoqiladi (texnik xodim tomonidan)."
+    },
+    {
+      title:"Ayozbobo va Qor qizni chaqirish",
+      icon:"ti-bell", tag:"4 daqiqa",
+      direction:"Bolalar birgalikda baland ovozda Ayozboboni chaqiradilar. Uzoqdan qo'ng'iroqcha ovozi eshitiladi, so'ng Ayozbobo va Qor qiz musiqa ostida zalga kirib keladi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Keling, bizning eng aziz mehmonimizni baland ovozda chaqiraylik! Uch marotaba baland ovozda: Ayozbobo!"},
+        {speaker:"Ayozbobo", text:"Ho-ho-ho! Assalomu alaykum, mening aziz, mehribon bolajonlarim! Men sizlarni butun yil davomida sog'-omon, quvnoq va tinch ko'rishni orzu qilib keldim. Mana, men yetib keldim!"},
+        {speaker:"Qor qiz", text:"Assalomu alaykum, do'stlarim! Men — Ayozboboning nevarasi, Qor qizman. Bobom bilan birga sizlarga sovuq qishning eng issiq tabriklarini olib keldik!"}
+      ]
+    },
+    {
+      title:"Qish haqida topishmoqlar va she'rlar",
+      icon:"ti-book", tag:"7 daqiqa",
+      direction:"Ayozbobo bolalarga qish mavzusida 2–3 topishmoq beradi, so'ngra 3 nafar bola navbat bilan oldinga chiqib she'r aytadi.",
+      lines:[
+        {speaker:"Ayozbobo", text:"Bolajonlar, mendan bir topishmoqni topa olasizlarmi? Oppoq libos kiyaman, lekin yozda ko'rinmayman, qishda osmondan uchib tushaman. Kim man?"},
+        {speaker:"Barcha bolalar", text:"Qor!"},
+        {speaker:"Ayozbobo", text:"Barakalla, juda topqirsizlar! Endi mening sevimli she'rxonlarimni eshitaylik."}
+      ],
+      poems:[
+        {speaker:"1-bola", text:"Oppoq qorlar yog'moqda,\nDov-daraxtlar oqarmoqda.\nAyozbobo kelmoqda,\nSovg'alarni sochmoqda!"},
+        {speaker:"2-bola", text:"Archa-archa, yashil archa,\nSan archalarning gulisan.\nChiroqlaring charaqlaydi,\nYangi yilning posbonisan!"},
+        {speaker:"3-bola", text:"Qorqiz bilan Ayozbobo,\nQo'lda olib keldi sovg'a.\nKelinglar, do'stlar, quvonaylik,\nYangi yilni kutib olaylik!"}
+      ]
+    },
+    {
+      title:"\"Qor parchalari\" raqsi",
+      icon:"ti-snowflake", tag:"5 daqiqa",
+      direction:"5–6 nafar qiz bola oq libosda, qo'llarida oq lentalar bilan archa atrofida nafis raqs tushadilar.",
+      lines:[
+        {speaker:"Qor qiz", text:"Endi mening sevimli qor parchalarim sizlarga raqs tortib beradi. Diqqat bilan tomosha qiling!"}
+      ]
+    },
+    {
+      title:"Archa atrofida umumiy o'yin-raqs",
+      icon:"ti-music", tag:"6 daqiqa",
+      direction:"Barcha bolalar Ayozbobo va Qor qiz bilan birga qo'l ushlashib, archa atrofida aylanma harakat qiladilar, qo'shiq kuylanadi.",
+      lines:[
+        {speaker:"Ayozbobo", text:"Kelinglar, hammamiz birga archa atrofida aylanaylik va quvnoq qo'shiq aytaylik!"}
+      ],
+      poems:[
+        {speaker:"Barcha bolalar (birga)", text:"Aylanaylik archa atrofida,\nQo'shiq aytib, kulib-kulib.\nAyozbobo biz bilan,\nYangi yilni kutib olib!"}
+      ]
+    },
+    {
+      title:"O'yin-tortishmalar",
+      icon:"ti-ball-american-football", tag:"8 daqiqa",
+      direction:"\"Qor to'pini ushla\", \"Muzlatib qo'yaman\" kabi harakatli o'yinlar Ayozbobo rahbarligida tashkil etiladi.",
+      lines:[
+        {speaker:"Ayozbobo", text:"Endi men sizlarni \"muzlatib qo'yaman\" o'yiniga taklif qilaman! Men \"muzla!\" deganimda hammangiz qimirlamay turib qolasiz, \"erit!\" deganimda esa yana harakatlanasiz!"}
+      ]
+    },
+    {
+      title:"Sovg'alar tarqatish va xayrlashuv",
+      icon:"ti-gift", tag:"6 daqiqa",
+      direction:"Ayozbobo katta qopdan har bir bolaga kichik sovg'a ulashadi. Yakunda umumiy fotosurat olinadi.",
+      lines:[
+        {speaker:"Ayozbobo", text:"Mana, mening sehrli qopimda har biringiz uchun kichik sovg'a bor. Yaxshi va mehribon bo'lib o'sing, bilim olishga qiziqing!"},
+        {speaker:"Qor qiz", text:"Biz endi boshqa bolalarga ham bayram tabrigi yetkazish uchun yo'lga chiqishimiz kerak. Sizlar bilan xayrlashish vaqti keldi, lekin biz keyingi yili albatta yana kelamiz!"},
+        {speaker:"Olib boruvchi", text:"Aziz bolajonlar, Yangi yilingiz muborak bo'lsin! Kelgusi yil sizlarga sog'lik, baxt va yangi bilimlar olib kelsin!"}
+      ]
+    }
+  ],
+  props:"Ayozbobo va Qor qiz kostyumlari, archa va uning bezaklari (sharlar, chiroqlar), sun'iy qor parchalari, qor to'pi maketlari, qish mavzusidagi bolalar kostyumlari, sovg'a qutilari (har bir bola uchun), audio tizim, mikrofon, qo'ng'iroqcha."
+},
+
+bitiruv: {
+  title:"Bitiruv bayrami (\"Alvido, bog'cha!\")",
+  date:"May oxiri",
+  duration:"40–45 daqiqa",
+  color:"purple",
+  icon:"ti-certificate",
+  full:true,
+  intro:`Maktabgacha ta'lim tashkilotini tugatib, sentyabr oyidan maktabga boradigan bitiruvchi bolalar uchun tashkil etiladigan tantanali va bir oz hayajonli xayrlashuv tadbiri. Bu kun bolalar uchun ham, ularning ota-onalari va tarbiyachilari uchun ham alohida ahamiyatga ega — bu yangi hayot bosqichi sari qo'yilgan birinchi qadamdir.`,
+  roles:[
+    ["Olib boruvchi (Tarbiyachi)","Tantanani boshqaradi"],
+    ["MTT rahbari yoki metodist","Tabrik nutqi va guvohnoma topshiradi"],
+    ["4 nafar bitiruvchi bola","She'rxonlar"],
+    ["2 nafar bola","\"Maktabga qadam\" sahnasi ishtirokchilari (o'quvchi va o'qituvchi rollarida)"],
+    ["Barcha bitiruvchilar","Yakuniy qo'shiq va raqs ijrochilari"]
+  ],
+  scenes:[
+    {
+      title:"Tantanali kirish marshi",
+      icon:"ti-walk", tag:"5 daqiqa",
+      direction:"Bitiruvchi bolalar bayramona liboslarda (lentalar, shapkalar bilan) tantanali marsh musiqasi ostida ikki qatorga bo'linib zalga kirib keladilar va sahna oldida saf tortadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Aziz mehmonlar, hurmatli ota-onalar! Bugun bizning bog'chamizda alohida, biroz hayajonli va ayni paytda quvonchli kun — bizning aziz bitiruvchilarimiz bilan xayrlashuv kuni!"},
+        {speaker:"Olib boruvchi", text:"Mana ular — bizning kichkina do'stlarimiz, ular bog'chaga ilk bor kichkina, uyatchan bolakaylar bo'lib kelgan edilar, endi esa katta, mustaqil va bilimga chanqoq maktab o'quvchilariga aylandilar!"}
+      ]
+    },
+    {
+      title:"Tarbiyachining xayrlashuv nutqi",
+      icon:"ti-heart-handshake", tag:"5 daqiqa",
+      direction:"Tarbiyachi bolalar qarshisida turib, samimiy va biroz hayajonli ohangda nutq so'zlaydi.",
+      lines:[
+        {speaker:"Tarbiyachi", text:"Mening aziz bolajonlarim! Necha yillar davomida biz birga kulib, birga o'ynab, birga yangi narsalarni o'rgandik. Har birlaringizning kulgusi, har bir savolingiz, har bir kichik yutug'ingiz mening uchun qadrli edi."},
+        {speaker:"Tarbiyachi", text:"Endi sizlar katta yo'lga, maktab yo'liga qadam qo'yasizlar. Bilingki, qaerda bo'lsangiz ham, men sizlarni doim yodda tutaman va muvaffaqiyatlaringizdan faxrlanaman. Omad sizlarga, mening kichkina, endi esa katta do'stlarim!"}
+      ]
+    },
+    {
+      title:"\"Bog'cha xotiralari\" – bolalar tilidan minnatdorlik",
+      icon:"ti-heart", tag:"6 daqiqa",
+      direction:"4 nafar bitiruvchi bola navbat bilan oldinga chiqib, bog'cha va tarbiyachiga bag'ishlangan she'rlarni ifodali tarzda aytib beradi.",
+      poems:[
+        {speaker:"1-bola", text:"Bog'chamiz edi mening uyim,\nDo'stlarim bilan o'tdi kunim.\nRahmat senga, aziz bog'cham,\nSeni hech qachon unutmayman!"},
+        {speaker:"2-bola", text:"Tarbiyachim, mehribonim,\nO'rgatding menga har bir o'nim.\nEndi maktabga ketaman,\nLekin seni esda tutaman!"},
+        {speaker:"3-bola", text:"O'yinlarim, qo'shiqlarim,\nDo'stlarim bilan rang-baranglarim.\nBu yerda topdim men ko'p bilim,\nRahmat senga, mehribon bog'cha!"},
+        {speaker:"4-bola", text:"Endi katta bo'ldik, sizga aytamiz,\nKitob, daftar olib, maktabga ketamiz.\nLekin bizning yurak to'rida,\nBog'cham doim qoladi, albatta!"}
+      ]
+    },
+    {
+      title:"\"Bog'cha xotiralari\" — slayd-ko'rsatuv",
+      icon:"ti-photo", tag:"5 daqiqa",
+      direction:"Bolalarning bog'chadagi turli yillardagi suratlari va qisqa video lavhalaridan iborat ko'rsatuv ekranda namoyish etiladi. Fonida yumshoq musiqa yangraydi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Keling, bir lahzaga to'xtalib, bu yillar davomida to'plangan eng yorqin xotiralarimizni birga ko'rib chiqaylik..."}
+      ]
+    },
+    {
+      title:"\"Maktabga qadam\" — kichik hazil-sahna",
+      icon:"ti-theater", tag:"8 daqiqa",
+      direction:"2 nafar bola sahnaga chiqadi — biri \"o'qituvchi\" (ko'zoynak va jurnal bilan), ikkinchisi \"yangi o'quvchi\" rolida. Sahna hazilomuz tarzda ijro etiladi, zalda kulgi va quvnoq kayfiyat uyg'otadi.",
+      lines:[
+        {speaker:"\"O'qituvchi\" (bola)", text:"Assalomu alaykum, yangi o'quvchi! Ismingiz nima?"},
+        {speaker:"\"Yangi o'quvchi\" (bola)", text:"Assalomu alaykum! Mening ismim... voy, unutib qo'ydim, bog'chada biz o'yin o'ynagandik shu payt!"},
+        {speaker:"\"O'qituvchi\" (bola)", text:"Hech bo'lmasa, alifboni bilasizmi? Birinchi harf qaysi?"},
+        {speaker:"\"Yangi o'quvchi\" (bola)", text:"Albatta bilaman! \"A\" harfi — ayiqcha, \"B\" harfi — bog'cha, chunki men bog'chada hammasini o'rgandim!"},
+        {speaker:"\"O'qituvchi\" (bola)", text:"Ajoyib! Ko'rinib turibdiki, siz bog'chada juda yaxshi tayyorgarlik ko'rgansiz. Xush kelibsiz, maktabimizga!"}
+      ]
+    },
+    {
+      title:"Guvohnoma topshirish marosimi",
+      icon:"ti-certificate", tag:"7 daqiqa",
+      direction:"MTT rahbari yoki metodist sahnaga chiqadi. Har bir bitiruvchi bola navbat bilan chaqiriladi, unga kichik diplom-guvohnoma va esdalik sovg'asi topshiriladi, umumiy olqishlar bilan kuzatib qo'yiladi.",
+      lines:[
+        {speaker:"MTT rahbari", text:"Aziz bitiruvchilar! Sizlarning har biringiz bizning bog'chamiz tarixida o'ziga xos, betakror iz qoldirdingiz. Endi men har biringizga maktabgacha ta'limni muvaffaqiyatli tugatganingiz haqida kichik guvohnoma topshirishdan faxrlanaman."},
+        {speaker:"MTT rahbari", text:"(har bir bola ismi aytilib chaqiriladi) ...Tabriklayman! Maktabda omadlar tilayman!"}
+      ]
+    },
+    {
+      title:"Yakuniy qo'shiq, raqs va umumiy fotosurat",
+      icon:"ti-camera", tag:"5 daqiqa",
+      direction:"Barcha bitiruvchilar sahnaga chiqib, quvonchli raqs-o'yin bilan tadbirni yakunlaydilar, so'ngra ota-onalar va tarbiyachilar bilan birga umumiy esdalik fotosuratiga tushadilar.",
+      poems:[
+        {speaker:"Barcha bitiruvchilar (birga)", text:"Alvido, mehribon bog'cham,\nRahmat senga, mening yurtim.\nMaktabga ketsam-da uzoq,\nQalbimda qolasan, mening o'tmishim!"}
+      ]
+    }
+  ],
+  props:"Bitiruvchilar uchun maxsus tantanali liboslar (lentalar, shapkalar), diplom-guvohnomalar va esdalik sovg'alari, slayd-ko'rsatuv uchun proyektor va ekran, \"o'qituvchi\" sahnasi uchun rekvizit (ko'zoynak, jurnal, daftar), audio tizim, mikrofon, fotosurat uchun bezatilgan fon."
+},
+
+mart8: {
+  title:"8-mart Xalqaro xotin-qizlar kuni",
+  date:"8-mart",
+  duration:"35–40 daqiqa",
+  color:"pink",
+  icon:"ti-heart",
+  full:true,
+  intro:`Onalar, buvilar, opalar va barcha ayol kishilarga bag'ishlangan mehr-muhabbat va ehtirom bayrami. Mazkur tadbirda bolalar o'z onalariga, buvilariga va ayol tarbiyachilariga bo'lgan samimiy hurmat va mehrini she'r, qo'shiq va qo'lda yasalgan tabriknomalar orqali izhor qiladilar. Zal bahor gullari va yumshoq pastel ranglar bilan bezatiladi.`,
+  roles:[
+    ["Olib boruvchi (Tarbiyachi)","Tantanani boshqaradi"],
+    ["4 nafar bola","She'rxonlar"],
+    ["3 nafar qiz bola","Kichik raqs ijrochilari"],
+    ["Barcha bolalar","Tabrik qo'shig'i va sovg'a topshirish ishtirokchilari"]
+  ],
+  scenes:[
+    {
+      title:"Tantanali kirish va bayram tarixi",
+      icon:"ti-microphone-2", tag:"5 daqiqa",
+      direction:"Bolalar qo'llarida qog'ozdan yasalgan gullar bilan zalga kirib, onalar va mehmonlar oldida yarim doira hosil qilib joylashadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Assalomu alaykum, aziz onalar, mehribon buvilar va bizning go'zal mehmonlarimiz! Bugun ajoyib bir kun — bahorning sevimli bayrami, ayollarimizga bag'ishlangan 8-mart bayrami!"},
+        {speaker:"Olib boruvchi", text:"Bu kunda biz onalarimizning bizga bergan cheksiz mehrini, sabr-toqatini va g'amxo'rligini eslab, ularga o'z minnatdorchiligimizni bildiramiz. Kelinglar, bolalarimizning samimiy so'zlarini eshitaylik!"}
+      ]
+    },
+    {
+      title:"\"Mening onam\" she'rxonligi",
+      icon:"ti-book", tag:"7 daqiqa",
+      direction:"4 nafar bola navbat bilan oldinga chiqib, onalar va buvilarga bag'ishlangan she'rlarni ifodali tarzda, ko'zlarini onalariga qarab aytib beradi.",
+      poems:[
+        {speaker:"1-bola", text:"Onajonim, mehribonim,\nSiz uchun bu kichik so'zim.\nQuchog'ingiz issiq, yumshoq,\nMening dunyom — sizsan, qadrdonim!"},
+        {speaker:"2-bola", text:"Buvijonim, qissalaringiz,\nMenga yoqar har bir kunlaringiz.\nQo'llaringiz hamisha mehr to'la,\nRahmat sizga, mening boqilim!"},
+        {speaker:"3-bola", text:"Onajon, sizning kulguningiz,\nUyimizga olib keladi quvonch.\nHar doim yonimda bo'lasiz,\nSizni sevaman, ayting buni hamma!"},
+        {speaker:"4-bola", text:"Bahor keldi gullar bilan,\nBayram keldi nurlar bilan.\nOnalarga, opa-singillarga,\nBaxt tilaymiz qalbdan, чин dillar bilan!"}
+      ]
+    },
+    {
+      title:"Kichik raqs namoyishi",
+      icon:"ti-music", tag:"6 daqiqa",
+      direction:"3 nafar qiz bola rangli ko'ylaklarda, qo'llarida qog'oz gullar bilan yumshoq musiqa ostida nafis raqs harakatlarini bajaradi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Endi bizning kichkina, ammo juda nafis raqqosalarimiz sizlarga bahor gullari sharafiga bag'ishlangan kichik raqsni taqdim etadilar."}
+      ]
+    },
+    {
+      title:"Tabrik qo'shig'i",
+      icon:"ti-microphone", tag:"5 daqiqa",
+      direction:"Barcha bolalar birgalikda, qo'llarini yurakka qo'yib, quyidagi qo'shiq-she'rni kuylaydilar/aytadilar.",
+      poems:[
+        {speaker:"Barcha bolalar (birga)", text:"8-mart keldi bahor bilan,\nGullar ochildi nafis ranglar bilan.\nOnalarimizga, buvilarimizga,\nBaxt va sog'lik tilaymiz chin dillar bilan!"}
+      ]
+    },
+    {
+      title:"Qo'lda yasalgan tabriknoma va gullar topshirish",
+      icon:"ti-gift", tag:"8 daqiqa",
+      direction:"Har bir bola oldindan tayyorlagan tabrik kartochkasi va qog'oz gulni navbat bilan o'z onasi yoki buvisiga (zalda bo'lsa) yaqinlashib topshiradi, agar onalar zalda bo'lmasa, bolalar bu sovg'alarni kechqurun uyga olib ketishlari uchun saqlanadi.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Endi bizning bolajonlarimiz o'zlari mehnat qilib tayyorlagan eng go'zal sovg'alarni — qalbidan chiqqan mehr bilan yasalgan tabriknomalarini taqdim etish vaqti keldi!"}
+      ]
+    },
+    {
+      title:"Yakuniy fotosurat va xayrlashuv",
+      icon:"ti-camera", tag:"4 daqiqa",
+      direction:"Barcha bolalar onalari (yoki guruh bo'lib) bilan birga esda qolar umumiy fotosuratga tushadilar.",
+      lines:[
+        {speaker:"Olib boruvchi", text:"Aziz onalar va buvilar, sizlarning bayramingiz muborak bo'lsin! Sizlarga doimo sog'lik, baxt va quvonch tilaymiz. Bolalaringiz sizlarni juda-juda yaxshi ko'radilar!"}
+      ]
+    }
+  ],
+  props:"Qog'ozdan yasalgan gullar (har bir bola uchun), tabrik kartochkalari va ularni yasash uchun materiallar (rangli qog'oz, yelim, bo'yoqlar), raqs uchun yengil ko'ylaklar, audio tizim, mikrofon, fotosurat uchun bezatilgan fon (gullar bilan)."
+}
+};
+
+/* ============== SIMPLE EVENTS (Mustaqillik kuni, Ustozlar kuni) ============== */
+
+const simpleEvents = {
+  mustaqillik: {
     title:"Mustaqillik kuni",
     date:"1-sentyabr",
     duration:"35–40 daqiqa",
     color:"blue",
     icon:"ti-flag",
+    full:false,
     intro:"O'zbekiston Mustaqillik kuniga bag'ishlangan vatanparvarlik tadbiri. Bolalarda Vatanga muhabbat va milliy g'urur tuyg'usini tarbiyalashga qaratilgan.",
     scenes:[
       {title:"Bayroq ko'tarish marosimi", icon:"ti-flag-3", text:"Tadbir Davlat madhiyasi ostida bayroq ko'tarish bilan boshlanadi, barcha bolalar tik turib hurmat bildiradi.", tag:"4 daqiqa"},
@@ -168,13 +540,13 @@ const events = [
     ],
     props:"Davlat bayrog'i va gerbi maketlari, rangli qog'oz va yelim, audio tizim, bayroq ranglarida shar va lentalar."
   },
-  {
-    id:"ustozlar",
+  ustozlar: {
     title:"O'qituvchi va murabbiylar kuni",
     date:"1-oktyabr",
     duration:"30 daqiqa",
     color:"amber",
     icon:"ti-school",
+    full:false,
     intro:"Tarbiyachi va pedagoglarga bag'ishlangan minnatdorlik tadbiri. Bolalar o'z tarbiyachilariga hurmat va mehr izhor qiladilar.",
     scenes:[
       {title:"Tabrik so'zi", icon:"ti-microphone", text:"Guruh rahbari yoki bolalardan biri tarbiyachilarga atalgan tabrik so'zini aytadi.", tag:"3 daqiqa"},
@@ -184,127 +556,131 @@ const events = [
       {title:"Umumiy fotosurat", icon:"ti-camera", text:"Guruh va tarbiyachilar birgalikda esda qolar fotosuratga tushadi.", tag:"4 daqiqa"}
     ],
     props:"Rangli qog'oz, oldindan chizilgan rasmlar, applikatsiya materiallari, gulchambar uchun rekvizit."
-  },
-  {
-    id:"yangi-yil",
-    title:"Yangi yil bayrami",
-    date:"25–31 dekabr",
-    duration:"45–50 daqiqa",
-    color:"pink",
-    icon:"ti-christmas-tree",
-    intro:"Bolalarning sevimli qish bayrami. Qor qiz va Ayozbobo ishtirokidagi sahna tomoshasi, raqs va o'yinlar bilan boyitilgan tantanali tadbir.",
-    scenes:[
-      {title:"Bayramona kirish", icon:"ti-sparkles", text:"Bolalar qishga oid kostyumlarda musiqa ostida zalga kirib, archa atrofida joylashadi.", tag:"5 daqiqa"},
-      {title:"Ayozbobo va Qor qizni chaqirish", icon:"ti-bell", text:"Bolalar birgalikda baland ovozda Ayozbobo va Qor qizni chaqiradi, ular sahnaga kirib keladi.", tag:"4 daqiqa"},
-      {title:"Qish she'rlari va topishmoqlar", icon:"ti-book", text:"Ayozbobo bolalarga qish haqida topishmoqlar beradi, bolalar esa qish mavzusidagi she'rlarni aytadi.", tag:"7 daqiqa"},
-      {title:"Archa atrofida o'yin va raqslar", icon:"ti-music", text:"\"Qorbobo, qorbobo\" qo'shig'i ostida bolalar archa atrofida aylanma o'yin o'ynaydi.", tag:"8 daqiqa"},
-      {title:"Sahna tomoshasi", icon:"ti-theater", text:"Tayyorlangan qisqa ertak-sahna (masalan, \"Qor qizning sarguzashtlari\") namoyish etiladi.", tag:"10 daqiqa"},
-      {title:"O'yin-tortishmalar", icon:"ti-ball-american-football", text:"\"Qor to'pini ushla\", \"Muzlatib qo'yaman\" kabi harakatli o'yinlar o'tkaziladi.", tag:"8 daqiqa"},
-      {title:"Sovg'alar tarqatish", icon:"ti-gift", text:"Ayozbobo har bir bolaga kichik sovg'a ulashadi, umumiy fotosurat olinadi.", tag:"5 daqiqa"}
-    ],
-    props:"Ayozbobo va Qor qiz kostyumlari, archa bezaklari, soxta qor to'plari, sovg'a qutilari, audio tizim, sahna dekoratsiyasi."
-  },
-  {
-    id:"bitiruv",
-    title:"Bitiruv bayrami (\"Alvido, bog'cha!\")",
-    date:"May oxiri",
-    duration:"40 daqiqa",
-    color:"purple",
-    icon:"ti-certificate",
-    intro:"Maktabgacha ta'lim tashkilotini tugatib, maktabga boradigan bitiruvchi bolalar uchun tantanali xayrlashuv tadbiri.",
-    scenes:[
-      {title:"Tantanali kirish marshi", icon:"ti-walk", text:"Bitiruvchi bolalar maxsus tantanali liboslarda musiqa ostida zalga kirib keladi.", tag:"5 daqiqa"},
-      {title:"Tarbiyachining xayrlashuv nutqi", icon:"ti-microphone", text:"Tarbiyachi bolalarning bog'chadagi yutuqlari haqida iliq so'zlar aytadi, ularni maktabga yo'llaydi.", tag:"5 daqiqa"},
-      {title:"\"Bog'cha xotiralari\" slayd-ko'rsatuv", icon:"ti-photo", text:"Bolalarning bog'chadagi rasmlari va videolaridan tashkil etilgan qisqa ko'rsatuv namoyish etiladi.", tag:"5 daqiqa"},
-      {title:"She'r va minnatdorlik so'zlari", icon:"ti-feather", text:"Bitiruvchi bolalar tarbiyachilar va bog'chaga bag'ishlangan she'rlarni aytadi.", tag:"7 daqiqa"},
-      {title:"\"Maktabga qadam\" sahnasi", icon:"ti-theater", text:"Bolalar maktab hayotidan kichik sahna ko'rinishini o'ynab ko'rsatishadi (qiziqarli, hazilomuz tarzda).", tag:"8 daqiqa"},
-      {title:"Guvohnoma topshirish", icon:"ti-certificate", text:"Har bir bitiruvchiga maktabgacha ta'limni tugatganligi haqida kichik diplom-guvohnoma topshiriladi.", tag:"6 daqiqa"},
-      {title:"Yakuniy raqs va fotosurat", icon:"ti-camera", text:"Umumiy quvonchli raqs va esda qolar fotosurat bilan tadbir yakunlanadi.", tag:"4 daqiqa"}
-    ],
-    props:"Bitiruvchilar uchun maxsus liboslar (lenta, shapka), diplom-guvohnomalar, slayd-ko'rsatuv uchun proyektor, audio tizim."
-  },
-  {
-    id:"8mart",
-    title:"8-mart Xalqaro xotin-qizlar kuni",
-    date:"8-mart",
-    duration:"30–35 daqiqa",
-    color:"pink",
-    icon:"ti-heart",
-    intro:"Onalar, buvilar va ayol tarbiyachilarga bag'ishlangan mehr-muhabbat tadbiri. Bolalar o'zlarining ona va buvilariga bo'lgan hurmatini namoyon etadilar.",
-    scenes:[
-      {title:"Tabriknoma kirish so'zi", icon:"ti-microphone", text:"Tarbiyachi bayram tarixi va ahamiyati haqida bolalarga sodda tilda gapirib beradi.", tag:"4 daqiqa"},
-      {title:"\"Mening onam\" she'rlari", icon:"ti-feather", text:"Bolalar onalariga bag'ishlangan she'rlarni navbat bilan aytib beradi.", tag:"6 daqiqa"},
-      {title:"Qo'shiq va raqs", icon:"ti-music", text:"Bolalar onalar haqidagi qo'shiqni kuylaydi, qiz bolalar kichik raqs namoyish etadi.", tag:"7 daqiqa"},
-      {title:"Qo'lda yasalgan tabriknoma", icon:"ti-gift", text:"Bolalar oldindan tayyorlagan tabrik kartochkalari va gullarni onalariga (yoki rasmiy ravishda yig'ib qo'yiladi) taqdim etadi.", tag:"8 daqiqa"},
-      {title:"Yakuniy fotosurat", icon:"ti-camera", text:"Barcha bolalar onalar bilan birga esda qolar fotosuratga tushadi.", tag:"5 daqiqa"}
-    ],
-    props:"Qog'ozdan yasalgan gullar, tabrik kartochkalari, rangli qog'oz va bo'yoqlar, audio tizim."
   }
-];
-
-const colorMap = {
-  green:{bg:"var(--green-soft)",fg:"var(--green)"},
-  blue:{bg:"var(--accent-soft)",fg:"var(--accent2)"},
-  amber:{bg:"var(--amber-soft)",fg:"var(--amber)"},
-  pink:{bg:"var(--pink-soft)",fg:"var(--pink)"},
-  purple:{bg:"var(--pro-soft)",fg:"var(--pro2)"}
 };
+
+const eventOrder = [
+  ["navroz", fullEvents.navroz],
+  ["mustaqillik", simpleEvents.mustaqillik],
+  ["ustozlar", simpleEvents.ustozlar],
+  ["yangiyil", fullEvents.yangiyil],
+  ["bitiruv", fullEvents.bitiruv],
+  ["mart8", fullEvents.mart8]
+];
 
 const grid = document.getElementById('eventGrid');
 const detail = document.getElementById('detailCard');
 const emptyHint = document.getElementById('emptyHint');
+const tocBox = document.getElementById('tocBox');
+const tocList = document.getElementById('tocList');
 
-events.forEach(ev => {
+eventOrder.forEach(([id, ev]) => {
   const c = colorMap[ev.color];
   const card = document.createElement('button');
   card.className = 'event-card';
-  card.id = 'card-'+ev.id;
-  card.style.border = '1px solid var(--border)';
+  card.id = 'card-'+id;
   card.innerHTML = `
+    ${ev.full ? '<span class="full-tag"><i class="ti ti-stars"></i> To\'liq ssenariy</span>' : ''}
     <div class="event-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
     <div class="event-title">${ev.title}</div>
     <div class="event-meta">${ev.date} · ${ev.duration}</div>
   `;
-  card.addEventListener('click', () => showEvent(ev.id));
+  card.addEventListener('click', () => showEvent(id));
   grid.appendChild(card);
 });
 
 function showEvent(id){
-  const ev = events.find(e => e.id === id);
+  const ev = fullEvents[id] || simpleEvents[id];
   if(!ev) return;
   document.querySelectorAll('.event-card').forEach(c => c.classList.remove('active'));
   document.getElementById('card-'+id).classList.add('active');
   const c = colorMap[ev.color];
   emptyHint.style.display = 'none';
   detail.classList.add('show');
-  detail.innerHTML = `
-    <div class="detail-head">
-      <div class="detail-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
-      <div>
-        <h2>${ev.title}</h2>
-        <div class="detail-meta">
-          <span><i class="ti ti-calendar"></i> ${ev.date}</span>
-          <span><i class="ti ti-clock"></i> ${ev.duration}</span>
+
+  if(ev.full){
+    tocBox.classList.add('show');
+    tocList.innerHTML = ev.scenes.map((s,i)=>`<button class="toc-link" onclick="document.getElementById('scene-${i}').scrollIntoView({behavior:'smooth',block:'start'})">${i+1}. ${s.title}</button>`).join('');
+
+    detail.innerHTML = `
+      <div class="detail-head">
+        <div class="detail-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
+        <div>
+          <h2>${ev.title}</h2>
+          <div class="detail-meta">
+            <span><i class="ti ti-calendar"></i> ${ev.date}</span>
+            <span><i class="ti ti-clock"></i> ${ev.duration}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <p style="font-size:13.5px;color:var(--text2);margin-bottom:18px;line-height:1.65">${ev.intro}</p>
-    ${ev.scenes.map((s,i)=>`
-      <div class="scene">
-        <div class="scene-num">${i+1}</div>
-        <div class="scene-content">
-          <h4><i class="ti ${s.icon}"></i> ${s.title}</h4>
-          <p>${s.text}</p>
-          <span class="scene-tag">${s.tag}</span>
+      <div class="intro-box"><b>Tadbir haqida:</b> ${ev.intro}</div>
+
+      <div class="rep-section">
+        <h4><i class="ti ti-users"></i> Ishtirokchilar va rollar</h4>
+        <div class="role-grid">
+          ${ev.roles.map(r=>`<div class="role-card"><b>${r[0]}</b><span>${r[1]}</span></div>`).join('')}
         </div>
       </div>
-    `).join('')}
-    <div class="props-box">
-      <h4><i class="ti ti-tools"></i> Kerakli rekvizit va atributlar</h4>
-      <p>${ev.props}</p>
-    </div>
-    <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Chop etish</button>
-  `;
+
+      <div class="rep-section">
+        <h4><i class="ti ti-theater"></i> Sahna ko'rinishlari rejasi</h4>
+        ${ev.scenes.map((s,i)=>`
+          <div class="scene" id="scene-${i}">
+            <div class="scene-num">${i+1}</div>
+            <div class="scene-content">
+              <h5><i class="ti ${s.icon}"></i> ${s.title} <span class="scene-tag">${s.tag}</span></h5>
+              <div class="stage-direction"><i class="ti ti-curly-loop"></i> ${s.direction}</div>
+              ${s.lines ? s.lines.map(l=>`<div class="dialogue-line"><b>${l.speaker}:</b> «${l.text}»</div>`).join('') : ''}
+              ${s.stageNote ? `<div class="stage-direction"><i class="ti ti-curly-loop"></i> ${s.stageNote}</div>` : ''}
+              ${s.poems ? s.poems.map(p=>`
+                <div class="poem-box">
+                  <div class="poem-speaker"><i class="ti ti-feather"></i> ${p.speaker}</div>
+                  <p>${p.text}</p>
+                </div>
+              `).join('') : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="props-box">
+        <h4><i class="ti ti-tools"></i> Kerakli rekvizit va atributlar</h4>
+        <p>${ev.props}</p>
+      </div>
+
+      <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Chop etish</button>
+    `;
+  } else {
+    tocBox.classList.remove('show');
+    detail.innerHTML = `
+      <div class="detail-head">
+        <div class="detail-icon" style="background:${c.bg};color:${c.fg}"><i class="ti ${ev.icon}"></i></div>
+        <div>
+          <h2>${ev.title}</h2>
+          <div class="detail-meta">
+            <span><i class="ti ti-calendar"></i> ${ev.date}</span>
+            <span><i class="ti ti-clock"></i> ${ev.duration}</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:13.5px;color:var(--text2);margin:16px 0 18px;line-height:1.65">${ev.intro}</p>
+      ${ev.scenes.map((s,i)=>`
+        <div class="scene">
+          <div class="scene-num">${i+1}</div>
+          <div class="scene-content">
+            <h5><i class="ti ${s.icon}"></i> ${s.title}</h5>
+            <p class="scene-text">${s.text}</p>
+            <span class="scene-tag">${s.tag}</span>
+          </div>
+        </div>
+      `).join('')}
+      <div class="props-box">
+        <h4><i class="ti ti-tools"></i> Kerakli rekvizit va atributlar</h4>
+        <p>${ev.props}</p>
+      </div>
+      <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Chop etish</button>
+    `;
+  }
 }
 </script>
 </body>
