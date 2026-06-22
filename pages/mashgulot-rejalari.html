@@ -27,6 +27,8 @@
   --pro:#7c3aed;
   --pro2:#8b5cf6;
   --pro-soft:#f5f3ff;
+  --teal:#0d9488;
+  --teal-soft:#ccfbf1;
   --sidebar:256px;
   --bottomnav:62px;
   --radius:12px;
@@ -50,54 +52,81 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .back-link{display:flex;align-items:center;gap:8px;padding:14px 18px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;border-bottom:1px solid var(--border)}
 .back-link:hover{color:var(--accent2)}
 
-.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1100px}
+.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1180px}
 .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .page-head h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
 .page-head h1 i{color:var(--pro2);font-size:24px}
 .page-sub{font-size:13px;color:var(--text2);margin-top:4px}
 .pro-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
 
-.age-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.age-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .age-tab{padding:9px 16px;border-radius:20px;border:1px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
 .age-tab:hover{border-color:var(--accent2);color:var(--accent2)}
 .age-tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 
-.plan-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.method-legend{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.method-legend-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.method-chips{display:flex;flex-wrap:wrap;gap:8px}
+.method-chip{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:20px;border:1px solid}
+
+.plan-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
 .plan-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px}
 .plan-head:hover{background:var(--bg)}
 .plan-head-left{display:flex;align-items:center;gap:12px;min-width:0}
-.plan-icon{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.plan-icon{width:40px;height:40px;border-radius:11px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
 .plan-title{font-size:14.5px;font-weight:700;color:var(--text)}
-.plan-meta{font-size:11.5px;color:var(--text3);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap}
+.plan-meta{font-size:11.5px;color:var(--text3);margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .plan-meta span{display:flex;align-items:center;gap:4px}
+.method-tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px}
 .plan-toggle{color:var(--text3);font-size:18px;transition:transform .2s;flex-shrink:0}
 .plan-card.open .plan-toggle{transform:rotate(180deg)}
-.plan-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border)}
+.plan-body{display:none;padding:0 20px 22px;border-top:1px solid var(--border)}
 .plan-card.open .plan-body{display:block}
 
-.plan-section{margin-top:16px}
+.method-banner{display:flex;gap:12px;align-items:flex-start;border-radius:var(--radius-sm);padding:13px 16px;margin-top:16px}
+.method-banner-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.method-banner-text b{display:block;font-size:12.5px;margin-bottom:2px}
+.method-banner-text span{font-size:12px;line-height:1.55;display:block}
+
+.plan-section{margin-top:18px}
 .plan-section h4{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .plan-section h4 i{font-size:14px;color:var(--accent2)}
-.plan-section p, .plan-section li{font-size:13px;color:var(--text);line-height:1.6}
+.plan-section p, .plan-section li{font-size:13px;color:var(--text);line-height:1.65}
 .plan-section ul{padding-left:18px;margin-top:4px}
-.plan-section ul li{margin-bottom:4px}
+.plan-section ul li{margin-bottom:5px}
 .comp-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
 .comp-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--green-soft);color:var(--green);border:1px solid #bbf7d0}
-.steps-grid{display:grid;gap:10px;margin-top:6px}
-.step-row{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
-.step-num{width:22px;height:22px;border-radius:6px;background:var(--accent2);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step-text b{display:block;font-size:12.5px;color:var(--text);margin-bottom:2px}
-.step-text span{font-size:12px;color:var(--text2)}
 
-.print-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:14px}
+.code-tag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--bg);color:var(--text3);font-family:monospace;border:1px solid var(--border)}
+
+.steps-grid{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.step-row{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.step-num{width:24px;height:24px;border-radius:7px;background:var(--accent2);color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{flex:1;min-width:0}
+.step-text b{display:block;font-size:13px;color:var(--text);margin-bottom:3px}
+.step-text span{font-size:12.5px;color:var(--text2);line-height:1.6}
+.step-time{font-size:10.5px;font-weight:700;color:var(--accent2);background:var(--accent-soft);padding:1px 7px;border-radius:20px;flex-shrink:0;white-space:nowrap;margin-top:1px}
+
+.diff-box{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.diff-card{border-radius:var(--radius-sm);padding:11px 13px;font-size:12.3px;line-height:1.6}
+.diff-card.easy{background:var(--teal-soft);border:1px solid #99f6e4}
+.diff-card.hard{background:var(--pro-soft);border:1px solid #ddd6fe}
+.diff-card b{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.diff-card.easy b{color:var(--teal)}
+.diff-card.hard b{color:var(--pro2)}
+
+.assess-box{background:var(--amber-soft);border:1px solid #fde68a;border-radius:var(--radius-sm);padding:12px 14px;margin-top:6px;font-size:12.8px;color:var(--text);line-height:1.6}
+
+.print-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-top:16px}
 .print-btn:hover{background:var(--accent)}
 
-@media(max-width:900px){
+@media(max-width:980px){
   .sidebar{display:none}
   .main{margin-left:0;padding:16px 14px 80px}
+  .diff-box{grid-template-columns:1fr}
 }
 @media print{
-  .sidebar,.age-tabs,.print-btn,.plan-toggle{display:none}
+  .sidebar,.age-tabs,.print-btn,.plan-toggle,.method-legend{display:none}
   .plan-body{display:block!important}
   .main{margin-left:0}
 }
@@ -121,9 +150,14 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="page-head">
     <div>
       <h1><i class="ti ti-clipboard-list"></i> Mashg'ulot rejalari</h1>
-      <p class="page-sub">"Ilk qadam" milliy o'quv dasturi asosida yoshga mos ochiq darslar va mashg'ulot ishlanmalari</p>
+      <p class="page-sub">"Ilk qadam" milliy o'quv dasturi mavzulari asosida, xalqaro pedagogik metodlar bilan boyitilgan to'liq ochiq dars ishlanmalari</p>
     </div>
     <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
+  </div>
+
+  <div class="method-legend">
+    <div class="method-legend-title"><i class="ti ti-world"></i> Qo'llanilgan xalqaro metodlar</div>
+    <div class="method-chips" id="methodLegend"></div>
   </div>
 
   <div class="age-tabs">
@@ -138,116 +172,278 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 </main>
 
 <script>
+const methods = {
+  montessori:{name:"Montessori metodi", color:"#7c3aed", bg:"#f5f3ff", border:"#ddd6fe", icon:"ti-flower", desc:"Bola mustaqil ravishda, o'zi tanlagan didaktik material bilan o'z tezligida ishlaydi; pedagog kuzatuvchi va muhit yaratuvchi rolida bo'ladi."},
+  reggio:{name:"Reggio Emilia yondashuvi", color:"#0d9488", bg:"#ccfbf1", border:"#99f6e4", icon:"ti-palette", desc:"Bola \"yuzlab tillarga\" ega ijodkor sifatida qaraladi; loyiha bolaning savoli va qiziqishidan boshlanadi, ko'p shaklli ifoda (rasm, harakat, so'z) rag'batlantiriladi."},
+  steam:{name:"STEAM yondashuvi", color:"#2563eb", bg:"#eff6ff", border:"#bfdbfe", icon:"ti-atom-2", desc:"Fan, texnologiya, muhandislik, san'at va matematika integratsiyalashgan holda, amaliy tajriba va loyiha orqali o'rgatiladi."},
+  vygotsky:{name:"Vigotskiy ZPD (yaqin rivojlanish zonasi)", color:"#b45309", bg:"#fffbeb", border:"#fde68a", icon:"ti-stairs", desc:"Bolaga kattalar yoki tengdosh yordamida (scaffolding) mustaqil bajara olmaydigan, lekin yordam bilan bajara oladigan vazifalar beriladi."},
+  gardner:{name:"Gardner ko'p qirrali intellekt", color:"#db2777", bg:"#fce7f3", border:"#fbcfe8", icon:"ti-brain", desc:"Bir mavzu bir nechta intellekt turi (vizual, kinestetik, lingvistik, mantiqiy) orqali taqdim etiladi, har bir bola o'z kuchli tomoni bilan ishtirok etadi."},
+  dewey:{name:"Jon Dyui — amaliyotga asoslangan ta'lim", color:"#15803d", bg:"#f0fdf4", border:"#bbf7d0", icon:"ti-tools", desc:"\"Qilib o'rganish\" tamoyili — bola nazariy ma'lumotni emas, real muammoni hal qilish tajribasi orqali bilim oladi."}
+};
+
 const plans = [
-  {
-    age:"3-4",
-    title:"Sensor o'yinlar orqali rang va shaklni tanish",
-    soha:"Bilish jarayonlarini rivojlantirish",
-    duration:"20–25 daqiqa",
-    code:"4.1.2.a",
-    goal:"Bolalarda asosiy ranglar (qizil, sariq, ko'k, yashil) va sodda geometrik shakllarni (doira, kvadrat, uchburchak) tanish ko'nikmasini shakllantirish, sensomotorika va mayda motorikani rivojlantirish.",
-    comps:["Bilish","Kommunikativ"],
-    resources:"Rangli kublar, sensor quti (qum, don, tugmalar), shakl bo'yicha saralagich, rangli kartochkalar.",
-    steps:[
-      {t:"Ertalabki davra suhbati",d:"Bolalar bilan kunni boshlash, kayfiyatni so'rash, kun rejasi haqida sodda tilda gaplashish (3–4 daqiqa)."},
-      {t:"Kirish — o'yin-sehrgar quti",d:"Tarbiyachi sensor qutidan turli rangdagi va shakldagi predmetlarni navbat bilan chiqarib, bolalarni qiziqtiradi (5 daqiqa)."},
-      {t:"Asosiy faoliyat — saralash o'yini",d:"Bolalar kichik guruhlarda predmetlarni rangi va shakli bo'yicha saralashadi, tarbiyachi nomlarni takrorlashga undaydi (10 daqiqa)."},
-      {t:"Mustahkamlash — harakatli o'yin",d:"'Ranglar bo'yicha to'planamiz' o'yini: tarbiyachi rang aytadi, bolalar shu rangdagi predmetga yugurib boradi (5 daqiqa)."},
-      {t:"Yakuniy davra suhbati",d:"Bugun nimani o'rgandik, eng yoqqan qismi haqida sodda savol-javob (2–3 daqiqa)."}
-    ]
-  },
-  {
-    age:"4-5",
-    title:"Oilamiz va men — rolli o'yin orqali ijtimoiy-hissiy rivojlanish",
-    soha:"Ijtimoiy-hissiy rivojlanish",
-    duration:"25–30 daqiqa",
-    code:"2.1.2.b",
-    goal:"Bolalarda oila a'zolari haqida tasavvurni mustahkamlash, his-tuyg'ularni so'z va harakat bilan ifoda etish, tengdoshlari bilan rolli muloqotga kirishish ko'nikmasini rivojlantirish.",
-    comps:["Ijtimoiy","Shaxsiy (\"Men\" konsepsiyasi)"],
-    resources:"\"Oila\" burchagi atributlari (qo'g'irchoqlar, oshxona idishlari), oila a'zolari rasmlari, hissiyot kartochkalari (quvonch, xafalik, hayrat).",
-    steps:[
-      {t:"Ertalabki davra suhbati",d:"Bolalardan oila a'zolari haqida bittadan gap so'rash, mavzuga kirish (4 daqiqa)."},
-      {t:"Suhbat va hikoya",d:"Tarbiyachi oila haqida qisqa hikoya o'qiydi, hissiyot kartochkalari yordamida qahramonlarning his-tuyg'ularini muhokama qiladi (7 daqiqa)."},
-      {t:"Rolli o'yin — \"Oila\"",d:"Bolalar kichik guruhlarga bo'linib, ona, ota, farzand rollarini o'ynashadi, kunlik vaziyatlarni (nonushta, sayr) sahnalashtirishadi (12 daqiqa)."},
-      {t:"Ijodiy faoliyat",d:"Har bir bola o'z oilasi rasmini chizadi va kim ekanini aytib beradi (5 daqiqa)."},
-      {t:"Yakuniy refleksiya",d:"\"Bugun kim bilan o'ynaganingiz yoqdi?\" savoli orqali kunni yakunlash."}
-    ]
-  },
-  {
-    age:"5-6",
-    title:"Tabiat sirlari — kichik tajribalar orqali tadqiqotchilik",
-    soha:"Bilish jarayonlarini rivojlantirish",
-    duration:"30 daqiqa",
-    code:"4.1.2.c",
-    goal:"Bolalarda kuzatish, taxmin qilish va oddiy xulosa chiqarish ko'nikmalarini rivojlantirish, suvning xususiyatlari (erish, cho'kish, suzish) haqida tasavvur hosil qilish.",
-    comps:["Bilish","Tanqidiy fikrlash"],
-    resources:"Shaffof idishlar, suv, turli og'irlikdagi predmetlar (tosh, yog'och, plastik qopqoq, metall qoshiq), muz bo'lakchalari, kuzatuv varaqasi.",
-    steps:[
-      {t:"Muammoli vaziyat",d:"\"Qaysi predmet suzadi, qaysi biri cho'kadi?\" savoli bilan qiziqish uyg'otish, bolalardan taxmin so'rash (5 daqiqa)."},
-      {t:"Tajriba o'tkazish",d:"Har bir bola navbat bilan predmetlarni suvga tashlab, natijani kuzatadi va kuzatuv varaqasiga belgi qo'yadi (15 daqiqa)."},
-      {t:"Muhokama va xulosa",d:"Nima uchun ba'zi predmetlar suzadi, ba'zilari cho'kadi — sabab-oqibat bog'lanishini sodda tilda tushuntirish (7 daqiqa)."},
-      {t:"Qo'shimcha tajriba — muz",d:"Muz bo'lagi suvga solinadi, eriy boshlashi kuzatiladi, \"nega muz eriydi?\" savoli muhokama qilinadi (5 daqiqa)."},
-      {t:"Yakunlash",d:"Bolalar o'z kashfiyotlarini bir-biriga gapirib berishadi."}
-    ]
-  },
-  {
-    age:"6-7",
-    title:"Mening Vatanim — milliy qadriyatlar va ijodiy ifoda",
-    soha:"Ijodiy rivojlanish",
-    duration:"30–35 daqiqa",
-    code:"5.1.2.d",
-    goal:"Bolalarda Vatanga muhabbat, milliy ramzlar (bayroq, gerb) haqida tasavvurni shakllantirish, ijodiy faoliyat orqali milliy g'oyani ifoda etish ko'nikmasini rivojlantirish.",
-    comps:["Bilish","Shaxsiy","Tanqidiy fikrlash"],
-    resources:"O'zbekiston bayrog'i va gerbi tasvirlari, milliy naqshlar namunalari, rangli qog'oz, qaychi, yelim, audio — milliy kuylar.",
-    steps:[
-      {t:"Ertalabki davra suhbati",d:"Bolalar bilan \"Vatan nima?\" mavzusida sodda muloqot, milliy bayroq ranglari haqida savol-javob (5 daqiqa)."},
-      {t:"Taqdimot",d:"Tarbiyachi O'zbekiston bayrog'i va gerbidagi ramzlar ma'nosini tushuntiradi, taniqli madaniy obidalar rasmlarini ko'rsatadi (8 daqiqa)."},
-      {t:"Ijodiy amaliy faoliyat",d:"Bolalar guruh bo'lib katta qog'ozga O'zbekiston bayrog'ini yasashadi (applikatsiya usulida) (15 daqiqa)."},
-      {t:"Taqdimot va muhokama",d:"Har bir guruh o'z ishini taqdim etadi, nega bu ranglarni tanlaganini tushuntiradi (5 daqiqa)."},
-      {t:"Yakuniy refleksiya",d:"\"Vatanimiz uchun nimadan faxrlanasiz?\" savoli bilan kunni yakunlash."}
-    ]
-  },
-  {
-    age:"4-5",
-    title:"So'z boyligimiz — ertak orqali nutq rivojlantirish",
-    soha:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
-    duration:"25 daqiqa",
-    code:"3.1.2.b",
-    goal:"Bolalarning faol so'z boyligini kengaytirish, ertakni tinglab tushunish va qayta hikoya qilish ko'nikmalarini shakllantirish.",
-    comps:["Kommunikativ","Bilish"],
-    resources:"\"Tulki va bo'ri\" o'zbek xalq ertagi matni, qahramonlar niqoblari yoki barmoq qo'g'irchoqlari, illyustratsiyalar.",
-    steps:[
-      {t:"Kirish",d:"Qahramonlar niqoblarini ko'rsatib, qiziqish uyg'otish, ertak nomini taxmin qilishga taklif etish (3 daqiqa)."},
-      {t:"Ertakni tinglash",d:"Tarbiyachi ifodali tarzda ertakni o'qiydi, illyustratsiyalarni ko'rsatib boradi (8 daqiqa)."},
-      {t:"Savol-javob",d:"Mazmun bo'yicha sodda savollar: \"Kim bosh qahramon?\", \"Nima bo'ldi keyin?\" (6 daqiqa)."},
-      {t:"Sahnalashtirish",d:"Bolalar niqob kiyib, ertakning qisqa parchasini o'zlari ijro etishadi (6 daqiqa)."},
-      {t:"Yakunlash",d:"Ertakdan qanday saboq olganimiz haqida qisqa xulosa."}
-    ]
-  },
-  {
-    age:"5-6",
-    title:"Sanoq olami — 10 ichida hisob mashqlari",
-    soha:"Bilish jarayonlarini rivojlantirish",
-    duration:"25–30 daqiqa",
-    code:"4.2.2.c",
-    goal:"10 ichida sonlarni tanish, sanash va oddiy qo'shish-ayirish amallarini bajarish ko'nikmasini shakllantirish.",
-    comps:["Bilish","Tanqidiy fikrlash"],
-    resources:"Raqamli kartochkalar (1–10), hisoblash uchun tayoqchalar yoki kublar, sanoq daraxti plakati, ish varaqlari.",
-    steps:[
-      {t:"Qizg'in boshlanish",d:"\"Sanoq mehmoni\" — qo'g'irchoq orqali bolalarni sanashga taklif etish (4 daqiqa)."},
-      {t:"Asosiy mashg'ulot",d:"Kublar yordamida 1–10 gacha sanash, raqamlarni kartochka bilan moslashtirish (10 daqiqa)."},
-      {t:"Amaliy mashqlar",d:"Oddiy qo'shish-ayirish misollari kublar yordamida ko'rgazmali yechiladi (8 daqiqa)."},
-      {t:"O'yin — \"Kim tezroq sanaydi\"",d:"Juftликда musobaqa tarzida sanoq mashqi (5 daqiqa)."},
-      {t:"Yakunlash",d:"Bugun nechtagacha sanay olishni o'rgandik — qisqa xulosa."}
-    ]
-  }
+
+/* ===================== 3-4 YOSH ===================== */
+{
+  age:"3-4", method:"montessori",
+  title:"Sensor savatcha — rang, shakl va o'lcham olamiga sayohat",
+  soha:"Bilish jarayonlarini rivojlantirish",
+  duration:"20–25 daqiqa", code:"4.1.2.a",
+  goal:"Bolalarda asosiy ranglar (qizil, sariq, ko'k, yashil) va sodda geometrik shakllarni (doira, kvadrat, uchburchak) tanish ko'nikmasini shakllantirish, sensomotorika va mayda motorikani Montessori sensor materiallari yordamida rivojlantirish.",
+  comps:["Bilish","Kommunikativ"],
+  resources:"Montessori uslubidagi rangli silindrlar to'plami, sensor quti (qum, don, tugmalar), shakl bo'yicha saralagich taxtachasi, rangli kartochkalar, har bir bola uchun individual \"ish gilamchasi\".",
+  diffEasy:"Faqat 2 ta asosiy rangni (qizil, sariq) va 1 ta shaklni (doira) tanib olish, kattalar yordamida saralash.",
+  diffHard:"4 ta rangni mustaqil nomlash, 3 shaklni farqlash va ularni o'lchami bo'yicha (katta-kichik) tartiblash.",
+  assess:"Kuzatuv varaqasiga har bir bolaning mustaqil saralay olgan rang va shakllari soni qayd etiladi (Ilk qadam rivojlanish xaritasi, 4.1.2.a indikatori asosida).",
+  steps:[
+    {t:"Ertalabki davra suhbati",time:"4 daqiqa",d:"Bolalar bilan kunni boshlash, atrofdagi narsalarning ranglarini sanab ko'rish orqali mavzuga tabiiy kirish."},
+    {t:"Individual ish gilamchasini tanlash (Montessori)",time:"3 daqiqa",d:"Har bir bola o'ziga gilamcha tanlab, \"o'z ish maydoni\"ni belgilaydi — bu Montessori metodining mustaqillik tamoyilini amalga oshiradi."},
+    {t:"Sensor materiallar bilan erkin tanishish",time:"6 daqiqa",d:"Bolalar sensor qutidan rang va shakl materiallarini ushlab, ko'rib, mustaqil tadqiq qiladi; tarbiyachi faqat kerak bo'lganda nom aytib yordam beradi."},
+    {t:"Uch bosqichli darsi (Montessori)",time:"7 daqiqa",d:"Tarbiyachi 1) \"Bu — qizil\" (nomlash), 2) \"Qizilni ko'rsat\" (tanish), 3) \"Bu qanday rang?\" (mustaqil aytish) bosqichlari orqali rangni mustahkamlaydi."},
+    {t:"Harakatli mustahkamlash o'yini",time:"4 daqiqa",d:"\"Ranglar bo'yicha to'planamiz\" — tarbiyachi rang aytadi, bolalar shu rangdagi predmetga yugurib boradi."},
+    {t:"Yakuniy davra suhbati",time:"2 daqiqa",d:"Har bir bola o'zi yodda qolgan bir rang yoki shaklni aytib, gilamchani yig'ishtiradi (mustaqillik va tartib ko'nikmasi)."}
+  ]
+},
+{
+  age:"3-4", method:"gardner",
+  title:"Hayvonlar olami — ko'p qirrali idrok orqali tabiatni tanish",
+  soha:"Bilish jarayonlarini rivojlantirish va Nutq rivojlanishi",
+  duration:"22–25 daqiqa", code:"4.3.1.a",
+  goal:"Bolalarda uy va yovvoyi hayvonlar haqida dastlabki tasavvurni Gardnerning ko'p qirrali intellekt nazariyasiga ko'ra turli kanallar (eshitish — tovushlar, ko'rish — rasmlar, harakat — taqlid) orqali shakllantirish.",
+  comps:["Bilish","Kommunikativ"],
+  resources:"Hayvonlar tasviri kartochkalari, hayvon ovozlari audiosi, yumshoq o'yinchoq-hayvonlar, hayvonlar haqida rasmli kitobcha.",
+  diffEasy:"Faqat 2-3 ta tanish hayvonni (mushuk, it, sigir) rasm orqali tanib, ovozini taqlid qilish.",
+  diffHard:"5-6 ta hayvonni rasm, ovoz va harakat orqali tanib, ularning \"uy\" yoki \"yovvoyi\" ekanini ajratish.",
+  assess:"Tarbiyachi har bir bolaning qaysi kanal (rasm, ovoz, harakat) orqali yaxshiroq eslab qolganini kuzatib, individual rivojlanish xaritasiga qayd etadi.",
+  steps:[
+    {t:"Qiziqarli boshlanish — \"sirli quti\"",time:"3 daqiqa",d:"Tarbiyachi sirli qutidan yumshoq o'yinchoq-hayvonni asta chiqarib, bolalarni qiziqtiradi."},
+    {t:"Eshitish kanali — hayvon ovozlari",time:"5 daqiqa",d:"Audio orqali turli hayvon ovozlari yangraydi, bolalar kim ekanini taxmin qiladi (musiqiy-eshitish intellekti)."},
+    {t:"Ko'rish kanali — rasmli kartochkalar",time:"5 daqiqa",d:"Har bir ovozga mos rasm ko'rsatiladi, bolalar rasm va ovozni moslashtiradi (vizual-fazoviy intellekt)."},
+    {t:"Harakat kanali — \"Men kimman?\" taqlid o'yini",time:"6 daqiqa",d:"Bolalar navbat bilan bir hayvonni tanlab, uning harakatini taqlid qiladi, qolganlar taxmin qiladi (tana-kinestetik intellekt)."},
+    {t:"Nutq mustahkamlash",time:"4 daqiqa",d:"Har bir bola \"Men mushukman, men miyovlayman\" kabi sodda gap tuzib aytadi (lingvistik intellekt)."},
+    {t:"Yakunlash",time:"2 daqiqa",d:"Qaysi hayvon eng ko'p yoqgani haqida qisqa suhbat."}
+  ]
+},
+{
+  age:"3-4", method:"dewey",
+  title:"Mevalarni yuvamiz va kesamiz — amaliy tajriba orqali sog'lom ovqatlanish",
+  soha:"Jismoniy rivojlanish va sog'lom turmush tarzi",
+  duration:"20 daqiqa", code:"1.4.1.a",
+  goal:"Bolalarda mevalarni tanish, ularni yuvish va xavfsiz tarzda (plastik pichoq bilan) kesish ko'nikmasini Jon Dyuining \"qilib o'rganish\" tamoyili asosida amaliy faoliyat orqali shakllantirish.",
+  comps:["Bilish","Shaxsiy"],
+  resources:"Yuvilgan mevalar (banan, olma, mandarin), plastik xavfsiz pichoqlar, kichik likopchalar, sochiqlar, suv idishi.",
+  diffEasy:"Faqat bananni tarbiyachi yordamida archish va o'z likopchasiga qo'yish.",
+  diffHard:"Olmani mustaqil yuvish, plastik pichoq bilan ehtiyotkorlik bilan bo'lakchalarga bo'lish va boshqalarga ulashish.",
+  assess:"Bola mustaqil bajargan amaliy harakatlar soni (yuvish, kesish, ulashish) kuzatuv varaqasida belgilanadi.",
+  steps:[
+    {t:"Kirish — \"Mevalar bozori\" o'yini",time:"3 daqiqa",d:"Stol ustiga turli mevalar qo'yiladi, bolalar ularni nomlab, rangini aytadi."},
+    {t:"Qo'l yuvish va gigiyena qoidasi",time:"2 daqiqa",d:"Amaliy ishdan oldin barcha bolalar qo'llarini yuvadi — sog'lom turmush tarzi ko'nikmasi mustahkamlanadi."},
+    {t:"Amaliy ish — mevani yuvish",time:"5 daqiqa",d:"Har bir bola o'z mevasini suv idishida ehtiyotkorlik bilan yuvadi (real, qilib-ko'rish tajribasi)."},
+    {t:"Amaliy ish — xavfsiz kesish",time:"6 daqiqa",d:"Tarbiyachi nazorati ostida bolalar plastik pichoq bilan mevani bo'lakchalarga bo'ladi."},
+    {t:"Birgalikda ovqatlanish va ulashish",time:"3 daqiqa",d:"Bolalar tayyorlagan mevalarini bir-biriga ulashib, birga yeyishadi — ijtimoiy ko'nikma mustahkamlanadi."},
+    {t:"Yakuniy suhbat",time:"1 daqiqa",d:"\"Nega mevalarni yuvish kerak?\" savoli bilan sog'lom turmush tarzi g'oyasi mustahkamlanadi."}
+  ]
+},
+
+/* ===================== 4-5 YOSH ===================== */
+{
+  age:"4-5", method:"reggio",
+  title:"Oilamiz va men — ijodiy ifoda orqali ijtimoiy-hissiy rivojlanish",
+  soha:"Ijtimoiy-hissiy rivojlanish",
+  duration:"28–30 daqiqa", code:"2.1.2.b",
+  goal:"Bolalarda oila a'zolari haqida tasavvurni mustahkamlash, his-tuyg'ularni Reggio Emilia yondashuvi asosida turli ifoda shakllari (rasm, rolli o'yin, og'zaki hikoya) orqali bildirish ko'nikmasini rivojlantirish.",
+  comps:["Ijtimoiy","Shaxsiy (\"Men\" konsepsiyasi)"],
+  resources:"\"Oila\" burchagi atributlari, oila a'zolari rasmlari, hissiyot kartochkalari, rangli qog'oz va bo'yoqlar, kichik diktofon (bolalar hikoyasini yozib olish uchun, ixtiyoriy).",
+  diffEasy:"Oilasidagi 2-3 a'zoni (ona, ota) nomlab, ulardan birining rasmini chizish.",
+  diffHard:"Butun oilasini (buvi, buva, aka-uka) nomlab, ularning kasbi yoki sevimli mashg'uloti haqida kichik hikoya tuzish.",
+  assess:"Bolaning oila haqidagi hikoyasi va rasmidagi tafsilotlar soni \"Bolalar ishi\" portfolio papkasiga kiritiladi va rivojlanish dinamikasi sifatida kuzatiladi.",
+  steps:[
+    {t:"Ertalabki davra suhbati — \"Provokatsion savol\" (Reggio)",time:"4 daqiqa",d:"Tarbiyachi \"Oilangizda kim sizni kuldiradi?\" kabi ochiq, qiziqarli savol bilan bolalarni mavzuga jalb qiladi (Reggio metodida savol — loyihaning boshlanish nuqtasi)."},
+    {t:"Hikoya va hissiyot kartochkalari",time:"6 daqiqa",d:"Tarbiyachi oila haqida qisqa hikoya o'qiydi, hissiyot kartochkalari yordamida qahramonlarning his-tuyg'ularini muhokama qiladi."},
+    {t:"Rolli o'yin — \"Oila\"",time:"10 daqiqa",d:"Bolalar kichik guruhlarga bo'linib, ona, ota, farzand rollarini o'ynashadi, kunlik vaziyatlarni sahnalashtirishadi."},
+    {t:"Ijodiy ifoda — \"Yuzlab tillar\" (Reggio)",time:"6 daqiqa",d:"Har bir bola o'z oilasini istagan usulda ifodalaydi: kimdir chizadi, kimdir loy bilan shakl yasaydi, kimdir og'zaki hikoya qiladi — Reggio metodining asosiy g'oyasi."},
+    {t:"Taqdimot doirasi",time:"3 daqiqa",d:"Har bir bola o'z ishini ko'rsatib, qisqa izoh beradi, boshqalar tinglaydi va savol berishi mumkin."},
+    {t:"Yakuniy refleksiya",time:"1 daqiqa",d:"\"Bugun kim haqida gapirganingiz yoqdi?\" savoli orqali kunni yakunlash."}
+  ]
+},
+{
+  age:"4-5", method:"vygotsky",
+  title:"Qadam-baqadam quramiz — tengdosh yordamida konstruksiyalash",
+  soha:"Bilish jarayonlarini rivojlantirish",
+  duration:"25–28 daqiqa", code:"4.1.3.b",
+  goal:"Bolalarda fazoviy tasavvur va konstruktiv fikrlashni Vigotskiyning yaqin rivojlanish zonasi (ZPD) tamoyili asosida — avval kattalar namunasi, so'ng tengdosh yordami, oxirida mustaqil ish bosqichlari orqali rivojlantirish.",
+  comps:["Bilish","Ijtimoiy"],
+  resources:"Turli o'lchamdagi qurilish kublari, namuna rasm-sxemalar (oddiy uydan murakkabroq qasrgacha), \"yordamchi kartochkalar\" (bosqichma-bosqich ko'rsatma).",
+  diffEasy:"Tarbiyachi namunasi asosida sodda 4-5 kublik uycha qurish (to'liq yordam bilan).",
+  diffHard:"Sxema kartochkasiga qarab, tengdosh yordamisiz, 10+ kublik murakkab qurilma (ko'prik, minora) yaratish.",
+  assess:"Tarbiyachi har bir bolaning qancha yordamga muhtoj bo'lganini (to'liq yordam → qisman yordam → mustaqil) belgilab, ZPD darajasini aniqlaydi — bu keyingi mashg'ulot murakkabligini rejalashtirish uchun asos bo'ladi.",
+  steps:[
+    {t:"Namunani ko'rsatish (kattalar yordami)",time:"4 daqiqa",d:"Tarbiyachi oddiy qurilmani qadam-baqadam qurib ko'rsatadi, bolalar kuzatadi — ZPDning birinchi bosqichi: to'liq tashqi yordam."},
+    {t:"Birgalikda takrorlash",time:"6 daqiqa",d:"Bolalar tarbiyachi bilan birga, uning ko'rsatmasi asosida xuddi shu qurilmani takrorlaydi."},
+    {t:"Juftlikda ishlash — tengdosh yordami (Vigotskiy)",time:"8 daqiqa",d:"Bolalar ikkitadan juft bo'lib, biri ko'proq bilgan bo'lsa, ikkinchisiga yordam beradi — \"ko'proq bilimli boshqa shaxs\" tamoyili amalda qo'llanadi."},
+    {t:"Murakkablashtirilgan mustaqil topshiriq",time:"6 daqiqa",d:"Endi har bir bola sxema kartochkasiga qarab, biroz murakkabroq qurilmani mustaqil yaratishga harakat qiladi."},
+    {t:"Ko'rgazma va muhokama",time:"3 daqiqa",d:"Barcha qurilmalar stolga qo'yiladi, bolalar bir-birining ishini ko'rib, fikr bildiradi."},
+    {t:"Yakunlash",time:"1 daqiqa",d:"\"Kim sizga yordam berdi?\" savoli orqali hamkorlik g'oyasi mustahkamlanadi."}
+  ]
+},
+{
+  age:"4-5", method:"steam",
+  title:"Suzadi yoki cho'kadi? — kichik olimlar tajribaxonasi",
+  soha:"Bilish jarayonlarini rivojlantirish",
+  duration:"28 daqiqa", code:"4.1.2.b",
+  goal:"Bolalarda kuzatish, taxmin qilish va oddiy xulosa chiqarish ko'nikmalarini STEAM yondashuvi (fan + muhandislik + matematika) asosida amaliy tajriba orqali rivojlantirish, suvning xususiyatlari haqida dastlabki tasavvur shakllantirish.",
+  comps:["Bilish","Tanqidiy fikrlash"],
+  resources:"Shaffof katta idish, suv, turli og'irlikdagi predmetlar (tosh, yog'och, plastik qopqoq, metall qoshiq, paxta), taxmin qilish uchun \"ha/yo'q\" kartochkalari, natijalarni belgilash uchun jadval-poster.",
+  diffEasy:"Faqat 2 predmetni (tosh va yog'och) sinab ko'rish, natijani \"suzadi\"/\"cho'kadi\" rasmiga yopishtirish.",
+  diffHard:"5-6 predmetni oldindan taxmin qilib, keyin sinab ko'rish, natijalarni solishtirish va \"nima uchun\" savoliga oddiy javob berishga harakat qilish.",
+  assess:"Bolaning oldindan aytgan taxmini bilan haqiqiy natija qanchalik mos kelgani, shuningdek sabab-oqibat bog'lanishini tushunish darajasi (\"og'ir narsa cho'kadi\") kuzatuv orqali baholanadi.",
+  steps:[
+    {t:"Muammoli savol (STEAM — fan)",time:"4 daqiqa",d:"\"Qaysi predmet suzadi, qaysi biri cho'kadi?\" savoli bilan qiziqish uyg'otish, bolalardan oldindan taxmin so'rash va jadvalga belgilash."},
+    {t:"Tajriba o'tkazish (muhandislik — qo'l bilan sinov)",time:"12 daqiqa",d:"Har bir bola navbat bilan predmetlarni suvga tashlab, natijani kuzatadi va kuzatuv jadvaliga haqiqiy natijani belgi qo'yib qayd etadi."},
+    {t:"Taqqoslash va muhokama (matematika — solishtirish)",time:"6 daqiqa",d:"Taxmin va natija ustunlari solishtiriladi, nechta to'g'ri taxmin qilingani sanaladi."},
+    {t:"Xulosa chiqarish (fan — sabab-oqibat)",time:"4 daqiqa",d:"Nima uchun ba'zi predmetlar suzadi, ba'zilari cho'kadi — sabab-oqibat bog'lanishini sodda tilda tushuntirish."},
+    {t:"Ijodiy kengaytirish (san'at — STEAM \"A\")",time:"2 daqiqa",d:"\"Qaysi predmet eng kulgili suzadi?\" kabi savol bilan bolalar ijodiy fikrlashga undaladi."}
+  ]
+},
+
+/* ===================== 5-6 YOSH ===================== */
+{
+  age:"5-6", method:"montessori",
+  title:"Sanoq olami — Montessori sonlar tasmasi orqali matematik tafakkur",
+  soha:"Bilish jarayonlarini rivojlantirish",
+  duration:"28–30 daqiqa", code:"4.2.2.c",
+  goal:"10 ichida sonlarni tanish, sanash va oddiy qo'shish-ayirish amallarini Montessori metodidagi aniq, o'zini-o'zi tuzatuvchi materiallar (sonlar tasmasi, oltin munchoqlar) yordamida bajarish ko'nikmasini shakllantirish.",
+  comps:["Bilish","Tanqidiy fikrlash"],
+  resources:"Montessori uslubidagi sonlar tasmasi (1-10), oltin munchoqlar yoki hisoblash tayoqchalari, raqamli kartochkalar, individual ish gilamchalari.",
+  diffEasy:"1 dan 5 gacha sanash, sonlarni munchoqlar bilan moslashtirish.",
+  diffHard:"1 dan 10 gacha sanash, oddiy qo'shish misollarini munchoqlar yordamida mustaqil yechish.",
+  assess:"Bola mustaqil ravishda nechtagacha sanay olishi va qo'shish amalini necha foiz to'g'ri bajarishi rivojlanish xaritasiga (4.2.2.c) kiritiladi.",
+  steps:[
+    {t:"Qizg'in boshlanish — \"Sanoq mehmoni\"",time:"3 daqiqa",d:"Qo'g'irchoq orqali bolalarni sanashga taklif etish, mavzuga tabiiy kirish."},
+    {t:"Individual ish — sonlar tasmasi (Montessori)",time:"10 daqiqa",d:"Har bir bola o'z gilamchasida sonlar tasmasi bo'ylab yurib, har bir sonni ovoz chiqarib sanaydi — material o'z-o'zini tuzatadi, xato darhol ko'rinadi."},
+    {t:"Oltin munchoqlar bilan miqdor tushunchasi",time:"8 daqiqa",d:"Bolalar har bir songa mos miqdordagi munchoqni hisoblab, son va miqdor o'rtasidagi bog'lanishni mustahkamlaydi."},
+    {t:"Amaliy qo'shish mashqlari",time:"6 daqiqa",d:"Oddiy qo'shish misollari munchoqlar yordamida ko'rgazmali yechiladi (masalan, 3 munchoq + 2 munchoq)."},
+    {t:"Juftlikdagi musobaqa o'yini",time:"2 daqiqa",d:"\"Kim tezroq sanaydi\" — ikki bola tezlikda sanoq mashqini bajaradi."},
+    {t:"Yakunlash",time:"1 daqiqa",d:"Bugun nechtagacha sanay olishni o'rgandik — qisqa xulosa va gilamchani yig'ishtirish."}
+  ]
+},
+{
+  age:"5-6", method:"reggio",
+  title:"Suv sirlari — kichik tadqiqotchilar loyihasi",
+  soha:"Bilish jarayonlarini rivojlantirish",
+  duration:"30 daqiqa", code:"4.1.2.c",
+  goal:"Bolalarda kuzatish, taxmin qilish va oddiy xulosa chiqarish ko'nikmalarini Reggio Emilia yondashuvidagi uzoq muddatli loyiha-tadqiqot mantiqi (\"uch savol\" metodikasi) asosida rivojlantirish, suvning xususiyatlari haqida chuqur tasavvur hosil qilish.",
+  comps:["Bilish","Tanqidiy fikrlash"],
+  resources:"Shaffof idishlar, suv, turli og'irlikdagi predmetlar, muz bo'lakchalari, kuzatuv jurnal-varaqasi (bolalar o'zlari rasm chizib to'ldiradigan), katta \"loyiha devori\" posteri.",
+  diffEasy:"Suvning sovuq/issiq, tinch/oqar holatlarini ko'rib, sodda so'zlar bilan tasvirlash.",
+  diffHard:"Muzning erish jarayonini kuzatib, vaqt o'tishi bilan o'zgarishni rasmda ifodalash va sababini taxmin qilish.",
+  assess:"Loyiha devoriga yopishtirilgan bolalar rasmlari va izohlari orqali har bir bolaning tushunish darajasi va savol berish faolligi baholanadi — Reggioda baholash hujjatlashtirish (documentation) orqali amalga oshadi.",
+  steps:[
+    {t:"\"Uch savol\" metodikasi — boshlanish (Reggio)",time:"5 daqiqa",d:"Tarbiyachi \"Suv haqida nimani bilamiz? Nimani bilishni istaymiz?\" savollarini beradi, javoblar loyiha devoriga yoziladi."},
+    {t:"Muammoli vaziyat — taxmin qilish",time:"4 daqiqa",d:"\"Qaysi predmet suzadi, qaysi biri cho'kadi?\" savoli bilan qiziqish uyg'otish."},
+    {t:"Tajriba o'tkazish va hujjatlashtirish",time:"10 daqiqa",d:"Har bir bola navbat bilan predmetlarni suvga tashlab, natijani kuzatuv jurnaliga o'zi rasm chizib qayd etadi (Reggioda bola — o'z bilimini hujjatlashtiruvchi tadqiqotchi)."},
+    {t:"Qo'shimcha tajriba — muz",time:"6 daqiqa",d:"Muz bo'lagi suvga solinadi, eriy boshlashi kuzatiladi, bolalar buni ham jurnalga chizadi."},
+    {t:"Loyiha devorida taqdimot",time:"4 daqiqa",d:"Bolalar o'z kashfiyotlarini loyiha devori oldida bir-biriga gapirib beradi, savol-javob bo'ladi."},
+    {t:"\"Nimani bilib oldik?\" yakuni",time:"1 daqiqa",d:"Uchinchi savolga javob berib, loyiha vaqtincha yakunlanadi (lekin keyingi kunlarga davom etishi mumkin)."}
+  ]
+},
+{
+  age:"5-6", method:"dewey",
+  title:"Kichik bog'bonlar — o'simlik ekib parvarish qilish loyihasi",
+  soha:"Bilish jarayonlarini rivojlantirish va Ijtimoiy-hissiy rivojlanish",
+  duration:"30 daqiqa (+kundalik kuzatish)", code:"4.3.2.c",
+  goal:"Bolalarda o'simlik o'sishi haqida real, amaliy tajriba orqali tasavvur shakllantirish, mas'uliyat va sabr-toqat tuyg'ularini Jon Dyuining \"qilib o'rganish\" tamoyili asosida tarbiyalash.",
+  comps:["Bilish","Shaxsiy","Ijtimoiy"],
+  resources:"Kichik gulqoqlar yoki plastik stakanlar, urug'lar (loviya yoki bug'doy — tez unadigan), tuproq, sug'orish uchun kichik idishlar, har bir bola uchun \"kuzatuv kundaligi\" varaqasi.",
+  diffEasy:"Tarbiyachi yordamida urug'ni tuproqqa solish va sug'orish, kattalar bilan birga kuzatish.",
+  diffHard:"Mustaqil urug' ekish, har kuni o'zi sug'orish va o'sish jarayonini kundalikka rasm bilan qayd etish.",
+  assess:"Har bir bolaning kuzatuv kundaligi (necha kun davomida muntazam kuzatuv olib borgani, o'simlik o'sishi haqidagi tushunchasi) portfolioga qo'shiladi.",
+  steps:[
+    {t:"Muammoli savol",time:"3 daqiqa",d:"\"O'simlik qayerdan o'sadi?\" savoli bilan bolalarning oldingi bilimlarini aniqlash."},
+    {t:"Amaliy ish — urug' ekish",time:"10 daqiqa",d:"Har bir bola o'z stakanchasiga tuproq solib, urug'ni ekadi va sug'oradi — real, qo'l bilan bajariladigan tajriba."},
+    {t:"Kuzatuv kundaligini tanishtirish",time:"4 daqiqa",d:"Tarbiyachi bolalarga har kuni o'simlikni kuzatib, rasm chizib boorish tartibini tushuntiradi."},
+    {t:"Mas'uliyat jadvalini tuzish",time:"5 daqiqa",d:"Bolalar guruh bo'lib, kim qachon sug'orish navbatida ekanini belgilaydigan jadval tuzadi (ijtimoiy mas'uliyat)."},
+    {t:"Taxmin qilish o'yini",time:"5 daqiqa",d:"\"Necha kundan keyin unib chiqadi deb o'ylaysiz?\" — bolalar taxminlarini aytadi, keyinroq tekshiriladi."},
+    {t:"Yakuniy suhbat",time:"3 daqiqa",d:"O'simlikka g'amxo'rlik qilish nima uchun muhim ekanligi haqida qisqa muhokama."}
+  ]
+},
+
+/* ===================== 6-7 YOSH ===================== */
+{
+  age:"6-7", method:"steam",
+  title:"Kichik me'morlar — ko'prik qurish muhandislik loyihasi",
+  soha:"Bilish jarayonlarini rivojlantirish va Ijodiy rivojlanish",
+  duration:"35 daqiqa", code:"4.1.2.d",
+  goal:"Bolalarda muammoni mustaqil hal qilish, gipoteza qurish va sinab ko'rish ko'nikmalarini STEAM (fan, texnologiya, muhandislik, san'at, matematika) integratsiyalashgan loyiha orqali rivojlantirish — daryo ustidan o'tuvchi mustahkam ko'prik yasash.",
+  comps:["Bilish","Tanqidiy fikrlash","Ijodiy"],
+  resources:"Qurilish materiallari (kartonlar, tayoqchalar, ip, yelim), \"daryo\" maketi (ikki stol orasidagi bo'shliq), sinov uchun kichik o'yinchoq mashinalar (yuk vazifasini bajaradi), o'lchov uchun chizg'ich.",
+  diffEasy:"Tarbiyachi taklif qilgan tayyor sxema asosida oddiy, bir qatlamli ko'prik yasash.",
+  diffHard:"Mustaqil dizayn o'ylab topish, ko'prikni sinab ko'rish, agar buzilsa — sababini tahlil qilib qayta loyihalash (muhandislik dizayn sikli).",
+  assess:"Bolaning necha marta qayta sinab ko'rgani va sababini tushunish darajasi (\"nima uchun buzildi, qanday mustahkamlash mumkin\") tanqidiy fikrlash ko'rsatkichi sifatida baholanadi.",
+  steps:[
+    {t:"Muammoni qo'yish (muhandislik)",time:"4 daqiqa",d:"\"Daryo narigi tomonidagi o'yinchoqlarga qanday o'tkazamiz?\" muammoli savoli qo'yiladi."},
+    {t:"Gipoteza va eskiz chizish (san'at + matematika)",time:"6 daqiqa",d:"Har bir bola o'z ko'prik dizaynini qog'ozga chizadi, uzunligini taxminiy o'lchaydi."},
+    {t:"Qurilish bosqichi (muhandislik)",time:"14 daqiqa",d:"Bolalar kichik guruhlarda o'z eskizlari asosida real ko'prikni qurishga kirishadi."},
+    {t:"Sinov — \"yuk\" o'tkazish (fan)",time:"6 daqiqa",d:"Qurilgan ko'prikdan kichik o'yinchoq mashina o'tkazib sinaladi; agar buzilsa, sabab muhokama qilinadi."},
+    {t:"Qayta loyihalash (dizayn sikli)",time:"4 daqiqa",d:"Muvaffaqiyatsiz bo'lgan guruhlar dizaynini tezda tuzatib, qayta sinaydi."},
+    {t:"Taqdimot va muhokama",time:"1 daqiqa",d:"Eng mustahkam ko'prik qaysi guruhda chiqgani va nega muhokama qilinadi."}
+  ]
+},
+{
+  age:"6-7", method:"vygotsky",
+  title:"Harflar shahri — o'qish va yozishga tayyorgarlik bosqichlari",
+  soha:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+  duration:"30 daqiqa", code:"3.1.2.d",
+  goal:"Bolalarda harflarni tanish, bo'g'inlarga bo'lish va sodda so'zlarni o'qishga tayyorgarlik ko'nikmasini Vigotskiyning yaqin rivojlanish zonasi tamoyili asosida — bosqichma-bosqich kattalardan tengdoshlarga, so'ng mustaqillikka o'tish orqali shakllantirish.",
+  comps:["Kommunikativ","Bilish"],
+  resources:"Katta harflar kartochkalari, bo'g'in kartochkalari, sodda so'z kartalari (rasm bilan), \"harflar shahri\" maketi-posteri, har bir bola uchun individual mashq varag'i.",
+  diffEasy:"Tarbiyachi yordamida o'z ismidagi harflarni tanib, ovoz chiqarib aytish.",
+  diffHard:"Mustaqil ravishda 3-4 harfli sodda so'zlarni bo'g'inlarga bo'lib o'qish.",
+  assess:"Har bir bolaning mustaqil o'qiy olgan so'zlari soni va qaysi bosqichda (to'liq yordam/qisman yordam/mustaqil) ekanligi o'qishga tayyorgarlik ko'rsatkichi sifatida qayd etiladi.",
+  steps:[
+    {t:"Kattalar namunasi — harf taqdimoti",time:"5 daqiqa",d:"Tarbiyachi yangi harfni ko'rsatib, uning tovushini aniq talaffuz qiladi — ZPDning birinchi bosqichi."},
+    {t:"Birgalikda takrorlash",time:"5 daqiqa",d:"Bolalar tarbiyachi bilan birga harfni baland ovozda aytadi va havoda \"chizadi\"."},
+    {t:"Tengdosh yordami — juftlikda bo'g'in o'qish",time:"8 daqiqa",d:"Bolalar juft bo'lib, bo'g'in kartochkalarini birga o'qiydi, ko'proq bilgan tengdosh yordam beradi."},
+    {t:"Mustaqil mashq — \"Harflar shahri\"",time:"8 daqiqa",d:"Har bir bola o'z mashq varag'ida mustaqil ravishda sodda so'zlarni o'qishga harakat qiladi, faqat kerak bo'lganda yordam so'raydi."},
+    {t:"O'qigan so'zni rasmga moslashtirish",time:"3 daqiqa",d:"Bolalar o'qigan so'zini mos rasmga bog'laydi (masalan, \"o-l-m-a\" → olma rasmi)."},
+    {t:"Yakunlash",time:"1 daqiqa",d:"Bugun necha yangi harf yoki so'z o'rganganimiz haqida qisqa xulosa."}
+  ]
+},
+{
+  age:"6-7", method:"gardner",
+  title:"Mening Vatanim — ko'p qirrali ifoda orqali milliy g'oya",
+  soha:"Ijodiy rivojlanish va Ijtimoiy-hissiy rivojlanish",
+  duration:"35 daqiqa", code:"5.1.2.d",
+  goal:"Bolalarda Vatanga muhabbat, milliy ramzlar haqida tasavvurni Gardnerning ko'p qirrali intellekt nazariyasi asosida — har bir bola o'z kuchli tomoni (rasm, qo'shiq, harakat, so'z) orqali ifodalashi uchun imkoniyat yaratib shakllantirish.",
+  comps:["Bilish","Shaxsiy","Tanqidiy fikrlash"],
+  resources:"O'zbekiston bayrog'i va gerbi tasvirlari, milliy naqshlar namunalari, rangli qog'oz, qaychi, yelim, audio — milliy kuylar, \"stansiyalar\" uchun 4 burchak (rasm, musiqa, harakat, so'z).",
+  diffEasy:"Faqat bitta stansiyani (masalan, rasm) tanlab, bayroq ranglarida oddiy ish yaratish.",
+  diffHard:"Ikki yoki undan ko'p stansiyada ishtirok etib (masalan, rasm + qisqa she'r aytish), Vatan haqidagi tushunchasini chuqur ifodalash.",
+  assess:"Har bir bola tanlagan stansiya (qaysi intellekt turi orqali ifodalagani) va ishining mazmuni hujjatlashtirib boriladi — bu bolaning individual kuchli tomonini aniqlashga yordam beradi.",
+  steps:[
+    {t:"Ertalabki davra suhbati",time:"4 daqiqa",d:"\"Vatan nima?\" mavzusida sodda muloqot, milliy bayroq ranglari haqida savol-javob."},
+    {t:"Taqdimot — milliy ramzlar",time:"6 daqiqa",d:"Tarbiyachi O'zbekiston bayrog'i va gerbidagi ramzlar ma'nosini tushuntiradi."},
+    {t:"4 stansiyani tanishtirish (Gardner)",time:"3 daqiqa",d:"Tarbiyachi 4 burchakni ko'rsatadi: 1) Rasm chizish, 2) Milliy kuy tinglab harakat qilish, 3) Naqsh yasash (qo'l-ko'z), 4) Vatan haqida kichik gap tuzish (so'z)."},
+    {t:"Erkin stansiya ishi",time:"14 daqiqa",d:"Bolalar o'zlari yoqtirgan stansiyada (yoki bir nechtasida) ishlaydi — har kim o'z kuchli intellekti orqali mavzuni o'zlashtiradi."},
+    {t:"\"Galereya yurishi\" — taqdimot",time:"6 daqiqa",d:"Barcha ishlar stollarga qo'yiladi, bolalar bir-birining ishini ko'rib chiqadi, ijodkorlar qisqa izoh beradi."},
+    {t:"Yakuniy refleksiya",time:"2 daqiqa",d:"\"Vatanimiz uchun nimadan faxrlanasiz?\" savoli bilan kunni yakunlash."}
+  ]
+}
 ];
 
-const container = document.getElementById('plansContainer');
+/* Render method legend */
+const legend = document.getElementById('methodLegend');
+Object.values(methods).forEach(m=>{
+  const chip = document.createElement('span');
+  chip.className = 'method-chip';
+  chip.style.color = m.color;
+  chip.style.background = m.bg;
+  chip.style.borderColor = m.border;
+  chip.innerHTML = `<i class="ti ${m.icon}"></i> ${m.name}`;
+  legend.appendChild(chip);
+});
 
-function compTagColor(c){
-  return c;
-}
+const container = document.getElementById('plansContainer');
 
 function renderPlans(filter){
   container.innerHTML = '';
@@ -256,7 +452,8 @@ function renderPlans(filter){
     container.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text3);font-size:13px">Bu yosh guruhi uchun reja topilmadi.</div>';
     return;
   }
-  filtered.forEach((p, idx) => {
+  filtered.forEach((p) => {
+    const m = methods[p.method];
     const card = document.createElement('div');
     card.className = 'plan-card';
     card.innerHTML = `
@@ -268,13 +465,22 @@ function renderPlans(filter){
             <div class="plan-meta">
               <span><i class="ti ti-users"></i> ${p.age} yosh</span>
               <span><i class="ti ti-clock"></i> ${p.duration}</span>
-              <span><i class="ti ti-hash"></i> ${p.code}</span>
+              <span class="code-tag">${p.code}</span>
+              <span class="method-tag" style="color:${m.color};background:${m.bg};border:1px solid ${m.border}"><i class="ti ${m.icon}"></i> ${m.name}</span>
             </div>
           </div>
         </div>
         <i class="ti ti-chevron-down plan-toggle"></i>
       </div>
       <div class="plan-body">
+        <div class="method-banner" style="background:${m.bg};border:1px solid ${m.border}">
+          <div class="method-banner-icon" style="background:${m.color};color:#fff"><i class="ti ${m.icon}"></i></div>
+          <div class="method-banner-text">
+            <b style="color:${m.color}">${m.name}</b>
+            <span style="color:var(--text)">${m.desc}</span>
+          </div>
+        </div>
+
         <div class="plan-section">
           <h4><i class="ti ti-chart-dots-3"></i> Rivojlanish sohasi</h4>
           <p>${p.soha}</p>
@@ -298,9 +504,21 @@ function renderPlans(filter){
               <div class="step-row">
                 <div class="step-num">${i+1}</div>
                 <div class="step-text"><b>${s.t}</b><span>${s.d}</span></div>
+                <div class="step-time">${s.time}</div>
               </div>
             `).join('')}
           </div>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-adjustments"></i> Individuallashtirish (differensiatsiya)</h4>
+          <div class="diff-box">
+            <div class="diff-card easy"><b>Yengillashtirish</b>${p.diffEasy}</div>
+            <div class="diff-card hard"><b>Murakkablashtirish</b>${p.diffHard}</div>
+          </div>
+        </div>
+        <div class="plan-section">
+          <h4><i class="ti ti-clipboard-check"></i> Baholash usuli</h4>
+          <div class="assess-box">${p.assess}</div>
         </div>
         <button class="print-btn" onclick="event.stopPropagation();window.print()"><i class="ti ti-printer"></i> Chop etish</button>
       </div>
