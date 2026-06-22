@@ -13,7 +13,7 @@ const PLANS = {
       'Cheksiz testlar (6 toifa)',
       'Barcha konspektlar (30+)',
       'Oyinlar, qo\'shiqlar, mashg\'ulotlar',
-      'AI Konspekt generator',
+      'Yillik hisobotlardan namuna',
       'Attestatsiya testlari',
       'Portfolio yaratish',
     ]
@@ -26,12 +26,9 @@ const PLANS = {
     color    : '#b45309',
     features : [
       'Professional + hamma narsa',
-      '20+ tarbiyachi uchun',
-      'Admin boshqaruv paneli',
-      'Davomat tizimi (QR)',
-      'Ota-ona portali',
-      'Bola rivojlanish monitoringi',
-      'Oylik hisobotlar (PDF)',
+      '6+ tarbiyachi uchun',
+      'Tadbir ssenaylari',
+      'Yillik hisobotlar (PDF)',
     ]
   }
 }
@@ -44,13 +41,8 @@ function openPremiumModal(module) {
   const moduleNames = {
     games           : 'Oyinlar',
     songs           : 'Qo\'shiqlar',
-    activities      : 'Mashg\'ulotlar',
-    ai_konspekt     : 'AI Konspekt generator',
-    attestation     : 'Attestatsiya testlari',
+    activities      : 'Mashg\'ulotlar'
     portfolio       : 'Portfolio',
-    attendance      : 'Davomat tizimi',
-    parent_portal   : 'Ota-ona portali',
-    child_monitoring: 'Bola monitoringi',
     reports         : 'Hisobotlar',
   }
 
