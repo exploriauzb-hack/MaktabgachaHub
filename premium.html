@@ -153,11 +153,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
   <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-  <div class="sidebar-section">Korporativ</div>
-  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -201,8 +197,6 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Oyinlar, qo'shiqlar, mashg'ulotlar</span></div>
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Attestatsiya testlari</span></div>
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Portfolio yaratish</span></div>
-        <div class="feat-item no"><i class="ti ti-circle-x"></i><span>Davomat tizimi</span></div>
-        <div class="feat-item no"><i class="ti ti-circle-x"></i><span>Ota-ona portali</span></div>
       </div>
       <button class="btn-plan pro" onclick="startPayment('pro')">
         <i class="ti ti-credit-card"></i> Hozir olish
@@ -219,12 +213,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="plan-hint">Butun muassasa uchun</div>
       <div class="feat-list">
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Professional + hamma narsa</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>20+ tarbiyachi uchun</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Admin boshqaruv paneli</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Davomat tizimi (QR)</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Ota-ona portali</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Bola rivojlanish monitoringi</span></div>
-        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Oylik hisobotlar (PDF)</span></div>
+        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>6+ tarbiyachi uchun</span></div>
+        <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Yillik hisobotlar (PDF)</span></div>
       </div>
       <button class="btn-plan corp" onclick="startPayment('corporate')">
         <i class="ti ti-phone-call"></i> Bog'lanish
@@ -268,10 +258,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
           <tr><td>Mashg'ulotlar</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
           <tr><td>AI Konspekt</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
           <tr><td>Attestatsiya</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
-          <tr><td>Portfolio</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
-          <tr><td>Davomat tizimi</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
-          <tr><td>Ota-ona portali</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
-          <tr><td>Tarbiyachilar soni</td><td style="color:var(--muted)">1</td><td class="pro-col">1</td><td class="corp-col">20+</td></tr>
+          <tr><td>Portfolio</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>>
         </tbody>
       </table>
     </div>
@@ -290,7 +277,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Korporativ rejada nechta tarbiyachi?<i class="ti ti-chevron-down"></i></div>
-      <div class="faq-a">20 tagacha tarbiyachi qo'shish mumkin. Agar ko'proq kerak bo'lsa, alohida kelishib olish mumkin.</div>
+      <div class="faq-a">6 tagacha tarbiyachi qo'shish mumkin. Agar ko'proq kerak bo'lsa, alohida kelishib olish mumkin.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Pul qaytarilishini so'rasam bo'ladimi?<i class="ti ti-chevron-down"></i></div>
