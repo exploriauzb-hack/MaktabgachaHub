@@ -69,6 +69,31 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .method-chips{display:flex;flex-wrap:wrap;gap:8px}
 .method-chip{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:20px;border:1px solid}
 
+.top10-section{background:linear-gradient(135deg,#fef9f0,#fff7ed);border:1px solid #fde68a;border-radius:var(--radius);margin-bottom:18px;overflow:hidden;box-shadow:var(--shadow)}
+.top10-head{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer}
+.top10-head:hover{background:rgba(255,255,255,.4)}
+.top10-head-left{display:flex;align-items:center;gap:14px;min-width:0}
+.top10-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 4px 14px rgba(217,119,6,.3)}
+.top10-title{font-size:15px;font-weight:800;color:var(--text)}
+.top10-sub{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5}
+.top10-toggle{color:var(--amber);font-size:20px;transition:transform .2s;flex-shrink:0}
+.top10-head.open .top10-toggle{transform:rotate(180deg)}
+.top10-body{display:none;padding:0 20px 22px}
+.top10-body.open{display:block}
+
+.top10-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:8px}
+.top10-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.top10-rank{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;color:#fff;background:linear-gradient(135deg,#f59e0b,#d97706);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.top10-card-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.top10-card-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.top10-card-title{font-size:13.5px;font-weight:700;color:var(--text)}
+.top10-card-author{font-size:11px;color:var(--text3);margin-top:1px}
+.top10-card p{font-size:12.3px;color:var(--text);line-height:1.6;margin:10px 0}
+.top10-card .label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-top:10px;margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.top10-tip{background:var(--green-soft);border:1px solid #bbf7d0;border-radius:8px;padding:9px 11px;margin-top:4px}
+.top10-tip p{font-size:12px;color:var(--text);margin:0;line-height:1.55}
+.top10-used-tag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--green);background:var(--green-soft);padding:2px 8px;border-radius:20px;margin-top:8px;border:1px solid #bbf7d0}
+
 .plan-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
 .plan-head{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px}
 .plan-head:hover{background:var(--bg)}
@@ -126,7 +151,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   .diff-box{grid-template-columns:1fr}
 }
 @media print{
-  .sidebar,.age-tabs,.print-btn,.plan-toggle,.method-legend{display:none}
+  .sidebar,.age-tabs,.print-btn,.plan-toggle,.method-legend,.top10-section{display:none}
   .plan-body{display:block!important}
   .main{margin-left:0}
 }
@@ -155,8 +180,24 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
   </div>
 
+  <div class="top10-section">
+    <div class="top10-head" onclick="document.getElementById('top10Body').classList.toggle('open');this.classList.toggle('open')">
+      <div class="top10-head-left">
+        <div class="top10-icon"><i class="ti ti-trophy"></i></div>
+        <div>
+          <div class="top10-title">Dunyo tan olgan TOP 10 maktabgacha ta'lim metodi</div>
+          <div class="top10-sub">Har biri — tarixi, asosiy g'oyasi va O'zbekiston MTT sharoitida qo'llash bo'yicha amaliy maslahat bilan</div>
+        </div>
+      </div>
+      <i class="ti ti-chevron-down top10-toggle"></i>
+    </div>
+    <div class="top10-body" id="top10Body">
+      <div class="top10-grid" id="top10Grid"></div>
+    </div>
+  </div>
+
   <div class="method-legend">
-    <div class="method-legend-title"><i class="ti ti-world"></i> Qo'llanilgan xalqaro metodlar</div>
+    <div class="method-legend-title"><i class="ti ti-world"></i> Quyidagi mashg'ulot rejalarida qo'llanilgan metodlar</div>
     <div class="method-chips" id="methodLegend"></div>
   </div>
 
@@ -430,6 +471,101 @@ const plans = [
   ]
 }
 ];
+
+/* ===================== TOP 10 XALQARO METODLAR ===================== */
+const top10 = [
+  {
+    rank:1, name:"Montessori metodi", author:"Mariya Montessori (Italiya, 1907)",
+    icon:"ti-flower", color:"#7c3aed", bg:"#f5f3ff",
+    used:true,
+    desc:"Bola o'z tabiiy qiziquvchanligi asosida, maxsus ishlab chiqilgan didaktik materiallar bilan mustaqil ishlaydi. Pedagog buyruq bermaydi, balki muhit yaratadi va kuzatadi. Har bir material \"o'z-o'zini tuzatuvchi\" bo'lib, bola xatosini o'zi sezadi.",
+    tip:"MTT guruhida \"erkin faoliyat soati\"ni joriy etish mumkin — bolalar 15-20 daqiqa davomida o'zlari rivojlanish markazini tanlab, mustaqil ishlaydi, tarbiyachi faqat kerak bo'lganda yordam beradi."
+  },
+  {
+    rank:2, name:"Reggio Emilia yondashuvi", author:"Loris Malaguzzi (Italiya, 1945)",
+    icon:"ti-palette", color:"#0d9488", bg:"#ccfbf1",
+    used:true,
+    desc:"Bola \"yuzlab tillarga\" ega — u o'zini rasm, harakat, musiqa, so'z orqali ifoda eta oladi. Ta'lim mazmuni bolaning o'z savoli va qiziqishidan kelib chiqib, uzoq muddatli loyihalar shaklida quriladi. Hujjatlashtirish (rasm, foto, bolalar so'zlari) markaziy o'rin tutadi.",
+    tip:"Haftalik mavzuni belgilashdan oldin bolalardan \"Bu haqida nimani bilishni istaysiz?\" deb so'rang va javoblarni \"loyiha devori\"ga yozib, mavzuni shu asosda chuqurlashtiring."
+  },
+  {
+    rank:3, name:"Valdorf pedagogikasi", author:"Rudolf Shteyner (Germaniya, 1919)",
+    icon:"ti-moon-stars", color:"#b45309", bg:"#fffbeb",
+    used:false,
+    desc:"Ta'lim bolaning xayolot kuchi, ritm va san'at orqali amalga oshiriladi. Erta intellektual zo'riqishdan (harf-raqam o'rgatish shoshilinch emas) saqlanib, tabiiy materiallar (yog'och, mato, mum) bilan ijodiy faoliyat, ertaklar va mavsumiy bayramlar muhim o'rin tutadi.",
+    tip:"Kun tartibiga doimiy \"ritm\" kiriting — har kuni bir xil vaqtda boshlanadigan kichik marosim (masalan, ertalabki sham yoqish o'rniga quvnoq qo'shiq), bu bolalarda xavfsizlik va barqarorlik tuyg'usini kuchaytiradi."
+  },
+  {
+    rank:4, name:"HighScope yondashuvi", author:"David Vaykart (AQSh, 1970)",
+    icon:"ti-route", color:"#2563eb", bg:"#eff6ff",
+    used:false,
+    desc:"Mashhur \"Reja–Ishla–Eslab qol\" (Plan-Do-Review) tsikliga asoslangan. Bola har kuni o'zi nima qilishni rejalashtiradi, shu faoliyatni bajaradi, so'ngra guruhga nima qilganini va nimani o'rgangani haqida gapirib beradi — bu tashabbus va o'z-o'zini tahlil qilish ko'nikmasini rivojlantiradi.",
+    tip:"Ertalabki davra suhbatida har bir bolaga \"Bugun qaysi markazda va nima bilan shug'ullanmoqchisiz?\" savolini bering, kun oxirida esa \"Nima qildingiz, nimani o'rgandingiz?\" deb so'rab, kichik \"hisobot doirasi\" tashkil eting."
+  },
+  {
+    rank:5, name:"STEAM yondashuvi", author:"Zamonaviy integratsion model (AQSh, 2000-yillar)",
+    icon:"ti-atom-2", color:"#2563eb", bg:"#eff6ff",
+    used:true,
+    desc:"Fan (Science), Texnologiya (Technology), Muhandislik (Engineering), San'at (Art) va Matematika (Mathematics) bir mashg'ulotda integratsiyalashadi. Bolalar real muammoni hal qilish jarayonida bir nechta sohadagi bilimlarni birgalikda qo'llashga o'rganadi.",
+    tip:"\"Suv suzadimi yoki cho'kadimi?\", \"Ko'prik qanday qurilsin?\" kabi oddiy muhandislik-tadqiqot savollarini haftalik mavzularga qo'shing — bu qo'shimcha xarajatsiz, mavjud materiallar bilan amalga oshiriladi."
+  },
+  {
+    rank:6, name:"Forest School / Tabiat maktabi", author:"Skandinaviya an'anasi (Daniya, 1950-yillar)",
+    icon:"ti-trees", color:"#15803d", bg:"#f0fdf4",
+    used:false,
+    desc:"Ta'lim asosiy qismi ochiq havoda, tabiat bag'rida o'tkaziladi. Bolalar daraxt, tosh, barg, suv bilan bevosita tajriba orqali o'rganadi, xavf-xatarni o'zi baholashga o'rgatiladi (\"xavfsiz xavf\" tamoyili), tabiatga hurmat tarbiyalanadi.",
+    tip:"Haftada kamida 1-2 marta mashg'ulotni hovliga, bog'cha hovlisiga yoki yaqin atrofdagi bog'ga ko'chiring — barglarni sanash, soyalarni kuzatish, tabiiy materiallardan hunarmandchilik kabi faoliyatlarni tashkil eting."
+  },
+  {
+    rank:7, name:"Vigotskiy ijtimoiy-madaniy nazariyasi", author:"Lev Vigotskiy (SSSR, 1930-yillar)",
+    icon:"ti-stairs", color:"#b45309", bg:"#fffbeb",
+    used:true,
+    desc:"Bilim ijtimoiy muloqot orqali shakllanadi. \"Yaqin rivojlanish zonasi\" (ZPD) tushunchasiga ko'ra, bola hozir mustaqil bajara olmaydigan, ammo kattalar yoki ko'proq bilimli tengdosh yordamida (scaffolding) bajara oladigan vazifalar orqali eng samarali rivojlanadi.",
+    tip:"Har bir mashg'ulotni 3 bosqichda quring: 1) tarbiyachi namuna ko'rsatadi, 2) birga bajaradi, 3) bola mustaqil sinaydi. Kuchli va kuchsizroq bolalarni aralash juftliklarga birlashtiring — tengdosh yordami juda samarali ishlaydi."
+  },
+  {
+    rank:8, name:"Gardner ko'p qirrali intellekt nazariyasi", author:"Xovard Gardner (AQSh, 1983)",
+    icon:"ti-brain", color:"#db2777", bg:"#fce7f3",
+    used:true,
+    desc:"Yagona \"aqllilik\" emas, balki 8 xil intellekt turi (lingvistik, mantiqiy-matematik, vizual-fazoviy, musiqiy, tana-kinestetik, ijtimoiy, shaxsiy, tabiatshunoslik) mavjud. Har bir bola o'zining kuchli intellekt turi orqali yaxshiroq o'rganadi.",
+    tip:"Bir mavzuni kamida 2-3 xil usulda taqdim eting — masalan, hikoya (lingvistik), rasm (vizual) va harakat-o'yin (kinestetik) orqali; bu har bir bolaga o'z kuchli tomoni bilan ishtirok etish imkonini beradi."
+  },
+  {
+    rank:9, name:"Jon Dyui amaliyotga asoslangan ta'lim", author:"Jon Dyui (AQSh, 1900-yillar boshi)",
+    icon:"ti-tools", color:"#15803d", bg:"#f0fdf4",
+    used:true,
+    desc:"\"Qilib o'rganish\" (Learning by doing) tamoyili — bilim mavhum nazariyadan emas, real, amaliy tajriba va muammoni hal qilish jarayonidan kelib chiqadi. Ta'lim bolaning kundalik hayoti va tajribasi bilan bog'liq bo'lishi kerak.",
+    tip:"Mavzularni \"nazariy tushuntirish\"dan ko'ra ko'proq amaliy ish bilan boshlang — masalan, mevalar haqida gapirish o'rniga, ularni birga yuvib-kesib, keyin muhokama qiling."
+  },
+  {
+    rank:10, name:"Frebel metodi", author:"Fridrix Frebel (Germaniya, 1837 — \"bolalar bog'chasi\" g'oyasining asoschisi)",
+    icon:"ti-building-castle", color:"#7c3aed", bg:"#f5f3ff",
+    used:false,
+    desc:"\"Kindergarten\" (bolalar bog'chasi) atamasini birinchi bo'lib joriy etgan pedagog. O'yinni bolaning eng muhim \"ishi\" deb hisoblagan va o'qitish uchun maxsus o'yinchoqlar — \"Frebel sovg'alari\" (kublar, sharlar, silindrlar to'plami) yaratgan, ular orqali fazoviy tasavvur va simmetriya tushunchasi singdiriladi.",
+    tip:"Oddiy geometrik shakldagi qurilish bloklari (kublar, prizmalar)ni alohida \"qadrli o'yinchoq\" sifatida taqdim eting — bolalarga ulardan simmetrik naqsh yoki bino yasashni taklif qilish Frebel g'oyasining zamonaviy ko'rinishidir."
+  }
+];
+
+const top10Grid = document.getElementById('top10Grid');
+top10.forEach(t=>{
+  const card = document.createElement('div');
+  card.className = 'top10-card';
+  card.innerHTML = `
+    <span class="top10-rank"><i class="ti ti-medal"></i> TOP ${t.rank}</span>
+    <div class="top10-card-head">
+      <div class="top10-card-icon" style="background:${t.bg};color:${t.color}"><i class="ti ${t.icon}"></i></div>
+      <div>
+        <div class="top10-card-title">${t.name}</div>
+        <div class="top10-card-author">${t.author}</div>
+      </div>
+    </div>
+    <p>${t.desc}</p>
+    <div class="label"><i class="ti ti-bulb"></i> Amaliy maslahat (O'zbekiston MTT uchun)</div>
+    <div class="top10-tip"><p>${t.tip}</p></div>
+    ${t.used ? '<span class="top10-used-tag"><i class="ti ti-check"></i> Quyidagi rejalarda qo\'llanilgan</span>' : ''}
+  `;
+  top10Grid.appendChild(card);
+});
 
 /* Render method legend */
 const legend = document.getElementById('methodLegend');
