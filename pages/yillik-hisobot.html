@@ -24,9 +24,13 @@
   --green-soft:#f0fdf4;
   --amber:#b45309;
   --amber-soft:#fffbeb;
+  --red:#b91c1c;
+  --red-soft:#fef2f2;
   --pro:#7c3aed;
   --pro2:#8b5cf6;
   --pro-soft:#f5f3ff;
+  --teal:#0d9488;
+  --teal-soft:#ccfbf1;
   --sidebar:256px;
   --radius:12px;
   --radius-sm:8px;
@@ -48,66 +52,127 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .back-link{display:flex;align-items:center;gap:8px;padding:14px 18px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:600;border-bottom:1px solid var(--border)}
 .back-link:hover{color:var(--accent2)}
 
-.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1100px}
+.main{margin-left:var(--sidebar);flex:1;padding:24px 32px 60px;max-width:1180px}
 .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
 .page-head h1{font-size:22px;font-weight:800;display:flex;align-items:center;gap:10px}
 .page-head h1 i{color:var(--pro2);font-size:24px}
 .page-sub{font-size:13px;color:var(--text2);margin-top:4px}
 .pro-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
 
-.age-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.age-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
 .age-tab{padding:9px 16px;border-radius:20px;border:1px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;font-family:inherit;transition:all .15s}
 .age-tab:hover{border-color:var(--accent2);color:var(--accent2)}
 .age-tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 
-.report-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 30px;display:none}
+.toc{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow)}
+.toc-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.toc-list{display:flex;flex-wrap:wrap;gap:6px}
+.toc-link{font-size:12px;font-weight:600;color:var(--accent2);background:var(--accent-soft);padding:5px 10px;border-radius:8px;text-decoration:none;cursor:pointer;border:none;font-family:inherit}
+.toc-link:hover{background:var(--accent2);color:#fff}
+
+.report-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 34px;display:none}
 .report-card.show{display:block}
 
 .report-title{text-align:center;margin-bottom:4px}
-.report-title h2{font-size:18px;font-weight:800;color:var(--text)}
+.report-title h2{font-size:19px;font-weight:800;color:var(--text)}
 .report-title p{font-size:12.5px;color:var(--text3);margin-top:4px}
 .report-divider{height:1px;background:var(--border);margin:18px 0}
 
-.info-row{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-bottom:18px;font-size:13px}
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-bottom:6px;font-size:13px}
 .info-row div span{color:var(--text3);font-weight:500}
 .info-row div b{color:var(--text);font-weight:600}
 
-.rep-section h4{font-size:13.5px;font-weight:700;color:var(--accent2);margin:20px 0 10px;display:flex;align-items:center;gap:7px}
-.rep-section h4 i{font-size:15px}
-.rep-section p{font-size:13.3px;color:var(--text);line-height:1.75;margin-bottom:10px;text-align:justify}
+.rep-section{scroll-margin-top:20px}
+.rep-section h4{font-size:14px;font-weight:700;color:var(--accent2);margin:26px 0 12px;display:flex;align-items:center;gap:7px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rep-section h4 i{font-size:16px}
+.rep-section h5{font-size:13px;font-weight:700;color:var(--text);margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.rep-section h5 i{font-size:14px;color:var(--pro2)}
+.rep-section p{font-size:13.3px;color:var(--text);line-height:1.78;margin-bottom:10px;text-align:justify}
 .rep-section ul{padding-left:20px;margin-bottom:10px}
-.rep-section ul li{font-size:13.3px;color:var(--text);line-height:1.7;margin-bottom:5px}
+.rep-section ul li{font-size:13.3px;color:var(--text);line-height:1.75;margin-bottom:6px}
 
 .data-table{width:100%;border-collapse:collapse;margin:10px 0 16px}
-.data-table th{font-size:11.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:8px 10px;border-bottom:2px solid var(--border);background:var(--bg)}
-.data-table td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--border)}
+.data-table th{font-size:11.3px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:8px 10px;border-bottom:2px solid var(--border);background:var(--bg)}
+.data-table td{padding:9px 10px;font-size:12.8px;border-bottom:1px solid var(--border);vertical-align:top}
 .data-table tr:last-child td{border-bottom:none}
-.growth-up{color:var(--green);font-weight:700}
-.growth-tag{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-soft);color:var(--green)}
+.data-table.compact td, .data-table.compact th{padding:6px 9px;font-size:12.3px}
+.growth-tag{display:inline-flex;align-items:center;gap:3px;font-size:11.3px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--green-soft);color:var(--green);white-space:nowrap}
 
-.code-tag{display:inline-flex;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;background:var(--accent-soft);color:var(--accent2);margin-left:6px;font-family:monospace}
+.month-bar-wrap{display:flex;align-items:flex-end;gap:6px;height:120px;margin:14px 0 8px;padding:0 4px}
+.month-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.month-bar{width:100%;max-width:26px;border-radius:5px 5px 0 0;background:linear-gradient(180deg,var(--accent2),#818cf8)}
+.month-bar-label{font-size:10px;color:var(--text3);font-weight:600}
+.month-bar-val{font-size:10px;color:var(--text2);font-weight:700}
+
+.soha-block{border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 18px;margin-bottom:14px;background:var(--bg)}
+.soha-block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.soha-block-head h5{margin:0;font-size:13.5px}
+.soha-progress-tag{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent2)}
+.subsoha-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed var(--border2);font-size:12.6px}
+.subsoha-row:last-child{border-bottom:none}
+.subsoha-name{color:var(--text);flex:1}
+.subsoha-bar-track{width:120px;height:7px;background:var(--border);border-radius:99px;overflow:hidden;margin:0 10px;flex-shrink:0}
+.subsoha-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#818cf8);border-radius:99px}
+.subsoha-pct{font-weight:700;color:var(--accent2);width:38px;text-align:right;flex-shrink:0}
+
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px 0 16px}
+.tier-card{border-radius:var(--radius-sm);padding:14px 16px;border:1px solid var(--border)}
+.tier-card.high{background:var(--green-soft);border-color:#bbf7d0}
+.tier-card.mid{background:var(--amber-soft);border-color:#fde68a}
+.tier-card.low{background:var(--red-soft);border-color:#fecaca}
+.tier-num{font-size:24px;font-weight:800;margin-bottom:2px}
+.tier-card.high .tier-num{color:var(--green)}
+.tier-card.mid .tier-num{color:var(--amber)}
+.tier-card.low .tier-num{color:var(--red)}
+.tier-label{font-size:12px;font-weight:700;color:var(--text)}
+.tier-desc{font-size:11.5px;color:var(--text2);margin-top:4px;line-height:1.5}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 16px}
+.kpi-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;text-align:center}
+.kpi-val{font-size:20px;font-weight:800;color:var(--accent2)}
+.kpi-label{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
 
 .check-list{display:flex;flex-direction:column;gap:8px;margin:10px 0 16px}
 .check-item{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);background:var(--green-soft);border:1px solid #bbf7d0}
 .check-item i{color:var(--green);font-size:16px;margin-top:1px;flex-shrink:0}
 .check-item span{font-size:13px;color:var(--text)}
 
-.signature-block{display:flex;justify-content:space-between;margin-top:30px;padding-top:20px;border-top:1px dashed var(--border2);font-size:13px}
+.problem-card{border:1px solid #fecaca;background:var(--red-soft);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:12px}
+.problem-card .p-title{font-size:13px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.problem-card .p-cause{font-size:12.5px;color:var(--text2);margin-bottom:8px}
+.problem-card .p-solution{font-size:12.7px;color:var(--text);background:var(--white);border-radius:8px;padding:9px 11px;display:flex;gap:8px;align-items:flex-start}
+.problem-card .p-solution i{color:var(--green);margin-top:1px;flex-shrink:0}
+
+.event-list-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.event-list-row:last-child{border-bottom:none}
+.event-date-tag{flex-shrink:0;width:74px;font-size:11px;font-weight:700;color:var(--accent2);background:var(--accent-soft);border-radius:6px;padding:4px 6px;text-align:center}
+.event-list-row .e-title{font-size:12.8px;font-weight:600;color:var(--text)}
+.event-list-row .e-desc{font-size:12.2px;color:var(--text2);margin-top:2px}
+
+.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.mini-badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px}
+.mini-badge.blue{background:var(--accent-soft);color:var(--accent2)}
+.mini-badge.teal{background:var(--teal-soft);color:var(--teal)}
+.mini-badge.purple{background:var(--pro-soft);color:var(--pro2)}
+
+.signature-block{display:flex;justify-content:space-between;margin-top:34px;padding-top:20px;border-top:1px dashed var(--border2);font-size:13px}
 .signature-block div{text-align:center}
-.signature-line{width:160px;border-bottom:1px solid var(--text3);margin-bottom:6px;height:1px}
+.signature-line{width:170px;border-bottom:1px solid var(--text3);margin-bottom:6px;height:1px}
 .signature-block b{font-size:12.5px;color:var(--text2);font-weight:600}
 
 .print-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:var(--radius-sm);background:var(--accent2);color:#fff;border:none;font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:18px}
 .print-btn:hover{background:var(--accent)}
 
-@media(max-width:900px){
+@media(max-width:980px){
   .sidebar{display:none}
   .main{margin-left:0;padding:16px 14px 80px}
   .info-row{grid-template-columns:1fr}
+  .tier-grid,.kpi-grid{grid-template-columns:1fr 1fr}
   .signature-block{flex-direction:column;gap:20px;align-items:center}
+  .report-card{padding:20px 16px}
 }
 @media print{
-  .sidebar,.age-tabs,.print-btn{display:none}
+  .sidebar,.age-tabs,.print-btn,.toc{display:none}
   .report-card{display:block!important;box-shadow:none;border:none}
   .main{margin-left:0}
 }
@@ -131,7 +196,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="page-head">
     <div>
       <h1><i class="ti ti-report"></i> Yillik hisobot</h1>
-      <p class="page-sub">"Ilk qadam" milliy o'quv dasturi asosida tayyorlangan yosh guruhlari bo'yicha yil yakuni hisobot namunalari</p>
+      <p class="page-sub">"Ilk qadam" milliy o'quv dasturi asosida tayyorlangan, yosh guruhlari bo'yicha to'liq yil yakuni hisobotlari</p>
     </div>
     <span class="pro-pill"><i class="ti ti-crown"></i> PRO</span>
   </div>
@@ -143,18 +208,26 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <button class="age-tab" data-age="6-7">6–7 yosh (bitiruv)</button>
   </div>
 
+  <div class="toc">
+    <div class="toc-title">Hisobot bo'limlari</div>
+    <div class="toc-list" id="tocList"></div>
+  </div>
+
   <div id="reportsContainer"></div>
 </main>
 
 <script>
 const reports = {
+
 "3-4": {
   group:"«Quvnoq qaldirgochlar»",
   schoolYear:"2025–2026",
   teacher:"M. Tursunova",
+  assistant:"SH. Nabiyeva",
   childCount:"18",
   ageLabel:"3–4 yosh",
-  intro:`O'quv yili davomida «Quvnoq qaldirgochlar» guruhida ta'lim-tarbiya jarayoni "Ilk qadam" milliy o'quv dasturining uchinchi nashri talablariga muvofiq, kichik yoshdagi bolalarning sensomotorika va mayda motorikasini rivojlantirishga, shaxsiy gigiyena ko'nikmalarini shakllantirishga hamda atrof-muhitga nisbatan dastlabki qiziqishni uyg'otishga yo'naltirilgan holda olib borildi.`,
+  intro:`O'quv yili davomida «Quvnoq qaldirgochlar» guruhida ta'lim-tarbiya jarayoni "Ilk qadam" milliy o'quv dasturining uchinchi nashri talablariga muvofiq, kichik yoshdagi bolalarning sensomotorika va mayda motorikasini rivojlantirishga, shaxsiy gigiyena ko'nikmalarini shakllantirishga hamda atrof-muhitga nisbatan dastlabki qiziqishni uyg'otishga yo'naltirilgan holda olib borildi. Guruhda 18 nafar bola (9 nafar o'g'il, 9 nafar qiz bola) tarbiyalangan bo'lib, ularning katto qismi o'quv yili boshida MTTga moslashish davrini boshdan kechirdi.`,
+  monthly:[["Sen",48],["Okt",53],["Noy",57],["Dek",61],["Yan",65],["Fev",69],["Mar",72],["Apr",76],["May",79]],
   stats:[
     ["Jismoniy rivojlanish va sog'lom turmush tarzi","55%","82%","+27%"],
     ["Ijtimoiy-hissiy rivojlanish","48%","76%","+28%"],
@@ -162,7 +235,68 @@ const reports = {
     ["Bilish jarayonlarini rivojlantirish","50%","78%","+28%"],
     ["Ijodiy rivojlanish","53%","80%","+27%"]
   ],
-  narrative:`Yil boshida o'tkazilgan dastlabki kuzatuv natijalariga ko'ra, bolalarning katto qismida asosiy ranglar va sodda geometrik shakllarni farqlash, shaxsiy gigiyena ko'nikmalari (qo'l yuvish, ovqatlanish madaniyati) hali to'liq shakllanmagan edi. O'quv yili davomida sensor o'yinlar, didaktik mashg'ulotlar va kundalik rutinalar orqali ushbu ko'nikmalar muntazam mustahkamlandi. Yil oxiriga kelib, bolalarning aksariyati mustaqil ravishda asosiy rang va shakllarni nomlay oladi, oddiy topshiriqlarni tushunib bajaradi, kattalar va tengdoshlari bilan sodda nutqiy muloqotga kirisha oladi.`,
+  sohaDetails:[
+    {
+      name:"Jismoniy rivojlanish va sog'lom turmush tarzi",
+      icon:"ti-heartbeat", progress:"+27%",
+      sub:[["Yirik motorika",84],["Mayda motorika",80],["Sog'lom turmush tarzi va xavfsizlik",83]],
+      text:`Yil boshida bolalarning ko'pchiligida asosiy harakat turlari (yurish, yugurish, sakrash) muvofiqlashtirilmagan holatda edi. Ertalabki badantarbiya, harakatli o'yinlar va mayda motorikani rivojlantiruvchi mashg'ulotlar (mozaika, plastilin, tasmachalar bog'lash) muntazam o'tkazildi. Yil oxiriga kelib bolalarning aksariyati to'pni ushlab-uloqtirish, to'siqlar ustidan sakrash kabi harakatlarni muvofiqlashgan holda bajaradi. Shaxsiy gigiyena ko'nikmalari (qo'l yuvish, sochiq ishlatish) barcha bolalarda mustaqil darajaga yetdi.`
+    },
+    {
+      name:"Ijtimoiy-hissiy rivojlanish",
+      icon:"ti-mood-smile", progress:"+28%",
+      sub:[["\"Men\" konsepsiyasi",74],["Hissiy rivojlanish",77],["Ijtimoiy rivojlanish",78]],
+      text:`Yil boshida bolalarning katta qismida ajralish xavotiri (ota-onadan ajralishda yig'lash) kuzatilgan, bu MTTga moslashish davrining tabiiy ko'rinishi hisoblanadi. Kundalik rutinalar, individual e'tibor va "Oilamiz" mavzusidagi mashg'ulotlar orqali bolalarning hissiy barqarorligi sezilarli oshdi. Yil oxirida bolalar tengdoshlari bilan parallel o'yinlardan birgalikdagi sodda o'yinlarga (qum bilan birga o'ynash, navbat kutish) o'tdilar.`
+    },
+    {
+      name:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+      icon:"ti-message-circle", progress:"+28%",
+      sub:[["Nutq va til",68],["O'qishga tayyorgarlik",71],["Yozuvga tayyorgarlik",72]],
+      text:`Faol so'z boyligi yil boshida o'rtacha 80–100 so'zni tashkil etgan bo'lsa, yil oxirida bu ko'rsatkich 250–300 so'zgacha yetdi. Bolalar endi 2–3 so'zdan iborat sodda gaplar tuzadi, kattalardan iltimos qila oladi, his-tuyg'ularini so'z bilan ifodalashga harakat qiladi. Ertaklarni tinglash davomida diqqatni jamlash vaqti 5 daqiqadan 12–15 daqiqagacha o'sdi.`
+    },
+    {
+      name:"Bilish jarayonlarini rivojlantirish",
+      icon:"ti-brain", progress:"+28%",
+      sub:[["Mantiqiy fikrlash",76],["Elementar matematika",79],["Dunyoni anglash",80]],
+      text:`Sensor o'yinlar va didaktik materiallar yordamida bolalarda rang, shakl va hajm tushunchalari shakllantirildi. 16 nafar bola (89%) asosiy 4 rangni va 3 geometrik shaklni mustaqil ajrata oladi. "Kattaroq-kichikroq", "ko'p-kam" kabi solishtirish tushunchalari amaliy mashg'ulotlar orqali singdirildi.`
+    },
+    {
+      name:"Ijodiy rivojlanish",
+      icon:"ti-palette", progress:"+27%",
+      sub:[["Dunyoni badiiy tasavvur qilish",81],["Badiiy va ijodiy qobiliyatlar",79]],
+      text:`Bolalar rangli qalam va bo'yoqlar bilan erkin chizishdan tobora maqsadli tasvirlar (quyosh, gul, uy konturlari) yaratishga o'tdilar. Musiqa va ritmga moslashib harakat qilish, oddiy qo'shiqlarni birga kuylash ko'nikmalari shakllandi.`
+    }
+  ],
+  tiers:{high:5,mid:11,low:2,note:"Yordamga muhtoj 2 nafar bola asosan nutq rivojlanishi bo'yicha orqada qoladi; ular bilan individual qo'shimcha mashg'ulotlar tashkil etilgan."},
+  parents:{
+    meetings:"4 marta umumiy ota-onalar majlisi",
+    individual:"32 marta individual suhbat",
+    participation:"83%",
+    events:["\"Moslashish davri\" bo'yicha psixolog ishtirokidagi maslahat kuni","\"Uyda o'yin orqali ta'lim\" amaliy seminari","Navro'z bayramida ota-onalar ishtiroki","Ochiq eshiklar kuni — guruhga tashrif"]
+  },
+  health:{
+    avgAttendance:"81%",
+    sickDays:"O'rtacha 14 kun/bola (asosan kuz-qish davrida ORVI)",
+    procedures:["Kundalik ertalabki ko'rik","Choraklik antropometriya o'lchovlari","Vitaminoterapiya kursi (kuz, qish)","Qattiqlashtirish protseduralari (havo va suv vannalari)"]
+  },
+  methodic:{
+    seminars:["\"Kichik yoshdagi bolalar bilan moslashish davri\" — 1 seminar","\"Sensor rivojlantirish usullari\" — amaliy trening"],
+    selfEducation:"Tarbiyachi M. Tursunova \"O'yin orqali ta'lim olish\" uslubiy qo'llanmasi asosida o'z ustida ish olib bordi, 2 ochiq mashg'ulot tashkil etdi."
+  },
+  centers:{
+    status:"Yaxshi",
+    notes:["\"Fan va tabiat\" markazi sensor materiallar (qum, don, rangli suv) bilan boyitildi","\"Qurish-yasash\" markaziga yumshoq kublar qo'shildi","\"Til va nutq\" burchagiga yangi rasmli kitoblar (8 nomda) kiritildi","Yotoqxona mebeli yangilanishga muhtoj — keyingi yilga reja kiritildi"]
+  },
+  inclusion:{
+    count:"1 nafar (nutq rivojlanishida kechikish)",
+    work:"Bola logoped bilan haftada 2 marta individual mashg'ulot oldi, ota-onasi bilan uyda bajariladigan mashqlar bo'yicha kelishildi. Yil oxiriga kelib faol so'z boyligi sezilarli oshdi, ammo nazoratni davom ettirish tavsiya etiladi."
+  },
+  events:[
+    ["Sentyabr","Bilimlar kuni","Moslashish davrini yengillashtiruvchi o'yin-tadbir"],
+    ["Oktyabr","Kuz bayrami","Mevalar va sabzavotlar mavzusida sensor faoliyat"],
+    ["Mart","Navro'z bayramchasi","Sodda raqs va qo'shiqlar bilan tantana"],
+    ["May","\"Oilam bilan\" kuni","Ota-onalar ishtirokidagi ochiq mashg'ulot"]
+  ],
   achievements:[
     "Barcha bolalar mustaqil ravishda qo'l yuvish va ovqatlanish gigiyenasiga oid asosiy ko'nikmalarni egalladi",
     "16 nafar bola (89%) asosiy ranglar va geometrik shakllarni mustaqil ajrata oladi",
@@ -170,15 +304,22 @@ const reports = {
     "Ota-onalar bilan har oyda kamida bir marta individual suhbat o'tkazib borildi",
     "Bolalarning 14 nafari (78%) oddiy 2–3 so'zli gaplar tuzib, o'z ehtiyojini og'zaki ifoda eta oladi"
   ],
-  recommendations:`Keyingi o'quv yilida nutq rivojlantirish bo'yicha qo'shimcha individual mashg'ulotlar tashkil etish, ayniqsa lug'at boyligi sustroq bo'lgan 4 nafar bola bilan maqsadli ishlash tavsiya etiladi. Shuningdek, "Syujetli-rolli o'yinlar" markazini yangi atributlar bilan boyitish va ijtimoiy-hissiy rivojlanish ko'rsatkichlarini yanada oshirish maqsadga muvofiq.`
+  problems:[
+    {title:"Moslashish davrining uzoq cho'zilishi",cause:"5 nafar bolada MTTga moslashish 2 oydan ortiq davom etdi, bu ajralish xavotiri va kundalik rutinaning yo'qligi bilan bog'liq edi.",solution:"Ota-onalar bilan moslashish davri bo'yicha maxsus jadval tuzildi, bolaning sevimli o'yinchog'ini olib kelishiga ruxsat berildi, natijada 4 nafar bolada holat 3 haftada barqarorlashdi."},
+    {title:"Faol so'z boyligining notekis rivojlanishi",cause:"2 nafar bolada nutqiy rivojlanish yosh me'yoridan orqada qolgani aniqlandi.",solution:"Logoped bilan individual mashg'ulotlar tashkil etildi, ota-onalarga uyda qo'llash uchun sodda nutq mashqlari to'plami berildi."}
+  ],
+  recommendations:`Keyingi o'quv yilida nutq rivojlantirish bo'yicha qo'shimcha individual mashg'ulotlar tashkil etish, ayniqsa lug'at boyligi sustroq bo'lgan bolalar bilan maqsadli ishlash tavsiya etiladi. Shuningdek, "Syujetli-rolli o'yinlar" markazini yangi atributlar bilan boyitish va ijtimoiy-hissiy rivojlanish ko'rsatkichlarini yanada oshirish maqsadga muvofiq. Yotoqxona mebelini yangilash bo'yicha MTT ma'muriyatiga taklif kiritilgan.`
 },
+
 "4-5": {
   group:"«Bahor nafosati»",
   schoolYear:"2025–2026",
   teacher:"D. Yusupova",
+  assistant:"F. Qosimova",
   childCount:"21",
   ageLabel:"4–5 yosh",
-  intro:`«Bahor nafosati» guruhida olib borilgan ta'lim-tarbiya faoliyati "Ilk qadam" dasturining o'rta guruh talablariga asoslanib, bolalarning ijtimoiy-hissiy kompetensiyasini, faol so'z boyligini va elementar matematik tasavvurlarini rivojlantirishga qaratildi. Yil davomida o'yinga asoslangan ta'lim, rolli o'yinlar va tadqiqot faoliyati orqali bolalarning mustaqil fikrlash ko'nikmalari shakllantirildi.`,
+  intro:`«Bahor nafosati» guruhida olib borilgan ta'lim-tarbiya faoliyati "Ilk qadam" dasturining o'rta guruh talablariga asoslanib, bolalarning ijtimoiy-hissiy kompetensiyasini, faol so'z boyligini va elementar matematik tasavvurlarini rivojlantirishga qaratildi. Guruhda 21 nafar bola (11 qiz, 10 o'g'il bola) tarbiyalanmoqda. Yil davomida o'yinga asoslangan ta'lim, rolli o'yinlar va tadqiqot faoliyati orqali bolalarning mustaqil fikrlash ko'nikmalari shakllantirildi.`,
+  monthly:[["Sen",56],["Okt",61],["Noy",65],["Dek",68],["Yan",71],["Fev",75],["Mar",78],["Apr",81],["May",84]],
   stats:[
     ["Jismoniy rivojlanish va sog'lom turmush tarzi","60%","85%","+25%"],
     ["Ijtimoiy-hissiy rivojlanish","58%","84%","+26%"],
@@ -186,7 +327,68 @@ const reports = {
     ["Bilish jarayonlarini rivojlantirish","56%","83%","+27%"],
     ["Ijodiy rivojlanish","61%","86%","+25%"]
   ],
-  narrative:`O'quv yili boshida bolalarning oila a'zolari haqidagi tasavvurlari, his-tuyg'ularni og'zaki ifoda etish va tengdoshlari bilan hamkorlikda o'yin tashkil etish ko'nikmalari o'rta darajada edi. Haftalik mavzuli rejalashtirish asosida tashkil etilgan rolli o'yinlar, davra suhbatlari va ijodiy faoliyatlar natijasida bolalar o'z his-tuyg'ularini aniqroq ifodalashga, nizoli vaziyatlarda murosaga kelishga o'rgandilar. Elementar matematik ko'nikmalar — 5 ichida sanash, predmetlarni taqqoslash — barqaror shakllandi.`,
+  sohaDetails:[
+    {
+      name:"Jismoniy rivojlanish va sog'lom turmush tarzi",
+      icon:"ti-heartbeat", progress:"+25%",
+      sub:[["Mayda motorika",85],["Sog'lom turmush tarzi va xavfsizlik",86]],
+      text:`Bolalarda qaychi bilan to'g'ri kesish, mato bog'lash, plastilindan murakkabroq shakllar yasash ko'nikmalari mustahkamlandi. Sport mashg'ulotlari va xalq o'yinlari orqali muvofiqlashtirilgan harakatlar (to'p bilan ishlash, muvozanat saqlash) yaxshi darajaga yetdi. Barcha bolalar mustaqil kiyinish va shaxsiy buyumlarini tartibga solishni o'rgandi.`
+    },
+    {
+      name:"Ijtimoiy-hissiy rivojlanish",
+      icon:"ti-mood-smile", progress:"+26%",
+      sub:[["\"Men\" konsepsiyasi",83],["Hissiy rivojlanish",84],["Ijtimoiy rivojlanish",85]],
+      text:`Yil boshida bolalarning his-tuyg'ularini og'zaki ifoda etish va tengdoshlari bilan hamkorlikda o'yin tashkil etish ko'nikmalari o'rta darajada edi. Rolli o'yinlar, davra suhbatlari va ijodiy faoliyatlar natijasida bolalar o'z his-tuyg'ularini aniqroq ifodalashga, nizoli vaziyatlarda murosaga kelishga o'rgandilar. Guruhda barqaror do'stlik munosabatlari shakllandi.`
+    },
+    {
+      name:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+      icon:"ti-message-circle", progress:"+27%",
+      sub:[["Nutq va til",77],["O'qishga tayyorgarlik",79],["Yozuvga tayyorgarlik",80]],
+      text:`Bolalarning faol so'z boyligi sezilarli kengaydi, ular endi 4–5 so'zdan iborat gaplar tuzadi. 17 nafar bola (81%) tinglagan kichik hikoyani mustaqil qayta so'zlab bera oladi. Harflarga qiziqish uyg'ondi, ba'zi bolalar o'z ismidagi harflarni tanay boshladi.`
+    },
+    {
+      name:"Bilish jarayonlarini rivojlantirish",
+      icon:"ti-brain", progress:"+27%",
+      sub:[["Mantiqiy fikrlash va muammolarni hal qilish",82],["Elementar matematika",84],["Dunyoni anglash",83]],
+      text:`5 ichida sanash, predmetlarni hajmi va miqdori bo'yicha taqqoslash ko'nikmalari barqaror shakllandi. 19 nafar bola (90%) mustaqil sanay oladi. Tadqiqot faoliyati (suv, magnit, soyalar bilan tajribalar) orqali bolalarda kuzatish va taxmin qilish ko'nikmalari rivojlandi.`
+    },
+    {
+      name:"Ijodiy rivojlanish",
+      icon:"ti-palette", progress:"+25%",
+      sub:[["Dunyoni badiiy tasavvur qilish",85],["Badiiy va ijodiy qobiliyatlar",87]],
+      text:`Bolalar endi murakkabroq kompozitsiyalar chizishga, applikatsiya va modellashtirish orqali g'oyalarini amalga oshirishga qodir. Musiqa va raqsga oid mashg'ulotlarda ijodiy tashabbus ko'rsatish kuchaydi.`
+    }
+  ],
+  tiers:{high:7,mid:12,low:2,note:"2 nafar bola ijtimoiy moslashuv bo'yicha qo'shimcha e'tiborni talab qiladi — ular bilan kichik guruhli o'yinlar orqali ish olib borilmoqda."},
+  parents:{
+    meetings:"4 marta umumiy ota-onalar majlisi",
+    individual:"38 marta individual suhbat",
+    participation:"88%",
+    events:["\"Oilamiz\" loyihasi taqdimoti — ota-onalar ishtirokida","Uyda ta'lim berish bo'yicha 3 amaliy seminar","8-mart bayramiga bag'ishlangan ochiq tadbir","Bitiruv guruhiga o'tish bosqichi bo'yicha maslahat kuni"]
+  },
+  health:{
+    avgAttendance:"85%",
+    sickDays:"O'rtacha 10 kun/bola",
+    procedures:["Kundalik ertalabki ko'rik","Choraklik antropometriya","Yengil gimnastika va nafas mashqlari","Sayrlarda qattiqlashtirish mashg'ulotlari"]
+  },
+  methodic:{
+    seminars:["\"O'rta guruhda matematik tasavvurlarni rivojlantirish\" — seminar","\"Loyiha metodi: amaliyotga tatbiq\" — trening"],
+    selfEducation:"Tarbiyachi D. Yusupova \"Shaxsga yo'naltirilgan yondashuv asosida ta'lim jarayonini rejalashtirish\" qo'llanmasi asosida 3 ochiq mashg'ulot tashkil etdi va metodik kengashda tajriba almashdi."
+  },
+  centers:{
+    status:"A'lo",
+    notes:["\"Oilamiz\" loyihasi doirasida yangi rolli o'yin atributlari yaratildi","\"Qurish, konstruksiyalash va matematika\" markazi sanoq materiallari bilan boyitildi","\"San'at\" markaziga tabiiy materiallar (paxta, mato bo'lakchalari) qo'shildi"]
+  },
+  inclusion:{
+    count:"Yo'q (joriy o'quv yilida rasmiy aniqlangan alohida ta'lim ehtiyojiga ega bola mavjud emas)",
+    work:"Ijtimoiy moslashuvda qiyinchilik sezayotgan 2 nafar bola bilan kichik guruhli o'yin faoliyati orqali profilaktik ish olib borildi."
+  },
+  events:[
+    ["Sentyabr","Bilimlar kuni","\"Yangi o'rtoqlar\" tanishuv o'yinlari"],
+    ["Dekabr","Yangi yil bayrami","Ayozbobo va Qor qiz ishtirokidagi sahna tomoshasi"],
+    ["Mart","8-mart tadbiri","Onalarga bag'ishlangan she'r va qo'shiqlar kechasi"],
+    ["Aprel","\"Oilamiz\" loyihasi taqdimoti","Ota-onalar ishtirokidagi yakuniy taqdimot"]
+  ],
   achievements:[
     "19 nafar bola (90%) 5 ichida mustaqil sanay oladi va predmetlarni hajmi bo'yicha taqqoslay oladi",
     "Guruhda \"Oilamiz\" mavzusidagi loyiha muvaffaqiyatli amalga oshirildi, barcha bolalar faol ishtirok etdi",
@@ -194,15 +396,22 @@ const reports = {
     "Ota-onalar uchun 3 marta amaliy seminar tashkil etildi (uy sharoitida ta'lim, nutq rivojlantirish)",
     "Rivojlanish markazlarida \"Til va nutq\" burchagi yangi kitoblar va kartochkalar bilan to'ldirildi"
   ],
+  problems:[
+    {title:"Ba'zi bolalarda diqqatni uzoq jamlay olmaslik",cause:"6 nafar bolada mashg'ulot davomida diqqatni 10 daqiqadan ortiq jamlash qiyinchilik tug'dirdi.",solution:"Mashg'ulotlar qisqaroq bosqichlarga bo'lindi, harakatli pauzalar ko'paytirildi, natijada yil oxiriga kelib bu ko'rsatkich sezilarli yaxshilandi."},
+    {title:"Rolli o'yinlarda ba'zi bolalarning passivligi",cause:"3 nafar uyatchan bola guruh o'yinlariga qo'shilishda ikkilanish ko'rsatdi.",solution:"Ularga kichik, ikki kishilik o'yinlardan boshlab, bosqichma-bosqich katta guruhga jalb qilish strategiyasi qo'llanildi."}
+  ],
   recommendations:`Keyingi bosqichda bolalarning diqqatini jamlash va vazifani oxirigacha bajarish ko'nikmalarini mustahkamlash, shuningdek, ijodiy rivojlanish sohasida individual qiziqishlarni (musiqa, rasm) chuqurroq aniqlash va qo'llab-quvvatlash tavsiya etiladi. Tanqidiy fikrlashni rivojlantiruvchi ochiq savollardan mashg'ulotlarda yanada ko'proq foydalanish zarur.`
 },
+
 "5-6": {
   group:"«Tafakkur yulduzlari»",
   schoolYear:"2025–2026",
   teacher:"N. Ergasheva",
+  assistant:"M. Saidova",
   childCount:"20",
   ageLabel:"5–6 yosh",
-  intro:`«Tafakkur yulduzlari» guruhida ta'lim jarayoni "Ilk qadam" dasturining katta guruh talablariga muvofiq tashkil etildi. Asosiy e'tibor bolalarning tanqidiy fikrlash, tadqiqotchilik faoliyati, elementar matematik hisob-kitob ko'nikmalari hamda savodxonlikka tayyorgarlik jarayonlariga qaratildi.`,
+  intro:`«Tafakkur yulduzlari» guruhida ta'lim jarayoni "Ilk qadam" dasturining katta guruh talablariga muvofiq tashkil etildi. Guruhda 20 nafar bola (10 qiz, 10 o'g'il bola) tarbiyalanmoqda. Asosiy e'tibor bolalarning tanqidiy fikrlash, tadqiqotchilik faoliyati, elementar matematik hisob-kitob ko'nikmalari hamda savodxonlikka tayyorgarlik jarayonlariga qaratildi.`,
+  monthly:[["Sen",63],["Okt",68],["Noy",72],["Dek",75],["Yan",78],["Fev",81],["Mar",84],["Apr",87],["May",89]],
   stats:[
     ["Jismoniy rivojlanish va sog'lom turmush tarzi","65%","88%","+23%"],
     ["Ijtimoiy-hissiy rivojlanish","63%","87%","+24%"],
@@ -210,7 +419,68 @@ const reports = {
     ["Bilish jarayonlarini rivojlantirish","62%","89%","+27%"],
     ["Ijodiy rivojlanish","66%","90%","+24%"]
   ],
-  narrative:`Yil davomida bolalar bilan "uch savol" metodikasi (Biz nimani bilamiz? Nimani bilishni istaymiz? Nimani bilib oldik?) asosida bir qator mavzuviy loyihalar — "Suv sirlari", "Kosmos", "Hunarmandlar shahri" — amalga oshirildi. Tajriba va tadqiqotlar orqali bolalarda sabab-oqibat bog'lanishlarini anglash, gipoteza qurish va kuzatish natijalarini umumlashtirish ko'nikmalari muvaffaqiyatli shakllandi. 10 ichida hisoblash, geometrik shakllarni tasniflash ko'nikmalari yuqori darajaga yetdi.`,
+  sohaDetails:[
+    {
+      name:"Jismoniy rivojlanish va sog'lom turmush tarzi",
+      icon:"ti-heartbeat", progress:"+23%",
+      sub:[["Mayda motorika",87],["Sog'lom turmush tarzi va xavfsizlik",89]],
+      text:`Bolalarda qalam va qaychi bilan ishlash texnikasi yuqori darajaga yetdi, bu yozuvga tayyorgarlikning muhim asosi hisoblanadi. Sport musobaqalarida faol ishtirok etish, jamoa bo'lib harakat qilish ko'nikmalari mustahkamlandi.`
+    },
+    {
+      name:"Ijtimoiy-hissiy rivojlanish",
+      icon:"ti-mood-smile", progress:"+24%",
+      sub:[["\"Men\" konsepsiyasi",86],["Hissiy rivojlanish",87],["Ijtimoiy rivojlanish",88]],
+      text:`Bolalar murakkab vaziyatlarda mustaqil yechim topishga, nizolarni so'z orqali hal qilishga o'rgandilar. Guruhda o'zaro yordam va hamdardlik munosabatlari yaxshi shakllangan.`
+    },
+    {
+      name:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+      icon:"ti-message-circle", progress:"+26%",
+      sub:[["Nutq va til",82],["O'qishga tayyorgarlik",85],["Yozuvga tayyorgarlik",84]],
+      text:`Bolalarning 16 nafari (80%) tinglagan ertak yoki hikoya asosida mustaqil savol tuza oladi, syujetni izchil qayta hikoya qiladi. So'zlarning bo'g'in tarkibini ajratish, ba'zi tovushlarni tahlil qilish ko'nikmalari shakllandi.`
+    },
+    {
+      name:"Bilish jarayonlarini rivojlantirish",
+      icon:"ti-brain", progress:"+27%",
+      sub:[["Mantiqiy fikrlash va muammolarni hal qilish",88],["Elementar matematika",91],["Dunyoni anglash",89]],
+      text:`18 nafar bola (90%) 10 ichida qo'shish-ayirish amallarini mustaqil bajaradi. "Suv sirlari", "Kosmos" mavzusidagi tadqiqot loyihalari orqali bolalarda gipoteza qurish va natijani umumlashtirish ko'nikmalari yuqori darajada rivojlandi.`
+    },
+    {
+      name:"Ijodiy rivojlanish",
+      icon:"ti-palette", progress:"+24%",
+      sub:[["Dunyoni badiiy tasavvur qilish",90],["Badiiy va ijodiy qobiliyatlar",91]],
+      text:`Bolalar murakkab kompozitsiyali ishlar yarata oladi, milliy naqsh elementlaridan foydalangan holda applikatsiya ishlarini bajaradi. Teatrlashtirilgan o'yinlarda rolga kirish va ifodali nutq ko'nikmalari rivojlandi.`
+    }
+  ],
+  tiers:{high:9,mid:9,low:2,note:"2 nafar bola matematik tasavvurlarni egallashda qo'shimcha mashqlarga muhtoj — ular bilan haftalik individual rejalashtirilgan ishlar olib borilmoqda."},
+  parents:{
+    meetings:"4 marta umumiy ota-onalar majlisi",
+    individual:"40 marta individual suhbat",
+    participation:"91%",
+    events:["Har chorakda bittadan ochiq mashg'ulot","\"Tadqiqotchi bola\" loyihasi taqdimoti","Attestatsiyaga tayyorgarlik bo'yicha maslahat kuni","Maktabga psixologik tayyorgarlik bo'yicha davra suhbati"]
+  },
+  health:{
+    avgAttendance:"89%",
+    sickDays:"O'rtacha 7 kun/bola",
+    procedures:["Kundalik ertalabki ko'rik","Yarim yillik chuqur tibbiy ko'rik","Nafas gimnastikasi mashg'ulotlari","Sport musobaqalarida faol ishtirok"]
+  },
+  methodic:{
+    seminars:["\"Tadqiqotga asoslangan ta'lim: amaliy usullar\" — seminar","\"Maktabga tayyorlik diagnostikasi\" — trening","Mintaqaviy metodik kengashda tajriba taqdimoti"],
+    selfEducation:"Tarbiyachi N. Ergasheva \"Kuzatish va baholash\" uslubiy qo'llanmasi asosida individual rivojlanish xaritalarini yuritish bo'yicha amaliyotni takomillashtirdi, 4 ochiq mashg'ulot o'tkazdi."
+  },
+  centers:{
+    status:"A'lo",
+    notes:["\"Fan va tabiat\" markaziga mini-laboratoriya jihozlari (lupalar, o'lchov idishlari) qo'shildi","\"Til va nutq\" markazi maktabga tayyorgarlik materiallari bilan boyitildi","\"Qurish, konstruksiyalash va matematika\" markaziga murakkab konstruktorlar kiritildi"]
+  },
+  inclusion:{
+    count:"1 nafar (diqqat yetishmovchiligi belgilari)",
+    work:"Bola psixolog kuzatuvida bo'lib, mashg'ulotlarda qisqa va aniq topshiriqlar, vizual jadvallar qo'llanildi. Ota-onasi bilan uyda kun tartibini izchil yuritish bo'yicha kelishildi. Yil davomida ijobiy dinamika kuzatildi."
+  },
+  events:[
+    ["Sentyabr","Bilimlar kuni","\"Men nimani bilaman\" mavzusidagi davra suhbati"],
+    ["Noyabr","\"Suv sirlari\" loyihasi","Tajribalar asosidagi tadqiqot loyihasi yakuni"],
+    ["Mart","Navro'z bayrami","Milliy raqs va sumalak sahnasi"],
+    ["Aprel","\"Kosmos\" loyihasi taqdimoti","Bolalar tomonidan tayyorlangan ko'rgazma"]
+  ],
   achievements:[
     "18 nafar bola (90%) 10 ichida qo'shish-ayirish amallarini mustaqil bajaradi",
     "\"Suv sirlari\" tadqiqot loyihasi doirasida barcha bolalar amaliy tajribalarda faol ishtirok etdi",
@@ -218,15 +488,22 @@ const reports = {
     "Guruhda har chorakda bittadan ochiq mashg'ulot ota-onalar ishtirokida o'tkazildi",
     "Attestatsiyaga tayyorgarlik maqsadida tashkil etilgan oraliq testlarda o'rtacha natija 84% ni tashkil etdi"
   ],
+  problems:[
+    {title:"Matematik tasavvurlarni egallashda notekislik",cause:"2 nafar bolada sanoq va miqdor tushunchalarini o'zlashtirishda boshqalardan orqada qolish kuzatildi.",solution:"Ular bilan haftada 3 marta individual o'yin-mashqlar (kublar, sanoq tayoqchalari) orqali qo'shimcha ish tashkil etildi, natija sezilarli yaxshilandi."},
+    {title:"Diqqat yetishmovchiligi belgilari",cause:"1 nafar bolada uzoq davom etadigan mashg'ulotlarda diqqatni jamlashda qiyinchilik aniqlandi.",solution:"Psixolog bilan hamkorlikda individual yondashuv ishlab chiqildi, vizual jadvallar va qisqa topshiriqlar qo'llanildi."}
+  ],
   recommendations:`Bolalarni maktab ta'limiga tayyorlash jarayonida yozuvga tayyorgarlik (qo'l mushaklarini mustahkamlash) bo'yicha mashg'ulotlar hajmini oshirish, shuningdek, jamoaviy loyihalarda tashabbuskorlik ko'rsatishda orqada qolayotgan bolalar bilan individual ishlashni kuchaytirish tavsiya etiladi.`
 },
+
 "6-7": {
   group:"«Kelajak quyoshlari» (bitiruv guruhi)",
   schoolYear:"2025–2026",
   teacher:"G. Aliyeva",
+  assistant:"Z. Mirzayeva",
   childCount:"19",
   ageLabel:"6–7 yosh",
-  intro:`«Kelajak quyoshlari» bitiruv guruhida o'quv yili davomidagi asosiy maqsad bolalarni boshlang'ich ta'limga har tomonlama tayyorlashdan iborat bo'ldi. "Ilk qadam" dasturining 6–7 yosh uchun belgilangan kutilayotgan natijalari asosida besh tayanch kompetensiya — kommunikativ, ijtimoiy, shaxsiy, bilish va tanqidiy fikrlash — izchil rivojlantirildi.`,
+  intro:`«Kelajak quyoshlari» bitiruv guruhida o'quv yili davomidagi asosiy maqsad bolalarni boshlang'ich ta'limga har tomonlama tayyorlashdan iborat bo'ldi. Guruhda 19 nafar bola (9 qiz, 10 o'g'il bola) tarbiyalanib, "Ilk qadam" dasturining 6–7 yosh uchun belgilangan kutilayotgan natijalari asosida besh tayanch kompetensiya — kommunikativ, ijtimoiy, shaxsiy, bilish va tanqidiy fikrlash — izchil rivojlantirildi.`,
+  monthly:[["Sen",67],["Okt",72],["Noy",76],["Dek",80],["Yan",83],["Fev",86],["Mar",89],["Apr",91],["May",93]],
   stats:[
     ["Jismoniy rivojlanish va sog'lom turmush tarzi","70%","93%","+23%"],
     ["Ijtimoiy-hissiy rivojlanish","68%","92%","+24%"],
@@ -234,7 +511,68 @@ const reports = {
     ["Bilish jarayonlarini rivojlantirish","67%","94%","+27%"],
     ["Ijodiy rivojlanish","71%","93%","+22%"]
   ],
-  narrative:`O'quv yili yakunida o'tkazilgan maktabga tayyorlik diagnostikasi natijalariga ko'ra, guruhdagi 19 nafar boladan 17 nafari (89%) yuqori va o'rtadan yuqori tayyorgarlik darajasini ko'rsatdi. Bolalar mustaqil ravishda matn tuzish, 20 ichida hisoblash, harflarni tanish va bo'g'inlarga bo'lish, shuningdek, kattalar va tengdoshlar bilan muloqotda o'z fikrini asoslab bera olish ko'nikmalarini egalladilar. Yil davomida "Mashgulot rejalari" bo'limidagi ochiq darslar va milliy bayramlarga bag'ishlangan tadbirlar orqali bolalarda Vatanga muhabbat va milliy g'urur tuyg'usi mustahkamlandi.`,
+  sohaDetails:[
+    {
+      name:"Jismoniy rivojlanish va sog'lom turmush tarzi",
+      icon:"ti-heartbeat", progress:"+23%",
+      sub:[["Mayda motorika (yozuvga tayyorgarlik)",94],["Sog'lom turmush tarzi va xavfsizlik",95]],
+      text:`Barcha bolalarda qalamni to'g'ri tutish, chiziqlarni izchil va tekis chizish ko'nikmalari to'liq shakllangan. Yo'l harakati xavfsizligi, yong'in xavfsizligi qoidalari bo'yicha bilimlar mustahkamlandi.`
+    },
+    {
+      name:"Ijtimoiy-hissiy rivojlanish",
+      icon:"ti-mood-smile", progress:"+24%",
+      sub:[["\"Men\" konsepsiyasi",92],["Hissiy rivojlanish",91],["Ijtimoiy rivojlanish",93]],
+      text:`Bolalar o'z his-tuyg'ularini chuqur anglaydi va vaziyatga mos boshqaradi, jamoada qoidalarga rioya qilib ishlash, mas'uliyatni his qilish ko'nikmalari yuqori darajaga yetdi.`
+    },
+    {
+      name:"Nutq, muloqot, o'qish va yozish ko'nikmalari",
+      icon:"ti-message-circle", progress:"+26%",
+      sub:[["Nutq va til",89],["O'qishga tayyorgarlik",91],["Yozuvga tayyorgarlik",90]],
+      text:`Barcha bolalar o'z ismi va oddiy so'zlarni mustaqil yoza oladi, harflarni bo'g'inlarga bo'lish va sodda matnlarni o'qishga tayyorgarlik ko'rsatkichlari yuqori. Bolalar izchil va mantiqiy hikoya tuza oladi.`
+    },
+    {
+      name:"Bilish jarayonlarini rivojlantirish",
+      icon:"ti-brain", progress:"+27%",
+      sub:[["Mantiqiy fikrlash va muammolarni hal qilish",93],["Elementar matematika",95],["Dunyoni anglash",94]],
+      text:`16 nafar bola (84%) 20 ichida qo'shish-ayirish amallarini xatosiz bajaradi. Bolalar murakkab mantiqiy zanjirlarni tushunadi, sabab-oqibat bog'lanishlarini mustaqil tahlil qiladi, raqamli savodxonlik asoslarini o'zlashtirgan.`
+    },
+    {
+      name:"Ijodiy rivojlanish",
+      icon:"ti-palette", progress:"+22%",
+      sub:[["Dunyoni badiiy tasavvur qilish",92],["Badiiy va ijodiy qobiliyatlar",94]],
+      text:`Bolalar milliy va umuminsoniy qadriyatlarni aks ettiruvchi murakkab ijodiy ishlar yaratadi, sahnalashtirilgan tomoshalarda ishonchli va ifodali ishtirok etadi.`
+    }
+  ],
+  tiers:{high:13,mid:4,low:2,note:"2 nafar bola maktabga tayyorlik bo'yicha o'rtacha darajada, ular uchun yoz davomida qo'shimcha individual reja ishlab chiqilgan."},
+  parents:{
+    meetings:"5 marta umumiy ota-onalar majlisi (jumladan maktabga o'tish bo'yicha alohida yig'ilish)",
+    individual:"45 marta individual suhbat",
+    participation:"95%",
+    events:["\"Maktabga tayyorlik\" bo'yicha psixolog ishtirokidagi davra suhbati","1-sinf o'qituvchilari bilan uchrashuv","\"Alvido, bog'cha!\" bitiruv tadbiri","Yoz davomidagi tavsiyalar bo'yicha individual maslahatlar"]
+  },
+  health:{
+    avgAttendance:"92%",
+    sickDays:"O'rtacha 5 kun/bola",
+    procedures:["Yakuniy tibbiy ko'rik va maktabga tayyorlik tibbiy xulosasi","Antropometrik ko'rsatkichlarning yakuniy o'lchovi","Sport musobaqalari va estafetalar","Kun tartibini maktab rejimiga moslashtirish mashg'ulotlari"]
+  },
+  methodic:{
+    seminars:["\"Maktabga tayyorlik diagnostikasi va xaritalash\" — seminar","\"Boshlang'ich ta'lim bilan uzviylik\" — hamkorlik trening","Tuman metodik kengashida tajriba taqdimoti — \"Bitiruv guruhida loyihaviy faoliyat\""],
+    selfEducation:"Tarbiyachi G. Aliyeva 1-sinf o'qituvchilari bilan uzviylik bo'yicha 2 qo'shma seminar tashkil etdi, har bir bitiruvchi uchun individual rivojlanish xaritasi va maktabga tavsiyanoma tayyorladi."
+  },
+  centers:{
+    status:"A'lo",
+    notes:["\"Til va nutq\" markazi maktab tipidagi o'quv qurollari bilan boyitildi","\"Qurish, konstruksiyalash va matematika\" markaziga murakkab sxema-konstruktorlar qo'shildi","Guruhda \"Maktab burchagi\" — partalar va maktab anjomlari namunasi bilan tashkil etildi"]
+  },
+  inclusion:{
+    count:"Yo'q (joriy o'quv yilida rasmiy aniqlangan alohida ta'lim ehtiyojiga ega bola mavjud emas)",
+    work:"Maktabga tayyorlik darajasi o'rtacha bo'lgan 2 nafar bola bilan individual qo'shimcha mashg'ulotlar (matematik tasavvurlar, diqqat mashqlari) tashkil etilgan."
+  },
+  events:[
+    ["Sentyabr","Bilimlar kuni","\"Men maktabchiman\" mavzusidagi tadbir"],
+    ["Mart","Navro'z bayrami","Milliy an'analar bilan tantanali tadbir"],
+    ["Aprel","\"Kichik olimlar\" loyihasi","Tadqiqot va kashfiyotlar ko'rgazmasi"],
+    ["May","\"Alvido, bog'cha!\"","Bitiruv tantanasi, guvohnoma topshirish"]
+  ],
   achievements:[
     "17 nafar bola (89%) maktabga tayyorlik xaritasi bo'yicha yuqori darajaga erishdi",
     "Barcha bolalar o'z ismi va oddiy so'zlarni mustaqil yoza oladi",
@@ -243,14 +581,42 @@ const reports = {
     "Guruh bo'yicha yil davomida o'tkazilgan 14 ta monitoring testining o'rtacha natijasi 91% ni tashkil etdi",
     "Barcha bitiruvchilarga individual rivojlanish xaritasi va maktabga tavsiyanoma rasmiylashtirildi"
   ],
-  recommendations:`Bitiruvchi bolalarning boshlang'ich ta'limga muvaffaqiyatli o'tishini ta'minlash maqsadida 1-sinf o'qituvchilari bilan uzviylik yig'ilishi tashkil etish, shuningdek, maktabga tayyorlik darajasi o'rtacha bo'lgan 2 nafar bola bo'yicha yoz davomida ota-onalar bilan qo'shimcha individual ish olib borish tavsiya etiladi.`
+  problems:[
+    {title:"Maktabga tayyorlik darajasining notekisligi",cause:"2 nafar bolada matematik tasavvurlar va diqqatni jamlash ko'rsatkichlari o'rtacha darajada qoldi.",solution:"Ota-onalar bilan kelishilgan holda yoz davomida bajariladigan individual mashqlar to'plami tuzildi, 1-sinf o'qituvchisiga ham tegishli ma'lumot uzatildi."},
+    {title:"Maktab rejimiga psixologik moslashish xavotiri",cause:"Bir qator bolalarda yangi muhitga o'tish bilan bog'liq xavotir alomatlari kuzatildi.",solution:"\"Maktab burchagi\" tashkil etilib, bolalar maktab my hitiga oldindan ko'nika boshladilar, psixolog bilan guruhli mashg'ulotlar o'tkazildi."}
+  ],
+  recommendations:`Bitiruvchi bolalarning boshlang'ich ta'limga muvaffaqiyatli o'tishini ta'minlash maqsadida 1-sinf o'qituvchilari bilan uzviylik yig'ilishini har yili an'anaga aylantirish, shuningdek, maktabga tayyorlik darajasi o'rtacha bo'lgan bolalar bo'yicha yoz davomida ota-onalar bilan qo'shimcha individual ish olib borish tavsiya etiladi.`
 }
 };
 
+const sectionsMeta = [
+  ["intro-sec","ti-file-text","Kirish"],
+  ["dynamics-sec","ti-chart-line","Oy-oy dinamika"],
+  ["stats-sec","ti-chart-dots-3","Umumiy natijalar"],
+  ["soha-sec","ti-list-details","Sohalar bo'yicha tahlil"],
+  ["tiers-sec","ti-users-group","Bolalar kesimida holat"],
+  ["parents-sec","ti-users","Ota-onalar bilan ish"],
+  ["health-sec","ti-stethoscope","Sog'lomlashtirish"],
+  ["inclusion-sec","ti-accessible","Inklyuziv ta'lim"],
+  ["centers-sec","ti-building","Rivojlanish markazlari"],
+  ["methodic-sec","ti-school","Metodik ish"],
+  ["events-sec","ti-calendar-event","Tadbirlar"],
+  ["achievements-sec","ti-trophy","Yutuqlar"],
+  ["problems-sec","ti-alert-triangle","Muammolar tahlili"],
+  ["recommend-sec","ti-target-arrow","Tavsiyalar"]
+];
+
 const container = document.getElementById('reportsContainer');
+const tocList = document.getElementById('tocList');
+
+function maxOf(arr){ return Math.max(...arr.map(x=>x[1])); }
 
 function renderReport(age){
   const r = reports[age];
+  const maxVal = maxOf(r.monthly);
+
+  tocList.innerHTML = sectionsMeta.map(s=>`<button class="toc-link" onclick="document.getElementById('${s[0]}').scrollIntoView({behavior:'smooth',block:'start'})"><i class="ti ${s[1]}"></i> ${s[2]}</button>`).join('');
+
   container.innerHTML = `
     <div class="report-card show">
       <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Chop etish</button>
@@ -266,16 +632,32 @@ function renderReport(age){
         <div><span>Guruh: </span><b>${r.group}</b></div>
         <div><span>Yosh guruhi: </span><b>${r.ageLabel}</b></div>
         <div><span>Tarbiyachi: </span><b>${r.teacher}</b></div>
+        <div><span>Yordamchi tarbiyachi: </span><b>${r.assistant}</b></div>
         <div><span>Bolalar soni: </span><b>${r.childCount} nafar</b></div>
+        <div><span>O'quv yili: </span><b>${r.schoolYear}</b></div>
       </div>
 
-      <div class="rep-section">
+      <div class="rep-section" id="intro-sec">
         <h4><i class="ti ti-file-text"></i> Kirish</h4>
         <p>${r.intro}</p>
       </div>
 
-      <div class="rep-section">
-        <h4><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari bo'yicha natijalar</h4>
+      <div class="rep-section" id="dynamics-sec">
+        <h4><i class="ti ti-chart-line"></i> Oy-oy rivojlanish dinamikasi</h4>
+        <p>O'quv yili davomida bolalarning umumiy rivojlanish ko'rsatkichi (barcha sohalar bo'yicha o'rtacha foiz) oylar kesimida quyidagicha o'zgardi:</p>
+        <div class="month-bar-wrap">
+          ${r.monthly.map(m=>`
+            <div class="month-bar-col">
+              <span class="month-bar-val">${m[1]}%</span>
+              <div class="month-bar" style="height:${(m[1]/maxVal*100)}%"></div>
+              <span class="month-bar-label">${m[0]}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="rep-section" id="stats-sec">
+        <h4><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari bo'yicha umumiy natijalar</h4>
         <table class="data-table">
           <thead>
             <tr><th>Rivojlanish sohasi</th><th>Yil boshi</th><th>Yil oxiri</th><th>O'sish</th></tr>
@@ -293,19 +675,122 @@ function renderReport(age){
         </table>
       </div>
 
-      <div class="rep-section">
-        <h4><i class="ti ti-notes"></i> Tahliliy xulosa</h4>
-        <p>${r.narrative}</p>
+      <div class="rep-section" id="soha-sec">
+        <h4><i class="ti ti-list-details"></i> Har bir rivojlanish sohasi bo'yicha batafsil tahlil</h4>
+        ${r.sohaDetails.map(sd=>`
+          <div class="soha-block">
+            <div class="soha-block-head">
+              <h5><i class="ti ${sd.icon}"></i> ${sd.name}</h5>
+              <span class="soha-progress-tag">${sd.progress}</span>
+            </div>
+            ${sd.sub.map(s=>`
+              <div class="subsoha-row">
+                <span class="subsoha-name">${s[0]}</span>
+                <div class="subsoha-bar-track"><div class="subsoha-bar-fill" style="width:${s[1]}%"></div></div>
+                <span class="subsoha-pct">${s[1]}%</span>
+              </div>
+            `).join('')}
+            <p style="margin-top:10px">${sd.text}</p>
+          </div>
+        `).join('')}
       </div>
 
-      <div class="rep-section">
+      <div class="rep-section" id="tiers-sec">
+        <h4><i class="ti ti-users-group"></i> Bolalar kesimida holat</h4>
+        <div class="tier-grid">
+          <div class="tier-card high">
+            <div class="tier-num">${r.tiers.high}</div>
+            <div class="tier-label">Yuqori daraja</div>
+            <div class="tier-desc">Barcha sohalarda dastur talablaridan yuqori natija ko'rsatadi</div>
+          </div>
+          <div class="tier-card mid">
+            <div class="tier-num">${r.tiers.mid}</div>
+            <div class="tier-label">O'rta daraja</div>
+            <div class="tier-desc">Dastur talablariga muvofiq, barqaror rivojlanmoqda</div>
+          </div>
+          <div class="tier-card low">
+            <div class="tier-num">${r.tiers.low}</div>
+            <div class="tier-label">Yordamga muhtoj</div>
+            <div class="tier-desc">Individual qo'shimcha ishlarni talab qiladi</div>
+          </div>
+        </div>
+        <p>${r.tiers.note}</p>
+      </div>
+
+      <div class="rep-section" id="parents-sec">
+        <h4><i class="ti ti-users"></i> Ota-onalar bilan ish</h4>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-val">${r.parents.meetings.split(' ')[0]}</div><div class="kpi-label">Umumiy majlislar</div></div>
+          <div class="kpi-card"><div class="kpi-val">${r.parents.individual.split(' ')[0]}</div><div class="kpi-label">Individual suhbatlar</div></div>
+          <div class="kpi-card"><div class="kpi-val">${r.parents.participation}</div><div class="kpi-label">Tadbirlarda qatnashish</div></div>
+          <div class="kpi-card"><div class="kpi-val">${r.parents.events.length}</div><div class="kpi-label">Maxsus tadbirlar</div></div>
+        </div>
+        <h5><i class="ti ti-calendar"></i> O'tkazilgan asosiy tadbirlar</h5>
+        <ul>${r.parents.events.map(e=>`<li>${e}</li>`).join('')}</ul>
+      </div>
+
+      <div class="rep-section" id="health-sec">
+        <h4><i class="ti ti-stethoscope"></i> Sog'lomlashtirish va sog'liqni saqlash</h4>
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-val">${r.health.avgAttendance}</div><div class="kpi-label">O'rtacha davomat</div></div>
+          <div class="kpi-card" style="grid-column:span 3"><div class="kpi-val" style="font-size:14px">${r.health.sickDays}</div><div class="kpi-label">Kasallanish ko'rsatkichi</div></div>
+        </div>
+        <h5><i class="ti ti-first-aid-kit"></i> O'tkazilgan sog'lomlashtirish tadbirlari</h5>
+        <ul>${r.health.procedures.map(p=>`<li>${p}</li>`).join('')}</ul>
+      </div>
+
+      <div class="rep-section" id="inclusion-sec">
+        <h4><i class="ti ti-accessible"></i> Inklyuziv ta'lim va alohida ehtiyojli bolalar bilan ish</h4>
+        <p><b>Alohida ta'lim ehtiyojiga ega bolalar soni:</b> ${r.inclusion.count}</p>
+        <p>${r.inclusion.work}</p>
+      </div>
+
+      <div class="rep-section" id="centers-sec">
+        <h4><i class="ti ti-building"></i> Rivojlanish markazlari va moddiy-texnik baza</h4>
+        <p><b>Umumiy holati:</b> <span class="mini-badge blue">${r.centers.status}</span></p>
+        <ul>${r.centers.notes.map(n=>`<li>${n}</li>`).join('')}</ul>
+      </div>
+
+      <div class="rep-section" id="methodic-sec">
+        <h4><i class="ti ti-school"></i> Metodik va kasbiy rivojlanish ishlari</h4>
+        <h5><i class="ti ti-presentation"></i> O'tkazilgan seminar va treninglar</h5>
+        <ul>${r.methodic.seminars.map(s=>`<li>${s}</li>`).join('')}</ul>
+        <h5><i class="ti ti-book"></i> O'z ustida ish</h5>
+        <p>${r.methodic.selfEducation}</p>
+      </div>
+
+      <div class="rep-section" id="events-sec">
+        <h4><i class="ti ti-calendar-event"></i> Yil davomidagi tadbirlar va loyihalar</h4>
+        ${r.events.map(e=>`
+          <div class="event-list-row">
+            <span class="event-date-tag">${e[0]}</span>
+            <div>
+              <div class="e-title">${e[1]}</div>
+              <div class="e-desc">${e[2]}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="rep-section" id="achievements-sec">
         <h4><i class="ti ti-trophy"></i> Yil davomidagi asosiy yutuqlar</h4>
         <div class="check-list">
           ${r.achievements.map(a=>`<div class="check-item"><i class="ti ti-circle-check"></i><span>${a}</span></div>`).join('')}
         </div>
       </div>
 
-      <div class="rep-section">
+      <div class="rep-section" id="problems-sec">
+        <h4><i class="ti ti-alert-triangle"></i> Muammolar tahlili va yechim yo'llari</h4>
+        ${r.problems.map(p=>`
+          <div class="problem-card">
+            <div class="p-title"><i class="ti ti-alert-circle"></i> ${p.title}</div>
+            <div class="p-cause"><b>Sabab:</b> ${p.cause}</div>
+            <div class="p-solution"><i class="ti ti-bulb"></i> <span><b>Yechim:</b> ${p.solution}</span></div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="rep-section" id="recommend-sec">
         <h4><i class="ti ti-target-arrow"></i> Keyingi o'quv yili uchun tavsiyalar</h4>
         <p>${r.recommendations}</p>
       </div>
