@@ -41,7 +41,7 @@ function openPremiumModal(module) {
   const moduleNames = {
     games           : 'Oyinlar',
     songs           : 'Qo\'shiqlar',
-    activities      : 'Mashg\'ulotlar'
+    activities      : 'Mashg\'ulotlar',
     portfolio       : 'Portfolio',
     reports         : 'Hisobotlar',
   }
