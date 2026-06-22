@@ -149,11 +149,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <div class="sidebar-section">Professional</div>
-  <a class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a
+  <a class="nav-item" onclick="openPremiumModal('games')"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
+  <a class="nav-item" onclick="openPremiumModal('songs')"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
+  <a class="nav-item" onclick="openPremiumModal('activities')"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
+  <a class="nav-item" onclick="openPremiumModal('reports')"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
+  <a class="nav-item" onclick="openPremiumModal('portfolio')"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -258,7 +258,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
           <tr><td>Mashg'ulotlar</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
           <tr><td>AI Konspekt</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
           <tr><td>Attestatsiya</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
-          <tr><td>Portfolio</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>>
+          <tr><td>Portfolio</td><td><i class="ti ti-circle-x no"></i></td><td><i class="ti ti-circle-check yes"></i></td><td><i class="ti ti-circle-check yes"></i></td></tr>
         </tbody>
       </table>
     </div>
