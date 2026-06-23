@@ -54,10 +54,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 @keyframes drift-x{0%{transform:translateX(-6%) translateY(0)}50%{transform:translateX(6%) translateY(-2.5%)}100%{transform:translateX(-6%) translateY(0)}}
 @keyframes bob{0%,100%{transform:translateY(0) translateX(0) rotate(0deg)}50%{transform:translateY(-22px) translateX(8px) rotate(6deg)}}
 @keyframes twinkle-float{0%,100%{transform:translateY(0) rotate(0deg);opacity:.55}50%{transform:translateY(-14px) rotate(12deg);opacity:1}}
-@keyframes navShimmer{0%{background-position:0% 0}100%{background-position:200% 0}}
-@keyframes bnPop{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
-@keyframes bnDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
-@keyframes sheetItemIn{to{opacity:1;transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.bg-cloud,.bg-star,.bg-bubble,.bg-dot{animation:none}}
 @media(max-width:768px){.bg-shape.hide-mobile{display:none}}
 
@@ -92,23 +88,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);border:1px solid #bfdbfe;white-space:nowrap}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro2);border-color:#ddd6fe}
 .level-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
-
-.quick-search{position:relative;margin-bottom:16px}
-.quick-search i.qs-search-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none}
-.quick-search input{width:100%;padding:11px 14px 11px 40px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'Inter',sans-serif;background:var(--white);box-shadow:var(--shadow);outline:none;transition:border-color .15s;color:var(--text)}
-.quick-search input:focus{border-color:var(--accent-mid)}
-.quick-search-results{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:10;overflow:hidden;max-height:280px;overflow-y:auto}
-.quick-search-results.show{display:block}
-.qs-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text);transition:background .1s}
-.qs-item:hover{background:var(--accent-soft)}
-.qs-item i{font-size:15px;color:var(--accent2);width:18px;text-align:center}
-.qs-pro{margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2)}
-
-.tip-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:flex-start}
-.tip-icon{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.tip-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
-.tip-text{font-size:13px;color:var(--text);line-height:1.55}
-.tip-source{font-size:11px;color:var(--accent2);font-weight:600;margin-top:6px}
 
 .premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 60%,#7c3aed 100%);border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(37,99,235,.25);}
 .premium-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%}
@@ -146,10 +125,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
 .mod-card.extra{display:none}
 .mod-grid.expanded .mod-card.extra{display:flex}
-.btn-seeall{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;margin-bottom:20px;font-size:12.5px;font-weight:600;color:var(--accent2);cursor:pointer;font-family:'Inter',sans-serif;box-shadow:var(--shadow);transition:box-shadow .15s,transform .15s,background .15s}
-.btn-seeall:hover{background:var(--accent-soft);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.btn-seeall:active{transform:translateY(0)}
-.btn-seeall i{font-size:15px;transition:transform .2s}
+.btn-seeall{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:none;border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:8px;margin-bottom:20px;font-size:12px;font-weight:600;color:var(--accent2);cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-seeall:hover{background:var(--accent-soft)}
+.btn-seeall i{font-size:14px;transition:transform .2s}
 .btn-seeall.open i{transform:rotate(180deg)}
 .mod-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--shadow);}
 .mod-card:hover{border-color:var(--accent-mid);box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
@@ -210,13 +188,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .more-sheet-hdr h3{font-size:15px;font-weight:700;color:#fff}
 .more-sheet-close{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);width:30px;height:30px;border-radius:8px;color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center}
 .more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
-.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;transition:transform .15s;opacity:0;transform:translateY(14px) scale(.9)}
-.more-sheet.show .more-item{animation:sheetItemIn .42s cubic-bezier(.34,1.56,.64,1) forwards}
-.more-item:nth-child(1){animation-delay:.02s}
-.more-item:nth-child(2){animation-delay:.06s}
-.more-item:nth-child(3){animation-delay:.10s}
-.more-item:nth-child(4){animation-delay:.14s}
-.more-item:nth-child(5){animation-delay:.18s}
+.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;transition:transform .15s}
 .more-item:active{background:var(--bg);transform:scale(.93)}
 .more-item .mi-icon{width:46px;height:46px;border-radius:16px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 3px 0 rgba(0,0,0,.04) inset;transition:transform .15s}
 .more-item:active .mi-icon{transform:scale(.9) rotate(-4deg)}
@@ -225,7 +197,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .more-item .mi-icon.c-amber{background:#fef3c7;color:#d97706}
 .more-item .mi-icon.c-pink{background:#fce7f3;color:#db2777}
 .more-item .mi-icon.c-teal{background:#ccfbf1;color:#0d9488}
-.more-item .mi-icon.pro{background:#ede9fe;color:#7c3aed}
+.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro2)}
 .more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
 .more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
 .more-item .mi-badge{position:absolute;top:6px;right:4px;font-size:8px;font-weight:700;padding:2px 5px;border-radius:20px;background:var(--pro2);color:#fff}
@@ -246,15 +218,12 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   .stat-card{padding:12px 14px}
   .stat-card .val{font-size:24px}
   .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
-  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;height:var(--bottomnav);background:linear-gradient(180deg,#ffffff 0%,#eef2ff 100%);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(15,20,50,.08);padding-bottom:env(safe-area-inset-bottom);overflow:hidden}
-  .bottom-nav::before{content:'';position:absolute;top:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,#3b5bdb,#5b6ee8,#8b6ef0,#3b5bdb);background-size:200% 100%;animation:navShimmer 5s linear infinite}
-  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;position:relative;transition:color .2s}
-  .bn-item i{font-size:20px;display:block;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
-  .bn-item:active i{transform:scale(.78)}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;height:var(--bottomnav);background:var(--white);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(15,20,50,.08);padding-bottom:env(safe-area-inset-bottom)}
+  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;position:relative}
+  .bn-item i{font-size:20px}
   .bn-item.active{color:var(--accent2)}
-  .bn-item.active i{animation:bnPop .4s ease}
   .bn-dot{display:none;position:absolute;top:2px;width:4px;height:4px;border-radius:50%;background:var(--accent2)}
-  .bn-item.active .bn-dot{display:block;animation:bnDotPulse 1.6s ease-in-out infinite}
+  .bn-item.active .bn-dot{display:block}
   .bn-item.pro-item.active{color:var(--pro2)}
   .bn-item.pro-item.active .bn-dot{background:var(--pro2)}
 }
@@ -342,10 +311,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <a href="pages/mashgulot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot.html')"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
   <a href="pages/attestatsiya.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/attestatsiya.html')"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a href="pages/portfolio.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/portfolio.html')"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-  <div class="sidebar-section">Korporativ</div>
-  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
+  <a href="pages/mashgulot-rejalari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot-rejalari.html')"><i class="ti ti-clipboard-list"></i> Mashgulot rejalari<span class="badge">PRO</span></a>
+  <a href="pages/tadbir-ssenariylari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/tadbir-ssenariylari.html')"><i class="ti ti-mask"></i> Tadbir ssenariy<span class="badge">PRO</span></a>
+  <a href="pages/yillik-hisobot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/yillik-hisobot.html')"><i class="ti ti-report"></i> Yillik hisobot<span class="badge">PRO</span></a>
   <div class="sidebar-bottom">
     <div class="user-card">
       <div class="avatar" id="sb-avatar">T</div>
@@ -372,12 +340,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     </div>
   </div>
 
-  <div class="quick-search">
-    <i class="ti ti-search qs-search-ic"></i>
-    <input type="text" id="quickSearchInput" placeholder="Tezkor qidiruv: Haftalik, Test, Konspekt, Qarorlar..." oninput="filterQuickSearch(this.value)" onfocus="filterQuickSearch(this.value)"/>
-    <div class="quick-search-results" id="quickSearchResults"></div>
-  </div>
-
   <div class="premium-banner" id="premiumBanner" style="display:none">
     <div class="premium-banner-left">
       <div class="premium-banner-icon"><i class="ti ti-crown"></i></div>
@@ -393,15 +355,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       </div>
     </div>
     <button class="btn-premium" onclick="openPremiumModal()"><i class="ti ti-crown"></i> Premium olish</button>
-  </div>
-
-  <div class="tip-card" id="dailyTipCard">
-    <div class="tip-icon"><i class="ti ti-bulb"></i></div>
-    <div>
-      <div class="tip-label">Kunning xalqaro maslahati</div>
-      <div class="tip-text" id="dailyTipText">Yuklanmoqda...</div>
-      <div class="tip-source" id="dailyTipSource"></div>
-    </div>
   </div>
 
   <div class="stats-grid">
@@ -452,9 +405,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
   <div class="sec-title"><i class="ti ti-building"></i> Korporativ</div>
   <div class="mod-grid">
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-qrcode"></i></div><div class="mod-title">Davomat</div><div class="mod-sub">QR bilan belgilash</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-users-group"></i></div><div class="mod-title">Ota-onalar</div><div class="mod-sub">Xabar va hisobot</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-chart-line"></i></div><div class="mod-title">Bola monitoringi</div><div class="mod-sub">Rivojlanish grafigi</div><span class="lock-tag soon">Tez kunda</span></div>
+    <div class="mod-card locked" id="card-lessonplans"><div class="icon purple"><i class="ti ti-clipboard-list"></i></div><div class="mod-title">Mashgulot rejalari</div><div class="mod-sub">Yoshga mos ochiq darslar</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-scenarios"><div class="icon purple"><i class="ti ti-mask"></i></div><div class="mod-title">Tadbir ssenariylari</div><div class="mod-sub">Bayram va tadbirlar uchun</div><span class="lock-tag">PRO</span></div>
+    <div class="mod-card locked" id="card-reports"><div class="icon purple"><i class="ti ti-report"></i></div><div class="mod-title">Yillik hisobotlar</div><div class="mod-sub">Yil yakuni shabloni</div><span class="lock-tag">PRO</span></div>
   </div>
 
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
@@ -478,6 +431,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       <div class="mf-item"><i class="ti ti-check"></i> Cheksiz test ishlash</div>
       <div class="mf-item"><i class="ti ti-check"></i> Didaktik o'yinlar</div>
       <div class="mf-item"><i class="ti ti-check"></i> Vaziyatlar — PRO variantlar</div>
+      <div class="mf-item"><i class="ti ti-check"></i> Mashgulot rejalari, ssenariylar va hisobotlar</div>
     </div>
     <div class="modal-price">
       <div>
@@ -531,6 +485,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <button class="more-item" onclick="handleProNav('pages/mashgulot.html')"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></button>
     <button class="more-item" onclick="handleProNav('pages/attestatsiya.html')"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></button>
     <button class="more-item" onclick="handleProNav('pages/portfolio.html')"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></button>
+    <button class="more-item" onclick="handleProNav('pages/mashgulot-rejalari.html')"><div class="mi-icon pro"><i class="ti ti-clipboard-list"></i></div><span class="mi-badge">PRO</span><span>Reja</span></button>
+    <button class="more-item" onclick="handleProNav('pages/tadbir-ssenariylari.html')"><div class="mi-icon pro"><i class="ti ti-mask"></i></div><span class="mi-badge">PRO</span><span>Ssenariy</span></button>
+    <button class="more-item" onclick="handleProNav('pages/yillik-hisobot.html')"><div class="mi-icon pro"><i class="ti ti-report"></i></div><span class="mi-badge">PRO</span><span>Hisobot</span></button>
   </div>
   <div class="more-sheet-section">Hisob</div>
   <div class="more-grid">
@@ -572,62 +529,6 @@ function handleProNav(url){
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePremiumModal();closeMoreSheet()}});
-
-// ===== TEZKOR QIDIRUV =====
-const QUICK_LINKS=[
-  {label:'Dashboard', href:'dashboard.html', icon:'ti-layout-dashboard'},
-  {label:'Kunlik jadval', href:'pages/jadval.html', icon:'ti-calendar'},
-  {label:'Haftalik mavzular', href:'pages/haftalik.html', icon:'ti-books'},
-  {label:'Rivojlanish sohalari', href:'pages/soha.html', icon:'ti-chart-dots-3'},
-  {label:'Tamoyillar', href:'pages/tamoyil.html', icon:'ti-pin'},
-  {label:'Testlar', href:'pages/test.html', icon:'ti-flask'},
-  {label:'Konspektlar', href:'pages/konspekt.html', icon:'ti-notebook'},
-  {label:'Vaziyatlar', href:'pages/vaziyat.html', icon:'ti-bulb'},
-  {label:'Qarorlar', href:'pages/qarorlar.html', icon:'ti-gavel'},
-  {label:"O'yinlar", href:'pages/oyinlar.html', icon:'ti-puzzle', pro:true},
-  {label:"Qo'shiqlar", href:'pages/qoshiqlar.html', icon:'ti-music', pro:true},
-  {label:"Mashg'ulot", href:'pages/mashgulot.html', icon:'ti-brush', pro:true},
-  {label:'Attestatsiya', href:'pages/attestatsiya.html', icon:'ti-certificate', pro:true},
-  {label:'Portfolio', href:'pages/portfolio.html', icon:'ti-id-badge-2', pro:true}
-];
-function filterQuickSearch(q){
-  const box=document.getElementById('quickSearchResults');
-  if(!q.trim()){box.classList.remove('show');box.innerHTML='';return;}
-  const matches=QUICK_LINKS.filter(l=>l.label.toLowerCase().includes(q.toLowerCase()));
-  if(!matches.length){box.innerHTML='<div class="qs-item" style="color:var(--text3);cursor:default">Topilmadi</div>';box.classList.add('show');return;}
-  box.innerHTML=matches.map(l=>`<div class="qs-item" onclick="quickGo('${l.href}',${!!l.pro})"><i class="ti ${l.icon}"></i> ${l.label}${l.pro?'<span class="qs-pro"><i class="ti ti-crown"></i> PRO</span>':''}</div>`).join('');
-  box.classList.add('show');
-}
-function quickGo(href,isProLink){
-  document.getElementById('quickSearchResults').classList.remove('show');
-  document.getElementById('quickSearchInput').value='';
-  if(isProLink){handleProNav(href);} else {window.location.href=href;}
-}
-document.addEventListener('click',e=>{
-  if(!e.target.closest('.quick-search')){
-    const box=document.getElementById('quickSearchResults');
-    if(box)box.classList.remove('show');
-  }
-});
-
-// ===== KUNNING XALQARO MASLAHATI =====
-const DAILY_TIPS=[
-  {text:"Kuniga kamida 60 daqiqa faol harakatli o'yin tashkil eting — bu jismoniy rivojlanishning asosiy mezoni.", source:"JSST (WHO) tavsiyasi"},
-  {text:"Bola bilan kuniga bir marta his-tuyg'ulari haqida suhbat o'tkazing: 'Bugun nima sezding?'", source:"UNICEF / OECD tavsiyasi"},
-  {text:"Kuniga kamida 20 daqiqa ovoz chiqarib kitob o'qish bolaning kelajakdagi o'qish muvaffaqiyatini oshiradi.", source:"UNESCO erta savodxonlik tavsiyasi"},
-  {text:"Savol-tajriba ('nega va qanday') usuli orqali tanqidiy fikrlash erta yoshda eng samarali rivojlanadi.", source:"NAEYC (AQSh) tavsiyasi"},
-  {text:"Bola '100 til'ga ega — ijodiy ifoda erkinligi bilim olishning teng huquqli yo'lidir.", source:"Reggio Emilia yondashuvi (Italiya)"},
-  {text:"Bolalarga tanlov erkinligi berish ularning mustaqillik va o'zini-o'zi boshqarish ko'nikmasini kuchaytiradi.", source:"Montessori pedagogikasi"},
-  {text:"Erta yoshda ko'p tilli muhit bolaning kognitiv moslashuvchanligini oshiradi.", source:"UNESCO ko'p tillilik tavsiyasi"}
-];
-function showDailyTip(){
-  const dayIndex=Math.floor(Date.now()/86400000)%DAILY_TIPS.length;
-  const tip=DAILY_TIPS[dayIndex];
-  const t=document.getElementById('dailyTipText'),s=document.getElementById('dailyTipSource');
-  if(t)t.textContent=tip.text;
-  if(s)s.textContent=tip.source;
-}
-showDailyTip();
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -669,11 +570,14 @@ window.addEventListener('load',async()=>{
   if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
   if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
   const proCards={
-    'card-games'      :{href:'pages/oyinlar.html'},
-    'card-songs'      :{href:'pages/qoshiqlar.html'},
-    'card-activities' :{href:'pages/mashgulot.html'},
-    'card-attestation':{href:'pages/attestatsiya.html'},
-    'card-portfolio'  :{href:'pages/portfolio.html'}
+    'card-games'        :{href:'pages/oyinlar.html'},
+    'card-songs'        :{href:'pages/qoshiqlar.html'},
+    'card-activities'   :{href:'pages/mashgulot.html'},
+    'card-attestation'  :{href:'pages/attestatsiya.html'},
+    'card-portfolio'    :{href:'pages/portfolio.html'},
+    'card-lessonplans'  :{href:'pages/mashgulot-rejalari.html'},
+    'card-scenarios'    :{href:'pages/tadbir-ssenariylari.html'},
+    'card-reports'      :{href:'pages/yillik-hisobot.html'}
   };
   Object.entries(proCards).forEach(([id,cfg])=>{
     const el=document.getElementById(id);if(!el)return;
