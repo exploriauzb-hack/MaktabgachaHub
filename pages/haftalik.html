@@ -67,6 +67,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .age-tab .age-desc{font-size:11px;color:var(--muted);margin-top:2px}
 .age-tab.active .age-num{color:var(--accent)}
 
+.btn-report{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--accent);color:var(--accent);font-weight:600;font-size:12.5px;padding:9px 16px;border-radius:10px;cursor:pointer;margin-bottom:16px;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-report:hover{background:var(--accent-soft)}
+.badge-pro-mini{display:inline-flex;align-items:center;gap:3px;background:var(--pro-soft);color:var(--pro);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:2px}
+
 .stats-row{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:500}
 .stat-chip i{font-size:15px;color:var(--accent)}
@@ -155,17 +159,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <a href="tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
   <a href="test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
   <a href="konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
-  <a href="vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
-  <a href="qarorlar.html" class="nav-item"><i class="ti ti-gavel"></i> Qarorlar</a>
   <div class="sidebar-section">Professional</div>
   <a class="nav-item" id="side-games"><i class="ti ti-puzzle"></i> O'yinlar<span class="badge">PRO</span></a>
   <a class="nav-item" id="side-songs"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
   <a class="nav-item" id="side-activities"><i class="ti ti-brush"></i> Mashg'ulotlar<span class="badge">PRO</span></a>
   <a class="nav-item" id="side-attestation"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
   <a class="nav-item" id="side-portfolio"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-  <a href="pages/mashgulot-rejalari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/mashgulot-rejalari.html')"><i class="ti ti-clipboard-list"></i> Mashgulot rejalari<span class="badge">PRO</span></a>
-  <a href="pages/tadbir-ssenariylari.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/tadbir-ssenariylari.html')"><i class="ti ti-mask"></i> Tadbir ssenariy<span class="badge">PRO</span></a>
-  <a href="pages/yillik-hisobot.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/yillik-hisobot.html')"><i class="ti ti-report"></i> Yillik hisobot<span class="badge">PRO</span></a>
+  <div class="sidebar-section">Korporativ</div>
+  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
+  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
   </div>
   <div class="sidebar-bottom">
     <div class="user-card">
@@ -277,6 +280,19 @@ const DOMAIN = {
      sub:["Mantiqiy fikrlash va muammolarni hal qilish","Elementar matematika","Dunyoni anglash"]},
   5:{name:"Ijodiy rivojlanish", color:'#7c3aed',
      sub:["Dunyoni badiiy tasavvur qilish","Badiiy va ijodiy qobiliyatlar"]}
+};
+
+const DOMAIN_RECS = {
+  1:{amal:"Kuniga kamida 60 daqiqa faol harakatli o'yin va sport mashqlari tashkil etish.",
+     intl:"JSST (WHO) tavsiyasi: 3-17 yosh bolalar kuniga kamida 60 daqiqa o'rtacha-yuqori intensivlikdagi jismoniy faollikka ega bo'lishi kerak."},
+  2:{amal:"Kuniga bir marta bola bilan his-tuyg'ulari haqida suhbat o'tkazish ('Bugun nima sezding?').",
+     intl:"UNICEF va OECD erta bolalik rivojlanishi tavsiyasi: ijtimoiy-hissiy ko'nikmalar 0-8 yosh oralig'ida shakllanadigan eng muhim hayotiy ko'nikma hisoblanadi."},
+  3:{amal:"Kuniga kamida 20 daqiqa ovoz chiqarib kitob o'qish yoki birgalikda hikoya tuzish.",
+     intl:"UNESCO 'erta savodxonlik' tavsiyasi: kuniga muntazam kitob o'qish bolaning keyingi o'qish muvaffaqiyatini sezilarli darajada oshiradi."},
+  4:{amal:"Haftada kamida 2 marta 'nega va qanday' turidagi savol-tajriba mashg'uloti o'tkazish.",
+     intl:"NAEYC (AQSh) tavsiyasi: erta yoshda tanqidiy fikrlash savol-tajriba (inquiry-based) usuli orqali eng samarali rivojlanadi."},
+  5:{amal:"Haftada kamida 3 marta erkin ijodiy faoliyat (chizish, qo'shiq, qurish) uchun vaqt ajratish.",
+     intl:"Reggio Emilia yondashuvi (Italiya) tavsiyasi: bola '100 til'ga ega — ijodiy ifoda erkinligi bilim olishning teng huquqli yo'lidir."}
 };
 
 const AGE_FOCUS = {
@@ -458,6 +474,13 @@ function openModal(n, ageKey){
     <div class="modal-sec-title"><i class="ti ti-chart-dots-3"></i> Integratsiyalashgan rivojlanish sohalari</div>
     <div class="modal-domain-list">
       ${acts.map(a=>`<div class="domain-row"><span class="domain-dot" style="background:${a.domain.color}"></span><div><b>${a.domain.name}<span class="domain-code" style="background:${a.domain.color}">${a.code}</span></b><span class="sub-label">${a.sub}</span><span>${a.text}</span></div></div>`).join('')}
+    </div>
+    <div class="modal-sec-title"><i class="ti ti-world"></i> Haftalik muhim amallar va xalqaro tavsiyalar</div>
+    <div class="modal-domain-list">
+      ${acts.map(a=>{
+        const rec = DOMAIN_RECS[a.domainId];
+        return `<div class="domain-row"><span class="domain-dot" style="background:${a.domain.color}"></span><div><b>${a.domain.name}</b><span class="sub-label">Muhim amal</span><span>${rec.amal}</span><span class="sub-label" style="margin-top:6px;display:block">Xalqaro tavsiya</span><span>${rec.intl}</span></div></div>`;
+      }).join('')}
     </div>
     ${ageKey==="d" ? `<div class="modal-sec-title"><i class="ti ti-award"></i> Tayanch kompetensiyalar (6–7 yosh)</div><div class="comp-row" style="display:flex">${compRowHtml(ageKey)}</div>` : ""}
   `;
