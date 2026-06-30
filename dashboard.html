@@ -10,17 +10,40 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f7ff;--white:#ffffff;--border:#e4e8f0;--border2:#d0d7e8;
-  --text:#1a1f36;--text2:#6b7694;--text3:#9aa3bf;
-  --accent:#1e40af;--accent2:#2563eb;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
-  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
-  --red:#b91c1c;--pro:#7c3aed;--pro2:#8b5cf6;--pro-soft:#f5f3ff;
-  --sidebar:256px;--bottomnav:62px;--radius:12px;--radius-sm:8px;
+  --bg:#f5f7ff;
+  --white:#ffffff;
+  --border:#e4e8f0;
+  --border2:#d0d7e8;
+  --text:#1a1f36;
+  --text2:#6b7694;
+  --text3:#9aa3bf;
+  --accent:#1e40af;
+  --accent2:#2563eb;
+  --accent-soft:#eff6ff;
+  --accent-mid:#3b82f6;
+  --green:#15803d;
+  --green-soft:#f0fdf4;
+  --amber:#b45309;
+  --amber-soft:#fffbeb;
+  --red:#b91c1c;
+  --pro:#7c3aed;
+  --pro2:#8b5cf6;
+  --pro-soft:#f5f3ff;
+  --sidebar:256px;
+  --bottomnav:62px;
+  --radius:12px;
+  --radius-sm:8px;
   --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
   --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
 }
+
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg);overflow-x:hidden;position:relative}
-.bg-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 15% 0%,#dbe6ff 0%,transparent 60%),radial-gradient(ellipse 60% 45% at 100% 10%,#e6e0ff 0%,transparent 55%),var(--bg);}
+
+.bg-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:
+    radial-gradient(ellipse 70% 50% at 15% 0%, #dbe6ff 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 100% 10%, #e6e0ff 0%, transparent 55%),
+    var(--bg);
+}
 .bg-shape{position:absolute;will-change:transform;opacity:.85}
 .bg-shape svg{display:block;width:100%;height:100%}
 .bg-dot{border-radius:50%;opacity:.5;animation:dot-drift ease-in-out infinite}
@@ -59,6 +82,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .btn-logout:hover{background:#fef2f2;color:var(--red);border-color:#fca5a5}
 
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:22px 30px;max-width:1020px}
+
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
 .topbar h1{font-size:21px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -188,7 +212,14 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
 .more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:14px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;transition:transform .15s;opacity:0;transform:translateY(14px) scale(.9)}
 .more-sheet.show .more-item{animation:sheetItemIn .42s cubic-bezier(.34,1.56,.64,1) forwards}
-.more-item:nth-child(1){animation-delay:.02s}.more-item:nth-child(2){animation-delay:.05s}.more-item:nth-child(3){animation-delay:.08s}.more-item:nth-child(4){animation-delay:.11s}.more-item:nth-child(5){animation-delay:.14s}.more-item:nth-child(6){animation-delay:.17s}.more-item:nth-child(7){animation-delay:.20s}.more-item:nth-child(8){animation-delay:.23s}.more-item:nth-child(9){animation-delay:.26s}
+.more-item:nth-child(1){animation-delay:.02s}
+.more-item:nth-child(2){animation-delay:.05s}
+.more-item:nth-child(3){animation-delay:.08s}
+.more-item:nth-child(4){animation-delay:.11s}
+.more-item:nth-child(5){animation-delay:.14s}
+.more-item:nth-child(6){animation-delay:.17s}
+.more-item:nth-child(7){animation-delay:.20s}
+.more-item:nth-child(8){animation-delay:.23s}
 .more-item:active{background:var(--bg);transform:scale(.93)}
 .more-item .mi-icon{width:46px;height:46px;border-radius:16px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:21px;box-shadow:0 3px 0 rgba(0,0,0,.04) inset;transition:transform .15s}
 .more-item:active .mi-icon{transform:scale(.9) rotate(-4deg)}
@@ -242,11 +273,31 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="bg-shape bg-dot" style="top:62%;left:6%;width:22px;height:22px;background:#fde68a;animation-duration:10s;animation-delay:-5s"></div>
   <div class="bg-shape bg-dot hide-mobile" style="top:70%;left:34%;width:16px;height:16px;background:#bbf7d0;animation-duration:9s;animation-delay:-2.5s"></div>
   <div class="bg-shape bg-dot" style="top:80%;left:68%;width:20px;height:20px;background:#a5d8ff;animation-duration:11s;animation-delay:-6s"></div>
+  <div class="bg-shape bg-dot hide-mobile" style="top:88%;left:18%;width:14px;height:14px;background:#bbf7d0;animation-duration:8.5s;animation-delay:-3.5s"></div>
+  <div class="bg-shape bg-dot" style="top:54%;left:24%;width:10px;height:10px;background:#fda4af;animation-duration:7s;animation-delay:-1.5s"></div>
   <div class="bg-shape bg-cloud" style="top:6%;left:-4%;width:180px;height:90px;animation-duration:38s;opacity:.9">
     <svg viewBox="0 0 200 100"><path d="M40 75 Q15 75 15 55 Q15 38 35 38 Q38 18 62 18 Q88 18 92 40 Q115 38 118 58 Q120 75 98 75 Z" fill="#ffffff"/></svg>
   </div>
   <div class="bg-shape bg-cloud hide-mobile" style="top:14%;left:62%;width:150px;height:75px;animation-duration:46s;animation-delay:-12s;opacity:.8">
     <svg viewBox="0 0 200 100"><path d="M40 75 Q15 75 15 55 Q15 38 35 38 Q38 18 62 18 Q88 18 92 40 Q115 38 118 58 Q120 75 98 75 Z" fill="#eef2ff"/></svg>
+  </div>
+  <div class="bg-shape bg-cloud" style="top:42%;left:80%;width:130px;height:65px;animation-duration:34s;animation-delay:-6s;opacity:.7">
+    <svg viewBox="0 0 200 100"><path d="M40 75 Q15 75 15 55 Q15 38 35 38 Q38 18 62 18 Q88 18 92 40 Q115 38 118 58 Q120 75 98 75 Z" fill="#ffffff"/></svg>
+  </div>
+  <div class="bg-shape bg-cloud hide-mobile" style="top:78%;left:8%;width:160px;height:80px;animation-duration:42s;animation-delay:-20s;opacity:.65">
+    <svg viewBox="0 0 200 100"><path d="M40 75 Q15 75 15 55 Q15 38 35 38 Q38 18 62 18 Q88 18 92 40 Q115 38 118 58 Q120 75 98 75 Z" fill="#eef2ff"/></svg>
+  </div>
+  <div class="bg-shape bg-bubble" style="top:24%;left:30%;width:18px;height:18px;animation-duration:7s">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#93c5fd" stroke-width="2" opacity=".55"/><circle cx="14" cy="14" r="3" fill="#bfdbfe" opacity=".7"/></svg>
+  </div>
+  <div class="bg-shape bg-bubble hide-mobile" style="top:60%;left:46%;width:26px;height:26px;animation-duration:9s;animation-delay:-2s">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#c4b5fd" stroke-width="2" opacity=".5"/><circle cx="14" cy="14" r="3.5" fill="#ddd6fe" opacity=".7"/></svg>
+  </div>
+  <div class="bg-shape bg-bubble" style="top:85%;left:72%;width:14px;height:14px;animation-duration:6s;animation-delay:-3.5s">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#93c5fd" stroke-width="2" opacity=".55"/><circle cx="14" cy="14" r="3" fill="#bfdbfe" opacity=".7"/></svg>
+  </div>
+  <div class="bg-shape bg-bubble hide-mobile" style="top:10%;left:90%;width:16px;height:16px;animation-duration:8s;animation-delay:-1s">
+    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#a5b4fc" stroke-width="2" opacity=".5"/><circle cx="14" cy="14" r="3" fill="#c7d2fe" opacity=".7"/></svg>
   </div>
   <div class="bg-shape bg-star" style="top:18%;left:48%;width:16px;height:16px;animation-duration:5s">
     <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#a5b4fc"/></svg>
@@ -254,12 +305,14 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="bg-shape bg-star hide-mobile" style="top:55%;left:8%;width:12px;height:12px;animation-duration:4.2s;animation-delay:-1.5s">
     <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#fbbf24"/></svg>
   </div>
-  <div class="bg-shape bg-bubble" style="top:24%;left:30%;width:18px;height:18px;animation-duration:7s">
-    <svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#93c5fd" stroke-width="2" opacity=".55"/><circle cx="14" cy="14" r="3" fill="#bfdbfe" opacity=".7"/></svg>
+  <div class="bg-shape bg-star" style="top:70%;left:90%;width:14px;height:14px;animation-duration:4.8s;animation-delay:-2.2s">
+    <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#c4b5fd"/></svg>
+  </div>
+  <div class="bg-shape bg-star hide-mobile" style="top:35%;left:20%;width:10px;height:10px;animation-duration:3.6s;animation-delay:-.8s">
+    <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#fbbf24"/></svg>
   </div>
 </div>
 
-<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">
@@ -286,7 +339,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
   <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
   <a href="pages/qarorlar.html" class="nav-item"><i class="ti ti-gavel"></i> Qarorlar</a>
-  <a href="pages/eko-bolajon.html" class="nav-item"><i class="ti ti-leaf"></i> Eko Bolajon</a>
   <div class="sidebar-section">Professional</div>
   <a href="pages/oyinlar.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/oyinlar.html')"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
   <a href="pages/qoshiqlar.html" class="nav-item" onclick="event.preventDefault();handleProNav('pages/qoshiqlar.html')"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
@@ -313,7 +365,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <div class="topbar-left">
       <div>
         <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
-        <p class="hero-sub" id="hero-sub">Bugun yangi narsa kashf qilamizmi?</p>
+        <p class="hero-sub" id="hero-sub"></p>
       </div>
     </div>
     <div class="topbar-right">
@@ -324,11 +376,11 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
   <div class="quick-search">
     <i class="ti ti-search qs-search-ic"></i>
-    <input type="text" id="quickSearchInput" placeholder="Tezkor qidiruv: Haftalik, Test, Konspekt, Eko Bolajon..." oninput="filterQuickSearch(this.value)" onfocus="filterQuickSearch(this.value)"/>
+    <input type="text" id="quickSearchInput" placeholder="Tezkor qidiruv: Haftalik, Test, Konspekt, Qarorlar..." oninput="filterQuickSearch(this.value)" onfocus="filterQuickSearch(this.value)"/>
     <div class="quick-search-results" id="quickSearchResults"></div>
   </div>
 
-  <div class="premium-banner" id="premiumBanner">
+  <div class="premium-banner" id="premiumBanner" style="display:none">
     <div class="premium-banner-left">
       <div class="premium-banner-icon"><i class="ti ti-crown"></i></div>
       <div>
@@ -355,9 +407,18 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card"><div class="val" id="stat-test">0</div><div class="lbl"><i class="ti ti-flask"></i> Testlar</div></div>
-    <div class="stat-card"><div class="val" id="stat-avg">0%</div><div class="lbl"><i class="ti ti-target"></i> O'rtacha</div></div>
-    <div class="stat-card"><div class="val" id="stat-xp">0</div><div class="lbl"><i class="ti ti-star"></i> Jami XP</div></div>
+    <div class="stat-card">
+      <div class="val" id="stat-test">0</div>
+      <div class="lbl"><i class="ti ti-flask"></i> Testlar</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="stat-avg">0%</div>
+      <div class="lbl"><i class="ti ti-target"></i> O'rtacha</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="stat-xp">0</div>
+      <div class="lbl"><i class="ti ti-star"></i> Jami XP</div>
+    </div>
   </div>
 
   <div class="xp-card">
@@ -365,7 +426,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       <strong id="xp-label">1-daraja: Yangi Tarbiyachi</strong>
       <span id="xp-next">Keyingi: 80 XP</span>
     </div>
-    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:35%"></div></div>
+    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
   </div>
 
   <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar</div>
@@ -378,7 +439,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/konspekt.html" class="mod-card extra" data-group="main"><div class="icon amber"><i class="ti ti-notebook"></i></div><div class="mod-title">Konspektlar</div><div class="mod-sub">3 ta ko'rish</div></a>
     <a href="pages/vaziyat.html" class="mod-card extra" data-group="main"><div class="icon blue"><i class="ti ti-bulb"></i></div><div class="mod-title">Vaziyatlar</div><div class="mod-sub">5 ta variant</div></a>
     <a href="pages/qarorlar.html" class="mod-card extra" data-group="main"><div class="icon green"><i class="ti ti-gavel"></i></div><div class="mod-title">Qarorlar</div><div class="mod-sub">Hujjatlar va qarorlar</div></a>
-    <a href="pages/eko-bolajon.html" class="mod-card extra" data-group="main"><div class="icon green"><i class="ti ti-leaf"></i></div><div class="mod-title">Eko Bolajon</div><div class="mod-sub">Ekologiya va tabiat</div></a>
   </div>
   <button class="btn-seeall" data-group="main" onclick="toggleGroup('main')"><span>Barchasini ko'rish</span><i class="ti ti-chevron-down"></i></button>
 
@@ -429,18 +489,20 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       </div>
       <div style="background:var(--pro2);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
     </div>
-    <button class="btn-buy" onclick="alert('premium.html ga yo\'naltiriladi')">
+    <button class="btn-buy" onclick="window.location.href='premium.html'">
       <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
     </button>
   </div>
 </div>
+
+<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <a href="dashboard.html" class="bn-item active"><span class="bn-dot"></span><i class="ti ti-layout-dashboard"></i>Bosh sahifa</a>
   <a href="pages/haftalik.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-books"></i>Haftalik</a>
   <a href="pages/test.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-flask"></i>Testlar</a>
-  <button class="bn-item pro-item" onclick="openPremiumModal()"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</button>
+  <button class="bn-item pro-item" onclick="handlePremiumNav()"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</button>
   <button class="bn-item" onclick="openMoreSheet()"><span class="bn-dot"></span><i class="ti ti-grid-dots"></i>Yana</button>
 </nav>
 
@@ -449,6 +511,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <div class="more-sheet-top">
     <div class="more-sheet-spark" style="top:8px;right:54px;width:12px;height:12px;animation-duration:3.6s">
       <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#fde68a"/></svg>
+    </div>
+    <div class="more-sheet-spark" style="top:30px;right:100px;width:8px;height:8px;animation-duration:4.4s;animation-delay:-1.2s">
+      <svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#ffffff"/></svg>
     </div>
     <div class="more-sheet-handle"></div>
     <div class="more-sheet-hdr"><h3>Barcha bo'limlar</h3><button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button></div>
@@ -461,7 +526,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     <a href="pages/konspekt.html" class="more-item"><div class="mi-icon c-amber"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
     <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon c-pink"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
     <a href="pages/qarorlar.html" class="more-item"><div class="mi-icon c-teal"><i class="ti ti-gavel"></i></div><span>Qarorlar</span></a>
-    <a href="pages/eko-bolajon.html" class="more-item"><div class="mi-icon c-green"><i class="ti ti-leaf"></i></div><span>Eko Bolajon</span></a>
   </div>
   <div class="more-sheet-section">Professional</div>
   <div class="more-grid">
@@ -493,18 +557,29 @@ function openPremiumModal(){document.getElementById('premiumModal').classList.ad
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
 function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
 function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
-function handleProNav(url){closeMoreSheet();setTimeout(()=>openPremiumModal(),300)}
 
-/* ✅ TUZATILDI: doLogout funksiyasi qo'shildi (oldin yo'q edi — shu sabab "ReferenceError: doLogout is not defined" xatosi chiqardi) */
-function doLogout(){
-  if(confirm("Hisobdan chiqmoqchimisiz?")){
-    // TODO: bu yerga haqiqiy logout logikasi (token/sessiyani tozalash, localStorage.clear() va h.k.) qo'shiladi
-    window.location.href='login.html';
+// Bottom nav Premium tugmasi
+function handlePremiumNav(){
+  if(typeof isPro==='function' && isPro()){
+    window.location.href='premium.html';
+  } else {
+    openPremiumModal();
+  }
+}
+
+// PRO bo'limlari (sidebar + more sheet ikkalasida ham ishlatiladi)
+function handleProNav(url){
+  closeMoreSheet();
+  if(typeof isPro==='function' && isPro()){
+    window.location.href=url;
+  } else {
+    setTimeout(()=>openPremiumModal(), 300);
   }
 }
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePremiumModal();closeMoreSheet()}});
 
+// ===== TEZKOR QIDIRUV =====
 const QUICK_LINKS=[
   {label:'Dashboard', href:'dashboard.html', icon:'ti-layout-dashboard'},
   {label:'Kunlik jadval', href:'pages/jadval.html', icon:'ti-calendar'},
@@ -515,7 +590,6 @@ const QUICK_LINKS=[
   {label:'Konspektlar', href:'pages/konspekt.html', icon:'ti-notebook'},
   {label:'Vaziyatlar', href:'pages/vaziyat.html', icon:'ti-bulb'},
   {label:'Qarorlar', href:'pages/qarorlar.html', icon:'ti-gavel'},
-  {label:'Eko Bolajon', href:'pages/eko-bolajon.html', icon:'ti-leaf'},
   {label:"O'yinlar", href:'pages/oyinlar.html', icon:'ti-puzzle', pro:true},
   {label:"Qo'shiqlar", href:'pages/qoshiqlar.html', icon:'ti-music', pro:true},
   {label:"Mashg'ulot", href:'pages/mashgulot.html', icon:'ti-brush', pro:true},
@@ -536,7 +610,7 @@ function filterQuickSearch(q){
 function quickGo(href,isProLink){
   document.getElementById('quickSearchResults').classList.remove('show');
   document.getElementById('quickSearchInput').value='';
-  if(isProLink){handleProNav(href);}else{window.location.href=href}
+  if(isProLink){handleProNav(href);} else {window.location.href=href;}
 }
 document.addEventListener('click',e=>{
   if(!e.target.closest('.quick-search')){
@@ -545,6 +619,7 @@ document.addEventListener('click',e=>{
   }
 });
 
+// ===== KUNNING XALQARO MASLAHATI =====
 const DAILY_TIPS=[
   {text:"Kuniga kamida 60 daqiqa faol harakatli o'yin tashkil eting — bu jismoniy rivojlanishning asosiy mezoni.", source:"JSST (WHO) tavsiyasi"},
   {text:"Bola bilan kuniga bir marta his-tuyg'ulari haqida suhbat o'tkazing: 'Bugun nima sezding?'", source:"UNICEF / OECD tavsiyasi"},
@@ -555,12 +630,106 @@ const DAILY_TIPS=[
   {text:"Erta yoshda ko'p tilli muhit bolaning kognitiv moslashuvchanligini oshiradi.", source:"UNESCO ko'p tillilik tavsiyasi"}
 ];
 function showDailyTip(){
-  const tip=DAILY_TIPS[Math.floor(Date.now()/86400000)%DAILY_TIPS.length];
+  const dayIndex=Math.floor(Date.now()/86400000)%DAILY_TIPS.length;
+  const tip=DAILY_TIPS[dayIndex];
   const t=document.getElementById('dailyTipText'),s=document.getElementById('dailyTipSource');
   if(t)t.textContent=tip.text;
   if(s)s.textContent=tip.source;
 }
 showDailyTip();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/premium.js"></script>
+<script>
+async function checkNotifications(){
+  const {data:{user}}=await _sb.auth.getUser();if(!user)return;
+  const {data:prof}=await _sb.from('profiles').select('subscription_tier').eq('id',user.id).single();
+  const tier=prof?.subscription_tier||'free';
+  const now=new Date().toISOString();
+  const {data}=await _sb.from('notifications').select('*').or(`target.eq.all,target.eq.${tier}`).or(`expires_at.is.null,expires_at.gt.${now}`).order('created_at',{ascending:false}).limit(3);
+  if(!data?.length)return;
+  const clrs={info:'#2563eb',success:'#15803d',warning:'#b45309'};
+  const popup=document.getElementById('notifPopup');
+  popup.style.display='flex';
+  popup.innerHTML=data.map(n=>`<div style="background:#fff;border:1px solid #e4e8f0;border-radius:10px;padding:14px 16px;box-shadow:0 4px 16px rgba(30,40,115,.1);border-left:3px solid ${clrs[n.type]||'#2563eb'};max-width:320px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-size:13px;color:#1a1f36">${n.title}</b><button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#9aa3bf;font-size:18px;line-height:1">×</button></div><p style="font-size:12px;color:#6b7694;margin:0">${n.message}</p></div>`).join('');
+  setTimeout(()=>{popup.style.display='none'},6000);
+}
+
+window.addEventListener('load',async()=>{
+  const auth=await initAuth(true);if(!auth)return;
+  if(typeof fillNav==='function')fillNav();
+  const profile=auth.profile;
+  const name=getUserName();
+  document.getElementById('hero-name').textContent=name;
+  const heroLines=["Bugun yangi narsa kashf qilamizmi?","Bolalar siz uchun sabrsizlik bilan kutmoqda!","Kichik qadamlar katta natijalar beradi.","Ajoyib bir kun uchun hammasi tayyor.","Ilhom va g'oyalar — bir qadam naridan."];
+  const heroSub=document.getElementById('hero-sub');
+  if(heroSub)heroSub.textContent=heroLines[Math.floor(Math.random()*heroLines.length)];
+  document.getElementById('sb-name').textContent=name;
+  document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
+  const proUser=isPro(),corpUser=isCorporate();
+  const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
+  document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
+  if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
+  document.getElementById('sb-plan').textContent=planLabel+' tarif';
+  const banner=document.getElementById('premiumBanner');
+  if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
+  if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
+  const proCards={
+    'card-games'        :{href:'pages/oyinlar.html'},
+    'card-songs'        :{href:'pages/qoshiqlar.html'},
+    'card-activities'   :{href:'pages/mashgulot.html'},
+    'card-attestation'  :{href:'pages/attestatsiya.html'},
+    'card-portfolio'    :{href:'pages/portfolio.html'},
+    'card-lessonplans'  :{href:'pages/mashgulot-rejalari.html'},
+    'card-scenarios'    :{href:'pages/tadbir-ssenariylari.html'},
+    'card-reports'      :{href:'pages/yillik-hisobot.html'}
+  };
+  Object.entries(proCards).forEach(([id,cfg])=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(proUser){
+      const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';
+      el.classList.remove('locked');
+      el.onclick=()=>window.location.href=cfg.href;
+    } else {
+      el.onclick=openPremiumModal;
+    }
+  });
+  if(proUser){
+    document.querySelectorAll('#sidebar .nav-item .badge').forEach(b=>{
+      if(!b.classList.contains('soon')) b.style.display='none';
+    });
+  }
+  const xp=profile?.xp||0;
+  document.getElementById('stat-xp').textContent=xp;
+  const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
+  if(allTests&&allTests.length){
+    const count=allTests.length,avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);
+    document.getElementById('stat-test').textContent=count;
+    document.getElementById('stat-avg').textContent=avg+'%';
+  }
+  const lv=getLevel(xp);
+  document.getElementById('xp-label').textContent=lv.lvl+'-daraja: '+lv.title;
+  document.getElementById('hero-xp-badge').innerHTML=`<i class="ti ti-medal"></i> ${lv.lvl}-daraja`;
+  const prevMin=[0,0,80,200,400,800][lv.lvl-1]||0;
+  const pct=lv.next<9999?Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100):100;
+  document.getElementById('xp-fill').style.width=pct+'%';
+  document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
+  const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
+  if(tests&&tests.length){
+    const ul=document.getElementById('lastTests');ul.innerHTML='';
+    tests.forEach(t=>{
+      const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';
+      const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';
+      const row=document.createElement('div');row.className='test-row';
+      row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;
+      ul.appendChild(row);
+    });
+  }
+  await checkNotifications();
+});
 </script>
 </body>
 </html>
