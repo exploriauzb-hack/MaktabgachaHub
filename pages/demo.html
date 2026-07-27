@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Demo Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;
+  --red:#b91c1c;--red-soft:#fef2f2;
+  --pro:#7c3aed;--pro-soft:#f5f3ff;
+  --sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+
+.screen{display:none;position:relative;z-index:2}
+.screen.active{display:block}
+
+/* ── CODE SCREEN ── */
+.code-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.code-box{background:var(--surface);border-radius:20px;padding:40px 36px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(30,64,175,.13)}
+.code-logo{font-size:48px;margin-bottom:16px}
+.code-box h2{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.code-box p{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6}
+.code-input{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:12px;font-size:18px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s;color:var(--text)}
+.code-input:focus{border-color:var(--accent)}
+.code-input.error{border-color:var(--red);animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.code-err{font-size:12px;color:var(--red);margin-top:8px;min-height:18px}
+.btn-enter{width:100%;margin-top:20px;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-enter:hover{background:#1c3a9e}
+.code-hint{font-size:11px;color:var(--muted);margin-top:16px}
+
+/* ── HOME ── */
+.home-wrap{min-height:100vh;padding:30px 20px;max-width:700px;margin:0 auto}
+.home-top{text-align:center;margin-bottom:30px}
+.home-top h1{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.home-top p{font-size:13px;color:var(--muted)}
+.var-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.var-card{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s;box-shadow:0 2px 12px rgba(30,64,175,.07)}
+.var-card:hover{border-color:var(--accent-mid);transform:translateY(-3px);box-shadow:0 8px 24px rgba(30,64,175,.12)}
+.var-card.selected{border-color:var(--accent);background:var(--accent-soft)}
+.var-num{font-size:42px;margin-bottom:10px}
+.var-card h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.var-card p{font-size:12px;color:var(--muted)}
+.var-meta{display:inline-flex;gap:12px;margin-top:12px;font-size:11px;color:var(--muted);background:var(--bg);padding:5px 14px;border-radius:20px}
+.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:12px;padding:14px 18px;font-size:12.5px;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.btn-start{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-start:hover{background:#1c3a9e}
+.btn-back-code{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline}
+
+/* ── EXAM ── */
+#timer-bar{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 0;margin-bottom:20px}
+.timer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:0 24px;max-width:800px;margin:0 auto}
+#timer-display{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+#timer-display.urgent{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-label{font-size:11px;color:var(--muted);margin-bottom:2px}
+.exam-body{padding:0 20px 60px;max-width:800px;margin:0 auto}
+.qpbar{height:5px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.qpfill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s}
+.nav-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
+.nav-btn{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:'Inter',sans-serif}
+.nav-btn.answered{background:var(--accent);color:#fff;border-color:var(--accent)}
+.nav-btn.current{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px #bfdbfe}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
+.q-num{font-size:11.5px;color:var(--muted);margin-bottom:10px;font-weight:600}
+.q-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px;line-height:1.6}
+.q-opts{display:flex;flex-direction:column;gap:8px}
+.q-opt{background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;color:var(--text);transition:all .15s;text-align:left;font-family:'Inter',sans-serif;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.q-opt:hover:not(.disabled){border-color:var(--accent-mid);background:var(--accent-soft)}
+.q-opt.selected{border-color:var(--accent);background:var(--accent-soft)}
+.q-opt.correct{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.q-opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.q-opt.disabled{cursor:default}
+.opt-letter{font-weight:800;color:var(--accent);min-width:18px;flex-shrink:0;font-size:13px}
+.q-nav{display:flex;gap:10px}
+.q-nav button{flex:1}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.btn-primary:hover{background:#1c3a9e}
+.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
+.btn-secondary:hover{background:var(--bg)}
+
+/* ── RESULT ── */
+.result-wrap{min-height:100vh;padding:30px 20px;max-width:700px;margin:0 auto}
+.result-circle{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;font-weight:800}
+.rc-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.rc-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.rc-blue{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
+.rc-red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;margin-bottom:16px;box-shadow:0 2px 12px rgba(30,64,175,.07)}
+.result-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.result-btns button{flex:1;min-width:130px}
+.wrong-section{margin-top:4px}
+.w-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:10px}
+.w-num{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px}
+.w-q{font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.5}
+.w-wrong{background:var(--red-soft);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--red);margin-bottom:6px}
+.w-correct{background:var(--green-soft);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--green);margin-bottom:6px}
+.w-exp{background:#f8fafc;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--muted);border-left:3px solid var(--accent-mid)}
+
+/* ── CERT ── */
+.cert-wrap{min-height:100vh;padding:30px 20px;max-width:620px;margin:0 auto}
+.cert-box{border:3px solid var(--accent);border-radius:18px;padding:40px;text-align:center;background:var(--surface);box-shadow:0 4px 24px rgba(30,64,175,.1)}
+@media print{.no-print{display:none!important}.cert-box{border:3px solid var(--accent)!important}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:11px 20px;border-radius:10px;font-size:12.5px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:500;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red)}
+
+@media(max-width:600px){
+  .var-grid{grid-template-columns:1fr}
+  .exam-body{padding:0 12px 60px}
+  .q-text{font-size:14px}
+  .timer-inner{padding:0 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ KOD SCREEN ══ -->
+<div id="screen-code" class="screen active">
+  <div class="code-wrap">
+    <div class="code-box">
+      <div class="code-logo">🎓</div>
+      <h2>Demo Test</h2>
+      <p>Maktabgacha pedagogika bo'yicha attestatsiya formatidagi test.<br>Kirish uchun kod kiriting.</p>
+      <input class="code-input" id="codeInput" type="text" maxlength="7" placeholder="● ● ● ● ● ● ●" autocomplete="off" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')checkCode()"/>
+      <div class="code-err" id="codeErr"></div>
+      <button class="btn-enter" onclick="checkCode()">Kirish →</button>
+      <p class="code-hint">Kodni tarbiyachingizdan oling</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOME SCREEN ══ -->
+<div id="screen-home" class="screen">
+  <div class="home-wrap">
+    <div class="home-top">
+      <div style="font-size:40px;margin-bottom:10px">📚</div>
+      <h1>Demo Test</h1>
+      <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
+    </div>
+    <div class="info-box">
+      ℹ️ <span>Har variant <b>50 ta savol</b>. <b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
+    </div>
+    <div class="var-grid">
+      <div class="var-card" id="vc-1" onclick="selectVar(1)">
+        <div class="var-num">1️⃣</div>
+        <h3>1-Variant</h3>
+        <p>Tarbiya tamoyillari, shaxs rivojlanishi va faoliyat turlari</p>
+        <div class="var-meta"><span>50 savol</span><span>90 daqiqa</span></div>
+      </div>
+      <div class="var-card" id="vc-2" onclick="selectVar(2)">
+        <div class="var-num">2️⃣</div>
+        <h3>2-Variant</h3>
+        <p>Yosh davrlari, jismoniy madaniyat va sog'lom turmush tarzi</p>
+        <div class="var-meta"><span>50 savol</span><span>90 daqiqa</span></div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
+    <span class="btn-back-code" onclick="goBackCode()">← Kodga qaytish</span>
+  </div>
+</div>
+
+<!-- ══ EXAM SCREEN ══ -->
+<div id="screen-exam" class="screen">
+  <div id="timer-bar">
+    <div class="timer-inner">
+      <div>
+        <div class="timer-label">Qolgan vaqt</div>
+        <div id="timer-display">90:00</div>
+      </div>
+      <div style="text-align:center">
+        <div class="timer-label" id="var-label">1-Variant</div>
+        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/50</div>
+      </div>
+      <button class="btn-secondary no-print" onclick="confirmFinish()" style="font-size:12px;padding:8px 14px">✅ Yakunlash</button>
+    </div>
+  </div>
+  <div class="exam-body">
+    <div class="qpbar"><div class="qpfill" id="qpfill"></div></div>
+    <div class="nav-grid" id="nav-grid"></div>
+    <div class="q-card">
+      <div class="q-num" id="q-num"></div>
+      <div class="q-text" id="q-text"></div>
+      <div class="q-opts" id="q-opts"></div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-secondary" onclick="prevQ()">← Oldingi</button>
+      <button class="btn-primary" onclick="nextQ()" id="next-btn">Keyingi →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULT SCREEN ══ -->
+<div id="screen-result" class="screen">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div class="result-circle" id="result-circle">
+        <span id="result-pct"></span>
+        <span style="font-size:10px;margin-top:2px" id="result-grade-short"></span>
+      </div>
+      <h2 id="result-grade-full" style="font-size:18px;margin-bottom:8px"></h2>
+      <p id="result-msg" style="color:var(--muted);font-size:13px"></p>
+      <div style="display:flex;justify-content:space-around;margin-top:20px;flex-wrap:wrap;gap:12px">
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--green)" id="res-correct"></div><div style="font-size:11px;color:var(--muted)">To'g'ri</div></div>
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--red)" id="res-wrong"></div><div style="font-size:11px;color:var(--muted)">Xato</div></div>
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--accent)">50</div><div style="font-size:11px;color:var(--muted)">Jami</div></div>
+      </div>
+    </div>
+    <div class="result-btns no-print">
+      <button class="btn-primary" onclick="showWrong()" style="flex:1">❌ Xato savollar</button>
+      <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🏆 Sertifikat</button>
+      <button class="btn-secondary" onclick="goHome()" style="flex:1">🔄 Qayta</button>
+    </div>
+    <div id="wrong-section" class="wrong-section" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══ CERT SCREEN ══ -->
+<div id="screen-cert" class="screen">
+  <div class="cert-wrap">
+    <div class="cert-box">
+      <div style="font-size:3.5rem;margin-bottom:10px">🎓</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">MaktabgachaHub | Demo Test</div>
+      <h2 style="color:var(--accent);font-size:20px;margin-bottom:10px">MUVAFFAQIYAT SERTIFIKATI</h2>
+      <p style="color:var(--muted);font-size:12px;margin-bottom:14px">Quyidagi ishtirokchi testni muvaffaqiyatli topshirdi:</p>
+      <div style="font-size:24px;font-weight:800;margin:14px 0 6px" id="cert-name">Ishtirokchi</div>
+      <div style="font-size:22px;margin:8px 0" id="cert-stars"></div>
+      <div style="font-size:3.5rem;font-weight:900;color:var(--accent)" id="cert-score"></div>
+      <div style="font-size:16px;font-weight:700;color:var(--green);margin-bottom:10px" id="cert-grade"></div>
+      <div style="font-size:12px;color:var(--muted)" id="cert-variant"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px" id="cert-date"></div>
+      <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting.</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px" class="no-print">
+      <button class="btn-primary" onclick="window.print()" style="flex:1">🖨️ Chop etish</button>
+      <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1">← Natijaga qaytish</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// KODLAR
+// ══════════════════════════════════════════
+const CODES = {
+  'ILM150': 1,
+  'ILM250': 2
+};
+
+// ══════════════════════════════════════════
+// SAVOL BAZASI
+// ══════════════════════════════════════════
+const V1 = [
+  {q:"Vaziyat. MTT tarbiyachisi 'Mening oilam' mavzusidagi faoliyat davomida bolalarga oila qadriyatlari haqida suhbat o'tkazdi. Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilgan edi. Mazkur vaziyatda asosiy tarbiya tamoyili qaysi?",opts:["Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada demokratik va insonparvarlik g'oyalarining ustunligi","Tarbiyada milliy va umumbashariy qadriyatlarning ustunligi","Tarbiyani ijtimoiy hayot bilan bog'lash"],ans:2,exp:"Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilganligi bu tamoyilni to'liq ifodalaydi."},
+  {q:"Vaziyat. MTT pedagoglari barcha guruhlarda bir xil axloqiy talablarni belgilashdi va yil davomida izchil davom ettirdilar. Mazkur vaziyatda qaysi tamoyil eng to'liq amalga oshirilgan?",opts:["Tarbiyaning maqsadga yo'naltirilganligi","Jamoa yordamida tarbiyalash","Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada izchillik va tizimlilik"],ans:3,exp:"Tarbiyaviy talablarning uzluksiz va yagona qo'llanishi izchillik va tizimlilik tamoyilini ifodalaydi."},
+  {q:"Tarbiya tamoyillarini mos vaziyatlar bilan moslashtiring: 1-Tarbiyani mehnat bilan bog'lash, 2-Tarbiyalanuvchi shaxsini hurmat qilish, 3-Yosh va alohida xususiyatlarni hisobga olish. a-Kichik guruhga yirik, katta guruhga mayda konstruktor, b-Bolalar gullarga suv quydi, c-Xato javob bergan bolani ham qo'llab-quvvatladi.",opts:["1-c, 2-a, 3-b","1-b, 2-c, 3-a","1-a, 2-b, 3-c","1-b, 2-a, 3-c"],ans:1,exp:"1-b (mehnat bilan bog'lash = gul parvarishi), 2-c (shaxsni hurmat = xato javobni ham qo'llash), 3-a (yosh = konstruktor tanlash)."},
+  {q:"Vaziyat. Tarbiyachi muloqotda qiynalayotgan bolaga tanqid o'rniga mas'ul vazifalar berib, muvaffaqiyatlarini e'tirof etdi va tengdoshlari bilan hamkorlikni rag'batlantirdi. Mazkur vaziyatda qaysi tamoyil ustuvor hisoblanadi?",opts:["Jamoa yordamida tarbiyalash","Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada ijobiy sifatlarga tayanib salbiy tomonlarni bartaraf etish","Demokratik va insonparvarlik g'oyalarining ustunligi"],ans:2,exp:"Mavjud ijobiy fazilatlar rivojlantirilib salbiy holat kamaytirildi — bu ijobiy sifatlarga tayanish tamoyili."},
+  {q:"Vaziyat. MTTda 'Kasblar olami' haftaligi o'tkazildi. Bolalar oshpaz, shifokor, bog'bon mehnati bilan tanishdilar va mehnat qilayotgan insonlarga hurmat haqida suhbatlashdilar. Mazkur faoliyatning asosiy maqsadi qaysi tamoyilga ko'proq mos keladi?",opts:["Tarbiyani ijtimoiy hayot bilan bog'lash","Tarbiyani mehnat bilan bog'lash","Maqsadga yo'naltirilganlik va g'oyaviylik","Milliy va umumbashariy qadriyatlarning ustunligi"],ans:1,exp:"Bolalarda mehnatsevarlik va mehnatga hurmat shakllantirilmoqda — bu tarbiyani mehnat bilan bog'lash tamoyili."},
+  {q:"Vaziyat. Katta guruh tarbiyachisi yangi konstruktor berdi. Ayrim bolalar mustaqil yig'di, ayrimlari esa ko'mak bilan uddaladi. Mazkur vaziyat shaxs rivojlanishining qaysi omili yetakchi rol o'ynaganini ko'rsatadi?",opts:["Nasl-irsiyatning ustunligi","Ta'lim-tarbiya ta'siri","Biologik yetilish","Tabiiy qobiliyat"],ans:1,exp:"Tarbiyachining ko'rsatmasi va tengdoshlar yordami ta'lim-tarbiya ta'sirini ko'rsatadi."},
+  {q:"Vaziyat. Tarbiyachi kichik guruh bolalari bilan avval hissiy muloqot, keyinchalik predmetli faoliyat, undan so'ng rolli o'yinlarni tashkil etdi. Mashg'ulotlar bosqichma-bosqich murakkashgani sababli mustaqillik izchil rivojlandi. Tarbiyachining yondashuvi qaysi fikrga asoslanadi?",opts:["Faollik irsiyatga bog'liq","Shaxs tug'ma shakllanadi","Faoliyat tasodifiy rivojlanadi","Faoliyat bosqichma-bosqich egallanadi"],ans:3,exp:"Faoliyat bosqichma-bosqich murakkablashib, rivojlanish izchil kechdi."},
+  {q:"Rivojlanish turlarini tavsiflar bilan moslashtiring: 1-Jismoniy, 2-Ruhiy, 3-Ijtimoiy. a-Tafakkur va hissiy jarayonlarning o'zgarishi, b-Atrofdagilar bilan munosabatlarning shakllanishi, c-Bo'y, vazn va harakatlarning takomillashuvi.",opts:["1-a, 2-c, 3-b","1-c, 2-a, 3-b","1-b, 2-a, 3-c","1-c, 2-b, 3-a"],ans:1,exp:"Jismoniy=vazn/bo'y (c), Ruhiy=tafakkur (a), Ijtimoiy=munosabatlar (b)."},
+  {q:"Vaziyat. Katta guruhda ikki bola bir xil topshiriqni bajardi. Birinchi bola tez o'zlashtirdi, ikkinchisi ko'mak bilan uddaladi. Tarbiyachi har bir bolaga rivojlanish darajasiga mos vazifalarni tanladi. Mazkur vaziyat qaysi pedagogik xulosani tasdiqlaydi?",opts:["Rivojlanish individual kechadi","Nasl barcha bolada bir xil","Ta'lim ikkinchi darajali","Muhitning ta'siri cheklangan"],ans:0,exp:"Bir xil sharoitda turlicha natija — rivojlanish individual kechishini ko'rsatadi."},
+  {q:"Vaziyat. MTTda bolalar avval buyumlar bilan harakat qilishni o'rgandilar, keyin rolli o'yinlarda kattalar kasblarini tasvirlay boshladilar. Tarbiyachi hamkorlikka yo'naltirdi. Mazkur vaziyatda o'yin faoliyatining asosiy pedagogik ahamiyati nimada?",opts:["Nutqni rivojlantirish","Jismoniy chiniqtirish","Ijtimoiy tajribani egallash","Xotirani mustahkamlash"],ans:2,exp:"O'yin orqali bolalar ijtimoiy munosabatlar va jamoa tajribasini egallaydi."},
+  {q:"Vaziyat. Ikki nafar bola bir xil yoshda. Biri kitob o'qiladigan, muloqotga boy oilada, ikkinchisi kattalar e'tiboridan chetda. Oradan vaqt o'tgach, birinchi bola erkin muloqot qiladi. Bolaning rivojlanishiga eng kuchli ta'sir ko'rsatgan omil qaysi?",opts:["Irsiyat","Tabiiy muhit","Mikromuhit","Yosh xususiyati"],ans:2,exp:"Oila muhiti — mikromuhit — bolaning muloqot ko'nikmalarini shakllantirdi."},
+  {q:"Vaziyat. Tarbiyachi bolalarni gul ekish, daraxtlarni parvarish qilish va o'simliklarni kuzatishga jalb etdi, tabiatni asrash haqida suhbat olib bordi. Mazkur faoliyat qaysi fikrni tasdiqlaydi?",opts:["Tabiat irsiyatni o'zgartiradi","Tabiiy muhit shaxsga ta'sir qiladi","Muhit tarbiyadan ustun turadi","Qobiliyat faqat tug'ma bo'ladi"],ans:1,exp:"Tabiat bilan tashkil etilgan faoliyat tabiiy muhitning shaxsga ta'sirini ko'rsatadi."},
+  {q:"Omillarni tavsiflar bilan moslashtiring: 1-Irsiyat, 2-Ijtimoiy muhit, 3-Tarbiya. a-Maqsadli pedagogik ta'sir, b-Nasldan o'tuvchi layoqat, c-Jamiyat va atrof ta'siri.",opts:["1-c, 2-b, 3-a","1-a, 2-c, 3-b","1-b, 2-c, 3-a","1-b, 2-a, 3-c"],ans:2,exp:"Irsiyat=nasldan o'tuvchi (b), Ijtimoiy muhit=jamiyat ta'siri (c), Tarbiya=maqsadli ta'sir (a)."},
+  {q:"Vaziyat. Bir bola musiqa eshitishga qiziqadi va kuylarni tez eslab qoladi. Tarbiyachi uni musiqa mashg'ulotlariga jalb etdi. Bolaning musiqiy qobiliyati yanada rivojlandi. Mazkur vaziyat qaysi pedagogik xulosani tasdiqlaydi?",opts:["Layoqat muhitda rivojlanadi","Qobiliyat to'liq irsiydir","Tarbiya ikkinchi darajali","Muhit irsiyatni almashtiradi"],ans:0,exp:"Tug'ma layoqat maqsadli tarbiya muhitida yanada rivojlandi."},
+  {q:"Vaziyat. Tarbiyachi guruhdagi barcha bolalarga bir xil sharoit yaratdi. Shunga qaramay, ayrim bolalar topshiriqlarni tez, boshqalari sekin o'zlashtirdi. Tarbiyachi har bir bolaning imkoniyatini hisobga olib ishlashni rejalashtirdi. Bu vaziyatdan qanday xulosa?",opts:["Muhit barcha bolaga bir xil ta'sir qiladi","Tarbiya irsiyatni bekor qiladi","Yosh rivojlanishni belgilaydi","Rivojlanish omillari o'zaro bog'liq"],ans:3,exp:"Bir xil muhitda turlicha natija — omillar (irsiyat, muhit, tarbiya) o'zaro bog'liq ekanini ko'rsatadi."},
+  {q:"Vaziyat. MTTga yangi kelgan bola tengdoshlari bilan muloqotda qiynalardi. Tarbiyachi uni kichik guruh o'yinlariga jalb qildi va ijobiy xatti-harakatlarini rag'batlantirib bordi. Bir necha oy o'tgach faol ishtirok eta boshladi. Tarbiyaning qaysi imkoniyati ko'proq ifodalangan?",opts:["Irsiy belgilarni kuchaytiradi","Muhit ta'sirini to'ldiradi","Yoshni o'zgartiradi","Biologik rivojlanishni tezlashtiradi"],ans:1,exp:"Tarbiya muhitning yetishmovchiligini to'ldirib, bolaning ijtimoiylashuviga yordam berdi."},
+  {q:"Vaziyat. Nutqida nuqsoni bo'lgan bola bilan tarbiyachi muntazam individual mashg'ulotlar olib bordi. Ota-onasi bilan hamkorlik qilindi va bola asta-sekin erkinroq muloqot qila boshladi. Mazkur holat qaysi fikrni tasdiqlaydi?",opts:["Tarbiya irsiyatni bekor qiladi","Muhit barcha kamchilikni bartaraf etadi","Rivojlanish faqat yoshga bog'liq","Tarbiya kamchilikni yumshatadi"],ans:3,exp:"Tarbiya nuqsonni to'liq bartaraf etmasa-da, sezilarli darajada yumshatdi."},
+  {q:"Tarbiyaning imkoniyatlarini mos misollar bilan bog'lang: 1-Muhitning salbiy ta'sirini kamaytirish, 2-Bilim va ko'nikmalarni shakllantirish, 3-Kelajakka yo'naltirish. a-Mustaqil hayot ko'nikmalarini rivojlantirish, b-Salbiy odatlarni ijobiy faoliyat bilan almashtirish, c-Yangi bilim va malakalarni egallash.",opts:["1-c, 2-a, 3-b","1-a, 2-b, 3-c","1-b, 2-c, 3-a","1-b, 2-a, 3-c"],ans:2,exp:"Muhit salbiy ta'sir=salbiy odatlarni almashtirish (b), Bilim shakllantirish=yangi bilim (c), Kelajak=mustaqil ko'nikmalar (a)."},
+  {q:"Vaziyat. Tarbiyachi 3 yoshli bolalarga faqat buyumlar bilan amaliy harakatlarni taklif qilsa, 6 yoshli bolalar bilan sabab-oqibatni tushuntirishga asoslangan topshiriqlarni tashkil etdi. Bu yondashuv qaysi pedagogik g'oyaga mos keladi?",opts:["Ta'lim rivojlanishdan oldinda boradi","Tarbiya faqat mavjud bilimga tayanadi","Rivojlanish tarbiyaga bog'liq emas","Yosh barcha bolada bir xil kechadi"],ans:0,exp:"Ta'lim bolaning mavjud darajasidan bir qadam oldinda bo'lib, rivojlanishni yetaklab boradi — Vigotskiy nazariyasi."},
+  {q:"Vaziyat. Tarbiyachi mashg'ulotni rejalashtirishda bugungi bilim darajasini emas, balki ozgina yordam bilan bajara oladigan vazifalarni ham hisobga oldi. Mazkur yondashuv qaysi tushunchaga asoslanadi?",opts:["Faoliyat nazariyasi","Individual yondashuv","Yosh davrlari","Yaqin rivojlanish zonasi"],ans:3,exp:"Mustaqil daraja bilan yordam bilan bajariladigan daraja orasidagi zona — Vigotskiyning 'yaqin rivojlanish zonasi'."},
+  {q:"Vaziyat. Kichik guruh tarbiyachisi bolalarga turli shakldagi kubiklarni berdi. Dastlab ushlab ko'rdilar, keyin ko'rsatma bilan inshootlar qurdilar, so'ng mustaqil yasashga harakat qildilar. Mazkur vaziyat bolaning qaysi jarayonini ifodalaydi?",opts:["Bilimning irsiy shakllanishi","Faoliyat orqali rivojlanishi","Yoshga bog'liq o'zgarishi","Muhitga moslashishi"],ans:1,exp:"Bosqichma-bosqich harakat va mashq orqali rivojlanish — faoliyat nazariyasini tasdiqlaydi."},
+  {q:"Vaziyat. Tarbiyachi mashg'ulot davomida bolalarga o'yinchoqlarni mustaqil tanlash imkonini berdi. Bolalar rollarni o'zlari taqsimladi, qoidalarni kelishib oldi va bahsli vaziyatlarni birgalikda hal qildi. Qaysi faoliyat turi yetakchi hisoblanadi?",opts:["Tasviriy faoliyat","Bilish faoliyati","Mehnat faoliyati","O'yin faoliyati"],ans:3,exp:"Maktabgacha yoshda o'yin yetakchi faoliyat bo'lib, shaxsning har tomonlama rivojlanishini ta'minlaydi."},
+  {q:"Faoliyat turlarini natijalar bilan moslashtiring: 1-Buyumlar bilan faoliyat, 2-Muomala, 3-Harakatli o'yin. a-Makonda harakat qilish rivojlanadi, b-Buyumlarning xususiyatlari o'zlashtiriladi, c-Ijtimoiy munosabatlar shakllanadi.",opts:["1-c, 2-a, 3-b","1-a, 2-b, 3-c","1-b, 2-c, 3-a","1-b, 2-a, 3-c"],ans:2,exp:"Buyumlar=xususiyatlar (b), Muomala=ijtimoiy (c), Harakatli=makonda harakat (a)."},
+  {q:"Vaziyat. Bir bola faqat tarbiyachi ko'rsatmasi bilan ishlaydi, ikkinchi bola esa topshiriqni bajarishning yangi usullarini mustaqil izlaydi va tengdoshlariga taklif qiladi. Ikkinchi bolaning xatti-harakati nimani ko'rsatadi?",opts:["Faol subyektligini","Yuqori yosh bosqichini","Kuchli irsiyatni","Tabiiy qobiliyatni"],ans:0,exp:"Bola o'rganish jarayonining faol subyekti sifatida harakat qilmoqda — mustaqil izlash va taklif qilish."},
+  {q:"Vaziyat. Tarbiyachi rolli o'yin tashkil etdi. Bolalar shifokor, oshpaz va sotuvchi rollarini ijro etdilar. O'yin davomida navbat kutish, kelishish, vazifalarni taqsimlash va bir-biriga yordam berishni o'rgandilar. O'yinning asosiy pedagogik ahamiyati nimada?",opts:["Nutqni faollashtirish","Ijtimoiy tajribani egallash","Harakatni rivojlantirish","Tasavvurni boyitish"],ans:1,exp:"Rolli o'yin orqali bolalar jamiyatdagi munosabatlar va ijtimoiy tajribani o'zlashtiradi."},
+  {q:"Vaziyat. Katta guruhda 'Shifoxona' nomli syujetli-rolli o'yinda bolalar shifokor, hamshira va bemor rollarini taqsimlab, davolash jarayonini mustaqil tashkil etdilar. Mazkur vaziyatda o'yin faoliyatining asosiy natijasi qaysi?",opts:["Nutq faollashadi","Harakat takomillashadi","Jamoaviy sifatlar rivojlanadi","Tasavvur kengayadi"],ans:2,exp:"Rollarni taqsimlash, kelishish va hamkorlik — jamoaviy sifatlarning rivojlanishini ko'rsatadi."},
+  {q:"Vaziyat. Tarbiyachi katta guruh bolalariga gullarga suv quyish, o'yinchoqlarni tartibga keltirish va navbatchilik vazifalarini muntazam topshirib bordi. Bir necha haftadan keyin bolalar topshiriqlarni eslatmasdan bajarishga odatlandi. Qaysi sifat ko'proq shakllanmoqda?",opts:["Bilishga qiziqish","Jamoa manfaatini anglash","Nutq madaniyati","Tasviriy qobiliyat"],ans:1,exp:"Umumiy topshiriqlarni bajarish va ulardan mamnunlik — jamoa manfaatini anglashni shakllantiradi."},
+  {q:"Faoliyatlarni asosiy natijasi bilan moslashtiring: 1-Syujetli-rolli o'yin, 2-Mehnat faoliyati, 3-O'quv faoliyati. a-Oddiy tushunchalar shakllanadi, b-Jamoaviy mas'uliyat rivojlanadi, c-Ijtimoiy munosabatlar o'zlashtiriladi.",opts:["1-a, 2-c, 3-b","1-c, 2-b, 3-a","1-b, 2-a, 3-c","1-c, 2-a, 3-b"],ans:1,exp:"Rolli o'yin=ijtimoiy (c), Mehnat=mas'uliyat (b), O'quv=tushunchalar (a)."},
+  {q:"Vaziyat. Tarbiyachi 4 yoshli bolalar bilan fasllarning belgilarini kuzatishga e'tibor qaratdi. 6 yoshli bolalar bilan esa fasllar almashinishining sabablarini muhokama qildi. Mazkur yondashuv nimani ko'rsatadi?",opts:["Ta'lim mazmuni yoshga moslashadi","Bilim faqat kuzatish bilan shakllanadi","O'yin ta'limdan ustun turadi","Mehnat tafakkurni rivojlantiradi"],ans:0,exp:"Turli yosh guruhlariga turlicha topshiriq — ta'lim mazmunining yoshga moslashishini ko'rsatadi."},
+  {q:"Vaziyat. Tarbiyachi bolalarni faqat topshiriqni bajarishga emas, balki savol berish, yangi usullarni izlash va fikrini asoslashga undadi. Vaqt o'tishi bilan bolalar yangi faoliyatlarga qiziqish bildira boshladilar. Mazkur natijaning asosiy sababi qaysi?",opts:["Mashg'ulotlar murakkablashdi","Bilimlar ko'paydi","Yosh xususiyati o'zgardi","Faol ehtiyoj shakllandi"],ans:3,exp:"Bolalarda bilishga bo'lgan ichki faol ehtiyoj shakllandi — bu yangi faoliyatlarga qiziqishni keltirib chiqardi."},
+  {q:"Vaziyat. Tarbiyachi 2-3 yoshli bolalar bilan musiqa mashg'ulotida qo'shiq kuylash, ohangga mos harakat qilish va she'r aytish faoliyatlarini tashkil etdi. Bolalar kattalarga taqlid qilib harakatlarni takrorladilar. Qaysi yosh xususiyatiga mos?",opts:["Mustaqil fikrlash rivojlanishi","Taqlid orqali o'zlashtirish","Mantiqiy tushunchalar shakllanishi","Jamoaviy mehnat rivojlanishi"],ans:1,exp:"2-3 yosh uchun taqlid orqali o'zlashtirish xaracterli — bola kattalarga taqlid qilib bilim oladi."},
+  {q:"Vaziyat. 3-4 yoshli guruhda tarbiyachi bolalarni birgalikdagi o'yinlarga jalb qildi. Bolalar rollarni taqsimlashni, harakatlarini qisqa muddat nazorat qilishni va tengdoshlari bilan hamkorlik qilishni boshladilar. Bu yoshdagi qaysi rivojlanish xususiyati ifodalangan?",opts:["Nutqning dastlabki shakllanishi","Musiqiy qobiliyatning rivoji","Jamoaviy o'yin ko'nikmasi","Mustaqil mehnat faoliyati"],ans:2,exp:"3-4 yoshda bolalar jamoaviy o'yin ko'nikmalarini o'zlashtirib, hamkorlikka o'rganadi."},
+  {q:"Yosh davrlarini xususiyatlari bilan belgilang: 1-2-3 yosh, 2-3-4 yosh, 3-4-5 yosh. a-Qiyoslash, mustaqil fikrlash va ravon nutq rivojlanadi, b-Taqlid qilish, musiqa va badiiy so'zga qiziqish kuchayadi, c-O'yin, tasviriy va qurish-yasash faoliyatlari rivojlanadi.",opts:["1-c, 2-b, 3-a","1-b, 2-c, 3-a","1-a, 2-c, 3-b","1-b, 2-a, 3-c"],ans:1,exp:"2-3 yosh=taqlid (b), 3-4 yosh=o'yin/tasviriy (c), 4-5 yosh=mustaqil fikrlash (a)."},
+  {q:"Vaziyat. Tarbiyachi 4-5 yoshli bolalarga mustaqil bajarish, taqqoslash va fikrini aytish imkonini berdi. Bolalar faoliyatda tashabbus ko'rsata boshladilar. Ushbu yondashuv qaysi yosh xususiyatiga asoslangan?",opts:["Taqlid qilish ehtiyojiga","Harakatlarni boshqarish boshlanishiga","Jamoaga moslashish jarayoniga","Mustaqil fikrlash rivojiga"],ans:3,exp:"4-5 yoshda mustaqil fikrlash rivojlanib, bola taqqoslash va tashabbus ko'rsatishga qodir bo'ladi."},
+  {q:"Vaziyat. Tarbiyachi 3 yoshli bolalar uchun mashg'ulotlarda asosan o'yin elementlaridan foydalandi. Bolalar uzoq vaqt davomida bir xil faoliyatga diqqatini jamlay olmaydi va bilimlarni o'yin orqali yaxshi o'zlashtiradi. Mazkur qaror qaysi xulosaga mos?",opts:["Mehnat asosiy faoliyat bo'ladi","O'qish yetakchi faoliyat hisoblanadi","O'yin yetakchi faoliyatdir","Tasviriy faoliyat ustun turadi"],ans:2,exp:"Maktabgacha yoshda, ayniqsa kichik guruhda, o'yin yetakchi faoliyat hisoblanadi."},
+  {q:"Vaziyat. Katta guruh tarbiyachisi 5-6 yoshli bolalar bilan so'z boyligini oshirish, matematik tushunchalarni rivojlantirish va turli vaziyatlar asosida fikrlashga undash ishlarini olib bordi. Ushbu faoliyatlar qaysi rivojlanish xususiyatiga mos?",opts:["Jismoniy chidamlilikni oshirishga","Aqliy va nutqiy rivojlanishga","Gigiyenik ko'nikmalarni shakllantirishga","Harakatlarni muvofiqlashtirishga"],ans:1,exp:"So'z boyligi, matematik tushuncha va fikrlash — aqliy va nutqiy rivojlanish sohasiga kiradi."},
+  {q:"Vaziyat. Tarbiyachi 5-6 yoshli bolalar bilan ishlashda stulda to'g'ri o'tirish, gavdani tik tutish va jismoniy mashqlarni bajarishga alohida e'tibor qaratdi. Buning asosiy sababi nimada?",opts:["Nutq rivojlanishi tezlashgani uchun","Yurak faoliyati kuchaydi","Umurtqa suyaklari hali to'liq qotmagani uchun","Tafakkur jarayoni rivojlangani uchun"],ans:2,exp:"5-6 yoshda umurtqa pog'onasi hali shakllanib bo'lmagan, shuning uchun qaddi-qomatga e'tibor zarur."},
+  {q:"Yosh davrlarini rivojlanish belgilariga moslashtiring: 1-5-6 yosh, 2-6-7 yosh. a-O'z harakatlarini nazorat qilish va maktabga tayyorgarlik kuchayadi, b-Nutq, matematik tafakkur va faraz qilish rivojlanadi.",opts:["1-a, 2-b","1-b, 2-a","1-a, 2-a","1-b, 2-b"],ans:1,exp:"5-6 yosh=nutq va matematik tafakkur (b), 6-7 yosh=nazorat va maktabga tayyorgarlik (a)."},
+  {q:"Vaziyat. Olti yoshli bola maktabga kirishga qiziqadi, lekin tarbiyachi faqat bilim darajasini emas, balki jismoniy va ruhiy tayyorgarligini ham baholash zarurligini ta'kidladi. Tarbiyachining fikri nimaga asoslanadi?",opts:["Barcha bolalar bir xil rivojlanadi","Bilim maktabga tayyorgarlik uchun yetarli","Yosh bolaning asosiy mezoni","Tayyorlik har tomonlama aniqlanadi"],ans:3,exp:"Maktabga tayyorlik jismoniy, ruhiy va bilim tomonlarini o'z ichiga olgan yaxlit baholashni talab qiladi."},
+  {q:"Vaziyat. Maktabga tayyorlov guruhida tarbiyachi bolalarga mustaqil topshiriqlar beradi, fikrini bildirishga, sog'lig'iga e'tibor berishga va gigiyena qoidalariga amal qilishga o'rgatadi. Bu ishlarning asosiy maqsadi qaysi?",opts:["Faqat jismoniy rivojlanishni ta'minlash","O'yin faoliyatini kengaytirish","Maktab ta'limiga tayyorlash","Mehnat malakasini shakllantirish"],ans:2,exp:"Barcha ko'nikmalar va fazilatlar maktab ta'limiga kompleks tayyorgarlikka xizmat qiladi."},
+  {q:"MTT tarbiyachisi ota-onalarga jismoniy madaniyat faqat mashqlar emas, balki gigiyena va chiniqtirishni ham qamrab olishini tushuntirdi. Matnga ko'ra, qaysi javob eng to'g'ri?",opts:["Mashq va gigiyena","Mashq, gigiyena va chiniqtirish","Mashq va chiniqtirish","Gigiyena va chiniqtirish"],ans:1,exp:"Jismoniy madaniyat uch komponentni — mashq, gigiyena va chiniqtirishni — o'z ichiga oladi."},
+  {q:"Tarbiyachi kun tartibiga ertalabki badantarbiya, gigiyenik odatlar va ochiq havodagi o'yinlarni kiritdi. Bu faoliyatlar nimani ifodalaydi?",opts:["Jismoniy rivojlanishni","Jismoniy madaniyatni","Jismoniy kamolotni","Badan tuzilishini"],ans:1,exp:"Mashq, gigiyena va faol o'yin birgalikda jismoniy madaniyatni tashkil etadi."},
+  {q:"Tarbiyachi bolaning bo'yi, vazni va o'pka sig'imini birgalikda baholadi. Bu, avvalo, qaysi tushunchaga tegishli?",opts:["Jismoniy kamolot","Jismoniy rivojlanish","Jismoniy madaniyat","Badan tarbiya"],ans:1,exp:"Bo'y, vazn, o'pka sig'imi — jismoniy rivojlanishning biologik ko'rsatkichlari."},
+  {q:"Moslashtiring: 1-Jismoniy madaniyat, 2-Jismoniy rivojlanish, 3-Badan tarbiya. a-Mashqlar tizimi, b-Biologik o'zgarish, c-Gigiyena va chiniqtirish.",opts:["1-c, 2-b, 3-a","1-a, 2-b, 3-c","1-c, 2-a, 3-b","1-b, 2-c, 3-a"],ans:0,exp:"Jismoniy madaniyat=gigiyena+chiniqtirish (c), Jismoniy rivojlanish=biologik o'zgarish (b), Badan tarbiya=mashqlar tizimi (a)."},
+  {q:"Ikki guruh kuzatildi. Birinchi guruh mashq, gigiyena va chiniqtirish bilan shug'ullandi, ikkinchi guruh faqat mashq qildi. Qaysi xulosa matnga mos?",opts:["Birinchi guruh sog'lomroq","Birinchi guruh chiniqqanroq","Birinchi guruh harakatchanroq","Birinchi guruh baquvvatroq"],ans:0,exp:"Uch komponentni birlashtirgan guruh har tomonlama sog'lomroq bo'ladi."},
+  {q:"Tarbiyachi mashg'ulot davomida bolalarga yugurish, sakrash va muvozanat mashqlarini bajartirdi. Bolalarning chaqqonligi va chidamliligi yaxshilangani kuzatildi. Ushbu natija qaysi vazifaning bajarilganini ko'rsatadi?",opts:["Tarbiyaviy vazifa","Ta'limiy vazifa","Sog'lomlashtiruvchi vazifa","Rivojlantiruvchi vazifa"],ans:1,exp:"Harakat ko'nikma va sifatlarni o'rgatish — ta'limiy vazifaning natijasidir."},
+  {q:"Tarbiyachi bolalarga qo'l yuvish, sport kiyimini tartibli saqlash va mashqdan keyin dam olish qoidalarini o'rgatdi. Bu faoliyat, avvalo, nimani shakllantiradi?",opts:["Harakat malakasini","Gigiyenik ko'nikmani","Jismoniy sifatni","Sport qiziqishini"],ans:1,exp:"Tozalik va tartib qoidalariga rioya qilish — gigiyenik ko'nikmani shakllantiradi."},
+  {q:"Mashg'ulot vaqtida bola yiqilgan do'stiga yordam berdi, navbatni kutdi va jihozlardan ehtiyotkorlik bilan foydalandi. Bu holat qaysi vazifaning natijasini ifodalaydi?",opts:["Ta'limiy vazifa","Sog'lomlashtiruvchi vazifa","Tarbiyaviy vazifa","Chiniqtirish vazifasi"],ans:2,exp:"Halollik, yordam berish, ehtiyotkorlik — tarbiyaviy vazifaning natijalaridir."},
+  {q:"Tarbiyachi mashg'ulotni ochiq havoda tashkil etdi. Mashqlar davomida bolalarning organizmi tashqi muhitga yaxshi moslasha boshladi. Bu natija qaysi vazifaga ko'proq mos?",opts:["Ta'limiy","Tarbiyaviy","Sog'lomlashtiruvchi","Bilim beruvchi"],ans:2,exp:"Organizmning tashqi muhitga moslashishi — sog'lomlashtiruvchi vazifaning natijasidir."},
+  {q:"Vazifalarni natijalari bilan moslashtiring: 1-Sog'lomlashtiruvchi, 2-Ta'limiy, 3-Tarbiyaviy. a-Halollik va intizom, b-Harakat ko'nikmalari, c-Organizmni mustahkamlash.",opts:["1-c, 2-b, 3-a","1-b, 2-c, 3-a","1-a, 2-b, 3-c","1-c, 2-a, 3-b"],ans:0,exp:"Sog'lomlashtiruvchi=organizm (c), Ta'limiy=ko'nikmalar (b), Tarbiyaviy=intizom (a)."},
+];
+
+const V2 = [
+  {q:"Mashg'ulot davomida tarbiyachi bolalarning qaddi-qomatini kuzatib, organizm tizimlarini uyg'un rivojlantirishga qaratilgan mashqlarni tanladi. Bu faoliyat, avvalo, qaysi vazifani ifodalaydi?",opts:["Ta'limiy vazifa","Tarbiyaviy vazifa","Sog'lomlashtiruvchi vazifa","Gigiyenik vazifa"],ans:2,exp:"Qaddi-qomat va organizm tizimlarini rivojlantirish — sog'lomlashtiruvchi vazifaning ko'rinishidir."},
+  {q:"Tarbiyachi bolalarga yugurish, sakrash va muvozanat saqlash mashqlarini muntazam bajartirdi. Maqsad kelajakdagi murakkab jismoniy faoliyat uchun zamin yaratish edi. Qaysi natija ushbu maqsadga mos?",opts:["Gigiyenik odatlar","Hayotiy harakat ko'nikmalari","Axloqiy fazilatlar","Organizm chiniqishi"],ans:1,exp:"Asosiy harakatlarni o'rgatish — hayotiy harakat ko'nikmalarini shakllantiradi."},
+  {q:"Bola mashg'ulotdan oldin qo'lini yuvadi, sport kiyimini tartibli saqlaydi va mashqdan keyin buyumlarini joyiga qo'yadi. Bu holat qaysi vazifaning natijasidir?",opts:["Shaxsiy gigiyena","Jismoniy rivojlanish","Hayotni muhofaza qilish","Harakat malakasi"],ans:0,exp:"Tozalik va tartib qoidalari — shaxsiy gigiyena ko'nikmalarining natijasidir."},
+  {q:"Tarbiyachi mashg'ulot yuklamasini asta-sekin oshirdi. Natijada bolalar yangi mashqlarga tez moslasha boshladi. Buning asosiy sababi nima?",opts:["Modda almashinuvi jadalligi","Mushaklar kuchliligi","Asab tizimi yetukligi","Skeletning mustahkamligi"],ans:0,exp:"Maktabgacha yoshdagi bolalarda modda almashinuvi jadal kechadi — bu yuklama oshirishga tez moslashishni ta'minlaydi."},
+  {q:"Faoliyatlarni vazifalar bilan moslashtiring: 1-Hayotiy harakatlar, 2-Shaxsiy gigiyena, 3-Organizmni chiniqtirish. a-Sog'lomlashtirish, b-Ta'limiy, c-Gigiyenik.",opts:["1-b, 2-c, 3-a","1-a, 2-b, 3-c","1-c, 2-a, 3-b","1-b, 2-a, 3-c"],ans:0,exp:"Hayotiy harakatlar=ta'limiy (b), Gigiyena=gigiyenik (c), Chiniqtirish=sog'lomlashtirish (a)."},
+  {q:"Tarbiyachi bolalarni har kuni sayrga olib chiqadi. Sayrdan keyin bolalarda faollik oshib, harakatlari yaxshilandi. Matnga ko'ra, buning asosiy sababi nima?",opts:["Toza havo ta'siri","O'yin ko'pligi","Dam olish vaqti","Kiyim qulayligi"],ans:0,exp:"Toza havo organizmni to'ydiradi va faollikni oshiradi."},
+  {q:"Tarbiyachi sayr rejasiga kuzatish, mehnat, o'yin va sport mashqlarini kiritdi. Bu yondashuv nimani ta'minlaydi?",opts:["Faoliyat xilma-xilligini","Vaqt qisqarishini","Harakat kamayishini","Dam olishni"],ans:0,exp:"Turli xil faoliyatlarni birlashtirish sayrning tarbiyaviy va rivojlantiruvchi imkoniyatlarini to'liq ochadi."},
+  {q:"Kuchli shamol va sovuq havo kuzatilgan kuni tarbiyachi sayrni bekor qildi. Matnga ko'ra, bu qaror qanday baholanadi?",opts:["To'g'ri qaror","Noto'g'ri qaror","Shartli qaror","Vaqtinchalik qaror"],ans:0,exp:"Og'ir ob-havo sharoitida bolalar sog'ligini himoya qilish — to'g'ri va asosli qaror."},
+  {q:"Tarbiyachi bolalarda harorat, namlik va quyosh ta'siriga moslashuvni rivojlantirishni maqsad qildi. Bu jarayon nima deb ataladi?",opts:["Sayr","Chiniqtirish","Mashq","Dam olish"],ans:1,exp:"Tabiiy omillarga (havo, suv, quyosh) moslashishni rivojlantirish chiniqtirish deb ataladi."},
+  {q:"Tushunchalarni moslashtiring: 1-Sayr, 2-Harakatli o'yin, 3-Chiniqtirish. a-Tabiiy omillarga moslashish, b-Ochiq havodagi faoliyat, c-Jismoniy sifatlarni rivojlantirish.",opts:["1-b, 2-c, 3-a","1-a, 2-b, 3-c","1-c, 2-a, 3-b","1-b, 2-a, 3-c"],ans:0,exp:"Sayr=ochiq havo (b), Harakatli o'yin=jismoniy sifatlar (c), Chiniqtirish=tabiiy omillarga moslashish (a)."},
+  {q:"Tarbiyachi chiniqtirish jarayonida bolalarga birdaniga kuchli sovuq suv ta'sirini qo'lladi. Natijada ayrim bolalar noqulay holatga tushdi. Tarbiyachining asosiy xatosi nimada?",opts:["Vaqt tanlamadi","Ta'sirni keskin oshirdi","Vosita tanlamadi","Bolani kuzatmadi"],ans:1,exp:"Chiniqtirish bosqichma-bosqich amalga oshirilishi kerak — ta'sirni keskin oshirish xatodir."},
+  {q:"Ikki guruhda chiniqtirish tashkil etildi. 1-guruhda barcha bolalarga bir xil usul qo'llandi. 2-guruhda bolaning sog'ligi va yosh xususiyatlari hisobga olindi. Qaysi guruh yondashuvi to'g'ri?",opts:["1-guruh","2-guruh","Ikkalasi","Hech biri"],ans:1,exp:"Individual yondashuv — har bir bolaning sog'ligi va yosh xususiyatini hisobga olish to'g'ri."},
+  {q:"Chiniqtirishni tashkil etishda qaysi tamoyil muhim hisoblanadi?",opts:["Tezlashtirish","Muntazamlilik","Kuchaytirish","Majburlash"],ans:1,exp:"Chiniqtirish uzilishsiz, muntazam ravishda olib borilsa samarali bo'ladi."},
+  {q:"Tarbiyachi chiniqtirish mashg'ulotlarini faqat yoz faslida o'tkazmoqda. Bu yondashuv qanday baholanadi?",opts:["To'liq to'g'ri","Qisman to'g'ri","Noto'g'ri","Eng maqbul"],ans:1,exp:"Chiniqtirish yil bo'yi davom ettirilishi kerak — faqat yozda o'tkazish qisman to'g'ri."},
+  {q:"Chiniqtirish qoidalarini moslashtiring: 1-Muntazam o'tkazish, 2-Individual yondashish, 3-Kuchni asta oshirish. a-Bola xususiyatini hisobga olish, b-Ta'sirni bosqichma-bosqich kuchaytirish, c-Yil davomida davom ettirish.",opts:["1-c, 2-a, 3-b","1-a, 2-b, 3-c","1-b, 2-c, 3-a","1-c, 2-b, 3-a"],ans:0,exp:"Muntazam=yil davomida (c), Individual=bola xususiyati (a), Kuch osta=bosqichma-bosqich (b)."},
+  {q:"Tarbiyachi bolalarga qo'l yuvish, kiyimlarini tartibli saqlash va ovqatlanish qoidalarini har kuni bir xil tartibda bajarishni o'rgatmoqda. Bu yondashuv nimaga xizmat qiladi?",opts:["Harakatni tezlashtirish","Ko'nikmani mustahkamlash","Faollikni oshirish","Bilimni kengaytirish"],ans:1,exp:"Bir xil tartibda muntazam takrorlash ko'nikmalarni mustahkamlaydi va odatga aylantiradi."},
+  {q:"Bir guruhda bolalarga gigiyenik talablar tushuntirildi, ammo tarbiyachi ularning bajarilishini tekshirmadi. Matnga ko'ra, qaysi shart buzilgan?",opts:["Nazorat","Jihozlash","Takrorlash","Rag'bat"],ans:0,exp:"Ko'nikmalarning shakllanishi uchun nazorat zarur — nazorat bo'lmasa bilim amaliyotga o'tmaydi."},
+  {q:"Jismoniy mashqlar bolaning organizmiga qanday ta'sir ko'rsatadi?",opts:["Faqat mushakni rivojlantiradi","Modda almashinuvini faollashtiradi","Faqat qomatni o'zgartiradi","Faqat chiniqtiradi"],ans:1,exp:"Jismoniy mashqlar qon aylanishi, nafas olish, modda almashinuvini faollashtiradi — ta'sir keng."},
+  {q:"Tarbiyachi kichik yoshdagi bolalar bilan massajdan foydalanmoqda. Massajning asosiy natijasi qaysi?",opts:["Harakat tezligi oshadi","Qon va mushak oziqlanishi yaxshilanadi","Bilim hajmi ortadi","O'yin faolligi kamayadi"],ans:1,exp:"Massaj qon aylanishini yaxshilab, mushaklar oziqlanishini ta'minlaydi."},
+  {q:"Tushunchalarni moslashtiring: 1-Madaniy-gigiyenik ko'nikma, 2-Jismoniy mashq, 3-Massaj. a-Organizm faoliyatini faollashtirish, b-Ozodalikka rioya qilish, c-Mushak va qon aylanishiga ta'sir.",opts:["1-b, 2-a, 3-c","1-a, 2-c, 3-b","1-c, 2-b, 3-a","1-b, 2-c, 3-a"],ans:0,exp:"Gigiyenik ko'nikma=tozalik (b), Jismoniy mashq=organizm faoliyati (a), Massaj=mushak/qon (c)."},
+  {q:"MTTda ovqatlanish vaqtida bolalar uzoq kutib qoldi. Tarbiyachi ayrim bolalarda ishtaha pasayganini kuzatdi. Buning asosiy sababi nima?",opts:["Shovqin oshdi","Kutish cho'zildi","Taom sovidi","Yosh farqi"],ans:1,exp:"Ovqatlanish vaqtini cho'zish ishtahani pasaytiradi — ovqatlanish aniq vaqtda bo'lishi kerak."},
+  {q:"O'rta guruh bolalari ovqatlanishdan oldin stol bezashda navbatchilik qilmoqda. Bu faoliyat, avvalo, nimani shakllantiradi?",opts:["Mustaqillikni","Tezkorlikni","Chiniqishni","Kuchlilikni"],ans:0,exp:"Navbatchilik — bolada mustaqillik, mas'uliyat va jamoa burchini anglash hissini shakllantiradi."},
+  {q:"4 yoshli bola qo'l yuvish, tish tozalash va stol atrofida o'zini tutish qoidalarini bajara oladi. Bu yosh uchun qaysi ko'nikma mos?",opts:["Gigiyenik ko'nikma","Mehnat malakasi","Sport malakasi","Harakat tezligi"],ans:0,exp:"4 yoshda asosiy gigiyenik ko'nikmalar shakllanadi — bu yoshga xos normal rivojlanish."},
+  {q:"Tarbiyachi ovqatlanish vaqtida bolalardan madaniy-gigiyenik qoidalarga rioya qilishni talab qiladi, biroq o'zi bu qoidalarga amal qilmaydi. Bir muddatdan so'ng bolalarda ham ushbu odatlar sust shakllandi. Buning asosiy sababi nima?",opts:["Nazorat sustligi","Ijobiy namuna yetishmadi","Mashq kam bo'ldi","Yosh hisobga olinmadi"],ans:1,exp:"Bola kattalarning xatti-harakatini namuna sifatida oladi — ijobiy namuna bo'lmasa odat shakllanmaydi."},
+  {q:"Bir bola tez-tez injiqlik qiladi, mashg'ulotda diqqatini jamlay olmaydi va arzimas shovqindan uyg'onib ketadi. Matnga ko'ra, buning ehtimoliy sababi qaysi?",opts:["Ovqat me'yori","Uyqu sifati","Sayr davomiyligi","Kiyim qulayligi"],ans:1,exp:"Uyqu sifatining pastligi asab tizimiga ta'sir qilib, injiqlik va diqqatsizlikka olib keladi."},
+  {q:"Tarbiyachi bolalarni har kuni toza havoda uxlatishni yo'lga qo'ydi. Bir necha haftadan keyin bolalarda tetiklik va shamollash holatlari kamaydi. Bu natijaga eng asosiy omil nima?",opts:["Kislorod ta'siri","Quyosh nuri","Harakat faolligi","Ovqat sifati"],ans:0,exp:"Toza havo bilan to'yingan kislorod nafas yo'llarini mustahkamlaydi va immunitetni oshiradi."},
+  {q:"Yoz faslida tarbiyachi bolalarga maydonchada qisqa muddat yalangoyoq yurishga ruxsat berdi. Buning asosiy maqsadi nima?",opts:["Mushakni kuchaytirish","Organizmni chiniqtirish","Qomatni tiklash","Charchoqni kamaytirish"],ans:1,exp:"Yalangoyoq yurish — tabiiy chiniqtirish usuli bo'lib, organizmni tashqi muhitga moslashtirishga xizmat qiladi."},
+  {q:"Tushunchalarni natijasi bilan moslashtiring: 1-Toza havoda uyqu, 2-Ijobiy namuna, 3-Yalangoyoq yurish. a-Chiniqtirish, b-Gigiyenik odat, c-Tetik uyg'onish.",opts:["1-c, 2-b, 3-a","1-b, 2-a, 3-c","1-a, 2-c, 3-b","1-c, 2-a, 3-b"],ans:0,exp:"Toza havoda uyqu=tetik uyg'onish (c), Namuna=gigiyenik odat (b), Yalangoyoq=chiniqtirish (a)."},
+  {q:"Tarbiyachi bolalarga qo'l yuvish, kiyimlarini tartibli saqlash va ovqatlanish qoidalarini har kuni bir xil tartibda bajarishni o'rgatmoqda. Yosh davrlarini ko'nikmalar bilan moslashtiring: 1-4 yosh, 2-5 yosh, 3-O'rta guruh. a-Navbatchilikda ishtirok etish, b-Yuz, bo'yin, quloqlarni mustaqil yuvish, c-Qo'l yuvish va stol odoblari.",opts:["1-c, 2-b, 3-a","1-a, 2-c, 3-b","1-b, 2-a, 3-c","1-c, 2-a, 3-b"],ans:0,exp:"4 yosh=qo'l yuvish va stol (c), 5 yosh=yuz/bo'yin yuvish (b), O'rta guruh=navbatchilik (a)."},
+  {q:"Tarbiyachi tayyorlov guruhida bolalarning o'ziga-o'zi xizmat ko'rsatish ko'nikmalarini nazorat qilib bormadi. Bir necha oydan so'ng ayrim bolalarda oldingi malakalar sustlashdi. Buning asosiy sababi nima?",opts:["Yosh o'sishi","Mustahkamlash yo'qligi","Mashq kamayishi","Harakat oshishi"],ans:1,exp:"Ko'nikmalar mustahkamlanmasa va nazorat qilinmasa, ular susayib ketadi."},
+  {q:"6-7 yoshli bolalar ovqatlanishda sanchqi va pichoqdan foydalanmoqda, kiyinishda mustaqil harakat qilmoqda. Bu holat qaysi xususiyatni ko'rsatadi?",opts:["Mustaqillik darajasi","Harakat tezligi","Jismoniy kuch","Sport qobiliyati"],ans:0,exp:"Murakkab asboblardan foydalanish va mustaqil kiyinish — yuqori mustaqillik darajasining ko'rinishi."},
+  {q:"Tarbiyachi bolalar bilan faqat ertalabki gimnastika o'tkazdi, ammo harakatli o'yinlar va sport mashqlarini tashkil etmadi. Qaysi imkoniyat cheklangan?",opts:["Har tomonlama rivojlanish","Gigiyenik tarbiya","Nutq rivoji","Ovqatlanish odati"],ans:0,exp:"Faqat bir vosita bilan jismoniy tarbiya amalga oshirilsa, har tomonlama rivojlanish ta'minlanmaydi."},
+  {q:"Maktabgacha yoshdagi bolalar jismoniy tarbiyasida eng ko'p o'rin beriladigan vosita qaysi?",opts:["Sport mashqi","Harakatli o'yin","Turizm","Gimnastika"],ans:1,exp:"Harakatli o'yin bolalar yoshiga mos bo'lib, jismoniy tarbiyaning asosiy vositasi hisoblanadi."},
+  {q:"Jismoniy tarbiya vositalarini moslashtiring: 1-Asosiy gimnastika, 2-Sport mashqlari, 3-Bolalar turizmi. a-Suzish, chang'i, velosiped, b-Sayohat faoliyati, c-Asosiy harakatlar, saf mashqlari.",opts:["1-c, 2-a, 3-b","1-a, 2-b, 3-c","1-b, 2-c, 3-a","1-c, 2-b, 3-a"],ans:0,exp:"Asosiy gimnastika=saf mashqlari (c), Sport mashqlari=suzish/chang'i (a), Turizm=sayohat (b)."},
+  {q:"MTTda bolalarning har tomonlama jismoniy rivojlanishini ta'minlash uchun qaysi vositalardan kompleks tarzda foydalanish tavsiya etiladi?",opts:["Harakatli o'yinlar, asosiy gimnastika, sport mashqlari va bolalar turizmi","Harakatli o'yinlar, sport musobaqalari, mehnat faoliyati va sayr","Asosiy gimnastika, musiqa mashg'ulotlari, sport mashqlari va ekskursiyalar","Harakatli o'yinlar, badiiy faoliyat, sport mashqlari va sayohatlar"],ans:0,exp:"To'rt komponentni birlashtirgan kompleks yondashuv har tomonlama jismoniy rivojlanishni ta'minlaydi."},
+  {q:"Tarbiyachi haftalik jismoniy tarbiya mashg'ulotlarini rejalashtirishda jismoniy rivojlanishni to'liq ta'minlashni maqsad qildi. Qaysi reja matndagi tavsiyaga eng mos keladi?",opts:["Harakatli o'yinlar, asosiy gimnastika, sport mashqlari va bolalar turizmini uyg'unlashtirish","Faqat asosiy gimnastika va ertalabki badantarbiya bilan cheklanish","Asosan sport mashqlari tashkil etib, harakatli o'yinlarni kamaytirish","Sayr va erkin o'yinlarni asosiy mashg'ulot sifatida rejalashtirish"],ans:0,exp:"Barcha vositalarni uyg'unlashtirgan reja eng maqbul hisoblanadi."},
+  {q:"Nima uchun maktabgacha ta'limda harakatli o'yinlarga boshqa vositalarga nisbatan ko'proq o'rin beriladi?",opts:["Chunki ular bolalarning yosh xususiyatiga mos bo'lib, harakat faolligini tabiiy rivojlantiradi","Chunki ular sport mashqlarining o'rnini to'liq bosa oladi","Chunki ular faqat jismoniy sifatlarni rivojlantiradi","Chunki ular gimnastika mashqlarini o'tkazishni talab qilmaydi"],ans:0,exp:"Harakatli o'yinlar maktabgacha yoshga xos bo'lib, tabiiy va qiziqarli tarzda rivojlanishni ta'minlaydi."},
+  {q:"Tarbiyachi mashg'ulotlarda faqat sport mashqlaridan foydalanmoqda, harakatli o'yinlar va asosiy gimnastikaga deyarli o'rin bermaydi. Bunday yondashuvning asosiy kamchiligi nimada?",opts:["Jismoniy tarbiya vositalarining uyg'unligi buzilib, har tomonlama rivojlanish ta'minlanmaydi","Bolalarda faqat chidamlilik rivojlanadi","Sport mashqlari maktabgacha yoshda umuman tavsiya etilmaydi","Mashg'ulotlar faqat ochiq havoda tashkil etilishi talab qilinadi"],ans:0,exp:"Faqat bir vosita bilan cheklanish jismoniy tarbiyaning muvozanatini buzadi."},
+  {q:"Tarbiyachi ovqatlanish vaqtida ovqatni sekin yeyayotgan bolani hammaga eshittirib koyidi. Shundan so'ng bolaning ishtahasi pasaydi. Buning asosiy sababi nima?",opts:["Ishtaha buzildi","Me'yor oshdi","Ovqat sovidi","Vaqt cho'zildi"],ans:0,exp:"Hammaning oldida sharmandalash stressga olib keladi — stress esa ishtahani pasaytiradi."},
+  {q:"Bir tarbiyachi ovqatni oxirigacha yemasligi uchun bolani majburladi, ikkinchisi esa yosh me'yorini hisobga oldi. Qaysi yondashuv to'g'ri?",opts:["Birinchisi","Ikkinchisi","Ikkalasi","Vaziyatga bog'liq"],ans:1,exp:"Yosh me'yorini hisobga olish — ovqatlanishda to'g'ri yondashuv. Majburlash salbiy natija beradi."},
+  {q:"To'rt yoshli bolaga ovqatlanish vaqtida qaysi anjomdan foydalanish malakasi shakllantirilishi kerak?",opts:["Qoshiq","Sanchqi","Pichoq","Piyola"],ans:1,exp:"4 yoshda sanchqidan foydalanish malakasi shakllantiriladi — bu yosh uchun mos ko'nikma."},
+  {q:"Tarbiyachi ovqatlanishdan oldin bolalarga qo'l yuvish, salfetkadan foydalanish va ovqatdan keyin og'izni chayishni o'rgatmoqda. Bu faoliyat, avvalo, nimani rivojlantiradi?",opts:["Ovqatlanish odati","Gigiyenik malaka","Harakat ko'nikmasi","Mustaqillik hissi"],ans:1,exp:"Ovqatlanish bilan bog'liq tozalik va tartib qoidalari — gigiyenik malakani rivojlantiradi."},
+  {q:"Faoliyatlarni yosh davri bilan moslashtiring: 1-Qoshiq, 2-Sanchqi, 3-Pichoq. a-2 yosh, b-4 yosh, c-5 yosh.",opts:["1-a, 2-b, 3-c","1-b, 2-a, 3-c","1-a, 2-c, 3-b","1-c, 2-b, 3-a"],ans:0,exp:"Qoshiq=2 yosh (a), Sanchqi=4 yosh (b), Pichoq=5 yosh (c)."},
+  {q:"Tarbiyachi kun tartibini tuzayotganda bolalarning yoshini, uyqu davomiyligini va harakat ehtiyojini hisobga oldi. Qaysi omil ham albatta hisobga olinishi kerak?",opts:["Yil fasli","Mashg'ulot turi","O'yin mazmuni","Jihoz soni"],ans:0,exp:"Yil fasli sayr davomiyligi, kiyim-bosh va faoliyat turini belgilaydi — uni hisobga olish zarur."},
+  {q:"Tarbiyachi bolalarga tabiatga mehrini oshirish maqsadida gul ekish, daraxtlarni parvarish qilish va o'simliklarni kuzatishga jalb etdi. Sayr vaqtida faqat o'yin tashkil etdi, tabiat kuzatuvi va mehnat faoliyatini kiritmadi. Sayrning qaysi imkoniyati yetarli foydalanilmagan?",opts:["Tarbiyaviy imkoniyat","Jismoniy imkoniyat","Ovqatlanish imkoniyati","Uyqu imkoniyati"],ans:0,exp:"Kuzatish va mehnat faoliyatini kiritmaslik — sayrning tarbiyaviy imkoniyatidan to'liq foydalanmaslikdir."},
+  {q:"Quyidagi tushunchalarni natijalari bilan moslashtiring: 1-Rejim, 2-Gigiyenik sharoit, 3-Maydoncha. a-Harakat jihozlari, b-Kun tartibi, c-Xona talablari.",opts:["1-b, 2-c, 3-a","1-c, 2-a, 3-b","1-a, 2-b, 3-c","1-b, 2-a, 3-c"],ans:0,exp:"Rejim=kun tartibi (b), Gigiyenik sharoit=xona talablari (c), Maydoncha=harakat jihozlari (a)."},
+  {q:"Tarbiyachi bolalar bilan jismoniy tarbiya mashg'ulotida asosiy gimnastika elementlarini o'rgatdi: to'g'ri yurish, yugurish va muvozanat saqlash. Bu mashqlar, avvalo, qaysi ko'nikmani shakllantiradi?",opts:["Hayotiy harakat ko'nikmalarini","Sport ko'nikmalarini","Chiniqtirish ko'nikmalarini","Musiqiy ko'nikmalarni"],ans:0,exp:"Asosiy harakatlar — yurish, yugurish, muvozanat — hayotiy ko'nikmalar sirasiga kiradi."},
+  {q:"Tushunchalarni ularning mazmuni bilan moslashtiring: 1-Iste'dod, 2-Komil inson, 3-Jismoniy madaniyat. a-Insonning tabiiy va ijtimoiy qobiliyatlarini rivojlantirish, b-Aqliy takomillashuv bosqichlaridan biri, c-Har tomonlama rivojlangan, kuchli va takrorlanmas qobiliyat.",opts:["1-c, 2-b, 3-a","1-a, 2-c, 3-b","1-b, 2-a, 3-c","1-c, 2-a, 3-b"],ans:0,exp:"Iste'dod=takrorlanmas qobiliyat (c), Komil inson=aqliy takomil (b), Jismoniy madaniyat=qobiliyatlarni rivojlantirish (a)."},
+  {q:"Tarbiyachi mashg'ulotda bolalarga to'g'ri o'tirish, yugurish va muvozanat mashqlarini bajarishni o'rgatdi. Mashg'ulot yakunida bolalarda chaqqonlik, chidamlilik va koordinatsiya yaxshilangani kuzatildi. Bu natijalar, avvalo, qaysi vazifani ko'rsatadi?",opts:["Faqat sog'lomlashtiruvchi","Ta'limiy va rivojlantiruvchi","Faqat tarbiyaviy","Faqat gigiyenik"],ans:1,exp:"Ko'nikma va sifatlarni o'rgatib rivojlantirish — ta'limiy va rivojlantiruvchi vazifalarni birlashtiradi."},
+  {q:"MTT da jismoniy tarbiya bo'yicha yillik rejani tuzing. Qaysi faoliyat to'plami eng to'liq yondashuvni ifodalaydi?",opts:["Harakatli o'yinlar, ertalabki badantarbiya, sport mashqlari, sayr va chiniqtirish","Faqat ertalabki badantarbiya va sport musobaqalari","Harakatli o'yinlar va faqat yozgi chiniqtirish","Gimnastika va faqat guruh mashg'ulotlari"],ans:0,exp:"Barcha vositalarni (o'yin, gimnastika, sport, sayr, chiniqtirish) yil davomida qo'llash eng to'liq yondashuv."},
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let selectedVar=1, examQ=[], userAns=[], currentQ=0;
+let timerInt=null, timeLeft=90*60, examActive=false;
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function toast(msg,err){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show'+(err?' err':'');
+  setTimeout(()=>t.className='toast',3000);
+}
+
+// ══════════════════════════════════════════
+// KOD
+// ══════════════════════════════════════════
+function checkCode(){
+  const val=document.getElementById('codeInput').value.trim().toUpperCase();
+  const errEl=document.getElementById('codeErr');
+  if(CODES[val]!==undefined){
+    selectedVar=CODES[val];
+    errEl.textContent='';
+    showScreen('screen-home');
+    selectVar(selectedVar);
+  } else {
+    document.getElementById('codeInput').classList.add('error');
+    setTimeout(()=>document.getElementById('codeInput').classList.remove('error'),500);
+    errEl.textContent='Noto\'g\'ri kod! Iltimos qayta urinib ko\'ring.';
+  }
+}
+function goBackCode(){showScreen('screen-code');}
+
+// ══════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════
+function selectVar(n){
+  selectedVar=n;
+  document.getElementById('vc-1').classList.toggle('selected',n===1);
+  document.getElementById('vc-2').classList.toggle('selected',n===2);
+}
+
+// ══════════════════════════════════════════
+// START
+// ══════════════════════════════════════════
+function startExam(){
+  const raw=selectedVar===1?V1:V2;
+  examQ=shuffle(raw);
+  userAns=new Array(examQ.length).fill(null);
+  currentQ=0;examActive=true;timeLeft=90*60;
+  document.getElementById('var-label').textContent=selectedVar+'-Variant';
+  buildNav();renderQ();
+  showScreen('screen-exam');
+  startTimer();
+}
+
+// ══════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════
+function startTimer(){
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    timeLeft--;
+    const m=String(Math.floor(timeLeft/60)).padStart(2,'0');
+    const s=String(timeLeft%60).padStart(2,'0');
+    const el=document.getElementById('timer-display');
+    el.textContent=m+':'+s;
+    el.classList.toggle('urgent',timeLeft<=300);
+    if(timeLeft<=0){clearInterval(timerInt);finishExam(true);}
+  },1000);
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function renderQ(){
+  const q=examQ[currentQ];
+  const total=examQ.length;
+  const answered=userAns.filter(a=>a!==null).length;
+  document.getElementById('qpfill').style.width=(currentQ/total*100)+'%';
+  document.getElementById('q-counter').textContent=`Savol ${currentQ+1}/${total}`;
+  document.getElementById('q-num').textContent=`${currentQ+1}-savol | ${answered} ta javob berildi`;
+  document.getElementById('q-text').textContent=q.q;
+  const letters=['A','B','D','E'];
+  const isAns=userAns[currentQ]!==null;
+  const ua=userAns[currentQ];
+  document.getElementById('q-opts').innerHTML=q.opts.map((o,i)=>{
+    let cls='q-opt';
+    if(isAns){cls+=' disabled';if(i===q.ans)cls+=' correct';else if(i===ua)cls+=' wrong';}
+    else if(i===ua)cls+=' selected';
+    return `<button class="${cls}" onclick="selectAns(${i})"><span class="opt-letter">${letters[i]}</span><span>${o}</span></button>`;
+  }).join('');
+  document.getElementById('next-btn').textContent=currentQ===examQ.length-1?'✅ Yakunlash':'Keyingi →';
+  updateNav();
+}
+function selectAns(i){
+  if(userAns[currentQ]!==null)return;
+  userAns[currentQ]=i;renderQ();
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+function buildNav(){
+  document.getElementById('nav-grid').innerHTML=examQ.map((_,i)=>
+    `<button class="nav-btn" id="nb-${i}" onclick="goQ(${i})">${i+1}</button>`
+  ).join('');
+}
+function updateNav(){
+  examQ.forEach((_,i)=>{
+    const b=document.getElementById('nb-'+i);if(!b)return;
+    b.className='nav-btn';
+    if(i===currentQ)b.classList.add('current');
+    if(userAns[i]!==null)b.classList.add('answered');
+  });
+}
+function goQ(i){currentQ=i;renderQ();}
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
+function nextQ(){if(currentQ<examQ.length-1){currentQ++;renderQ();}else confirmFinish();}
+
+// ══════════════════════════════════════════
+// FINISH
+// ══════════════════════════════════════════
+function confirmFinish(){
+  const answered=userAns.filter(a=>a!==null).length;
+  if(answered<10){toast(`Kamida 10 ta savolga javob bering (hozir: ${answered})`,true);return;}
+  if(!confirm(`Testni yakunlashni tasdiqlaysizmi?\nJavob berildi: ${answered}/${examQ.length}`))return;
+  finishExam(false);
+}
+function finishExam(timeout){
+  clearInterval(timerInt);examActive=false;
+  if(timeout)toast('⏰ Vaqt tugadi!',true);
+  let correct=0;
+  examQ.forEach((q,i)=>{if(userAns[i]===q.ans)correct++;});
+  const total=examQ.length;
+  const pct=Math.round(correct/total*100);
+  let grade,gs,msg,cls;
+  if(pct>=90){grade="A'lo — Eng yuqori toifa";gs="A'LO";msg="Ajoyib natija! Siz attestatsiyaga tayyorsiz!";cls='rc-gold';}
+  else if(pct>=75){grade="Birinchi toifa";gs="1-TOIFA";msg="Yaxshi natija! Biroz mashq qiling.";cls='rc-green';}
+  else if(pct>=60){grade="Ikkinchi toifa";gs="2-TOIFA";msg="O'rtacha natija. Zaif mavzularni qayta o'rganing.";cls='rc-blue';}
+  else{grade="Yetarli emas";gs="PAST";msg="Qo'shimcha tayyorgarlik kerak.";cls='rc-red';}
+  document.getElementById('result-circle').className='result-circle '+cls;
+  document.getElementById('result-pct').textContent=pct+'%';
+  document.getElementById('result-grade-short').textContent=gs;
+  document.getElementById('result-grade-full').textContent=grade;
+  document.getElementById('result-msg').textContent=msg;
+  document.getElementById('res-correct').textContent=correct;
+  document.getElementById('res-wrong').textContent=total-correct;
+  document.getElementById('btn-cert').style.display=pct>=75?'block':'none';
+  showScreen('screen-result');
+}
+
+// ══════════════════════════════════════════
+// WRONG
+// ══════════════════════════════════════════
+function showWrong(){
+  const sec=document.getElementById('wrong-section');
+  sec.style.display='block';
+  const letters=['A','B','D','E'];
+  const wrongs=examQ.map((q,i)=>({q,ua:userAns[i],i})).filter(({q,ua})=>ua!==q.ans);
+  if(!wrongs.length){sec.innerHTML='<div style="background:var(--green-soft);border-radius:10px;padding:16px;color:var(--green);font-weight:600;text-align:center">🎉 Barcha savollarga to\'g\'ri javob berdingiz!</div>';return;}
+  sec.innerHTML=wrongs.map(({q,ua},idx)=>`
+    <div class="w-card">
+      <div class="w-num">Xato ${idx+1}</div>
+      <div class="w-q">${q.q}</div>
+      <div class="w-wrong">❌ Sizning javobingiz: ${ua!==null?letters[ua]+') '+q.opts[ua]:'Javob berilmadi'}</div>
+      <div class="w-correct">✅ To'g'ri javob: ${letters[q.ans]}) ${q.opts[q.ans]}</div>
+      <div class="w-exp">💡 ${q.exp}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// CERT
+// ══════════════════════════════════════════
+function showCert(){
+  const correct=userAns.filter((a,i)=>a===examQ[i].ans).length;
+  const pct=Math.round(correct/examQ.length*100);
+  let grade,stars;
+  if(pct>=90){grade="A'lo — Eng yuqori toifa";stars="⭐⭐⭐⭐⭐";}
+  else if(pct>=75){grade="Birinchi toifa";stars="⭐⭐⭐⭐";}
+  else{grade="Ikkinchi toifa";stars="⭐⭐⭐";}
+  document.getElementById('cert-score').textContent=pct+'%';
+  document.getElementById('cert-stars').textContent=stars;
+  document.getElementById('cert-grade').textContent=grade;
+  document.getElementById('cert-variant').textContent=`📋 ${selectedVar}-Variant | 50 ta savol`;
+  document.getElementById('cert-date').textContent='📅 '+new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
+  showScreen('screen-cert');
+}
+
+// ══════════════════════════════════════════
+// GO HOME
+// ══════════════════════════════════════════
+function goHome(){
+  clearInterval(timerInt);
+  document.getElementById('wrong-section').style.display='none';
+  document.getElementById('btn-cert').style.display='none';
+  showScreen('screen-home');
+}
+
+// Enter key for code input
+document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
+</script>
+</body>
+</html>
