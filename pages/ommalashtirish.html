@@ -311,7 +311,7 @@ async function loadPubs() {
   var grid = document.getElementById('pub-grid');
   grid.innerHTML = '<div class="loading" style="grid-column:1/-1"><i class="ti ti-loader"></i> Yuklanmoqda...</div>';
 
-  var q = sb.from('publications').select('*, profiles(full_name, avatar_url), pub_comments(count)');
+  var q = sb.from('publications').select('*');
 
   if (currentFilter !== 'all') q = q.eq('type', currentFilter);
 
@@ -333,7 +333,7 @@ function renderCard(p) {
   var imgHtml = p.image_url
     ? '<img class="pub-img" src="' + p.image_url + '" alt="" loading="lazy"/>'
     : '<div class="pub-img-placeholder">' + typeEmoji(p.type) + '</div>';
-  var authorName = (p.profiles && p.profiles.full_name) ? p.profiles.full_name : 'Tarbiyachi';
+  var authorName = p.author_name || 'Tarbiyachi';
   var initials = authorName.charAt(0).toUpperCase();
   var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
   var pdfBadge = p.pdf_url ? '<span class="pdf-badge"><i class="ti ti-file-type-pdf"></i> PDF</span>' : '';
@@ -367,13 +367,13 @@ async function openDetail(id) {
   document.getElementById('detail-modal').classList.add('show');
   document.getElementById('detail-body').innerHTML = '<div class="loading"><i class="ti ti-loader"></i> Yuklanmoqda...</div>';
 
-  var r = await sb.from('publications').select('*, profiles(full_name, avatar_url)').eq('id', id).single();
+  var r = await sb.from('publications').select('*').eq('id', id).single();
   if (!r.data) return;
   var p = r.data;
   document.getElementById('detail-title').textContent = p.title;
 
   var liked = userLikes.indexOf(id) !== -1;
-  var authorName = (p.profiles && p.profiles.full_name) ? p.profiles.full_name : 'Tarbiyachi';
+  var authorName = p.author_name || 'Tarbiyachi';
   var initials = authorName.charAt(0).toUpperCase();
   var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
   var imgHtml = p.image_url ? '<img class="detail-img" src="' + p.image_url + '"/>' : '';
@@ -562,8 +562,13 @@ async function submitPublication() {
   }
 
   // Insert to DB
+  // Foydalanuvchi ismini olish
+  var profR = await sb.from('profiles').select('full_name').eq('id', currentUser.id).single();
+  var authorName = (profR.data && profR.data.full_name) ? profR.data.full_name : (currentUser.email || 'Tarbiyachi');
+
   var ins = await sb.from('publications').insert({
     user_id: currentUser.id,
+    author_name: authorName,
     title: title,
     description: desc,
     type: type,
