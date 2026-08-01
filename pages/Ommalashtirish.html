@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MaktabgachaHub — Ommalashtirish</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
+  --green:#15803d;--green-soft:#f0fdf4;--red:#b91c1c;--red-soft:#fef2f2;
+  --amber:#b45309;--amber-soft:#fffbeb;--pro:#7c3aed;--pro-soft:#f5f3ff;
+  --sidebar:240px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+
+/* TOPBAR */
+.topnav{position:relative;z-index:10;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(30,64,175,.06)}
+.topnav-left{display:flex;align-items:center;gap:12px}
+.btn-back{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:9px;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;cursor:pointer;transition:background .15s}
+.btn-back:hover{background:#dbeafe}
+.topnav h1{font-size:17px;font-weight:700;color:var(--text)}
+.topnav h1 span{color:var(--accent)}
+.btn-upload-top{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.btn-upload-top:hover{background:#1c3a9e}
+
+/* MAIN */
+.main{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:24px 20px 60px}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.filter-btn:hover{border-color:var(--accent-mid);color:var(--accent)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sort-select{margin-left:auto;padding:6px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);cursor:pointer;outline:none}
+
+/* CARDS */
+.pub-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pub-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s;box-shadow:0 2px 8px rgba(30,64,175,.06)}
+.pub-card:hover{border-color:#93c5fd;box-shadow:0 6px 20px rgba(59,130,246,.12);transform:translateY(-2px)}
+.pub-img{width:100%;height:160px;object-fit:cover;background:var(--bg);display:block}
+.pub-img-placeholder{width:100%;height:160px;background:linear-gradient(135deg,#dbeafe,#ede9fe);display:flex;align-items:center;justify-content:center;font-size:40px}
+.pub-body{padding:14px}
+.pub-type{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;margin-bottom:8px}
+.type-loyiha{background:#dbeafe;color:#1e40af}
+.type-metod{background:#dcfce7;color:#15803d}
+.type-dars{background:#fef3c7;color:#b45309}
+.type-boshqa{background:#f5f3ff;color:#7c3aed}
+.pub-title{font-size:14px;font-weight:700;margin-bottom:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pub-desc{font-size:12px;color:var(--muted);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
+.pub-author{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.pub-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.pub-author-info{min-width:0}
+.pub-author-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pub-author-meta{font-size:10px;color:var(--muted)}
+.pub-stats{display:flex;gap:12px;align-items:center;border-top:1px solid var(--border);padding-top:10px}
+.pub-stat{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
+.pub-stat i{font-size:14px}
+.pub-stat.liked{color:var(--red)}
+.like-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:12px;color:var(--muted);font-weight:500;font-family:'Inter',sans-serif;padding:0;transition:color .15s}
+.like-btn:hover{color:var(--red)}
+.like-btn.liked{color:var(--red)}
+.like-btn i{font-size:14px}
+.pdf-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef2f2;color:var(--red);margin-left:auto}
+
+/* EMPTY */
+.empty-box{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-box i{font-size:48px;color:#d1d5db;margin-bottom:12px;display:block}
+.empty-box p{font-size:14px;margin-bottom:16px}
+
+/* DETAIL MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:200;align-items:flex-start;justify-content:center;padding:20px;backdrop-filter:blur(3px);overflow-y:auto}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--surface);border-radius:16px;max-width:680px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);border-radius:16px 16px 0 0;z-index:5}
+.modal-hdr h3{font-size:15px;font-weight:700;line-height:1.4;padding-right:12px}
+.modal-cls{background:var(--bg);border:none;width:30px;height:30px;border-radius:8px;cursor:pointer;color:var(--muted);font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.modal-cls:hover{background:#e5e7eb}
+.modal-body{padding:22px}
+.detail-img{width:100%;max-height:300px;object-fit:cover;border-radius:10px;margin-bottom:16px}
+.detail-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.detail-author{display:flex;align-items:center;gap:9px;background:var(--bg);padding:10px 14px;border-radius:10px;margin-bottom:14px}
+.detail-avatar{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.detail-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;background:var(--bg);padding:12px 14px;border-radius:10px}
+.btn-pdf{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;background:var(--red-soft);border:1px solid #fca5a5;color:var(--red);border-radius:9px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:16px;cursor:pointer}
+.btn-pdf:hover{background:#fee2e2}
+.detail-actions{display:flex;gap:10px;margin-bottom:20px}
+.btn-like-big{display:flex;align-items:center;gap:7px;padding:10px 20px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;color:var(--muted)}
+.btn-like-big:hover{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.btn-like-big.liked{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.btn-like-big i{font-size:16px}
+
+/* COMMENTS */
+.comments-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.comment-item{display:flex;gap:10px;margin-bottom:14px}
+.comment-avatar{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:1px solid #bfdbfe}
+.comment-bubble{background:var(--bg);border-radius:0 10px 10px 10px;padding:9px 12px;flex:1;border:1px solid var(--border)}
+.comment-author{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px}
+.comment-text{font-size:12.5px;color:var(--text);line-height:1.5}
+.comment-date{font-size:10px;color:var(--muted);margin-top:4px}
+.comment-form{display:flex;gap:8px;margin-top:14px}
+.comment-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Inter',sans-serif;outline:none;resize:none;color:var(--text);background:var(--surface)}
+.comment-input:focus{border-color:var(--accent-mid)}
+.btn-comment{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0}
+.btn-comment:hover{background:#1c3a9e}
+
+/* UPLOAD MODAL */
+.upload-overlay{display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:300;align-items:flex-start;justify-content:center;padding:20px;backdrop-filter:blur(3px);overflow-y:auto}
+.upload-overlay.show{display:flex}
+.upload-box{background:var(--surface);border-radius:16px;max-width:560px;width:100%;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.upload-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border)}
+.upload-hdr h3{font-size:15px;font-weight:700}
+.upload-body{padding:22px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;display:block}
+.form-label span{color:var(--red)}
+.form-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:'Inter',sans-serif;outline:none;color:var(--text);transition:border-color .15s}
+.form-input:focus{border-color:var(--accent-mid)}
+.form-textarea{resize:vertical;min-height:80px}
+.form-select{background:var(--surface);cursor:pointer}
+.file-zone{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .15s;position:relative}
+.file-zone:hover{border-color:var(--accent-mid)}
+.file-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-zone i{font-size:28px;color:var(--muted);margin-bottom:6px;display:block}
+.file-zone p{font-size:12px;color:var(--muted)}
+.file-preview{font-size:12px;color:var(--green);font-weight:600;margin-top:8px;display:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-submit{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;margin-top:4px}
+.btn-submit:hover{background:#1c3a9e}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.progress-bar{height:5px;background:var(--bg);border-radius:99px;overflow:hidden;margin-top:10px;display:none}
+.progress-fill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .3s}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:11px 20px;border-radius:10px;font-size:12.5px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:500;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red)}
+.toast.ok{background:var(--green)}
+
+/* LOADING */
+.loading{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.loading i{font-size:24px;display:block;margin-bottom:8px;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:640px){
+  .pub-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .topnav{padding:0 14px}
+  .main{padding:16px 14px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <a href="../dashboard.html" class="btn-back"><i class="ti ti-arrow-left"></i> Dashboard</a>
+    <h1><span>Omma</span>lashtirish</h1>
+  </div>
+  <button class="btn-upload-top" onclick="openUpload()">
+    <i class="ti ti-upload"></i> Yuklash
+  </button>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Hammasi</button>
+    <button class="filter-btn" onclick="setFilter('loyiha',this)">📋 Loyiha</button>
+    <button class="filter-btn" onclick="setFilter('metod',this)">📚 Metodik</button>
+    <button class="filter-btn" onclick="setFilter('dars',this)">📝 Dars reja</button>
+    <button class="filter-btn" onclick="setFilter('boshqa',this)">🗂 Boshqa</button>
+    <select class="sort-select" onchange="setSort(this.value)">
+      <option value="likes">❤️ Liklar bo'yicha</option>
+      <option value="new">🕐 Yangilari</option>
+      <option value="comments">💬 Izohlar</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <div id="pub-grid" class="pub-grid">
+    <div class="loading" style="grid-column:1/-1"><i class="ti ti-loader"></i> Yuklanmoqda...</div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)closeDetail()">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3 id="detail-title">—</h3>
+      <button class="modal-cls" onclick="closeDetail()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+  </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="upload-overlay" id="upload-modal" onclick="if(event.target===this)closeUpload()">
+  <div class="upload-box">
+    <div class="upload-hdr">
+      <h3>📤 Material yuklash</h3>
+      <button class="modal-cls" onclick="closeUpload()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="upload-body">
+      <div class="form-group">
+        <label class="form-label">Sarlavha <span>*</span></label>
+        <input class="form-input" id="f-title" type="text" placeholder="Masalan: Loyiham: Ranglar dunyosi"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tavsif <span>*</span></label>
+        <textarea class="form-input form-textarea" id="f-desc" placeholder="Loyiha/metod haqida qisqacha yozing..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Material turi <span>*</span></label>
+          <select class="form-input form-select" id="f-type">
+            <option value="loyiha">📋 Loyiha</option>
+            <option value="metod">📚 Metodik qo'llanma</option>
+            <option value="dars">📝 Dars reja</option>
+            <option value="boshqa">🗂 Boshqa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Yosh guruhi</label>
+          <select class="form-input form-select" id="f-age">
+            <option value="">— tanlang —</option>
+            <option value="Kichik guruh (3-4 yosh)">Kichik guruh (3-4 yosh)</option>
+            <option value="O'rta guruh (4-5 yosh)">O'rta guruh (4-5 yosh)</option>
+            <option value="Katta guruh (5-6 yosh)">Katta guruh (5-6 yosh)</option>
+            <option value="Tayyorlov (6-7 yosh)">Tayyorlov (6-7 yosh)</option>
+            <option value="Barcha guruhlar">Barcha guruhlar</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Shahar / Tuman</label>
+          <input class="form-input" id="f-city" type="text" placeholder="Toshkent"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">MTT nomi</label>
+          <input class="form-input" id="f-school" type="text" placeholder="1-MTT"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rasm (JPG/PNG, max 3MB)</label>
+        <div class="file-zone" id="img-zone">
+          <input type="file" id="f-img" accept="image/jpeg,image/png,image/webp" onchange="previewFile('f-img','img-preview','img-zone')"/>
+          <i class="ti ti-photo"></i>
+          <p>Rasm tanlash uchun bosing</p>
+          <div class="file-preview" id="img-preview"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">PDF hujjat (max 10MB)</label>
+        <div class="file-zone" id="pdf-zone">
+          <input type="file" id="f-pdf" accept="application/pdf" onchange="previewFile('f-pdf','pdf-preview','pdf-zone')"/>
+          <i class="ti ti-file-type-pdf"></i>
+          <p>PDF tanlash uchun bosing</p>
+          <div class="file-preview" id="pdf-preview"></div>
+        </div>
+      </div>
+      <div class="progress-bar" id="upload-progress">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <button class="btn-submit" id="btn-submit" onclick="submitPublication()">
+        <i class="ti ti-upload"></i> Yuborish
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPA_URL = 'https://oxpbltvnbjzxqwsxrpvg.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
+var sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+var currentUser = null;
+var currentFilter = 'all';
+var currentSort = 'likes';
+var currentPubId = null;
+var userLikes = [];
+
+// ── INIT ──
+window.addEventListener('load', async function() {
+  var res = await sb.auth.getUser();
+  if (res.data && res.data.user) {
+    currentUser = res.data.user;
+    loadUserLikes();
+  }
+  loadPubs();
+});
+
+async function loadUserLikes() {
+  if (!currentUser) return;
+  var r = await sb.from('pub_likes').select('pub_id').eq('user_id', currentUser.id);
+  if (r.data) userLikes = r.data.map(function(l) { return l.pub_id; });
+}
+
+// ── LOAD PUBLICATIONS ──
+async function loadPubs() {
+  var grid = document.getElementById('pub-grid');
+  grid.innerHTML = '<div class="loading" style="grid-column:1/-1"><i class="ti ti-loader"></i> Yuklanmoqda...</div>';
+
+  var q = sb.from('publications').select('*, profiles(full_name, avatar_url), pub_comments(count)');
+
+  if (currentFilter !== 'all') q = q.eq('type', currentFilter);
+
+  if (currentSort === 'likes') q = q.order('likes_count', { ascending: false });
+  else if (currentSort === 'new') q = q.order('created_at', { ascending: false });
+  else if (currentSort === 'comments') q = q.order('comments_count', { ascending: false });
+
+  var r = await q.limit(50);
+
+  if (!r.data || !r.data.length) {
+    grid.innerHTML = '<div class="empty-box" style="grid-column:1/-1"><i class="ti ti-mood-empty"></i><p>Hali hech qanday material yuklanmagan.<br>Birinchi bo\'ling!</p><button class="btn-upload-top" onclick="openUpload()"><i class="ti ti-upload"></i> Yuklash</button></div>';
+    return;
+  }
+  grid.innerHTML = r.data.map(function(p) { return renderCard(p); }).join('');
+}
+
+function renderCard(p) {
+  var liked = userLikes.indexOf(p.id) !== -1;
+  var imgHtml = p.image_url
+    ? '<img class="pub-img" src="' + p.image_url + '" alt="" loading="lazy"/>'
+    : '<div class="pub-img-placeholder">' + typeEmoji(p.type) + '</div>';
+  var authorName = (p.profiles && p.profiles.full_name) ? p.profiles.full_name : 'Tarbiyachi';
+  var initials = authorName.charAt(0).toUpperCase();
+  var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
+  var pdfBadge = p.pdf_url ? '<span class="pdf-badge"><i class="ti ti-file-type-pdf"></i> PDF</span>' : '';
+  return '<div class="pub-card" onclick="openDetail(\'' + p.id + '\')">' +
+    imgHtml +
+    '<div class="pub-body">' +
+      '<span class="pub-type type-' + p.type + '">' + typeLabel(p.type) + '</span>' +
+      '<div class="pub-title">' + esc(p.title) + '</div>' +
+      '<div class="pub-desc">' + esc(p.description || '') + '</div>' +
+      '<div class="pub-author">' +
+        '<div class="pub-avatar">' + initials + '</div>' +
+        '<div class="pub-author-info">' +
+          '<div class="pub-author-name">' + esc(authorName) + '</div>' +
+          '<div class="pub-author-meta">' + esc(meta) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pub-stats">' +
+        '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="event.stopPropagation();toggleLike(\'' + p.id + '\',this)">' +
+          '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' + (p.likes_count || 0) +
+        '</button>' +
+        '<span class="pub-stat"><i class="ti ti-message-circle"></i> ' + (p.comments_count || 0) + '</span>' +
+        pdfBadge +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ── DETAIL ──
+async function openDetail(id) {
+  currentPubId = id;
+  document.getElementById('detail-modal').classList.add('show');
+  document.getElementById('detail-body').innerHTML = '<div class="loading"><i class="ti ti-loader"></i> Yuklanmoqda...</div>';
+
+  var r = await sb.from('publications').select('*, profiles(full_name, avatar_url)').eq('id', id).single();
+  if (!r.data) return;
+  var p = r.data;
+  document.getElementById('detail-title').textContent = p.title;
+
+  var liked = userLikes.indexOf(id) !== -1;
+  var authorName = (p.profiles && p.profiles.full_name) ? p.profiles.full_name : 'Tarbiyachi';
+  var initials = authorName.charAt(0).toUpperCase();
+  var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
+  var imgHtml = p.image_url ? '<img class="detail-img" src="' + p.image_url + '"/>' : '';
+  var pdfHtml = p.pdf_url
+    ? '<a href="' + p.pdf_url + '" target="_blank" class="btn-pdf"><i class="ti ti-file-type-pdf"></i> PDF hujjatni ochish</a>'
+    : '';
+  var date = new Date(p.created_at).toLocaleDateString('uz-UZ', {year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('detail-body').innerHTML =
+    imgHtml +
+    '<div class="detail-meta">' +
+      '<span class="pub-type type-' + p.type + '">' + typeLabel(p.type) + '</span>' +
+      (p.age_group ? '<span class="pub-type" style="background:#f0fdf4;color:#15803d">' + esc(p.age_group) + '</span>' : '') +
+    '</div>' +
+    '<div class="detail-author">' +
+      '<div class="detail-avatar">' + initials + '</div>' +
+      '<div>' +
+        '<div style="font-size:13px;font-weight:700">' + esc(authorName) + '</div>' +
+        '<div style="font-size:11px;color:var(--muted)">' + esc(meta) + ' • ' + date + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="detail-desc">' + esc(p.description || '') + '</div>' +
+    pdfHtml +
+    '<div class="detail-actions">' +
+      '<button class="btn-like-big' + (liked ? ' liked' : '') + '" id="detail-like-btn" onclick="toggleLike(\'' + id + '\',this)">' +
+        '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' +
+        '<span id="detail-like-count">' + (p.likes_count || 0) + '</span> ta like' +
+      '</button>' +
+    '</div>' +
+    '<div class="comments-title"><i class="ti ti-message-circle"></i> Izohlar</div>' +
+    '<div id="comments-list"><div class="loading"><i class="ti ti-loader"></i></div></div>' +
+    '<div class="comment-form">' +
+      '<textarea class="comment-input" id="comment-input" rows="2" placeholder="Izoh yozing..."></textarea>' +
+      '<button class="btn-comment" onclick="postComment()"><i class="ti ti-send"></i></button>' +
+    '</div>';
+
+  loadComments(id);
+}
+
+async function loadComments(pubId) {
+  var r = await sb.from('pub_comments')
+    .select('*, profiles(full_name)')
+    .eq('pub_id', pubId)
+    .order('created_at', { ascending: true });
+
+  var el = document.getElementById('comments-list');
+  if (!el) return;
+  if (!r.data || !r.data.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:10px 0">Hali izoh yo\'q. Birinchi bo\'ling!</div>';
+    return;
+  }
+  el.innerHTML = r.data.map(function(c) {
+    var name = (c.profiles && c.profiles.full_name) ? c.profiles.full_name : 'Foydalanuvchi';
+    var date = new Date(c.created_at).toLocaleDateString('uz-UZ');
+    return '<div class="comment-item">' +
+      '<div class="comment-avatar">' + name.charAt(0).toUpperCase() + '</div>' +
+      '<div class="comment-bubble">' +
+        '<div class="comment-author">' + esc(name) + '</div>' +
+        '<div class="comment-text">' + esc(c.text) + '</div>' +
+        '<div class="comment-date">' + date + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function postComment() {
+  if (!currentUser) { showToast('Iltimos tizimga kiring', 'err'); return; }
+  var inp = document.getElementById('comment-input');
+  var txt = inp ? inp.value.trim() : '';
+  if (!txt) return;
+
+  var r = await sb.from('pub_comments').insert({ pub_id: currentPubId, user_id: currentUser.id, text: txt });
+  if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
+
+  // update comments_count
+  await sb.rpc('increment_comments', { pub_id: currentPubId });
+
+  inp.value = '';
+  loadComments(currentPubId);
+  showToast('Izoh qo\'shildi', 'ok');
+}
+
+function closeDetail() {
+  document.getElementById('detail-modal').classList.remove('show');
+  currentPubId = null;
+  loadPubs();
+}
+
+// ── LIKE ──
+async function toggleLike(pubId, btn) {
+  if (!currentUser) { showToast('Iltimos tizimga kiring', 'err'); return; }
+
+  var liked = userLikes.indexOf(pubId) !== -1;
+  if (liked) {
+    await sb.from('pub_likes').delete().eq('user_id', currentUser.id).eq('pub_id', pubId);
+    await sb.rpc('decrement_likes', { pub_id: pubId });
+    userLikes = userLikes.filter(function(l) { return l !== pubId; });
+  } else {
+    await sb.from('pub_likes').insert({ user_id: currentUser.id, pub_id: pubId });
+    await sb.rpc('increment_likes', { pub_id: pubId });
+    userLikes.push(pubId);
+  }
+
+  // update UI
+  var nowLiked = !liked;
+  btn.className = 'like-btn' + (nowLiked ? ' liked' : '');
+  var icon = btn.querySelector('i');
+  if (icon) icon.className = 'ti ti-heart' + (nowLiked ? '-filled' : '');
+
+  // also update detail like btn if open
+  var detailBtn = document.getElementById('detail-like-btn');
+  if (detailBtn) {
+    detailBtn.className = 'btn-like-big' + (nowLiked ? ' liked' : '');
+    var di = detailBtn.querySelector('i');
+    if (di) di.className = 'ti ti-heart' + (nowLiked ? '-filled' : '');
+  }
+}
+
+// ── FILTERS & SORT ──
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  loadPubs();
+}
+function setSort(val) { currentSort = val; loadPubs(); }
+
+// ── UPLOAD ──
+function openUpload() {
+  if (!currentUser) { showToast('Iltimos tizimga kiring', 'err'); return; }
+  document.getElementById('upload-modal').classList.add('show');
+}
+function closeUpload() { document.getElementById('upload-modal').classList.remove('show'); }
+
+function previewFile(inputId, previewId, zoneId) {
+  var f = document.getElementById(inputId).files[0];
+  var pr = document.getElementById(previewId);
+  if (!f) return;
+  pr.style.display = 'block';
+  pr.textContent = '✅ ' + f.name + ' (' + (f.size / 1024 / 1024).toFixed(2) + ' MB)';
+}
+
+async function submitPublication() {
+  if (!currentUser) { showToast('Tizimga kiring', 'err'); return; }
+  var title = document.getElementById('f-title').value.trim();
+  var desc = document.getElementById('f-desc').value.trim();
+  var type = document.getElementById('f-type').value;
+  var age = document.getElementById('f-age').value;
+  var city = document.getElementById('f-city').value.trim();
+  var school = document.getElementById('f-school').value.trim();
+  var imgFile = document.getElementById('f-img').files[0];
+  var pdfFile = document.getElementById('f-pdf').files[0];
+
+  if (!title || !desc) { showToast('Sarlavha va tavsif majburiy', 'err'); return; }
+
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader"></i> Yuklanmoqda...';
+  var prog = document.getElementById('upload-progress');
+  var fill = document.getElementById('progress-fill');
+  prog.style.display = 'block';
+  fill.style.width = '10%';
+
+  var imgUrl = null, pdfUrl = null;
+
+  // Upload image
+  if (imgFile) {
+    if (imgFile.size > 3 * 1024 * 1024) { showToast('Rasm 3MB dan oshmasin', 'err'); reset(); return; }
+    var imgName = currentUser.id + '/' + Date.now() + '_img.' + imgFile.name.split('.').pop();
+    var ir = await sb.storage.from('publications').upload(imgName, imgFile, { upsert: true });
+    if (ir.error) { showToast('Rasm yuklab bo\'lmadi: ' + ir.error.message, 'err'); reset(); return; }
+    var pu = sb.storage.from('publications').getPublicUrl(imgName);
+    imgUrl = pu.data.publicUrl;
+    fill.style.width = '50%';
+  }
+
+  // Upload PDF
+  if (pdfFile) {
+    if (pdfFile.size > 10 * 1024 * 1024) { showToast('PDF 10MB dan oshmasin', 'err'); reset(); return; }
+    var pdfName = currentUser.id + '/' + Date.now() + '_doc.pdf';
+    var pr2 = await sb.storage.from('publications').upload(pdfName, pdfFile, { upsert: true });
+    if (pr2.error) { showToast('PDF yuklab bo\'lmadi: ' + pr2.error.message, 'err'); reset(); return; }
+    var pu2 = sb.storage.from('publications').getPublicUrl(pdfName);
+    pdfUrl = pu2.data.publicUrl;
+    fill.style.width = '80%';
+  }
+
+  // Insert to DB
+  var ins = await sb.from('publications').insert({
+    user_id: currentUser.id,
+    title: title,
+    description: desc,
+    type: type,
+    age_group: age || null,
+    city: city || null,
+    school: school || null,
+    image_url: imgUrl,
+    pdf_url: pdfUrl,
+    likes_count: 0,
+    comments_count: 0
+  });
+
+  fill.style.width = '100%';
+
+  if (ins.error) {
+    showToast('Xato: ' + ins.error.message, 'err');
+    reset();
+    return;
+  }
+
+  showToast('Muvaffaqiyatli yuklandi! 🎉', 'ok');
+  closeUpload();
+  clearForm();
+  loadPubs();
+  reset();
+
+  function reset() {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-upload"></i> Yuborish';
+    prog.style.display = 'none';
+    fill.style.width = '0%';
+  }
+}
+
+function clearForm() {
+  ['f-title','f-desc','f-city','f-school'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-type').value = 'loyiha';
+  document.getElementById('f-age').value = '';
+  document.getElementById('f-img').value = '';
+  document.getElementById('f-pdf').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('pdf-preview').style.display = 'none';
+}
+
+// ── HELPERS ──
+function typeLabel(t) {
+  return t === 'loyiha' ? '📋 Loyiha'
+    : t === 'metod' ? '📚 Metodik'
+    : t === 'dars' ? '📝 Dars reja'
+    : '🗂 Boshqa';
+}
+function typeEmoji(t) {
+  return t === 'loyiha' ? '📋' : t === 'metod' ? '📚' : t === 'dars' ? '📝' : '🗂';
+}
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'err' ? ' err' : type === 'ok' ? ' ok' : '');
+  setTimeout(function() { t.className = 'toast'; }, 3500);
+}
+</script>
+</body>
+</html>
