@@ -351,7 +351,7 @@ function renderCard(p) {
         '</div>' +
       '</div>' +
       '<div class="pub-stats">' +
-        '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="event.stopPropagation();toggleLike(\'' + p.id + '\',this)">' +
+        '<button class="like-btn' + (liked ? ' liked' : '') + '" data-pub-like="' + p.id + '" onclick="event.stopPropagation();toggleLike(\'' + p.id + '\',this)">' +
           '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' + (p.likes_count || 0) +
         '</button>' +
         '<span class="pub-stat"><i class="ti ti-message-circle"></i> ' + (p.comments_count || 0) + '</span>' +
@@ -398,7 +398,7 @@ async function openDetail(id) {
     '<div class="detail-desc">' + esc(p.description || '') + '</div>' +
     pdfHtml +
     '<div class="detail-actions">' +
-      '<button class="btn-like-big' + (liked ? ' liked' : '') + '" id="detail-like-btn" onclick="toggleLike(\'' + id + '\',this)">' +
+      '<button class="btn-like-big' + (liked ? ' liked' : '') + '" id="detail-like-btn" data-pub-like="' + id + '" onclick="toggleLike(\'' + id + '\',this)">' +
         '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' +
         '<span id="detail-like-count">' + (p.likes_count || 0) + '</span> ta like' +
       '</button>' +
@@ -464,32 +464,57 @@ function closeDetail() {
 
 // ── LIKE ──
 async function toggleLike(pubId, btn) {
-  if (!currentUser) { showToast('Iltimos tizimga kiring', 'err'); return; }
+  if (!currentUser) { showToast('Like bosish uchun tizimga kiring!', 'err'); return; }
+
+  // Ikki marta bosishni oldini olish
+  if (btn.dataset.loading === '1') return;
+  btn.dataset.loading = '1';
 
   var liked = userLikes.indexOf(pubId) !== -1;
-  if (liked) {
+
+  // DB dan tekshirish (aniqlik uchun)
+  var check = await sb.from('pub_likes')
+    .select('id')
+    .eq('user_id', currentUser.id)
+    .eq('pub_id', pubId)
+    .maybeSingle();
+
+  var reallyLiked = !!(check.data);
+
+  if (reallyLiked) {
     await sb.from('pub_likes').delete().eq('user_id', currentUser.id).eq('pub_id', pubId);
     await sb.rpc('decrement_likes', { pub_id: pubId });
     userLikes = userLikes.filter(function(l) { return l !== pubId; });
   } else {
-    await sb.from('pub_likes').insert({ user_id: currentUser.id, pub_id: pubId });
-    await sb.rpc('increment_likes', { pub_id: pubId });
-    userLikes.push(pubId);
+    var ins = await sb.from('pub_likes').insert({ user_id: currentUser.id, pub_id: pubId });
+    if (!ins.error) {
+      await sb.rpc('increment_likes', { pub_id: pubId });
+      userLikes.push(pubId);
+    }
   }
 
-  // update UI
-  var nowLiked = !liked;
-  btn.className = 'like-btn' + (nowLiked ? ' liked' : '');
-  var icon = btn.querySelector('i');
-  if (icon) icon.className = 'ti ti-heart' + (nowLiked ? '-filled' : '');
+  var nowLiked = !reallyLiked;
 
-  // also update detail like btn if open
-  var detailBtn = document.getElementById('detail-like-btn');
-  if (detailBtn) {
-    detailBtn.className = 'btn-like-big' + (nowLiked ? ' liked' : '');
-    var di = detailBtn.querySelector('i');
-    if (di) di.className = 'ti ti-heart' + (nowLiked ? '-filled' : '');
+  // Barcha like tugmalarini yangilash (grid + detail)
+  document.querySelectorAll('[data-pub-like="' + pubId + '"]').forEach(function(b) {
+    b.className = (b.classList.contains('btn-like-big') ? 'btn-like-big' : 'like-btn') + (nowLiked ? ' liked' : '');
+    var ic = b.querySelector('i');
+    if (ic) ic.className = 'ti ti-heart' + (nowLiked ? '-filled' : '');
+    b.dataset.loading = '0';
+  });
+
+  // Like sonini yangilash
+  var r = await sb.from('publications').select('likes_count').eq('id', pubId).single();
+  if (r.data) {
+    document.querySelectorAll('[data-pub-like="' + pubId + '"]').forEach(function(b) {
+      var txt = b.childNodes[b.childNodes.length - 1];
+      if (txt && txt.nodeType === 3) txt.textContent = ' ' + r.data.likes_count;
+      var countEl = document.getElementById('detail-like-count');
+      if (countEl) countEl.textContent = r.data.likes_count;
+    });
   }
+
+  btn.dataset.loading = '0';
 }
 
 // ── FILTERS & SORT ──
