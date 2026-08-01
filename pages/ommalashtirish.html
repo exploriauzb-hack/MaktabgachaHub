@@ -67,6 +67,24 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .like-btn i{font-size:14px}
 .pdf-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#fef2f2;color:var(--red);margin-left:auto}
 
+/* CARD COMMENTS */
+.card-comments{border-top:1px solid var(--border);padding:10px 14px;background:#fafbff;max-height:220px;overflow-y:auto}
+.card-comments-loading{font-size:11px;color:var(--muted);padding:4px 0}
+.card-comment-row{display:flex;gap:8px;margin-bottom:10px;align-items:flex-start}
+.card-comment-row:last-child{margin-bottom:0}
+.cc-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid #bfdbfe}
+.cc-bubble{background:var(--surface);border:1px solid var(--border);border-radius:0 9px 9px 9px;padding:7px 10px;flex:1;min-width:0}
+.cc-name{font-size:10px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.cc-text{font-size:12px;color:var(--text);line-height:1.45;word-break:break-word}
+.cc-date{font-size:10px;color:var(--muted);margin-top:3px}
+.cc-empty{font-size:11px;color:var(--muted);padding:4px 0;font-style:italic}
+.card-comment-form{display:flex;align-items:center;gap:7px;padding:9px 12px;border-top:1px solid var(--border);background:var(--surface)}
+.card-avatar-sm{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.card-comment-input{flex:1;padding:7px 10px;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-family:'Inter',sans-serif;outline:none;color:var(--text);background:var(--bg);transition:border-color .15s}
+.card-comment-input:focus{border-color:var(--accent-mid)}
+.card-comment-send{background:var(--accent);color:#fff;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:13px;transition:background .15s}
+.card-comment-send:hover{background:#1c3a9e}
+
 /* EMPTY */
 .empty-box{text-align:center;padding:60px 20px;color:var(--muted)}
 .empty-box i{font-size:48px;color:#d1d5db;margin-bottom:12px;display:block}
@@ -326,6 +344,8 @@ async function loadPubs() {
     return;
   }
   grid.innerHTML = r.data.map(function(p) { return renderCard(p); }).join('');
+  // Har bir karta uchun izohlarni yuklash
+  r.data.forEach(function(p) { loadCardComments(p.id); });
 }
 
 function renderCard(p) {
@@ -337,7 +357,8 @@ function renderCard(p) {
   var initials = authorName.charAt(0).toUpperCase();
   var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
   var pdfBadge = p.pdf_url ? '<span class="pdf-badge"><i class="ti ti-file-type-pdf"></i> PDF</span>' : '';
-  return '<div class="pub-card" onclick="openDetail(\'' + p.id + '\')">' +
+  return '<div class="pub-card">' +
+    '<div onclick="openDetail(\'' + p.id + '\')">' +
     imgHtml +
     '<div class="pub-body">' +
       '<span class="pub-type type-' + p.type + '">' + typeLabel(p.type) + '</span>' +
@@ -358,7 +379,67 @@ function renderCard(p) {
         pdfBadge +
       '</div>' +
     '</div>' +
+    '</div>' +
+    // IZOHLAR QISMI — kartaning ostida
+    '<div class="card-comments" id="cc-' + p.id + '">' +
+      '<div class="card-comments-loading">Yuklanmoqda...</div>' +
+    '</div>' +
+    '<div class="card-comment-form" onclick="event.stopPropagation()">' +
+      '<div class="card-avatar-sm">' + initials + '</div>' +
+      '<input class="card-comment-input" id="ci-' + p.id + '" type="text" placeholder="Izoh yozing..." onkeydown="if(event.key===\'Enter\')postCardComment(\'' + p.id + '\')"/>' +
+      '<button class="card-comment-send" onclick="postCardComment(\'' + p.id + '\')"><i class="ti ti-send"></i></button>' +
+    '</div>' +
   '</div>';
+}
+
+// ── CARD COMMENTS ──
+async function loadCardComments(pubId) {
+  var el = document.getElementById('cc-' + pubId);
+  if (!el) return;
+  var r = await sb.from('pub_comments')
+    .select('*')
+    .eq('pub_id', pubId)
+    .order('created_at', { ascending: false })
+    .limit(5);
+  if (!r.data || !r.data.length) {
+    el.innerHTML = '<div class="cc-empty">Hali izoh yo\'q. Birinchi bo\'ling!</div>';
+    return;
+  }
+  el.innerHTML = r.data.reverse().map(function(c) {
+    var name = c.author_name || 'Foydalanuvchi';
+    var date = new Date(c.created_at).toLocaleDateString('uz-UZ');
+    return '<div class="card-comment-row">' +
+      '<div class="cc-avatar">' + name.charAt(0).toUpperCase() + '</div>' +
+      '<div class="cc-bubble">' +
+        '<div class="cc-name">' + esc(name) + '</div>' +
+        '<div class="cc-text">' + esc(c.text) + '</div>' +
+        '<div class="cc-date">' + date + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function postCardComment(pubId) {
+  if (!currentUser) { showToast('Izoh yozish uchun tizimga kiring!', 'err'); return; }
+  var inp = document.getElementById('ci-' + pubId);
+  if (!inp) return;
+  var txt = inp.value.trim();
+  if (!txt) return;
+
+  var profR = await sb.from('profiles').select('full_name').eq('id', currentUser.id).single();
+  var authorName = (profR.data && profR.data.full_name) ? profR.data.full_name : (currentUser.email || 'Foydalanuvchi');
+
+  var r = await sb.from('pub_comments').insert({
+    pub_id: pubId,
+    user_id: currentUser.id,
+    author_name: authorName,
+    text: txt
+  });
+  if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
+  await sb.rpc('increment_comments', { pub_id: pubId });
+  inp.value = '';
+  loadCardComments(pubId);
+  showToast('Izoh qo\'shildi!', 'ok');
 }
 
 // ── DETAIL ──
