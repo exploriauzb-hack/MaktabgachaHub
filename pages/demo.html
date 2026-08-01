@@ -472,6 +472,11 @@ function checkCode(){
     selectedVar=CODES[val];
     errEl.textContent='';
     showScreen('screen-home');
+    // Faqat shu variantga tegishli kartani ko'rsat
+    document.getElementById('vc-1').style.display=selectedVar===1?'':'none';
+    document.getElementById('vc-2').style.display=selectedVar===2?'':'none';
+    var vc3=document.getElementById('vc-3');
+    if(vc3)vc3.style.display=selectedVar===3?'':'none';
     selectVar(selectedVar);
   } else {
     document.getElementById('codeInput').classList.add('error');
