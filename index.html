@@ -25,11 +25,6 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 .auth-title{font-size:20px;font-weight:700;color:var(--text);text-align:center;margin-bottom:4px}
 .auth-sub{font-size:12px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
 
-/* TABS */
-.auth-tabs{display:flex;background:#f1f5f9;border-radius:10px;padding:3px;gap:3px;margin-bottom:20px}
-.auth-tab{flex:1;padding:8px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);font-family:'Inter',sans-serif;transition:all .2s}
-.auth-tab.active{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px rgba(30,64,175,.12)}
-
 /* INPUTS */
 .inp{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--text);background:#fafafa;outline:none;margin-bottom:10px;display:block;transition:border .2s,background .2s}
 .inp:focus{border-color:var(--accent2);background:var(--surface)}
@@ -41,10 +36,12 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 .btn-primary:active{transform:scale(.98)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 
-/* HINT */
-.auth-hint{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
-.auth-hint a{color:var(--accent);text-decoration:none;font-weight:500}
-.auth-hint a:hover{text-decoration:underline}
+.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;margin-top:10px;transition:background .2s}
+.btn-secondary:hover{background:#f9fafb}
+
+/* WELCOME BACK CARD */
+.welcome-card{display:none;text-align:center}
+.welcome-name{font-size:18px;font-weight:700;color:var(--text);margin:10px 0 20px}
 
 /* MESSAGES */
 .msg{font-size:12px;padding:10px 13px;border-radius:8px;margin-bottom:12px;display:none;text-align:left;line-height:1.5}
@@ -69,31 +66,25 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
     <h1 class="auth-title">MaktabgachaHub</h1>
     <p class="auth-sub">MTT tarbiyachilari uchun metodic yordam markazi</p>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login-btn" onclick="switchTab('login')">Kirish</button>
-      <button class="auth-tab" id="tab-register-btn" onclick="switchTab('register')">Ro'yxatdan o'tish</button>
-    </div>
-
     <div class="msg msg-err" id="msg-err"></div>
     <div class="msg msg-ok"  id="msg-ok"></div>
 
-    <!-- Login -->
-    <div id="form-login">
-      <input class="inp" type="email" id="login-email" placeholder="Email manzilingiz" autocomplete="email"/>
-      <input class="inp" type="password" id="login-pass" placeholder="Parolingiz" autocomplete="current-password"
-        onkeydown="if(event.key==='Enter')doLogin()"/>
-      <button class="btn-primary" id="login-btn" onclick="doLogin()">Kirish</button>
-      <p class="auth-hint">Parolni unutdingizmi? <a href="#">Tiklash</a></p>
+    <!-- Yangi kirish: ism + telefon -->
+    <div id="form-name">
+      <input class="inp" type="text" id="name-input" placeholder="Ismingizni kiriting" autocomplete="name"/>
+      <input class="inp" type="tel" id="phone-input" placeholder="+998 90 123 45 67" autocomplete="tel"
+        onkeydown="if(event.key==='Enter')doNameLogin()"/>
+      <button class="btn-primary" id="name-btn" onclick="doNameLogin()">Kirish</button>
+      <p class="auth-hint" style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">
+        Telefon raqamingiz orqali istalgan qurilmadan hisobingizga kirishingiz mumkin bo'ladi
+      </p>
     </div>
 
-    <!-- Register -->
-    <div id="form-register" style="display:none">
-      <input class="inp" type="text" id="reg-name" placeholder="Ismingiz (ixtiyoriy)"/>
-      <input class="inp" type="email" id="reg-email" placeholder="Email manzilingiz" autocomplete="email"/>
-      <input class="inp" type="password" id="reg-pass" placeholder="Parol (kamida 6 belgi)"
-        onkeydown="if(event.key==='Enter')doRegister()"/>
-      <button class="btn-primary" id="reg-btn" onclick="doRegister()">Ro'yxatdan o'tish</button>
-      <p class="auth-hint">Ro'yxatdan o'tish orqali <a href="#">shartlarga</a> roziman</p>
+    <!-- Qaytgan foydalanuvchi uchun -->
+    <div id="form-welcome" class="welcome-card">
+      <p class="welcome-name" id="welcome-name-text"></p>
+      <button class="btn-primary" id="continue-btn" onclick="continueSession()">Davom etish</button>
+      <button class="btn-secondary" onclick="showNameForm()">Boshqa hisob bilan kirish</button>
     </div>
   </div>
 
@@ -137,16 +128,25 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
 </script>
 
 <script>
-function switchTab(tab){
-  document.getElementById('form-login').style.display   =tab==='login'   ?'block':'none';
-  document.getElementById('form-register').style.display=tab==='register'?'block':'none';
-  document.getElementById('tab-login-btn').classList.toggle('active',tab==='login');
-  document.getElementById('tab-register-btn').classList.toggle('active',tab==='register');
-  clearMsgs();
-}
 function showErr(m){const el=document.getElementById('msg-err');el.textContent=m;el.style.display='block';document.getElementById('msg-ok').style.display='none'}
 function showOk(m){const el=document.getElementById('msg-ok');el.textContent=m;el.style.display='block';document.getElementById('msg-err').style.display='none'}
 function clearMsgs(){document.getElementById('msg-err').style.display='none';document.getElementById('msg-ok').style.display='none'}
+
+function showNameForm(){
+  document.getElementById('form-name').style.display='block';
+  document.getElementById('form-welcome').style.display='none';
+  clearMsgs();
+}
+function showWelcomeForm(name){
+  document.getElementById('welcome-name-text').textContent='Xush kelibsiz, '+name+'!';
+  document.getElementById('form-name').style.display='none';
+  document.getElementById('form-welcome').style.display='block';
+}
+
+// Telefon raqamni faqat raqamlarga tozalaydi (masalan +998901234567 -> 998901234567)
+function normalizePhone(raw){
+  return raw.replace(/\D/g,'');
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -154,38 +154,106 @@ function clearMsgs(){document.getElementById('msg-err').style.display='none';doc
 <script src="js/auth.js"></script>
 
 <script>
+const NAME_KEY='mgh_saved_name';
+const PHONE_KEY='mgh_saved_phone';
+
 window.addEventListener('load',async()=>{
   const{data:{session}}=await _sb.auth.getSession();
-  if(session)window.location.href='dashboard.html';
+  const savedName=localStorage.getItem(NAME_KEY);
+  const savedPhone=localStorage.getItem(PHONE_KEY);
+
+  if(session && savedName && savedPhone){
+    // Sessiya hali faol shu qurilmada — to'g'ridan-to'g'ri dashboardga
+    window.location.href='dashboard.html';
+    return;
+  }
+  if(savedName && savedPhone){
+    showWelcomeForm(savedName);
+  }
 });
 
-async function doLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-pass').value;
-  if(!email||!pass){showErr('Email va parolni kiriting!');return}
-  const btn=document.getElementById('login-btn');
-  btn.textContent='Kirilmoqda...';btn.disabled=true;
-  const{error}=await _sb.auth.signInWithPassword({email,password:pass});
-  btn.textContent='Kirish';btn.disabled=false;
-  if(error){showErr(error.message==='Invalid login credentials'?"Email yoki parol noto'g'ri!":error.message)}
-  else{window.location.href='dashboard.html'}
+async function continueSession(){
+  const name=localStorage.getItem(NAME_KEY);
+  const phone=localStorage.getItem(PHONE_KEY);
+  if(!name||!phone){showNameForm();return}
+  await signInWithPhone(name,phone,document.getElementById('continue-btn'));
 }
 
-async function doRegister(){
-  const name=document.getElementById('reg-name').value.trim();
-  const email=document.getElementById('reg-email').value.trim();
-  const pass=document.getElementById('reg-pass').value;
-  if(!email||!pass){showErr('Email va parolni kiriting!');return}
-  if(pass.length<6){showErr("Parol kamida 6 belgi bo'lsin!");return}
-  const btn=document.getElementById('reg-btn');
-  btn.textContent='Yuklanmoqda...';btn.disabled=true;
-  const{data,error}=await _sb.auth.signUp({email,password:pass,options:{data:{full_name:name||email.split('@')[0]}}});
-  btn.textContent="Ro'yxatdan o'tish";btn.disabled=false;
-  if(error){showErr(error.message)}
-  else if(data.user){
-    await _sb.from('profiles').upsert({id:data.user.id,full_name:name||email.split('@')[0],role:'teacher',subscription_tier:'free',xp:0});
-    showOk("Muvaffaqiyatli ro'yxatdan o'tdingiz! Endi kiring.");
-    switchTab('login');
+async function doNameLogin(){
+  const name=document.getElementById('name-input').value.trim();
+  const phoneRaw=document.getElementById('phone-input').value.trim();
+  const phone=normalizePhone(phoneRaw);
+
+  if(!name||name.length<2){showErr("Iltimos, ismingizni to'liq kiriting!");return}
+  if(!phone||phone.length<9){showErr("Iltimos, to'g'ri telefon raqam kiriting!");return}
+
+  await signInWithPhone(name,phone,document.getElementById('name-btn'));
+}
+
+async function signInWithPhone(name,phone,btn){
+  const originalText=btn.textContent;
+  btn.textContent='Kirilmoqda...';btn.disabled=true;
+  clearMsgs();
+
+  // Telefon raqamdan sintetik email va parol hosil qilamiz
+  const syntheticEmail=phone+'@phone.maktabgachahub.uz';
+  const syntheticPassword='mgh_'+phone+'_pass';
+
+  try{
+    let session=null;
+
+    // Avval mavjud hisobga kirishga urinamiz
+    let{data:signInData,error:signInError}=await _sb.auth.signInWithPassword({
+      email:syntheticEmail,password:syntheticPassword
+    });
+
+    if(signInData && signInData.session){
+      session=signInData.session;
+    }else if(signInError){
+      // Hisob mavjud emas — yangisini yaratamiz
+      const{data:signUpData,error:signUpError}=await _sb.auth.signUp({
+        email:syntheticEmail,
+        password:syntheticPassword,
+        options:{data:{full_name:name}}
+      });
+      if(signUpError){
+        showErr("Kirishda xatolik: "+signUpError.message);
+        btn.textContent=originalText;btn.disabled=false;
+        return;
+      }
+      if(!signUpData.session){
+        showErr("Ro'yxatdan o'tish tasdiqlanishi kerak. Administratorga murojaat qiling (Email confirmation o'chirilishi kerak).");
+        btn.textContent=originalText;btn.disabled=false;
+        return;
+      }
+      session=signUpData.session;
+    }
+
+    if(!session){
+      showErr("Kutilmagan xatolik. Qayta urinib ko'ring.");
+      btn.textContent=originalText;btn.disabled=false;
+      return;
+    }
+
+    // Profilni yangilaymiz (ism yangilanadi, XP/progress saqlanib qoladi)
+    const{error:profileError}=await _sb.from('profiles').upsert({
+      id:session.user.id,
+      full_name:name,
+      phone:phone,
+      role:'teacher',
+      subscription_tier:'free'
+    },{onConflict:'id',ignoreDuplicates:false});
+
+    if(profileError){
+      console.warn('Profil yangilashda ogohlantirish:',profileError.message);
+    }
+
+    localStorage.setItem(NAME_KEY,name);
+    localStorage.setItem(PHONE_KEY,phone);
+    window.location.href='dashboard.html';
+  }catch(e){
+    showErr("Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring.");
+    btn.textContent=originalText;btn.disabled=false;
   }
 }
 </script>
