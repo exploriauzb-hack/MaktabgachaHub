@@ -666,5 +666,24 @@ buildStoryFilters();
 renderSongList();
 renderStoryList();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ═══ Admin panelda qo'shilgan kontentni Supabase'dan yuklaydi ═══
+   Mavjud (qattiq yozilgan) kontent ustiga qo'shiladi.
+   'content' jadvali yo'q yoki bo'sh bo'lsa — sahifa o'zgarishsiz ishlaydi. */
+(async function(){
+  try{
+    var _dbsb = (typeof _sb!=='undefined' && _sb) ? _sb
+              : (window.supabase ? window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ') : null);
+    if(!_dbsb) return;
+      { const {data,error}=await _dbsb.from('content').select('category,category_title,data').eq('type','qoshiq');
+        if(!error&&data){ data.forEach(function(r){ if(r&&r.data) SONGS.push(r.data); }); } }
+      { const {data,error}=await _dbsb.from('content').select('category,category_title,data').eq('type','hikoya');
+        if(!error&&data){ data.forEach(function(r){ if(r&&r.data) STORIES.push(r.data); }); } }
+    if(typeof buildSongFilters==='function')buildSongFilters();if(typeof renderSongList==='function')renderSongList();if(typeof buildStoryFilters==='function')buildStoryFilters();if(typeof renderStoryList==='function')renderStoryList();
+  }catch(e){ console.warn('DB kontent yuklashda ogohlantirish:', e); }
+})();
+</script>
+
 </body>
 </html>
