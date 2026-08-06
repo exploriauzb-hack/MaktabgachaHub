@@ -278,6 +278,10 @@ const SCHEMAS={
         target:()=>'var ALL_Q',page:'pages/vaziyat.html'},
   qaror:{label:'Qaror / normativ',icon:'ti-gavel',kind:'quiz',explanation:false,
         target:()=>'var ALL_Q',page:'pages/qarorlar.html'},
+  attestatsiya:{label:'Attestatsiya',icon:'ti-certificate',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`VARIANTS.${cat||'variant_1'}`,page:'pages/attestatsiya.html'},
+  demo:{label:'Demo test',icon:'ti-device-desktop-analytics',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`var ${cat||'V1'}`,page:'pages/demo.html'},
   qoshiq:{label:"Qo'shiqlar",icon:'ti-music',kind:'record',target:()=>'var SONGS',page:'pages/qoshiqlar.html',
     fields:[
       {k:'title',l:'Nomi',t:'text',req:1},
