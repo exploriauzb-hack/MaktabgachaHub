@@ -208,7 +208,7 @@ pre.code.show{display:block}
       Bazaga saqlash uchun avval jadvalni yarating: <b>“SQL kodini ko'rsatish”</b> tugmasini bosing, kodni Supabase → SQL Editor'ga qo'yib ishga tushiring. U vaqtgacha <b>“JS sifatida nusxalash”</b> orqali sahifaga to'g'ridan-to'g'ri qo'sha olasiz.
     </div>
 
-    <div class="cols">
+    <div class="cols" id="content-view">
       <!-- FORM -->
       <section class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px">
@@ -251,6 +251,38 @@ pre.code.show{display:block}
         </div>
         <pre class="code" id="export-box"></pre>
         <pre class="code" id="sql-box"></pre>
+      </section>
+    </div>
+
+    <!-- ═══════ STATISTIKA ═══════ -->
+    <div id="stats-view" style="display:none">
+      <div id="stat-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px"></div>
+      <section class="card">
+        <div class="card-title"><i class="ti ti-chart-bar"></i> Kontent bo'limlar bo'yicha</div>
+        <div id="stat-content"><div class="empty"><i class="ti ti-loader-2"></i><p>Yuklanmoqda…</p></div></div>
+      </section>
+      <section class="card" style="margin-top:16px">
+        <div class="card-title"><i class="ti ti-user-plus"></i> So'nggi qo'shilgan foydalanuvchilar</div>
+        <div id="stat-recent"></div>
+      </section>
+    </div>
+
+    <!-- ═══════ PRO BERISH ═══════ -->
+    <div id="pro-view" style="display:none">
+      <div class="warn" id="pro-warn">
+        <b>Diqqat:</b> boshqa foydalanuvchi tarifini o'zgartirish uchun <code>profiles</code> jadvalida admin ruxsati kerak.
+        Agar "ruxsat yo'q" xatosi chiqsa — <b>“SQL: admin ruxsati”</b> tugmasidagi kodni Supabase SQL Editor'da ishga tushiring.
+      </div>
+      <section class="card">
+        <div class="card-title"><i class="ti ti-search"></i> Foydalanuvchini toping</div>
+        <div class="cat-row">
+          <input class="inp" id="pro-q" placeholder="Ism yoki telefon raqam bo'yicha qidiring"
+            onkeydown="if(event.key==='Enter')searchUsers()"/>
+          <button class="btn btn-primary" style="flex:0 0 auto;max-width:140px" onclick="searchUsers()"><i class="ti ti-search"></i> Qidirish</button>
+        </div>
+        <div class="tools-row"><button class="mini-btn" onclick="toggleProSQL()"><i class="ti ti-database"></i> SQL: admin ruxsati</button></div>
+        <pre class="code" id="pro-sql"></pre>
+        <div id="pro-results" style="margin-top:12px"><div class="empty"><i class="ti ti-users"></i><p>Ism yoki raqam kiritib qidiring.</p></div></div>
       </section>
     </div>
   </main>
@@ -423,11 +455,33 @@ function renderNav(){
   box.innerHTML=Object.entries(SCHEMAS).map(([k,s])=>
     `<button class="nav-item${k===TYPE?' active':''}" data-type="${k}" onclick="selectType('${k}')">
        <i class="ti ${s.icon}"></i> ${s.label}
-     </button>`).join('');
+     </button>`).join('')
+    +`<div class="sb-sec">Boshqaruv</div>
+      <button class="nav-item" data-type="__stats" onclick="selectType('__stats')"><i class="ti ti-chart-histogram"></i> Statistika</button>
+      <button class="nav-item" data-type="__pro" onclick="selectType('__pro')"><i class="ti ti-crown"></i> Pro berish</button>`;
+}
+function showView(which){
+  document.getElementById('content-view').style.display = which==='content'?'':'none';
+  document.getElementById('stats-view').style.display   = which==='stats'?'':'none';
+  document.getElementById('pro-view').style.display     = which==='pro'?'':'none';
+  document.getElementById('table-warn').style.display   = which==='content'&&!TABLE_OK?'block':'none';
 }
 async function selectType(t){
-  TYPE=t; EDIT_ID=null; CURRENT_CAT='';
   document.querySelectorAll('#nav-types .nav-item').forEach(b=>b.classList.toggle('active',b.dataset.type===t));
+
+  if(t==='__stats'){
+    document.getElementById('page-title').textContent='Statistika';
+    document.getElementById('page-sub').textContent='Umumiy ko\'rsatkichlar va so\'nggi faoliyat.';
+    showView('stats'); await loadStats(); return;
+  }
+  if(t==='__pro'){
+    document.getElementById('page-title').textContent='Pro berish';
+    document.getElementById('page-sub').textContent='Foydalanuvchiga qo\'lda tarif bering yoki bekor qiling.';
+    showView('pro'); return;
+  }
+
+  TYPE=t; EDIT_ID=null; CURRENT_CAT='';
+  showView('content');
   const s=SCHEMAS[t];
   document.getElementById('page-title').textContent=s.label;
   document.getElementById('page-sub').textContent=s.kind==='quiz'
@@ -868,6 +922,151 @@ async function doBulkImport(){
     closeBulk();toast(`${done} ta yozuv yuklandi ✓`,'ok');
     await loadRecords();
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATISTIKA
+   ═══════════════════════════════════════════════════════════════ */
+function statCard(icon,val,label,color){
+  return `<div class="card" style="padding:16px 18px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:38px;height:38px;border-radius:10px;background:${color}1a;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ${icon}"></i></div>
+      <div><div style="font-size:24px;font-weight:800;letter-spacing:-.02em">${val}</div>
+      <div style="font-size:12px;color:var(--text2)">${label}</div></div>
+    </div></div>`;
+}
+async function countOf(table,filters){
+  let q=_sb.from(table).select('*',{count:'exact',head:true});
+  (filters||[]).forEach(f=>{ q=q[f.op](f.col,f.val); });
+  const {count,error}=await q;
+  return error?null:(count||0);
+}
+async function loadStats(){
+  const cards=document.getElementById('stat-cards');
+  cards.innerHTML='';
+  // Umumiy ko'rsatkichlar (parallel)
+  const [users,pros,corps,tests] = await Promise.all([
+    countOf('profiles'),
+    countOf('profiles',[{op:'eq',col:'subscription_tier',val:'pro'}]),
+    countOf('profiles',[{op:'eq',col:'subscription_tier',val:'corporate'}]),
+    countOf('test_results')
+  ]);
+  // XP yig'indisi (xp ustunini olib qo'shamiz)
+  let totalXP='—';
+  try{ const {data}=await _sb.from('profiles').select('xp'); if(data) totalXP=data.reduce((s,r)=>s+(r.xp||0),0).toLocaleString('uz-UZ'); }catch(e){}
+
+  const proTotal=(pros||0)+(corps||0);
+  cards.innerHTML=
+    statCard('ti-users', users==null?'—':users.toLocaleString('uz-UZ'),'Foydalanuvchilar','#2563eb')+
+    statCard('ti-crown', proTotal.toLocaleString('uz-UZ'),'Pro / Korporativ','#7c3aed')+
+    statCard('ti-flask', tests==null?'—':tests.toLocaleString('uz-UZ'),'Ishlangan testlar','#15803d')+
+    statCard('ti-star', totalXP,'Jami XP','#b45309');
+
+  // Kontent bo'limlar bo'yicha
+  const cbox=document.getElementById('stat-content');
+  try{
+    const {data,error}=await _sb.from('content').select('type');
+    if(error){cbox.innerHTML='<div class="empty"><i class="ti ti-database-off"></i><p>content jadvali topilmadi.</p></div>';}
+    else{
+      const by={}; (data||[]).forEach(r=>{by[r.type]=(by[r.type]||0)+1;});
+      const rows=Object.entries(SCHEMAS).map(([k,s])=>{
+        const n=by[k]||0;
+        return `<div class="q-item" style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:600"><i class="ti ${s.icon}" style="color:var(--accent2);margin-right:8px"></i>${s.label}</span>
+          <span class="count-pill">${n} ta</span></div>`;
+      }).join('');
+      cbox.innerHTML=rows;
+    }
+  }catch(e){cbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
+
+  // So'nggi foydalanuvchilar
+  const rbox=document.getElementById('stat-recent');
+  try{
+    const {data,error}=await _sb.from('profiles').select('full_name,phone,subscription_tier,xp,created_at').order('created_at',{ascending:false}).limit(10);
+    if(error||!data||!data.length){rbox.innerHTML='<div class="empty"><i class="ti ti-user"></i><p>Ma\'lumot yo\'q yoki ruxsat cheklangan.</p></div>';}
+    else{
+      rbox.innerHTML=data.map(u=>{
+        const tier=u.subscription_tier==='pro'?'⭐ Pro':u.subscription_tier==='corporate'?'🏢 Korp':'Bepul';
+        const d=u.created_at?new Date(u.created_at).toLocaleDateString('uz-UZ'):'';
+        return `<div class="q-item" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <div><div style="font-weight:600">${escapeHtml(u.full_name||'—')}</div>
+            <div class="q-meta" style="margin-top:3px"><span>${escapeHtml(u.phone||'')}</span><span>${d}</span><span>${(u.xp||0)} XP</span></div></div>
+          <span class="count-pill">${tier}</span></div>`;
+      }).join('');
+    }
+  }catch(e){rbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRO BERISH
+   ═══════════════════════════════════════════════════════════════ */
+async function searchUsers(){
+  const q=document.getElementById('pro-q').value.trim();
+  const box=document.getElementById('pro-results');
+  if(!q){box.innerHTML='<div class="empty"><i class="ti ti-users"></i><p>Ism yoki raqam kiriting.</p></div>';return;}
+  box.innerHTML='<div class="empty"><i class="ti ti-loader-2"></i><p>Qidirilmoqda…</p></div>';
+  const {data,error}=await _sb.from('profiles')
+    .select('id,full_name,phone,subscription_tier,xp')
+    .or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`).limit(20);
+  if(error){box.innerHTML=`<div class="empty"><i class="ti ti-alert-triangle"></i><p>Xatolik: ${escapeHtml(error.message)}<br/>Admin ruxsati kerak bo'lishi mumkin (SQL tugmasi).</p></div>`;return;}
+  if(!data||!data.length){box.innerHTML='<div class="empty"><i class="ti ti-mood-empty"></i><p>Topilmadi.</p></div>';return;}
+  box.innerHTML=data.map(u=>renderUserRow(u)).join('');
+}
+function renderUserRow(u){
+  const tier=u.subscription_tier||'free';
+  const badge=tier==='pro'?'⭐ Pro':tier==='corporate'?'🏢 Korporativ':'Bepul';
+  const b=(plan,label,cls)=>`<button class="mini-btn${tier===plan?' active-plan':''}" ${tier===plan?'disabled':''} onclick="setPlan('${u.id}','${plan}',this)">${label}</button>`;
+  return `<div class="q-item" data-uid="${u.id}">
+    <div class="q-top">
+      <div><div class="q-text">${escapeHtml(u.full_name||'—')}</div>
+        <div class="q-meta" style="margin-top:4px"><span>${escapeHtml(u.phone||'')}</span><span>${(u.xp||0)} XP</span></div></div>
+      <span class="count-pill">${badge}</span>
+    </div>
+    <div class="tools-row" style="margin-top:10px">
+      ${b('free','Bepul')} ${b('pro','⭐ Pro berish')} ${b('corporate','🏢 Korporativ')}
+    </div></div>`;
+}
+async function setPlan(userId,plan,btn){
+  if(!confirm('Tarifni "'+plan+'" ga o\'zgartirasizmi?'))return;
+  btn.disabled=true;const old=btn.innerHTML;btn.innerHTML='...';
+  const {error}=await _sb.from('profiles').update({subscription_tier:plan}).eq('id',userId);
+  if(error){btn.disabled=false;btn.innerHTML=old;toast('Xatolik: '+error.message+' (admin ruxsati kerak)','err');return;}
+  // subscriptions jadvali bo'lsa — unga ham yozamiz (ixtiyoriy, xato bo'lsa e'tiborsiz)
+  try{ if(plan==='free'){await _sb.from('subscriptions').update({status:'expired'}).eq('user_id',userId);} }catch(e){}
+  toast('Tarif yangilandi: '+plan,'ok');
+  // Qatorni yangilaymiz
+  const {data}=await _sb.from('profiles').select('id,full_name,phone,subscription_tier,xp').eq('id',userId).single();
+  if(data){const row=document.querySelector(`#pro-results .q-item[data-uid="${userId}"]`);if(row)row.outerHTML=renderUserRow(data);}
+}
+function toggleProSQL(){
+  const box=document.getElementById('pro-sql');
+  box.textContent=`-- ═══ Admin uchun 'profiles' ruxsati (bir marta) ═══
+-- Admin barcha profillarni KO'RA va tarifni O'ZGARTIRA olishi uchun.
+-- Supabase → SQL Editor'ga qo'ying va Run bosing.
+
+alter table public.profiles enable row level security;
+
+-- Admin barcha profillarni o'qiy oladi (statistika + qidiruv uchun)
+drop policy if exists "profiles_admin_read" on public.profiles;
+create policy "profiles_admin_read"
+  on public.profiles for select
+  to authenticated
+  using (
+    auth.uid() = id
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+  );
+
+-- Admin har qanday profil tarifini/rolini yangilay oladi
+drop policy if exists "profiles_admin_update" on public.profiles;
+create policy "profiles_admin_update"
+  on public.profiles for update
+  to authenticated
+  using (
+    auth.uid() = id
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+  );`;
+  box.classList.toggle('show');
+  if(box.classList.contains('show')){navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});}
 }
 
 gate();
