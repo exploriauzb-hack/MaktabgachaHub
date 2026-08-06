@@ -211,7 +211,10 @@ pre.code.show{display:block}
     <div class="cols">
       <!-- FORM -->
       <section class="card">
-        <div class="card-title"><i class="ti ti-plus"></i> <span id="form-title">Yangi yozuv</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px">
+          <div class="card-title" style="margin:0"><i class="ti ti-plus"></i> <span id="form-title">Yangi yozuv</span></div>
+          <button class="mini-btn" onclick="openBulk()"><i class="ti ti-upload"></i> Ko'p yuklash</button>
+        </div>
         <div id="cat-block" style="display:none">
           <label class="lbl">Toifa</label>
           <div class="cat-row">
@@ -251,6 +254,44 @@ pre.code.show{display:block}
       </section>
     </div>
   </main>
+</div>
+
+<!-- ═══════ BULK IMPORT MODAL ═══════ -->
+<div id="bulk-modal" style="display:none;position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.45);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--white);border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.25);padding:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="card-title" style="margin:0"><i class="ti ti-upload"></i> Ko'p savol/yozuv yuklash</div>
+      <button class="mini-btn" onclick="closeBulk()"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:12.5px;color:var(--text2);line-height:1.6;margin-bottom:14px">
+      Bo'lim: <b id="bulk-type-label"></b>. Ro'yxatni pastga yopishtiring — bir marta bosib hammasi bazaga tushadi.
+    </p>
+
+    <div id="bulk-cat-block" style="display:none">
+      <label class="lbl">Toifa kodi (masalan: <code>ilk_qadam</code>, <code>variant_1</code>, <code>V1</code>)</label>
+      <input class="inp" id="bulk-cat" placeholder="toifa kodi"/>
+      <label class="lbl">Toifa nomi (ko'rinadigan nom — ixtiyoriy)</label>
+      <input class="inp" id="bulk-cat-title" placeholder="Toifa nomi"/>
+    </div>
+
+    <label class="lbl">Ro'yxat (JSON yoki sahifadagi JS format)</label>
+    <textarea class="inp" id="bulk-text" style="min-height:200px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px" placeholder='[
+  { "q":"Savol?", "opts":["A","B","C","D"], "ans":2, "exp":"Izoh" },
+  { "q":"Ikkinchi savol?", "opts":["1","2","3"], "ans":0 }
+]'></textarea>
+    <div class="field-hint" id="bulk-hint">Test/attestatsiya/demo uchun har element: <code>q</code>, <code>opts</code>, <code>ans</code> (va ixtiyoriy <code>exp</code>).</div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="mini-btn" onclick="bulkFromFile()"><i class="ti ti-file-upload"></i> Fayldan (.json / .txt)</button>
+      <input type="file" id="bulk-file" accept=".json,.txt" style="display:none" onchange="bulkFileChosen(event)"/>
+      <span id="bulk-parsed" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="bulk-btn" onclick="doBulkImport()"><i class="ti ti-database-import"></i> Hammasini yuklash</button>
+      <button class="btn btn-ghost" onclick="closeBulk()">Bekor qilish</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -719,6 +760,113 @@ create policy "content_admin_write"
   box.classList.toggle('show');
   if(box.classList.contains('show')){
     navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BULK IMPORT — ko'p savol/yozuvni bir marta yuklash
+   Qabul qilinadi: JSON massiv, YOKI sahifadagi JS format
+   (masalan  QUESTIONS.ilk_qadam = [ ... ];  yoki  var V1 = [ ... ];)
+   ═══════════════════════════════════════════════════════════════ */
+function openBulk(){
+  const s=SCHEMAS[TYPE];
+  document.getElementById('bulk-type-label').textContent=s.label;
+  document.getElementById('bulk-cat-block').style.display=s.hasCategory?'block':'none';
+  // Joriy tanlangan toifani oldindan qo'yamiz
+  if(s.hasCategory&&CURRENT_CAT){
+    document.getElementById('bulk-cat').value=CURRENT_CAT;
+    document.getElementById('bulk-cat-title').value=CATEGORIES[CURRENT_CAT]||'';
+  }else{
+    document.getElementById('bulk-cat').value='';
+    document.getElementById('bulk-cat-title').value='';
+  }
+  document.getElementById('bulk-hint').innerHTML = s.kind==='quiz'
+    ? 'Har element: <code>q</code>, <code>opts</code>, <code>ans</code>'+(s.explanation?' (va ixtiyoriy <code>exp</code>)':'')+'.'
+    : 'Har element — shu bo\'limning maydonlariga mos obyekt.';
+  document.getElementById('bulk-parsed').textContent='';
+  document.getElementById('bulk-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeBulk(){document.getElementById('bulk-modal').style.display='none';document.body.style.overflow='';}
+function bulkFromFile(){document.getElementById('bulk-file').click();}
+function bulkFileChosen(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{document.getElementById('bulk-text').value=r.result;toast('Fayl yuklandi — endi "Hammasini yuklash"ni bosing','ok');};
+  r.readAsText(f);
+}
+// Matnni massivga aylantiradi: JSON, yoki JS literal ("QUESTIONS.x = [...]" / "var V1=[...]")
+function parseBulk(text){
+  let t=(text||'').trim();
+  if(!t) throw new Error('Ro\'yxat bo\'sh');
+  // Old qismini olib tashlaymiz:  NOM = [ ... ] ;
+  const eq=t.indexOf('=');
+  if(t[0]!=='['&&t[0]!=='{'&&eq!==-1&&t.indexOf('[')>eq){ t=t.slice(eq+1); }
+  t=t.trim().replace(/;+\s*$/,'');
+  // 1) avval toza JSON sifatida
+  try{ const v=JSON.parse(t); return Array.isArray(v)?v:[v]; }catch(e){}
+  // 2) JS literal sifatida (unquoted kalit, backtick, trailing comma) — admin o'z brauzerida
+  try{ const v=(new Function('return ('+t+')'))(); return Array.isArray(v)?v:[v]; }
+  catch(e){ throw new Error('Formatni o\'qib bo\'lmadi. JSON yoki to\'g\'ri JS ro\'yxat kiriting.'); }
+}
+async function doBulkImport(){
+  const s=SCHEMAS[TYPE];
+  let items;
+  try{ items=parseBulk(document.getElementById('bulk-text').value); }
+  catch(e){ return toast(e.message,'err'); }
+  if(!items.length) return toast('Hech qanday element topilmadi','err');
+
+  let cat=null,catTitle=null;
+  if(s.hasCategory){
+    cat=document.getElementById('bulk-cat').value.trim();
+    catTitle=document.getElementById('bulk-cat-title').value.trim()||cat;
+    if(!cat) return toast('Toifa kodini kiriting','err');
+  }
+
+  // Validatsiya + normallashtirish
+  const rows=[];
+  for(let i=0;i<items.length;i++){
+    const it=items[i];
+    if(s.kind==='quiz'){
+      if(!it||typeof it.q!=='string'||!Array.isArray(it.opts)) return toast(`${i+1}-element noto'g'ri (q/opts yo'q)`,'err');
+      let ans=Number(it.ans);
+      if(isNaN(ans)||ans<0||ans>=it.opts.length) return toast(`${i+1}-element: 'ans' noto'g'ri`,'err');
+      const data={q:it.q,opts:it.opts,ans};
+      if(s.explanation)data.exp=it.exp||'';
+      rows.push({type:TYPE,category:cat,category_title:catTitle,data,created_by:CURRENT_USER?.id||null});
+    }else{
+      if(!it||typeof it!=='object'||Array.isArray(it)) return toast(`${i+1}-element obyekt bo'lishi kerak`,'err');
+      rows.push({type:TYPE,category:cat,category_title:catTitle,data:it,created_by:CURRENT_USER?.id||null});
+    }
+  }
+
+  const btn=document.getElementById('bulk-btn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Yuklanmoqda…';
+
+  if(!TABLE_OK){
+    // Baza yo'q — mahalliy ro'yxatga qo'shamiz (JS export orqali ishlatiladi)
+    if(s.hasCategory){CURRENT_CAT=cat;CATEGORIES[cat]=catTitle;if(!RECORDS)RECORDS=[];renderCatSelect();document.getElementById('cat-select').value=cat;}
+    rows.forEach(r=>RECORDS.push(r));
+    renderList();btn.disabled=false;btn.innerHTML='<i class="ti ti-database-import"></i> Hammasini yuklash';
+    closeBulk();toast(`${rows.length} ta qo'shildi (mahalliy)`,'ok');return;
+  }
+
+  // Bazaga bo'lak-bo'lak (100 tadan) yuklaymiz
+  let done=0;
+  try{
+    for(let i=0;i<rows.length;i+=100){
+      const chunk=rows.slice(i,i+100);
+      const {error}=await _sb.from('content').insert(chunk);
+      if(error){toast('Yuklashda xatolik: '+error.message,'err');break;}
+      done+=chunk.length;
+      document.getElementById('bulk-parsed').textContent=done+' / '+rows.length+' yuklandi';
+    }
+  }catch(e){toast('Xatolik: '+e.message,'err');}
+
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-database-import"></i> Hammasini yuklash';
+  if(done>0){
+    if(s.hasCategory){if(!CATEGORIES[cat]){CATEGORIES[cat]=catTitle;renderCatSelect();}CURRENT_CAT=cat;document.getElementById('cat-select').value=cat;}
+    closeBulk();toast(`${done} ta yozuv yuklandi ✓`,'ok');
+    await loadRecords();
   }
 }
 
