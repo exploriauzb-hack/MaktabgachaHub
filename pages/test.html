@@ -588,6 +588,50 @@ function renderAdabSubs() {
   }).join('');
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  Admin panelda qo'shilgan testlarni Supabase 'content' jadvalidan
+//  yuklab, mavjud QUESTIONS ustiga qo'shadi. Yangi toifa bo'lsa —
+//  TEST_CATS ro'yxatiga ham qo'shiladi (grid'da paydo bo'lishi uchun).
+//  Jadval yo'q yoki xato bo'lsa — jimgina qattiq yozilganlar bilan ishlaydi.
+// ═══════════════════════════════════════════════════════════════
+async function loadDBQuestions() {
+  try {
+    const { data, error } = await _sb
+      .from('content')
+      .select('category, category_title, data')
+      .eq('type', 'test');
+    if (error || !data) return;
+
+    var known = {};
+    TEST_CATS.forEach(function(c){ known[c.id] = true; });
+    ADAB_SUBS.forEach(function(s){ known[s.id] = true; });
+
+    data.forEach(function(row) {
+      var cat = row.category;
+      if (!cat || !row.data) return;
+      if (!QUESTIONS[cat]) QUESTIONS[cat] = [];
+      QUESTIONS[cat].push({
+        q:    row.data.q,
+        opts: row.data.opts || [],
+        ans:  row.data.ans,
+        exp:  row.data.exp || ''
+      });
+      // Yangi toifa bo'lsa — grid'ga qo'shamiz
+      if (!known[cat]) {
+        known[cat] = true;
+        TEST_CATS.push({
+          id: cat,
+          icon: 'ti-flask',
+          title: row.category_title || cat,
+          desc: 'Test savollari'
+        });
+      }
+    });
+  } catch (e) {
+    console.warn('DB testlarini yuklashda ogohlantirish:', e);
+  }
+}
+
 window.addEventListener('load', async function() {
   const auth = await initAuth(true);
   if (!auth) return;
@@ -608,6 +652,7 @@ window.addEventListener('load', async function() {
     }
   }
 
+  await loadDBQuestions();
   renderTestGrid();
 });
 
