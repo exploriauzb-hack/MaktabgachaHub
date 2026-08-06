@@ -3,511 +3,722 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MaktabgachaHub — Dashboard</title>
+<meta name="description" content="MaktabgachaHub admin paneli — testlar, vaziyatlar, qo'shiqlar, o'yinlar va boshqa bo'limlar kontentini forma orqali boshqarish."/>
+<title>MaktabgachaHub — Admin panel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f5f7ff;
-  --white:#ffffff;
-  --border:#e4e8f0;
-  --border2:#d0d7e8;
-  --text:#1a1f36;
-  --text2:#6b7694;
-  --text3:#9aa3bf;
-  --accent:#1e40af;
-  --accent2:#2563eb;
-  --accent-soft:#eff6ff;
-  --accent-mid:#3b82f6;
-  --green:#15803d;
-  --green-soft:#f0fdf4;
-  --amber:#b45309;
-  --amber-soft:#fffbeb;
-  --red:#b91c1c;
-  --pro:#7c3aed;
-  --pro2:#8b5cf6;
-  --pro-soft:#f5f3ff;
-  --sidebar:256px;
-  --bottomnav:62px;
-  --radius:12px;
-  --radius-sm:8px;
+  --bg:#f5f7ff;--white:#fff;--border:#e4e8f0;--border2:#d0d7e8;
+  --text:#1a1f36;--text2:#6b7694;--text3:#9aa3bf;
+  --accent:#1e40af;--accent2:#2563eb;--accent-soft:#eff6ff;--accent-mid:#3b82f6;--indigo:#6366f1;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--red-soft:#fef2f2;
+  --radius:12px;--radius-sm:8px;
   --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
   --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
+  --sidebar:250px;
 }
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;background:var(--bg);min-height:100vh}
 
-body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg);overflow-x:hidden}
+/* GATE */
+.gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);text-align:center;padding:24px}
+.gate .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gate h2{font-size:18px;font-weight:700}
+.gate p{font-size:13px;color:var(--text2);max-width:340px}
+.gate .g-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.gate .g-icon.err{background:var(--red-soft);color:var(--red)}
+.gate a.g-btn{margin-top:4px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none}
+.gate a.g-btn:hover{opacity:.92}
 
-/* ── SIDEBAR ── */
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.35);z-index:20;backdrop-filter:blur(3px)}
-.sidebar{
-  z-index:30;width:var(--sidebar);
-  background:var(--white);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:fixed;top:0;left:0;height:100vh;overflow-y:auto;
-}
-.sidebar-logo{
-  padding:20px 18px 18px;
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:11px;
-}
-.logo-icon{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,var(--accent2),#6366f1);
-  border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:18px;flex-shrink:0;
-  box-shadow:0 2px 8px rgba(37,99,235,.3);
-}
-.logo-text{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
-.logo-text span{display:block;font-size:11px;font-weight:400;color:var(--text3);margin-top:2px}
-.sidebar-close{display:none;margin-left:auto;background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;padding:4px}
-
-.sidebar-section{padding:18px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
-.nav-item{
-  display:flex;align-items:center;gap:9px;
-  padding:9px 12px;border-radius:var(--radius-sm);
-  margin:1px 8px;
-  color:var(--text2);text-decoration:none;
-  font-size:13px;font-weight:500;cursor:pointer;
-  transition:background .15s,color .15s;
-}
+/* LAYOUT */
+.app{display:none;min-height:100vh}
+.app.show{display:flex}
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:20;overflow-y:auto}
+.sb-logo{padding:18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.sb-logo .ic{width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),var(--indigo));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.sb-logo .tx{font-size:13px;font-weight:700;line-height:1.25}
+.sb-logo .tx span{display:block;font-size:10px;font-weight:600;color:var(--indigo);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.sb-sec{padding:16px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);margin:1px 8px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;border:none;background:none;width:calc(100% - 16px);text-align:left;font-family:inherit}
 .nav-item:hover{background:var(--accent-soft);color:var(--accent)}
 .nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
-.nav-item .badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2)}
-.nav-item .badge.soon{background:#f1f5f9;color:#94a3b8}
+.nav-item .n-count{margin-left:auto;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;background:var(--bg);color:var(--text3)}
+.nav-item.active .n-count{background:var(--white);color:var(--accent)}
+.sb-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
+.who{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg)}
+.who .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--indigo));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.who .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .rl{font-size:11px;color:var(--indigo);font-weight:600}
+.sb-link{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;text-decoration:none;transition:all .15s;font-family:inherit}
+.sb-link:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
 
-.sidebar-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
-.user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg)}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
-.user-info .name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.user-info .plan{font-size:11px;color:var(--text3)}
-.btn-logout{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:all .15s}
-.btn-logout:hover{background:#fef2f2;color:var(--red);border-color:#fca5a5}
+.main{margin-left:var(--sidebar);flex:1;padding:24px 30px;max-width:1200px}
+.head h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.head p{font-size:13px;color:var(--text2);margin-top:3px}
+.head{margin-bottom:20px}
 
-/* ── MAIN ── */
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:28px 32px;max-width:1020px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:960px){.cols{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.card-title i{color:var(--accent2);font-size:18px}
 
-/* ── TOPBAR ── */
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:12px}
-.topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.btn-hamburger{display:none;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:20px;flex-shrink:0;transition:background .15s}
-.btn-hamburger:hover{background:var(--bg)}
-.topbar h1{font-size:21px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.topbar h1 span{color:var(--accent2)}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.plan-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);border:1px solid #bfdbfe;white-space:nowrap}
-.plan-pill.pro{background:var(--pro-soft);color:var(--pro2);border-color:#ddd6fe}
-.level-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
+label.lbl{display:block;font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+label.lbl .req{color:var(--red);margin-left:2px}
+label.lbl:first-child{margin-top:0}
+.inp,select.inp,textarea.inp{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13.5px;font-family:'Inter',sans-serif;color:var(--text);background:#fafbff;outline:none;transition:border .18s,background .18s}
+.inp:focus{border-color:var(--accent2);background:var(--white)}
+textarea.inp{resize:vertical;min-height:62px;line-height:1.55}
+select.inp{cursor:pointer}
+.field-hint{font-size:11px;color:var(--text3);margin-top:4px}
 
-/* ── PREMIUM BANNER ── */
-.premium-banner{
-  background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 60%,#7c3aed 100%);
-  border-radius:var(--radius);padding:22px 26px;
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:24px;gap:16px;position:relative;overflow:hidden;
-  box-shadow:0 4px 20px rgba(37,99,235,.25);
+.cat-row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.cat-row select,.cat-row input{flex:1;min-width:140px}
+
+/* option builder (quiz) */
+.opt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.opt-row .radio{flex-shrink:0;width:26px;height:26px;border:2px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:var(--white)}
+.opt-row .radio.on{border-color:var(--green);background:var(--green-soft)}
+.opt-row .radio.on::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--green)}
+.opt-row .inp{flex:1}
+.opt-row .del{flex-shrink:0;width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}
+.opt-row .del:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+.opt-hint{font-size:11px;color:var(--text3);margin:6px 0 10px;display:flex;align-items:center;gap:5px}
+.opt-hint i{color:var(--green);font-size:13px}
+.btn-add-opt{font-size:12px;font-weight:600;color:var(--accent2);background:none;border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:8px;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-family:inherit}
+.btn-add-opt:hover{background:var(--accent-soft);border-color:var(--accent-mid)}
+
+/* list-field (rules/steps) */
+.li-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.li-row .inp{flex:1}
+.li-row .del{flex-shrink:0;width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text3);cursor:pointer;font-size:14px}
+.li-row .del:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+
+/* advanced collapsible */
+.adv-toggle{font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:16px;padding:8px 0;user-select:none}
+.adv-toggle i{transition:transform .2s}
+.adv-toggle.open i{transform:rotate(90deg)}
+.adv-box{display:none;padding:12px;background:var(--bg);border-radius:var(--radius-sm);margin-top:4px}
+.adv-box.open{display:block}
+
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:11px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s,transform .1s,background .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;flex:1;justify-content:center}
+.btn-primary:hover:not(:disabled){opacity:.93}
+.btn-ghost{background:var(--white);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+
+.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.count-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
+.q-item{border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:10px;transition:box-shadow .15s}
+.q-item:hover{box-shadow:var(--shadow)}
+.q-item .q-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.q-item .q-text{font-size:13.5px;font-weight:600;line-height:1.5}
+.q-item .q-tools{display:flex;gap:4px;flex-shrink:0}
+.q-item .q-tools button{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.q-item .q-tools button:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
+.q-item .q-tools button.dl:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+.q-opts{list-style:none;margin-top:9px;display:flex;flex-direction:column;gap:5px}
+.q-opts li{font-size:12.5px;color:var(--text2);padding:6px 10px;border-radius:6px;background:var(--bg);display:flex;align-items:center;gap:7px}
+.q-opts li.correct{background:var(--green-soft);color:var(--green);font-weight:600}
+.q-opts li i{font-size:14px;flex-shrink:0}
+.q-meta{font-size:11.5px;color:var(--text3);margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
+.q-meta span{background:var(--bg);padding:2px 8px;border-radius:20px}
+.q-exp{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5}
+.empty{text-align:center;padding:38px 16px;color:var(--text3)}
+.empty i{font-size:34px;opacity:.5;display:block;margin-bottom:10px}
+.empty p{font-size:13px}
+
+.tools-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.mini-btn{font-size:12px;font-weight:600;color:var(--text2);background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;font-family:inherit}
+.mini-btn:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
+pre.code{margin-top:12px;background:#0f172a;color:#e2e8f0;border-radius:var(--radius-sm);padding:16px;font-size:12px;line-height:1.6;overflow-x:auto;font-family:'SF Mono',Menlo,Consolas,monospace;white-space:pre;max-height:360px;overflow-y:auto;display:none}
+pre.code.show{display:block}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;font-size:13px;font-weight:500;padding:12px 20px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;display:flex;align-items:center;gap:8px;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+.toast i{font-size:16px}
+
+.warn{background:var(--amber-soft);border:1px solid #fde68a;border-left:3px solid var(--amber);border-radius:var(--radius-sm);padding:13px 15px;font-size:12.5px;color:#92400e;line-height:1.55;margin-bottom:16px;display:none}
+.warn.show{display:block}
+.warn b{color:#78350f}
+
+@media(max-width:760px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:18px 16px}
+  .mobile-bar{display:flex!important}
 }
-.premium-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%}
-.premium-banner::after{content:'';position:absolute;right:70px;bottom:-40px;width:90px;height:90px;background:rgba(255,255,255,.04);border-radius:50%}
-.premium-banner-left{display:flex;align-items:center;gap:16px;z-index:1}
-.premium-banner-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
-.premium-banner-icon i{font-size:22px;color:#fde68a}
-.premium-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
-.premium-banner p{font-size:12px;color:#bfdbfe}
-.premium-features{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
-.pf-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#c7d2fe}
-.pf-item i{font-size:13px;color:#86efac}
-.btn-premium{background:#fff;color:var(--accent);font-size:13px;font-weight:700;padding:10px 22px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.15)}
-.btn-premium:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
-.btn-premium i{font-size:14px;color:var(--pro2)}
-
-/* ── STATS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);transition:box-shadow .2s}
-.stat-card:hover{box-shadow:var(--shadow-md)}
-.stat-card .val{font-size:30px;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.02em}
-.stat-card .lbl{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px}
-.stat-card .lbl i{font-size:14px;color:var(--accent-mid)}
-
-/* ── XP ── */
-.xp-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:28px;box-shadow:var(--shadow)}
-.xp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
-.xp-header span{font-size:12px;color:var(--text3)}
-.xp-header strong{font-size:13px;color:var(--text);font-weight:600}
-.xp-bar{height:7px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
-.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#818cf8);border-radius:99px;transition:width .5s ease}
-
-/* ── SECTION TITLE ── */
-.sec-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.sec-title i{font-size:14px}
-.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* ── MOD CARDS ── */
-.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
-.mod-card{
-  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
-  padding:16px;text-decoration:none;color:inherit;
-  display:flex;flex-direction:column;gap:3px;
-  transition:border-color .15s,box-shadow .15s,transform .15s;
-  cursor:pointer;position:relative;overflow:hidden;
-  box-shadow:var(--shadow);
-}
-.mod-card:hover{border-color:var(--accent-mid);box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
-.mod-card.locked:hover{border-color:#c4b5fd;box-shadow:0 4px 16px rgba(124,58,237,.1);transform:translateY(-2px)}
-.mod-card .icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-size:18px;flex-shrink:0}
-.mod-card .icon.blue{background:var(--accent-soft);color:var(--accent2)}
-.mod-card .icon.green{background:var(--green-soft);color:var(--green)}
-.mod-card .icon.amber{background:var(--amber-soft);color:var(--amber)}
-.mod-card .icon.purple{background:var(--pro-soft);color:var(--pro2)}
-.mod-card .icon.slate{background:#f1f5f9;color:#94a3b8}
-.mod-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.3}
-.mod-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.3}
-.lock-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:var(--pro-soft);color:var(--pro2);border:1px solid #ddd6fe}
-.lock-tag.soon{background:#f1f5f9;color:#94a3b8;border-color:#e2e8f0}
-
-/* ── TEST ROWS ── */
-.test-row{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;box-shadow:var(--shadow);transition:border-color .15s}
-.test-row:hover{border-color:var(--border2)}
-.test-row .test-name{font-size:13px;font-weight:500;color:var(--text)}
-.test-row .test-date{font-size:11px;color:var(--text3);margin-top:2px}
-.test-score{font-size:18px;font-weight:700}
-.test-score.high{color:var(--green)}
-.test-score.mid{color:var(--amber)}
-.test-score.low{color:var(--red)}
-
-.empty-state{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text2);font-size:13px;box-shadow:var(--shadow)}
-.empty-state a{color:var(--accent2);text-decoration:none;font-weight:500}
-
-/* ── MODAL ── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.5);z-index:200;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
-.modal-overlay.show{display:flex}
-.modal{background:var(--white);border-radius:16px;padding:28px;max-width:480px;width:100%;position:relative;box-shadow:0 24px 64px rgba(15,20,50,.2)}
-.modal-close{position:absolute;top:14px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:var(--border)}
-.modal-icon{width:52px;height:52px;background:var(--pro-soft);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;border:1px solid #ddd6fe}
-.modal-icon i{font-size:26px;color:var(--pro2)}
-.modal h2{font-size:18px;font-weight:700;margin-bottom:8px;color:var(--text)}
-.modal p{font-size:13px;color:var(--text2);margin-bottom:20px;line-height:1.65}
-.modal-features{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
-.mf-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text)}
-.mf-item i{font-size:16px;color:var(--green);flex-shrink:0}
-.modal-price{background:var(--pro-soft);border:1px solid #ddd6fe;border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.modal-price .price{font-size:22px;font-weight:800;color:var(--pro)}
-.modal-price .price span{font-size:13px;font-weight:400;color:var(--text2)}
-.modal-price .old-price{font-size:12px;color:var(--text3);text-decoration:line-through;margin-top:2px}
-.btn-buy{width:100%;padding:13px;background:linear-gradient(135deg,var(--pro),#a855f7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 16px rgba(124,58,237,.25)}
-.btn-buy:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(124,58,237,.35)}
-.btn-buy i{font-size:18px}
-
-/* ── BOTTOM NAV ── */
-.bottom-nav{display:none}
-.more-sheet-overlay{display:none;position:fixed;inset:0;background:rgba(15,20,50,.4);z-index:150;backdrop-filter:blur(3px)}
-.more-sheet-overlay.show{display:block}
-.more-sheet{display:none;position:fixed;left:0;right:0;bottom:0;z-index:160;background:var(--white);border-radius:20px 20px 0 0;max-height:78vh;overflow-y:auto;box-shadow:0 -8px 32px rgba(15,20,50,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
-.more-sheet.show{display:block;transform:translateY(0)}
-.more-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:99px;margin:12px auto}
-.more-sheet-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 18px 12px}
-.more-sheet-hdr h3{font-size:15px;font-weight:700;color:var(--text)}
-.more-sheet-close{background:var(--bg);border:1px solid var(--border);width:30px;height:30px;border-radius:8px;color:var(--text2);font-size:15px;display:flex;align-items:center;justify-content:center}
-.more-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px 14px 18px}
-.more-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:12px;text-decoration:none;color:var(--text);position:relative;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif}
-.more-item:active{background:var(--bg)}
-.more-item .mi-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:20px}
-.more-item .mi-icon.pro{background:var(--pro-soft);color:var(--pro2)}
-.more-item .mi-icon.slate{background:#f1f5f9;color:#94a3b8}
-.more-item span{font-size:10.5px;font-weight:600;text-align:center;line-height:1.25;color:var(--text2)}
-.more-item .mi-badge{position:absolute;top:6px;right:4px;font-size:8px;font-weight:700;padding:2px 5px;border-radius:20px;background:var(--pro2);color:#fff}
-.more-sheet-section{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;padding:10px 18px 4px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1100px){.mod-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){
-  .sidebar{display:none}
-  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 22px)}
-  .topbar{margin-bottom:16px}
-  .topbar h1{font-size:16px}
-  .topbar-right .level-pill{display:none}
-  .premium-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
-  .btn-premium{width:100%;justify-content:center}
-  .premium-features{display:none}
-  .stats-grid{gap:8px}
-  .stat-card{padding:12px 14px}
-  .stat-card .val{font-size:24px}
-  .mod-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
-  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:140;height:var(--bottomnav);background:var(--white);border-top:1px solid var(--border);box-shadow:0 -2px 12px rgba(15,20,50,.08);padding-bottom:env(safe-area-inset-bottom)}
-  .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;position:relative}
-  .bn-item i{font-size:20px}
-  .bn-item.active{color:var(--accent2)}
-  .bn-dot{display:none;position:absolute;top:2px;width:4px;height:4px;border-radius:50%;background:var(--accent2)}
-  .bn-item.active .bn-dot{display:block}
-  .bn-item.pro-item.active{color:var(--pro2)}
-  .bn-item.pro-item.active .bn-dot{background:var(--pro2)}
-}
+.mobile-bar{display:none;align-items:center;gap:12px;margin-bottom:16px}
+.mobile-bar button{width:38px;height:38px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);cursor:pointer;font-size:18px;color:var(--text2)}
 </style>
 </head>
 <body>
-<div class="sidebar-overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-icon"><i class="ti ti-school"></i></div>
-    <div class="logo-text">MaktabgachaHub<span>Ilk Qadam platformasi</span></div>
-    <button class="sidebar-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
-  </div>
-  <div class="sidebar-section">Asosiy</div>
-  <a href="dashboard.html" class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-  <a href="pages/jadval.html" class="nav-item"><i class="ti ti-calendar"></i> Kunlik jadval</a>
-  <a href="pages/haftalik.html" class="nav-item"><i class="ti ti-books"></i> Haftalik mavzular</a>
-  <a href="pages/soha.html" class="nav-item"><i class="ti ti-chart-dots-3"></i> Rivojlanish sohalari</a>
-  <a href="pages/tamoyil.html" class="nav-item"><i class="ti ti-pin"></i> Tamoyillar</a>
-  <a href="pages/test.html" class="nav-item"><i class="ti ti-flask"></i> Testlar</a>
-  <a href="pages/konspekt.html" class="nav-item"><i class="ti ti-notebook"></i> Konspektlar</a>
-  <a href="pages/vaziyat.html" class="nav-item"><i class="ti ti-bulb"></i> Vaziyatlar</a>
-  <div class="sidebar-section">Professional</div>
-  <a href="pages/oyinlar.html" class="nav-item"><i class="ti ti-puzzle"></i> Oyinlar<span class="badge">PRO</span></a>
-  <a href="pages/qoshiqlar.html" class="nav-item"><i class="ti ti-music"></i> Qo'shiqlar<span class="badge">PRO</span></a>
-  <a href="pages/mashgulot.html" class="nav-item"><i class="ti ti-brush"></i> Mashg'ulot<span class="badge">PRO</span></a>
-  <a href="pages/attestatsiya.html" class="nav-item"><i class="ti ti-certificate"></i> Attestatsiya<span class="badge">PRO</span></a>
-  <a href="pages/portfolio.html" class="nav-item"><i class="ti ti-id-badge-2"></i> Portfolio<span class="badge">PRO</span></a>
-  <div class="sidebar-section">Korporativ</div>
-  <a class="nav-item"><i class="ti ti-qrcode"></i> Davomat<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-users-group"></i> Ota-onalar<span class="badge soon">Tez kunda</span></a>
-  <a class="nav-item"><i class="ti ti-chart-line"></i> Monitoring<span class="badge soon">Tez kunda</span></a>
-  <div class="sidebar-bottom">
-    <div class="user-card">
-      <div class="avatar" id="sb-avatar">T</div>
-      <div class="user-info">
-        <div class="name" id="sb-name">Tarbiyachi</div>
-        <div class="plan" id="sb-plan">Bepul tarif</div>
-      </div>
-    </div>
-    <button class="btn-logout" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
-  </div>
-</aside>
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="spin" id="gate-spin"></div>
+  <div class="g-icon err" id="gate-icon" style="display:none"><i class="ti ti-lock"></i></div>
+  <h2 id="gate-title">Yuklanmoqda…</h2>
+  <p id="gate-msg">Hisobingiz va ruxsatingiz tekshirilmoqda.</p>
+  <a class="g-btn" id="gate-btn" href="dashboard.html" style="display:none">Dashboardga qaytish</a>
+</div>
 
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="btn-hamburger" id="hamburger" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-      <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
+<!-- APP -->
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="ic">🎓</div>
+      <div class="tx">MaktabgachaHub<span>Admin panel</span></div>
     </div>
-    <div class="topbar-right">
-      <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights"></i> Bepul</span>
-      <span class="level-pill" id="hero-xp-badge"><i class="ti ti-medal"></i> 1-daraja</span>
-    </div>
-  </div>
-
-  <div class="premium-banner" id="premiumBanner" style="display:none">
-    <div class="premium-banner-left">
-      <div class="premium-banner-icon"><i class="ti ti-crown"></i></div>
-      <div>
-        <h3>Professional obunaga o'ting</h3>
-        <p>Attestatsiya testlari, portfolio va ko'plab qulayliklar</p>
-        <div class="premium-features">
-          <div class="pf-item"><i class="ti ti-check"></i> Qo'shiqlar</div>
-          <div class="pf-item"><i class="ti ti-check"></i> Mashg'ulot</div>
-          <div class="pf-item"><i class="ti ti-check"></i> Attestatsiya</div>
-          <div class="pf-item"><i class="ti ti-check"></i> Portfolio</div>
+    <div class="sb-sec">Bo'limlar</div>
+    <div id="nav-types"></div>
+    <div class="sb-bottom">
+      <div class="who">
+        <div class="av" id="who-av">A</div>
+        <div style="min-width:0">
+          <div class="nm" id="who-nm">Admin</div>
+          <div class="rl"><i class="ti ti-shield-check" style="font-size:11px"></i> Administrator</div>
         </div>
       </div>
+      <a class="sb-link" href="dashboard.html"><i class="ti ti-arrow-left"></i> Dashboardga qaytish</a>
+      <button class="sb-link" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
     </div>
-    <button class="btn-premium" onclick="openPremiumModal()"><i class="ti ti-crown"></i> Premium olish</button>
-  </div>
+  </aside>
 
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="val" id="stat-test">0</div>
-      <div class="lbl"><i class="ti ti-flask"></i> Testlar</div>
+  <main class="main">
+    <div class="mobile-bar">
+      <button onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
     </div>
-    <div class="stat-card">
-      <div class="val" id="stat-avg">0%</div>
-      <div class="lbl"><i class="ti ti-target"></i> O'rtacha</div>
+    <div class="head">
+      <h1 id="page-title">Kontentni boshqarish</h1>
+      <p id="page-sub">Bo'limni tanlang va forma orqali qo'shing — HTML yozish shart emas.</p>
     </div>
-    <div class="stat-card">
-      <div class="val" id="stat-xp">0</div>
-      <div class="lbl"><i class="ti ti-star"></i> Jami XP</div>
+
+    <div class="warn" id="table-warn">
+      <b>Ma'lumotlar bazasida <code>content</code> jadvali topilmadi.</b><br/>
+      Bazaga saqlash uchun avval jadvalni yarating: <b>“SQL kodini ko'rsatish”</b> tugmasini bosing, kodni Supabase → SQL Editor'ga qo'yib ishga tushiring. U vaqtgacha <b>“JS sifatida nusxalash”</b> orqali sahifaga to'g'ridan-to'g'ri qo'sha olasiz.
     </div>
-  </div>
 
-  <div class="xp-card">
-    <div class="xp-header">
-      <strong id="xp-label">1-daraja: Yangi Tarbiyachi</strong>
-      <span id="xp-next">Keyingi: 80 XP</span>
+    <div class="cols">
+      <!-- FORM -->
+      <section class="card">
+        <div class="card-title"><i class="ti ti-plus"></i> <span id="form-title">Yangi yozuv</span></div>
+        <div id="cat-block" style="display:none">
+          <label class="lbl">Toifa</label>
+          <div class="cat-row">
+            <select class="inp" id="cat-select" onchange="onCatChange()"></select>
+            <button class="mini-btn" onclick="toggleNewCat()"><i class="ti ti-folder-plus"></i> Yangi</button>
+          </div>
+          <div id="new-cat-box" style="display:none">
+            <label class="lbl">Yangi toifa nomi</label>
+            <input class="inp" id="new-cat-title" placeholder="Masalan: Metodika" oninput="syncCatId()"/>
+            <label class="lbl">Toifa kodi (avtomatik)</label>
+            <input class="inp" id="new-cat-id" placeholder="metodika"/>
+            <div class="field-hint">Faqat lotin harflari va pastki chiziq.</div>
+          </div>
+        </div>
+
+        <div id="fields"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="save-btn" onclick="saveRecord()"><i class="ti ti-device-floppy"></i> Saqlash</button>
+          <button class="btn btn-ghost" onclick="resetForm()"><i class="ti ti-eraser"></i> Tozalash</button>
+        </div>
+      </section>
+
+      <!-- LIST -->
+      <section class="card">
+        <div class="list-head">
+          <div class="card-title" style="margin:0"><i class="ti ti-list-check"></i> Yozuvlar</div>
+          <span class="count-pill" id="rec-count">0 ta</span>
+        </div>
+        <div id="rec-list"><div class="empty"><i class="ti ti-inbox"></i><p>Bo'limni tanlang.</p></div></div>
+        <div class="tools-row">
+          <button class="mini-btn" onclick="exportJS()"><i class="ti ti-code"></i> JS sifatida nusxalash</button>
+          <button class="mini-btn" onclick="toggleSQL()"><i class="ti ti-database"></i> SQL kodini ko'rsatish</button>
+        </div>
+        <pre class="code" id="export-box"></pre>
+        <pre class="code" id="sql-box"></pre>
+      </section>
     </div>
-    <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
-  </div>
-
-  <div class="sec-title"><i class="ti ti-grid-dots"></i> Bo'limlar</div>
-  <div class="mod-grid">
-    <a href="pages/jadval.html" class="mod-card"><div class="icon blue"><i class="ti ti-calendar"></i></div><div class="mod-title">Kunlik jadval</div><div class="mod-sub">Soatma-soat reja</div></a>
-    <a href="pages/haftalik.html" class="mod-card"><div class="icon blue"><i class="ti ti-books"></i></div><div class="mod-title">Haftalik mavzular</div><div class="mod-sub">Yillik tematik reja</div></a>
-    <a href="pages/soha.html" class="mod-card"><div class="icon green"><i class="ti ti-chart-dots-3"></i></div><div class="mod-title">Rivojlanish sohalari</div><div class="mod-sub">5 ta asosiy soha</div></a>
-    <a href="pages/tamoyil.html" class="mod-card"><div class="icon green"><i class="ti ti-pin"></i></div><div class="mod-title">Tamoyillar</div><div class="mod-sub">6 ta tamoyil</div></a>
-    <a href="pages/test.html" class="mod-card"><div class="icon amber"><i class="ti ti-flask"></i></div><div class="mod-title">Testlar</div><div class="mod-sub" id="test-limit-txt">5 ta / oy</div></a>
-    <a href="pages/konspekt.html" class="mod-card"><div class="icon amber"><i class="ti ti-notebook"></i></div><div class="mod-title">Konspektlar</div><div class="mod-sub">3 ta ko'rish</div></a>
-    <a href="pages/vaziyat.html" class="mod-card"><div class="icon blue"><i class="ti ti-bulb"></i></div><div class="mod-title">Vaziyatlar</div><div class="mod-sub">5 ta variant</div></a>
-  </div>
-
-  <div class="sec-title"><i class="ti ti-crown"></i> Professional</div>
-  <div class="mod-grid">
-    <div class="mod-card locked" id="card-games"><div class="icon purple"><i class="ti ti-puzzle"></i></div><div class="mod-title">Oyinlar</div><div class="mod-sub">Didaktik oyinlar</div><span class="lock-tag">PRO</span></div>
-    <div class="mod-card locked" id="card-songs"><div class="icon purple"><i class="ti ti-music"></i></div><div class="mod-title">Qo'shiqlar</div><div class="mod-sub">Mavzuga mos</div><span class="lock-tag">PRO</span></div>
-    <div class="mod-card locked" id="card-activities"><div class="icon purple"><i class="ti ti-brush"></i></div><div class="mod-title">Mashg'ulot</div><div class="mod-sub">Ijodiy faoliyat</div><span class="lock-tag">PRO</span></div>
-    <div class="mod-card locked" id="card-attestation"><div class="icon purple"><i class="ti ti-certificate"></i></div><div class="mod-title">Attestatsiya</div><div class="mod-sub">Tayyorgarlik testlari</div><span class="lock-tag">PRO</span></div>
-    <div class="mod-card locked" id="card-portfolio"><div class="icon purple"><i class="ti ti-id-badge-2"></i></div><div class="mod-title">Portfolio</div><div class="mod-sub">Professional profil</div><span class="lock-tag">PRO</span></div>
-  </div>
-
-  <div class="sec-title"><i class="ti ti-building"></i> Korporativ</div>
-  <div class="mod-grid">
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-qrcode"></i></div><div class="mod-title">Davomat</div><div class="mod-sub">QR bilan belgilash</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-users-group"></i></div><div class="mod-title">Ota-onalar</div><div class="mod-sub">Xabar va hisobot</div><span class="lock-tag soon">Tez kunda</span></div>
-    <div class="mod-card" style="opacity:.45;cursor:default;pointer-events:none"><div class="icon slate"><i class="ti ti-chart-line"></i></div><div class="mod-title">Bola monitoringi</div><div class="mod-sub">Rivojlanish grafigi</div><span class="lock-tag soon">Tez kunda</span></div>
-  </div>
-
-  <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
-  <div id="lastTests">
-    <div class="empty-state">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a></div>
-  </div>
-</main>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="premiumModal" onclick="if(event.target===this)closePremiumModal()">
-  <div class="modal">
-    <button class="modal-close" onclick="closePremiumModal()"><i class="ti ti-x"></i></button>
-    <div class="modal-icon"><i class="ti ti-crown"></i></div>
-    <h2>Professional tarif</h2>
-    <p>Barcha PRO bo'limlarga to'liq kirish imkoniyati va cheksiz foydalanish.</p>
-    <div class="modal-features">
-      <div class="mf-item"><i class="ti ti-check"></i> Bolalar qo'shiqlari to'plami</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Ijodiy mashg'ulotlar kutubxonasi</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Attestatsiya tayyorgarlik testlari</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Professional portfolio yaratish</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Cheksiz test ishlash</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Didaktik o'yinlar</div>
-      <div class="mf-item"><i class="ti ti-check"></i> Vaziyatlar — PRO variantlar</div>
-    </div>
-    <div class="modal-price">
-      <div>
-        <div class="price">49 000 so'm <span>/ oy</span></div>
-        <div class="old-price">Avval: 79 000 so'm</div>
-      </div>
-      <div style="background:var(--pro2);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700">−38%</div>
-    </div>
-    <button class="btn-buy" onclick="window.location.href='pages/premium.html'">
-      <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
-    </button>
-  </div>
+  </main>
 </div>
 
-<div id="notifPopup" style="display:none;position:fixed;top:20px;right:20px;z-index:9999;flex-direction:column;gap:8px"></div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <a href="dashboard.html" class="bn-item active"><span class="bn-dot"></span><i class="ti ti-layout-dashboard"></i>Bosh sahifa</a>
-  <a href="pages/haftalik.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-books"></i>Haftalik</a>
-  <a href="pages/test.html" class="bn-item"><span class="bn-dot"></span><i class="ti ti-flask"></i>Testlar</a>
-  <a href="pages/premium.html" class="bn-item pro-item"><span class="bn-dot"></span><i class="ti ti-crown"></i>Premium</a>
-  <button class="bn-item" onclick="openMoreSheet()"><span class="bn-dot"></span><i class="ti ti-grid-dots"></i>Yana</button>
-</nav>
-
-<div class="more-sheet-overlay" id="moreOverlay" onclick="closeMoreSheet()"></div>
-<div class="more-sheet" id="moreSheet">
-  <div class="more-sheet-handle"></div>
-  <div class="more-sheet-hdr"><h3>Barcha bo'limlar</h3><button class="more-sheet-close" onclick="closeMoreSheet()"><i class="ti ti-x"></i></button></div>
-  <div class="more-sheet-section">Asosiy</div>
-  <div class="more-grid">
-    <a href="pages/jadval.html" class="more-item"><div class="mi-icon"><i class="ti ti-calendar"></i></div><span>Kunlik jadval</span></a>
-    <a href="pages/soha.html" class="more-item"><div class="mi-icon"><i class="ti ti-chart-dots-3"></i></div><span>Rivojlanish</span></a>
-    <a href="pages/tamoyil.html" class="more-item"><div class="mi-icon"><i class="ti ti-pin"></i></div><span>Tamoyillar</span></a>
-    <a href="pages/konspekt.html" class="more-item"><div class="mi-icon"><i class="ti ti-notebook"></i></div><span>Konspektlar</span></a>
-    <a href="pages/vaziyat.html" class="more-item"><div class="mi-icon"><i class="ti ti-bulb"></i></div><span>Vaziyatlar</span></a>
-  </div>
-  <div class="more-sheet-section">Professional</div>
-  <div class="more-grid">
-    <a href="pages/oyinlar.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-puzzle"></i></div><span class="mi-badge">PRO</span><span>Oyinlar</span></a>
-    <a href="pages/qoshiqlar.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-music"></i></div><span class="mi-badge">PRO</span><span>Qo'shiqlar</span></a>
-    <a href="pages/mashgulot.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-brush"></i></div><span class="mi-badge">PRO</span><span>Mashg'ulot</span></a>
-    <a href="pages/attestatsiya.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-certificate"></i></div><span class="mi-badge">PRO</span><span>Attestatsiya</span></a>
-    <a href="pages/portfolio.html" class="more-item"><div class="mi-icon pro"><i class="ti ti-id-badge-2"></i></div><span class="mi-badge">PRO</span><span>Portfolio</span></a>
-  </div>
-  <div class="more-sheet-section">Hisob</div>
-  <div class="more-grid">
-    <button class="more-item" onclick="doLogout()"><div class="mi-icon slate"><i class="ti ti-logout"></i></div><span>Chiqish</span></button>
-  </div>
-</div>
-
-<script>
-function openSidebar(){document.getElementById('sidebar').style.display='flex';document.getElementById('overlay').style.display='block';document.body.style.overflow='hidden'}
-function closeSidebar(){document.getElementById('sidebar').style.display='';document.getElementById('overlay').style.display='';document.body.style.overflow=''}
-function checkHamburger(){document.getElementById('hamburger').style.display=window.innerWidth>768?'none':'flex'}
-checkHamburger();window.addEventListener('resize',checkHamburger);
-function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
-function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
-function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
-function closeMoreSheet(){document.getElementById('moreSheet').classList.remove('show');document.getElementById('moreOverlay').classList.remove('show');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSidebar();closePremiumModal();closeMoreSheet()}});
-</script>
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/premium.js"></script>
 <script>
-async function checkNotifications(){
-  const {data:{user}}=await _sb.auth.getUser();if(!user)return;
-  const {data:prof}=await _sb.from('profiles').select('subscription_tier').eq('id',user.id).single();
-  const tier=prof?.subscription_tier||'free';
-  const now=new Date().toISOString();
-  const {data}=await _sb.from('notifications').select('*').or(`target.eq.all,target.eq.${tier}`).or(`expires_at.is.null,expires_at.gt.${now}`).order('created_at',{ascending:false}).limit(3);
-  if(!data?.length)return;
-  const clrs={info:'#2563eb',success:'#15803d',warning:'#b45309'};
-  const popup=document.getElementById('notifPopup');
-  popup.style.display='flex';
-  popup.innerHTML=data.map(n=>`<div style="background:#fff;border:1px solid #e4e8f0;border-radius:10px;padding:14px 16px;box-shadow:0 4px 16px rgba(30,40,115,.1);border-left:3px solid ${clrs[n.type]||'#2563eb'};max-width:320px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-size:13px;color:#1a1f36">${n.title}</b><button onclick="this.closest('div[style]').remove()" style="background:none;border:none;cursor:pointer;color:#9aa3bf;font-size:18px;line-height:1">×</button></div><p style="font-size:12px;color:#6b7694;margin:0">${n.message}</p></div>`).join('');
-  setTimeout(()=>{popup.style.display='none'},6000);
+/* ═══════════════════════════════════════════════════════════════
+   Supabase — mavjud loyihangizdagi qiymatlar (anon key ochiq bo'lishi normal).
+   HAQIQIY himoya RLS orqali server tomonda (pastdagi SQL).
+   ═══════════════════════════════════════════════════════════════ */
+const SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
+const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+/* ═══════════════════════════════════════════════════════════════
+   SCHEMAS — har bir bo'lim aynan o'sha sahifadagi shaklga mos.
+   kind:'quiz'  → savol + variantlar + to'g'ri javob (+ ixtiyoriy izoh)
+   kind:'record'→ maydonlar ro'yxati (text/textarea/number/list/tags)
+   target       → JS export'da hosil bo'ladigan o'zgaruvchi
+   ═══════════════════════════════════════════════════════════════ */
+const SCHEMAS={
+  test:{label:'Test savollari',icon:'ti-flask',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`QUESTIONS.${cat||'CATEGORY'}`,page:'pages/test.html'},
+  vaziyat:{label:'Vaziyatli savollar',icon:'ti-bulb',kind:'quiz',explanation:false,
+        target:()=>'var ALL_Q',page:'pages/vaziyat.html'},
+  qaror:{label:'Qaror / normativ',icon:'ti-gavel',kind:'quiz',explanation:false,
+        target:()=>'var ALL_Q',page:'pages/qarorlar.html'},
+  qoshiq:{label:"Qo'shiqlar",icon:'ti-music',kind:'record',target:()=>'var SONGS',page:'pages/qoshiqlar.html',
+    fields:[
+      {k:'title',l:'Nomi',t:'text',req:1},
+      {k:'tur',l:'Turi',t:'text',ph:"O'zbek xalq"},
+      {k:'soha',l:'Soha',t:'text',ph:'Nutq (3-soha)'},
+      {k:'yosh',l:'Yosh',t:'text',ph:'2-4 yosh'},
+      {k:'mavzu',l:'Mavzu',t:'text',ph:'Oila'},
+      {k:'note',l:'Izoh',t:'text',ph:'Uxlash vaqtida'},
+      {k:'lyrics',l:"Qo'shiq matni",t:'textarea',req:1},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-music'},
+      {k:'color',l:'Rang',t:'text',adv:1,def:'#7c3aed'},
+      {k:'bg',l:'Fon rang',t:'text',adv:1,def:'#f5f3ff'},
+    ]},
+  hikoya:{label:'Hikoya / ertak',icon:'ti-book',kind:'record',target:()=>'var STORIES',page:'pages/qoshiqlar.html',
+    fields:[
+      {k:'title',l:'Nomi',t:'text',req:1},
+      {k:'tur',l:'Turi',t:'text',ph:"O'zbek xalq ertagi"},
+      {k:'yosh',l:'Yosh',t:'text',ph:'3-5 yosh'},
+      {k:'mavzu',l:'Mavzu',t:'text',ph:'Hamkorlik, jasorat'},
+      {k:'matn',l:'Matn (HTML yoki oddiy)',t:'textarea',req:1,rows:6},
+      {k:'moral',l:'Xulosa / saboq',t:'textarea'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-book'},
+      {k:'color',l:'Rang',t:'text',adv:1,def:'#15803d'},
+      {k:'bg',l:'Fon rang',t:'text',adv:1,def:'#f0fdf4'},
+    ]},
+  oyin:{label:"O'yinlar",icon:'ti-puzzle',kind:'record',target:()=>'var games',page:'pages/oyinlar.html',
+    fields:[
+      {k:'name',l:'Nomi',t:'text',req:1},
+      {k:'cat',l:'Turkum',t:'text',ph:'Tabiat / Matematik / Sensor'},
+      {k:'age',l:'Yosh',t:'text',ph:'4-5 yosh'},
+      {k:'players',l:'Ishtirokchilar',t:'text',ph:'4-8 bola'},
+      {k:'time',l:'Davomiyligi',t:'text',ph:'12-15 daq'},
+      {k:'soha',l:'Soha',t:'text',ph:'4-soha: Bilish jarayonlari'},
+      {k:'goal',l:'Maqsad',t:'textarea',req:1},
+      {k:'materials',l:'Kerakli materiallar',t:'textarea'},
+      {k:'rules',l:"O'yin qoidalari (har biri alohida qator)",t:'list',req:1},
+      {k:'variant',l:"Variant / murakkablashtirish",t:'textarea'},
+      {k:'result',l:'Kutiladigan natija',t:'textarea'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-cards'},
+      {k:'ic',l:'Rang kodi (blue/green/amber/purple)',t:'text',adv:1,def:'blue'},
+    ]},
+  mashgulot:{label:"Mashg'ulotlar",icon:'ti-brush',kind:'record',target:()=>'var acts',page:'pages/mashgulot.html',
+    fields:[
+      {k:'name',l:'Nomi',t:'text',req:1},
+      {k:'desc',l:'Tavsif',t:'textarea',req:1},
+      {k:'steps',l:'Bosqichlar',t:'text',ph:"Qadam 1 → Qadam 2 → Qadam 3"},
+      {k:'soha',l:'Soha (raqam)',t:'number',def:5},
+      {k:'ages',l:'Yosh guruhlari (vergul bilan)',t:'tags',ph:'3-4, 4-5'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-brush'},
+    ]},
+  haftalik:{label:'Haftalik mavzular',icon:'ti-books',kind:'record',target:()=>'const baseWeeks',page:'pages/haftalik.html',
+    fields:[
+      {k:'n',l:'Hafta raqami',t:'number',req:1},
+      {k:'t',l:'Mavzu',t:'text',req:1},
+      {k:'soha',l:'Sohalar (raqamlar, vergul bilan)',t:'tags-num',ph:'2, 3'},
+    ]},
+};
+
+/* ── Holat ── */
+let CURRENT_USER=null, TYPE='test', CURRENT_CAT='', EDIT_ID=null, TABLE_OK=true;
+let CATEGORIES={}, RECORDS=[];
+
+/* ── Toast ── */
+function toast(msg,type){const t=document.getElementById('toast');t.className='toast '+(type||'')+' show';
+  t.innerHTML=(type==='err'?'<i class="ti ti-alert-circle"></i>':type==='ok'?'<i class="ti ti-circle-check"></i>':'')+msg;
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3200);}
+function escapeHtml(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ═══════ GATE ═══════ */
+async function gate(){
+  // Admin bo'lmagan har qanday holatda — sassiz yo'naltiramiz.
+  // Hech qanday "admin" ekran ko'rsatilmaydi, ya'ni sahifa borligi bilinmaydi.
+  // replace() ishlatiladi: "orqaga" tugmasi bilan ham qaytib bo'lmaydi.
+  try{
+    const {data:{session}}=await _sb.auth.getSession();
+    if(!session){ window.location.replace('index.html'); return; }
+    CURRENT_USER=session.user;
+    const {data:profile,error}=await _sb.from('profiles').select('full_name,role').eq('id',session.user.id).single();
+    if(error || !profile || profile.role!=='admin'){ window.location.replace('dashboard.html'); return; }
+
+    // Ruxsat bor — panelni ochamiz
+    const name=profile.full_name||'Admin';
+    document.getElementById('who-nm').textContent=name;
+    document.getElementById('who-av').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').classList.add('show');
+    renderNav();
+    await selectType('test');
+  }catch(e){
+    window.location.replace('dashboard.html');
+  }
 }
-window.addEventListener('load',async()=>{
-  const auth=await initAuth(true);if(!auth)return;
-  if(typeof fillNav==='function')fillNav();
-  const profile=auth.profile;
-  const name=getUserName();
-  document.getElementById('hero-name').textContent=name;
-  document.getElementById('sb-name').textContent=name;
-  document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
-  const proUser=isPro(),corpUser=isCorporate();
-  const planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
-  document.getElementById('hero-plan').innerHTML=proUser?`<i class="ti ti-crown"></i> ${planLabel}`:`<i class="ti ti-free-rights"></i> ${planLabel}`;
-  if(proUser)document.getElementById('hero-plan').className='plan-pill pro';
-  document.getElementById('sb-plan').textContent=planLabel+' tarif';
-  const banner=document.getElementById('premiumBanner');
-  if(!proUser){banner.removeAttribute('style');banner.style.display='flex';}else{banner.style.display='none';}
-  if(proUser)document.getElementById('test-limit-txt').textContent='Cheksiz';
-  const proCards={'card-games':{href:'pages/oyinlar.html'},'card-songs':{href:'pages/qoshiqlar.html'},'card-activities':{href:'pages/mashgulot.html'},'card-attestation':{href:'pages/attestatsiya.html'},'card-portfolio':{href:'pages/portfolio.html'}};
-  Object.entries(proCards).forEach(([id,cfg])=>{
-    const el=document.getElementById(id);if(!el)return;
-    if(proUser){const lt=el.querySelector('.lock-tag');if(lt)lt.style.display='none';el.classList.remove('locked');el.onclick=()=>window.location.href=cfg.href;}
-    else{el.onclick=openPremiumModal;}
+async function doLogout(){await _sb.auth.signOut();window.location.href='index.html';}
+
+/* ═══════ NAV ═══════ */
+function renderNav(){
+  const box=document.getElementById('nav-types');
+  box.innerHTML=Object.entries(SCHEMAS).map(([k,s])=>
+    `<button class="nav-item${k===TYPE?' active':''}" data-type="${k}" onclick="selectType('${k}')">
+       <i class="ti ${s.icon}"></i> ${s.label}
+     </button>`).join('');
+}
+async function selectType(t){
+  TYPE=t; EDIT_ID=null; CURRENT_CAT='';
+  document.querySelectorAll('#nav-types .nav-item').forEach(b=>b.classList.toggle('active',b.dataset.type===t));
+  const s=SCHEMAS[t];
+  document.getElementById('page-title').textContent=s.label;
+  document.getElementById('page-sub').textContent=s.kind==='quiz'
+    ? 'Savol, variantlar va to\'g\'ri javobni kiriting.'
+    : 'Maydonlarni to\'ldiring va saqlang.';
+  document.getElementById('form-title').textContent='Yangi yozuv';
+  document.getElementById('cat-block').style.display=s.hasCategory?'block':'none';
+  document.getElementById('export-box').classList.remove('show');
+  document.getElementById('sql-box').classList.remove('show');
+  buildForm();
+  if(s.hasCategory){await loadCategories();}
+  await loadRecords();
+}
+
+/* ═══════ FORM BUILDER ═══════ */
+function buildForm(){
+  const s=SCHEMAS[TYPE], wrap=document.getElementById('fields');
+  if(s.kind==='quiz'){
+    let html=`<label class="lbl">Savol matni<span class="req">*</span></label>
+      <textarea class="inp" id="q-text" placeholder="Savolni yozing"></textarea>
+      <label class="lbl">Javob variantlari — to'g'risini belgilang<span class="req">*</span></label>
+      <div id="opts-wrap"></div>
+      <button class="btn-add-opt" onclick="addOption()"><i class="ti ti-plus"></i> Variant qo'shish</button>
+      <div class="opt-hint"><i class="ti ti-circle-check"></i> Yashil doirani bosib to'g'ri javobni belgilang.</div>`;
+    if(s.explanation){
+      html+=`<label class="lbl">Izoh (ixtiyoriy)</label>
+        <textarea class="inp" id="q-exp" placeholder="To'g'ri javob nega to'g'ri ekanini tushuntiring."></textarea>`;
+    }
+    wrap.innerHTML=html;
+    const ow=document.getElementById('opts-wrap');ow.innerHTML='';
+    addOption();addOption();addOption();addOption();
+  }else{
+    const main=s.fields.filter(f=>!f.adv), adv=s.fields.filter(f=>f.adv);
+    let html=main.map(fieldHtml).join('');
+    if(adv.length){
+      html+=`<div class="adv-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+        <i class="ti ti-chevron-right"></i> Qo'shimcha (ko'rinish sozlamalari)</div>
+        <div class="adv-box">${adv.map(fieldHtml).join('')}</div>`;
+    }
+    wrap.innerHTML=html;
+    // list-field default rows
+    s.fields.filter(f=>f.t==='list').forEach(f=>{ if(!document.querySelectorAll(`#list-${f.k} .li-row`).length){addListItem(f.k);addListItem(f.k);} });
+  }
+}
+function fieldHtml(f){
+  const req=f.req?'<span class="req">*</span>':'';
+  const lbl=`<label class="lbl">${f.l}${req}</label>`;
+  if(f.t==='textarea') return `${lbl}<textarea class="inp" id="f-${f.k}" rows="${f.rows||3}" placeholder="${f.ph||''}"></textarea>`;
+  if(f.t==='number')   return `${lbl}<input class="inp" id="f-${f.k}" type="number" value="${f.def??''}" placeholder="${f.ph||''}"/>`;
+  if(f.t==='tags'||f.t==='tags-num') return `${lbl}<input class="inp" id="f-${f.k}" placeholder="${f.ph||'vergul bilan'}"/><div class="field-hint">Vergul bilan ajrating.</div>`;
+  if(f.t==='list') return `${lbl}<div id="list-${f.k}"></div>
+      <button class="btn-add-opt" onclick="addListItem('${f.k}')"><i class="ti ti-plus"></i> Qator qo'shish</button>`;
+  return `${lbl}<input class="inp" id="f-${f.k}" value="${f.def?escapeHtml(f.def):''}" placeholder="${f.ph||''}"/>`;
+}
+function addListItem(key,val){
+  const box=document.getElementById('list-'+key);
+  const row=document.createElement('div');row.className='li-row';
+  row.innerHTML=`<input class="inp" value="${(val||'').replace(/"/g,'&quot;')}" placeholder="Qatorni yozing"/>
+    <button class="del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  box.appendChild(row);
+}
+
+/* quiz options */
+function addOption(text,isCorrect){
+  const wrap=document.getElementById('opts-wrap');if(!wrap)return;
+  if(wrap.children.length>=6){toast('Ko\'pi bilan 6 ta variant','err');return;}
+  const row=document.createElement('div');row.className='opt-row';
+  row.innerHTML=`<div class="radio${isCorrect?' on':''}" onclick="markCorrect(this)" title="To'g'ri javob"></div>
+    <input class="inp" placeholder="Variant matni" value="${(text||'').replace(/"/g,'&quot;')}"/>
+    <button class="del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  wrap.appendChild(row);
+}
+function markCorrect(el){document.querySelectorAll('#opts-wrap .radio').forEach(r=>r.classList.remove('on'));el.classList.add('on');}
+
+/* ═══════ CATEGORIES (test) ═══════ */
+async function loadCategories(){
+  if(!TABLE_OK){renderCatSelect();return;}
+  const {data,error}=await _sb.from('content').select('category,category_title').eq('type','test');
+  if(error){handleNoTable();renderCatSelect();return;}
+  CATEGORIES={};
+  (data||[]).forEach(r=>{if(r.category)CATEGORIES[r.category]=r.category_title||r.category;});
+  renderCatSelect();
+}
+function renderCatSelect(){
+  const sel=document.getElementById('cat-select');if(!sel)return;const cur=sel.value;
+  sel.innerHTML='<option value="">— Toifani tanlang —</option>'+
+    Object.entries(CATEGORIES).map(([c,t])=>`<option value="${c}">${escapeHtml(t)}</option>`).join('');
+  sel.value=cur;
+}
+function toggleNewCat(){const b=document.getElementById('new-cat-box');b.style.display=b.style.display==='none'?'block':'none';}
+function syncCatId(){document.getElementById('new-cat-id').value=slugify(document.getElementById('new-cat-title').value);}
+function slugify(s){return (s||'').toLowerCase().trim().replace(/['`']/g,'').replace(/[^a-z0-9\s_]/g,'').replace(/\s+/g,'_').slice(0,40);}
+async function onCatChange(){CURRENT_CAT=document.getElementById('cat-select').value;document.getElementById('new-cat-box').style.display='none';await loadRecords();}
+
+/* ═══════ READ FORM ═══════ */
+function readForm(){
+  const s=SCHEMAS[TYPE];
+  if(s.kind==='quiz'){
+    const rows=[...document.querySelectorAll('#opts-wrap .opt-row')];
+    const opts=rows.map(r=>r.querySelector('input').value.trim());
+    const ans=rows.findIndex(r=>r.querySelector('.radio').classList.contains('on'));
+    const data={q:document.getElementById('q-text').value.trim(),opts,ans};
+    if(s.explanation)data.exp=(document.getElementById('q-exp')?.value||'').trim();
+    return {data};
+  }
+  const data={};
+  s.fields.forEach(f=>{
+    if(f.t==='list'){
+      data[f.k]=[...document.querySelectorAll(`#list-${f.k} .li-row input`)].map(i=>i.value.trim()).filter(Boolean);
+    }else if(f.t==='tags'){
+      data[f.k]=(document.getElementById('f-'+f.k).value||'').split(',').map(x=>x.trim()).filter(Boolean);
+    }else if(f.t==='tags-num'){
+      data[f.k]=(document.getElementById('f-'+f.k).value||'').split(',').map(x=>parseInt(x.trim(),10)).filter(n=>!isNaN(n));
+    }else if(f.t==='number'){
+      const v=document.getElementById('f-'+f.k).value;data[f.k]=v===''?(f.def??null):parseInt(v,10);
+    }else{
+      let v=(document.getElementById('f-'+f.k).value||'').trim();
+      if(!v&&f.def)v=f.def;data[f.k]=v;
+    }
   });
-  const xp=profile?.xp||0;
-  document.getElementById('stat-xp').textContent=xp;
-  const {data:allTests}=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
-  if(allTests&&allTests.length){const count=allTests.length,avg=Math.round(allTests.reduce((s,t)=>s+(t.percentage||0),0)/count);document.getElementById('stat-test').textContent=count;document.getElementById('stat-avg').textContent=avg+'%';}
-  const lv=getLevel(xp);
-  document.getElementById('xp-label').textContent=lv.lvl+'-daraja: '+lv.title;
-  document.getElementById('hero-xp-badge').innerHTML=`<i class="ti ti-medal"></i> ${lv.lvl}-daraja`;
-  const prevMin=[0,0,80,200,400,800][lv.lvl-1]||0;
-  const pct=lv.next<9999?Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100):100;
-  document.getElementById('xp-fill').style.width=pct+'%';
-  document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
-  const {data:tests}=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
-  if(tests&&tests.length){const ul=document.getElementById('lastTests');ul.innerHTML='';tests.forEach(t=>{const pct=t.percentage??t.score??0,cls=pct>=80?'high':pct>=60?'mid':'low';const date=new Date(t.created_at).toLocaleDateString('uz-UZ'),tname=t.test_name||t.category||'Test';const row=document.createElement('div');row.className='test-row';row.innerHTML=`<div><div class="test-name">${tname}</div><div class="test-date">${date}</div></div><div class="test-score ${cls}">${pct}%</div>`;ul.appendChild(row);});}
-  await checkNotifications();
-});
+  return {data};
+}
+function validate(data){
+  const s=SCHEMAS[TYPE];
+  if(s.kind==='quiz'){
+    if(!data.q)return 'Savol matnini kiriting';
+    const filled=data.opts.filter(o=>o.length);
+    if(filled.length<2)return 'Kamida 2 ta variant kiriting';
+    if(data.ans<0||!data.opts[data.ans])return 'To\'g\'ri javobni belgilang';
+    return null;
+  }
+  for(const f of s.fields){
+    if(!f.req)continue;
+    const v=data[f.k];
+    if(f.t==='list'){if(!v||!v.length)return `"${f.l}" — kamida bitta qator kerak`;}
+    else if(v===''||v==null){return `"${f.l}" to'ldirilishi shart`;}
+  }
+  return null;
+}
+
+/* ═══════ SAVE ═══════ */
+async function saveRecord(){
+  const s=SCHEMAS[TYPE];
+  const {data}=readForm();
+
+  // category (test)
+  let cat=null,catTitle=null;
+  if(s.hasCategory){
+    const newBox=document.getElementById('new-cat-box').style.display!=='none';
+    cat=newBox?document.getElementById('new-cat-id').value.trim():document.getElementById('cat-select').value;
+    catTitle=newBox?document.getElementById('new-cat-title').value.trim():(CATEGORIES[cat]||cat);
+    if(!cat)return toast('Toifani tanlang yoki yangi toifa kiriting','err');
+  }
+
+  // quiz: bo'sh variantlarni tozalash + ans indeksini moslash
+  if(s.kind==='quiz'){
+    const clean=[];let ans=0;
+    data.opts.forEach((o,i)=>{if(o.length){if(i===data.ans)ans=clean.length;clean.push(o);}});
+    data.opts=clean;data.ans=ans;
+  }
+  const err=validate(data);if(err)return toast(err,'err');
+
+  const row={type:TYPE,category:cat,category_title:catTitle,data};
+  const btn=document.getElementById('save-btn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Saqlanmoqda…';
+
+  if(!TABLE_OK){
+    if(s.hasCategory&&CURRENT_CAT!==cat){CURRENT_CAT=cat;CATEGORIES[cat]=catTitle;RECORDS=[];renderCatSelect();document.getElementById('cat-select').value=cat;}
+    if(EDIT_ID!==null&&typeof EDIT_ID==='number'){RECORDS[EDIT_ID]=row;}else{RECORDS.push(row);}
+    renderList();resetForm();btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';
+    toast('Saqlandi (mahalliy). SQL jadval yaratilsa bazaga yoziladi.','ok');return;
+  }
+
+  let res;
+  if(EDIT_ID!==null){res=await _sb.from('content').update(row).eq('id',EDIT_ID);}
+  else{res=await _sb.from('content').insert({...row,created_by:CURRENT_USER.id});}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';
+  if(res.error)return toast('Saqlashda xatolik: '+res.error.message,'err');
+  toast(EDIT_ID!==null?'Yangilandi':'Qo\'shildi','ok');
+  if(s.hasCategory){if(!CATEGORIES[cat]){CATEGORIES[cat]=catTitle;renderCatSelect();}CURRENT_CAT=cat;document.getElementById('cat-select').value=cat;}
+  resetForm();await loadRecords();
+}
+function resetForm(){EDIT_ID=null;document.getElementById('form-title').textContent='Yangi yozuv';buildForm();
+  document.getElementById('save-btn').innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';}
+
+/* ═══════ LIST ═══════ */
+function handleNoTable(){TABLE_OK=false;document.getElementById('table-warn').classList.add('show');}
+async function loadRecords(){
+  const s=SCHEMAS[TYPE];
+  if(s.hasCategory&&!CURRENT_CAT){RECORDS=[];renderList();return;}
+  if(!TABLE_OK){renderList();return;}
+  let q=_sb.from('content').select('*').eq('type',TYPE).order('created_at',{ascending:true});
+  if(s.hasCategory)q=q.eq('category',CURRENT_CAT);
+  const {data,error}=await q;
+  if(error){handleNoTable();renderList();return;}
+  RECORDS=data||[];renderList();updateNavCounts();
+}
+async function updateNavCounts(){/* soddalik uchun joriy tur sonini ko'rsatamiz */}
+function recTitle(r){
+  const d=r.data||{};
+  return d.q||d.title||d.name||d.t||('#'+(d.n||''))||'(nomsiz)';
+}
+function renderList(){
+  const s=SCHEMAS[TYPE],list=document.getElementById('rec-list');
+  document.getElementById('rec-count').textContent=RECORDS.length+' ta';
+  if(!RECORDS.length){
+    const hint=s.hasCategory&&!CURRENT_CAT?'Toifani tanlang.':'Hali yozuv yo\'q. Chapdan qo\'shing.';
+    list.innerHTML=`<div class="empty"><i class="ti ti-inbox"></i><p>${hint}</p></div>`;return;
+  }
+  list.innerHTML=RECORDS.map((r,i)=>{
+    const d=r.data||{};
+    let body='';
+    if(s.kind==='quiz'){
+      body='<ul class="q-opts">'+(d.opts||[]).map((o,oi)=>
+        `<li class="${oi===d.ans?'correct':''}"><i class="ti ${oi===d.ans?'ti-circle-check-filled':'ti-circle'}"></i>${escapeHtml(o)}</li>`).join('')+'</ul>'+
+        (d.exp?`<div class="q-exp"><i class="ti ti-info-circle" style="font-size:12px"></i> ${escapeHtml(d.exp)}</div>`:'');
+    }else{
+      const meta=s.fields.filter(f=>f.t!=='textarea'&&f.t!=='list'&&!f.adv&&d[f.k]!=null&&d[f.k]!=='')
+        .map(f=>`<span>${escapeHtml(f.l)}: ${escapeHtml(Array.isArray(d[f.k])?d[f.k].join(', '):d[f.k])}</span>`).join('');
+      body=meta?`<div class="q-meta">${meta}</div>`:'';
+    }
+    return `<div class="q-item"><div class="q-top">
+      <div class="q-text">${i+1}. ${escapeHtml(recTitle(r))}</div>
+      <div class="q-tools">
+        <button onclick="editRecord(${i})" title="Tahrirlash"><i class="ti ti-pencil"></i></button>
+        <button class="dl" onclick="deleteRecord(${i})" title="O'chirish"><i class="ti ti-trash"></i></button>
+      </div></div>${body}</div>`;
+  }).join('');
+}
+function editRecord(i){
+  const s=SCHEMAS[TYPE],r=RECORDS[i],d=r.data||{};
+  EDIT_ID=TABLE_OK?r.id:i;
+  document.getElementById('form-title').textContent='Tahrirlash';
+  buildForm();
+  if(s.kind==='quiz'){
+    document.getElementById('q-text').value=d.q||'';
+    if(s.explanation&&document.getElementById('q-exp'))document.getElementById('q-exp').value=d.exp||'';
+    const ow=document.getElementById('opts-wrap');ow.innerHTML='';
+    (d.opts||[]).forEach((o,oi)=>addOption(o,oi===d.ans));
+  }else{
+    s.fields.forEach(f=>{
+      const v=d[f.k];
+      if(f.t==='list'){const box=document.getElementById('list-'+f.k);box.innerHTML='';(v||[]).forEach(x=>addListItem(f.k,x));if(!(v||[]).length)addListItem(f.k);}
+      else if(f.t==='tags'||f.t==='tags-num'){document.getElementById('f-'+f.k).value=(v||[]).join(', ');}
+      else{document.getElementById('f-'+f.k).value=v??'';}
+    });
+  }
+  document.getElementById('save-btn').innerHTML='<i class="ti ti-check"></i> Yangilash';
+  window.scrollTo({top:0,behavior:'smooth'});toast('Tahrirlash rejimi','');
+}
+async function deleteRecord(i){
+  const r=RECORDS[i];
+  if(!confirm('Bu yozuvni o\'chirishni tasdiqlaysizmi?'))return;
+  if(!TABLE_OK){RECORDS.splice(i,1);renderList();toast('O\'chirildi (mahalliy)','ok');return;}
+  const {error}=await _sb.from('content').delete().eq('id',r.id);
+  if(error)return toast('O\'chirishda xatolik','err');
+  toast('O\'chirildi','ok');await loadRecords();
+}
+
+/* ═══════ EXPORT JS (sahifa formatida) ═══════ */
+function jsObj(d,keys){
+  const parts=keys.map(k=>{
+    let v=d[k];
+    if(v===undefined)v=null;
+    return `${k}:${JSON.stringify(v)}`;
+  });
+  return '{'+parts.join(', ')+'}';
+}
+function exportJS(){
+  const box=document.getElementById('export-box');
+  document.getElementById('sql-box').classList.remove('show');
+  const s=SCHEMAS[TYPE];
+  if(!RECORDS.length)return toast('Avval yozuv bo\'lsin','err');
+  if(s.hasCategory&&!CURRENT_CAT)return toast('Toifani tanlang','err');
+
+  let items='';
+  if(s.kind==='quiz'){
+    const keys=s.explanation?['q','opts','ans','exp']:['q','opts','ans'];
+    items=RECORDS.map(r=>'  '+jsObj(r.data,keys)).join(',\n');
+  }else{
+    const keys=s.fields.map(f=>f.k);
+    items=RECORDS.map(r=>'  '+jsObj(r.data,keys)).join(',\n');
+  }
+  const varName=s.target(CURRENT_CAT);
+  const code=`${varName} = [\n${items}\n];`;
+  box.textContent=code;box.classList.toggle('show');
+  if(box.classList.contains('show')){
+    navigator.clipboard?.writeText(code).then(
+      ()=>toast(`Nusxalandi — ${s.page} ga qo'ying`,'ok'),
+      ()=>toast('Kod tayyor — qo\'lda nusxalang',''));
+  }
+}
+
+/* ═══════ SQL migration ═══════ */
+function toggleSQL(){
+  const box=document.getElementById('sql-box');
+  document.getElementById('export-box').classList.remove('show');
+  box.textContent=`-- ═══ MaktabgachaHub: universal 'content' jadvali + himoya (RLS) ═══
+-- Supabase → SQL Editor'ga qo'ying va bir marta ishga tushiring.
+
+create table if not exists public.content (
+  id             uuid primary key default gen_random_uuid(),
+  type           text not null,        -- test, vaziyat, qaror, qoshiq, hikoya, oyin, mashgulot, haftalik
+  category       text,                 -- test uchun toifa kodi (masalan: ilk_qadam)
+  category_title text,
+  data           jsonb not null,       -- yozuvning sahifadagi aynan shakli
+  sort           int default 0,
+  created_by     uuid references auth.users(id),
+  created_at     timestamptz default now()
+);
+
+create index if not exists content_type_idx on public.content(type);
+create index if not exists content_cat_idx  on public.content(type, category);
+
+alter table public.content enable row level security;
+
+-- Har qanday tizimga kirgan foydalanuvchi kontentni O'QIY oladi
+create policy "content_read"
+  on public.content for select
+  to authenticated using (true);
+
+-- Faqat ADMIN yoza/tahrirlab/o'chira oladi (server tomonda tekshiriladi)
+create policy "content_admin_write"
+  on public.content for all
+  to authenticated
+  using   (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'));
+
+-- O'zingizni admin qiling (UUID'ni almashtiring):
+-- update public.profiles set role='admin' where id='SIZNING_USER_ID';`;
+  box.classList.toggle('show');
+  if(box.classList.contains('show')){
+    navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});
+  }
+}
+
+gate();
 </script>
 </body>
 </html>
