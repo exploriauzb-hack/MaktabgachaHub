@@ -40,8 +40,6 @@ async function initAuth(requireAuth = true) {
     await _sb.from('profiles').upsert({
       id: _currentUser.id,
       full_name: name,
-      role: 'teacher',
-      subscription_tier: 'free',
       xp: 0
     })
 
