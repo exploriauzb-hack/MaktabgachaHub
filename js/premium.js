@@ -229,9 +229,7 @@ async function activateSubscription(userId, planId) {
   })
 
   await _sb
-    .from('profiles')
-    .update({ subscription_tier: planId })
-    .eq('id', userId)
+    .rpc('set_subscription', { p_user: userId, p_tier: planId })
 }
 
 // ── Obuna muddatini tekshirish ──
@@ -255,12 +253,8 @@ async function checkSubscriptionExpiry() {
   const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24))
 
   if (daysLeft <= 0) {
-    await _sb.from('profiles')
-      .update({ subscription_tier: 'free' })
-      .eq('id', _currentUser.id)
-    await _sb.from('subscriptions')
-      .update({ status: 'expired' })
-      .eq('user_id', _currentUser.id)
+    await _sb.rpc('expire_own_subscription')
+    if (_currentProfile) _currentProfile.subscription_tier = 'free'
     showToast('Obuna muddati tugadi. Yangilang!', 'err')
   } else if (daysLeft <= 3) {
     showToast(`⚠️ Obuna ${daysLeft} kundan keyin tugaydi!`, 'err')
