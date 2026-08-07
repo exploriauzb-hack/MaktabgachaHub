@@ -252,7 +252,7 @@ var DOCS=[
   {id:3,name:"Vazirlik markaziy apparati, hududiy bo'linmalari nizomlari va xodimlarning lavozim yo'riqnomalarini yangidan tasdiqlash to'g'risida",sub:"334-son buyruq • 2024-yil 16-oktabr • Maktabgacha va maktab ta'limi vaziri",free:false,qrange:[30,45]},
   {id:4,name:"Davlat maktabgacha ta'lim tashkiloti xodimlarining lavozim yo'riqnomalari",sub:"334-son buyruq, 44-ilova • 2024-yil 16-oktabr • MMTV",free:false,qrange:[45,60]},
   {id:5,name:"5-hujjat",sub:"Tez kunda qo'shiladi",free:false,qrange:[115,115]},
-  {id:6,name:"Maktabgacha ta'lim va tarbiya to'g'risida (595-son Qonun, 1-20-moddalar)",sub:"O'zbekiston Respublikasi Qonuni • 595-son • vaziyatli testlar",free:true,qrange:[60,115]}
+  {id:6,name:"Maktabgacha ta'lim va tarbiya to'g'risida (595-son Qonun, 1-20-moddalar)",sub:"O'zbekiston Respublikasi Qonuni • 595-son • vaziyatli testlar",free:true,qrange:[60,115],min:40}
 ];
 
 var ALL_Q=[
@@ -414,7 +414,7 @@ function buildDocGrid(proUser){
   g.innerHTML=DOCS.map(function(d,i){
     var locked=!d.free&&!proUser;
     var iconCls=locked?'purple':'blue';
-    var hasQuestions=d.qrange&&ALL_Q.slice(d.qrange[0],d.qrange[1]).length>0;
+    var hasQuestions=(d.questions&&d.questions.length>0) || (d.qrange&&ALL_Q.slice(d.qrange[0],d.qrange[1]).length>0);
     var actions='';
     if(locked){
       actions='<button class="dc-btn lockbtn" onclick="openProModal()"><i class="ti ti-crown"></i> PRO orqali ochish</button>';
@@ -441,13 +441,15 @@ function buildDocGrid(proUser){
 
 function startDoc(idx){
   curDoc=DOCS[idx];
-  questions=ALL_Q.slice(curDoc.qrange[0],curDoc.qrange[1]);
+  questions = curDoc.questions
+            ? curDoc.questions.slice()
+            : ALL_Q.slice(curDoc.qrange[0],curDoc.qrange[1]);
   curIdx=0;score=0;
   document.getElementById('docScreen').style.display='none';
   document.getElementById('testScreen').style.display='block';
   document.getElementById('th-title').textContent=curDoc.id+'-hujjat testi';
   document.getElementById('th-sub').textContent=curDoc.name+' — '+questions.length+' ta savol';
-  startTimer(15*60);showQ();
+  startTimer((curDoc.min||15)*60);showQ();
 }
 
 function startTimer(sec){
@@ -528,6 +530,32 @@ function goDocs(){clearInterval(timerInt);document.getElementById('resultScreen'
 <script src="../js/auth.js"></script>
 <script src="../js/premium.js"></script>
 <script>
+// ── Admin panelda qo'shilgan hujjatlarni bazadan yuklaydi ──
+async function loadDBDocs(type){
+  if(typeof _sb==='undefined' || !_sb) return;
+  try{
+    var res=await _sb.from('content').select('category,category_title,data').eq('type',type);
+    if(res.error || !res.data) return;
+    var by={};
+    res.data.forEach(function(r){
+      if(!r.category || !r.data) return;
+      if(!by[r.category]) by[r.category]={title:r.category_title||r.category, qs:[]};
+      by[r.category].qs.push(r.data);
+    });
+    var nextId=DOCS.length+1;
+    Object.keys(by).forEach(function(k){
+      DOCS.push({
+        id: nextId++,
+        name: by[k].title,
+        sub: by[k].qs.length+' ta savol • Bepul',
+        free: true,
+        min: Math.max(15, Math.ceil(by[k].qs.length * 0.75)),
+        questions: by[k].qs
+      });
+    });
+  }catch(e){ console.warn('baza hujjatlari:',e); }
+}
+
 window.addEventListener('load', async function() {
   var proUser = false;
   try {
@@ -547,6 +575,7 @@ window.addEventListener('load', async function() {
   } catch(e) {
     console.error('Auth xato:', e);
   }
+  await loadDBDocs('qaror');
   buildDocGrid(proUser);
 });
 </script>
