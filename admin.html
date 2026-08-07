@@ -425,18 +425,41 @@ function escapeHtml(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').repla
 
 /* ═══════ GATE ═══════ */
 async function gate(){
-  // Admin bo'lmagan har qanday holatda — sassiz yo'naltiramiz.
-  // Hech qanday "admin" ekran ko'rsatilmaydi, ya'ni sahifa borligi bilinmaydi.
-  // replace() ishlatiladi: "orqaga" tugmasi bilan ham qaytib bo'lmaydi.
+  // Admin tekshiruvi endi is_admin() RPC'ga asoslanadi (ishlashi isbotlangan).
+  // Profil o'qishdagi single() xatolari sabab bejiz qaytarib yubormaydi.
   try{
     const {data:{session}}=await _sb.auth.getSession();
-    if(!session){ window.location.replace('index.html'); return; }
+    if(!session){ console.warn('[admin] session yo\'q → index.html'); window.location.replace('index.html'); return; }
     CURRENT_USER=session.user;
-    const {data:profile,error}=await _sb.from('profiles').select('full_name,role').eq('id',session.user.id).single();
-    if(error || !profile || profile.role!=='admin'){ window.location.replace('dashboard.html'); return; }
 
-    // Ruxsat bor — panelni ochamiz
-    const name=profile.full_name||'Admin';
+    // 1) Asosiy: is_admin() RPC
+    let isAdmin=false;
+    try{
+      const {data,error}=await _sb.rpc('is_admin');
+      if(error){ console.warn('[admin] is_admin() xatosi:', error.message); }
+      else { isAdmin = data===true; }
+    }catch(e){ console.warn('[admin] is_admin() istisno:', e); }
+
+    // 2) Zaxira: profildan role o'qish (maybeSingle — single() xatosidan xoli)
+    if(!isAdmin){
+      try{
+        const {data,error}=await _sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();
+        if(error){ console.warn('[admin] profiles o\'qish xatosi:', error.message); }
+        else if(data && data.role==='admin'){ isAdmin=true; }
+      }catch(e){ console.warn('[admin] profiles istisno:', e); }
+    }
+
+    if(!isAdmin){
+      console.warn('[admin] Bu akkaunt admin emas → dashboard.html. user.id =', session.user.id);
+      window.location.replace('dashboard.html'); return;
+    }
+
+    // Ruxsat bor — ismni olamiz (xato bo'lsa ham panel ochiladi)
+    let name='Admin';
+    try{
+      const {data}=await _sb.from('profiles').select('full_name').eq('id',session.user.id).maybeSingle();
+      if(data && data.full_name) name=data.full_name;
+    }catch(e){}
     document.getElementById('who-nm').textContent=name;
     document.getElementById('who-av').textContent=name.charAt(0).toUpperCase();
     document.getElementById('gate').style.display='none';
@@ -444,6 +467,7 @@ async function gate(){
     renderNav();
     await selectType('test');
   }catch(e){
+    console.error('[admin] gate umumiy xatosi:', e);
     window.location.replace('dashboard.html');
   }
 }
@@ -837,6 +861,13 @@ function openBulk(){
   document.getElementById('bulk-hint').innerHTML = s.kind==='quiz'
     ? 'Har element: <code>q</code>, <code>opts</code>, <code>ans</code>'+(s.explanation?' (va ixtiyoriy <code>exp</code>)':'')+'.'
     : 'Har element — shu bo\'limning maydonlariga mos obyekt.';
+  // Demo uchun toifa = KIRISH KODI
+  var catLabels=document.querySelectorAll('#bulk-cat-block .lbl');
+  if(TYPE==='demo' && catLabels[0]){
+    catLabels[0].innerHTML='Kirish kodi (foydalanuvchi shu kod bilan kiradi, masalan <code>ILM150</code>)';
+  }else if(catLabels[0]){
+    catLabels[0].innerHTML='Toifa kodi (masalan: <code>ilk_qadam</code>, <code>variant_1</code>, <code>V1</code>)';
+  }
   document.getElementById('bulk-parsed').textContent='';
   document.getElementById('bulk-modal').style.display='flex';
   document.body.style.overflow='hidden';
