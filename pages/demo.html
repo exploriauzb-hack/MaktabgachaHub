@@ -278,8 +278,18 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 <div id="toast" class="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Kirish kodlari: qattiq yozilganlar (eskilari) + admin paneldan qo'shilganlar (bazadan).
 var CODES = { 'ILM150': 1, 'ILM250': 2, 'ILM350': 3 };
+
+// Supabase (admin panelda qo'shilgan demo variantlarini o'qish uchun)
+var SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
+var _sb = (window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null);
+
+// Bazadan yuklangan variant: { code, title, questions:[{q,opts,ans,exp}] }
+var DB_VARIANT = null;
 
 var V1 = [
   {q:"Vaziyat. MTT tarbiyachisi 'Mening oilam' mavzusidagi faoliyat davomida bolalarga oila qadriyatlari haqida suhbat o'tkazdi. Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilgan edi. Mazkur vaziyatda asosiy tarbiya tamoyili qaysi?",opts:["Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada demokratik va insonparvarlik g'oyalarining ustunligi","Tarbiyada milliy va umumbashariy qadriyatlarning ustunligi","Tarbiyani ijtimoiy hayot bilan bog'lash"],ans:2,exp:"Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilganligi bu tamoyilni to'liq ifodalaydi."},
@@ -465,18 +475,52 @@ function confirmDashboard(){
   }
   return true;
 }
-function checkCode(){
+async function checkCode(){
   var val=document.getElementById('codeInput').value.trim().toUpperCase();
   var errEl=document.getElementById('codeErr');
+  var btn=document.querySelector('.btn-enter');
+  errEl.textContent='';
+  DB_VARIANT=null;
+
+  // 1) AVVAL bazadan qidiramiz: admin panelda 'toifa kodi' = shu kirish kodi.
+  if(_sb){
+    try{
+      if(btn){btn._t=btn.textContent;btn.textContent='Tekshirilmoqda…';btn.disabled=true;}
+      var res=await _sb.from('content')
+        .select('category_title,data')
+        .eq('type','demo').ilike('category',val);
+      if(btn){btn.textContent=btn._t||'Kirish';btn.disabled=false;}
+      if(!res.error && res.data && res.data.length){
+        DB_VARIANT={
+          code:val,
+          title:(res.data[0].category_title||val),
+          questions:res.data.map(function(r){return r.data;})
+        };
+        showScreen('screen-home');
+        // Bitta karta ko'rsatamiz (bazadagi variant)
+        var c1=document.getElementById('vc-1');
+        document.getElementById('vc-2').style.display='none';
+        var vc3=document.getElementById('vc-3'); if(vc3)vc3.style.display='none';
+        c1.style.display=''; c1.classList.add('selected'); c1.setAttribute('onclick','');
+        var h=c1.querySelector('h3'); if(h) h.textContent=DB_VARIANT.title;
+        var p=c1.querySelector('p'); if(p) p.textContent='Admin panel orqali qo\'shilgan variant';
+        var meta=c1.querySelector('.var-meta'); if(meta) meta.innerHTML='<span>'+DB_VARIANT.questions.length+' savol</span><span>90 daqiqa</span>';
+        return;
+      }
+    }catch(e){
+      if(btn){btn.textContent=btn._t||'Kirish';btn.disabled=false;}
+      console.warn('demo bazadan o\'qish:',e);
+    }
+  }
+
+  // 2) Zaxira: qattiq yozilgan kodlar (ILM150/250/350)
   if(CODES[val]!==undefined){
     selectedVar=CODES[val];
-    errEl.textContent='';
     showScreen('screen-home');
-    // Faqat shu variantga tegishli kartani ko'rsat
     document.getElementById('vc-1').style.display=selectedVar===1?'':'none';
     document.getElementById('vc-2').style.display=selectedVar===2?'':'none';
-    var vc3=document.getElementById('vc-3');
-    if(vc3)vc3.style.display=selectedVar===3?'':'none';
+    var vc3b=document.getElementById('vc-3');
+    if(vc3b)vc3b.style.display=selectedVar===3?'':'none';
     selectVar(selectedVar);
   } else {
     document.getElementById('codeInput').classList.add('error');
@@ -493,11 +537,12 @@ function selectVar(n){
   if(v3)v3.classList.toggle('selected',n===3);
 }
 function startExam(){
-  var raw=selectedVar===1?V1:selectedVar===2?V2:V3;
+  var raw = DB_VARIANT ? DB_VARIANT.questions
+          : (selectedVar===1?V1:selectedVar===2?V2:V3);
   examQ=shuffle(raw);
   userAns=new Array(examQ.length).fill(null);
   currentQ=0;examActive=true;timeLeft=90*60;
-  document.getElementById('var-label').textContent=selectedVar+'-Variant';
+  document.getElementById('var-label').textContent = DB_VARIANT ? DB_VARIANT.title : (selectedVar+'-Variant');
   buildNav();renderQ();
   showScreen('screen-exam');
   startTimer();
@@ -605,7 +650,7 @@ function showCert(){
   document.getElementById('cert-score').textContent=pct+'%';
   document.getElementById('cert-stars').textContent=stars;
   document.getElementById('cert-grade').textContent=grade;
-  document.getElementById('cert-variant').textContent='📋 '+selectedVar+'-Variant | 50 ta savol';
+  document.getElementById('cert-variant').textContent='📋 '+(DB_VARIANT?DB_VARIANT.title:(selectedVar+'-Variant'))+' | '+examQ.length+' ta savol';
   document.getElementById('cert-date').textContent='📅 '+new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
   showScreen('screen-cert');
 }
@@ -617,25 +662,5 @@ function goHome(){
 }
 document.getElementById('codeInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkCode();});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* ═══ Admin panelda qo'shilgan kontentni Supabase'dan yuklaydi ═══
-   Mavjud (qattiq yozilgan) kontent ustiga qo'shiladi.
-   'content' jadvali yo'q yoki bo'sh bo'lsa — sahifa o'zgarishsiz ishlaydi. */
-(async function(){
-  try{
-    var _dbsb = (typeof _sb!=='undefined' && _sb) ? _sb
-              : (window.supabase ? window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ') : null);
-    if(!_dbsb) return;
-      { const {data,error}=await _dbsb.from('content').select('category,category_title,data').eq('type','demo');
-        if(!error&&data){ data.forEach(function(r){ if(!r||!r.data||!r.category)return;
-          if(!window[r.category]) window[r.category]=[];
-          window[r.category].push({q:r.data.q,opts:r.data.opts||[],ans:r.data.ans,exp:r.data.exp||''});
-        }); } }
-    
-  }catch(e){ console.warn('DB kontent yuklashda ogohlantirish:', e); }
-})();
-</script>
-
 </body>
 </html>
