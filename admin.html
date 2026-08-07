@@ -152,13 +152,16 @@ pre.code.show{display:block}
 .warn b{color:#78350f}
 
 @media(max-width:760px){
-  .sidebar{transform:translateX(-100%);transition:transform .2s}
+  .sidebar{width:82%;max-width:300px;transform:translateX(-100%);transition:transform .22s;z-index:60;box-shadow:0 0 40px rgba(0,0,0,.18)}
   .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0;padding:18px 16px}
+  .main{margin-left:0;padding:16px 14px}
   .mobile-bar{display:flex!important}
+  #sb-backdrop.show{display:block}
 }
+#sb-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:50}
 .mobile-bar{display:none;align-items:center;gap:12px;margin-bottom:16px}
-.mobile-bar button{width:38px;height:38px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);cursor:pointer;font-size:18px;color:var(--text2)}
+.mobile-bar button{width:40px;height:40px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);cursor:pointer;font-size:19px;color:var(--text2);flex-shrink:0}
+.mobile-bar .mb-title{font-size:16px;font-weight:700}
 </style>
 </head>
 <body>
@@ -193,10 +196,12 @@ pre.code.show{display:block}
       <button class="sb-link" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
     </div>
   </aside>
+  <div id="sb-backdrop" onclick="closeSidebar()"></div>
 
   <main class="main">
     <div class="mobile-bar">
-      <button onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
+      <button onclick="toggleSidebar()" aria-label="Menyu"><i class="ti ti-menu-2"></i></button>
+      <span class="mb-title">Admin panel</span>
     </div>
     <div class="head">
       <h1 id="page-title">Kontentni boshqarish</h1>
@@ -411,6 +416,31 @@ const SCHEMAS={
       {k:'t',l:'Mavzu',t:'text',req:1},
       {k:'soha',l:'Sohalar (raqamlar, vergul bilan)',t:'tags-num',ph:'2, 3'},
     ]},
+  mashgulot_rejalari:{label:"Mashg'ulot rejalari",icon:'ti-clipboard-list',kind:'record',target:()=>'const plans',page:'pages/mashgulot-rejalari.html',
+    fields:[
+      {k:'title',l:'Sarlavha',t:'text',req:1},
+      {k:'age',l:'Yosh guruhi',t:'text',ph:'3-4'},
+      {k:'method',l:'Metod',t:'text',ph:'montessori / reggio / froebel'},
+      {k:'soha',l:'Soha',t:'text',ph:'Bilish jarayonlarini rivojlantirish'},
+      {k:'duration',l:'Davomiyligi',t:'text',ph:'20–25 daqiqa'},
+      {k:'code',l:'Indikator kodi',t:'text',ph:'4.1.2.a'},
+      {k:'goal',l:'Maqsad',t:'textarea',req:1},
+      {k:'comps',l:'Kompetensiyalar (vergul bilan)',t:'tags',ph:'Bilish, Kommunikativ'},
+      {k:'resources',l:'Kerakli resurslar',t:'textarea'},
+      {k:'diffEasy',l:'Yengillashtirilgan variant',t:'textarea'},
+      {k:'diffHard',l:'Murakkablashtirilgan variant',t:'textarea'},
+      {k:'assess',l:'Baholash',t:'textarea'},
+      {k:'steps',l:'Bosqichlar — JSON: [{"t":"nom","time":"4 daqiqa","d":"tavsif"}]',t:'json'},
+    ]},
+  tadbir:{label:'Tadbir ssenariylari',icon:'ti-confetti',kind:'record',target:()=>'var EVENTS',page:'pages/tadbir-ssenariylari.html',
+    fields:[
+      {k:'title',l:'Tadbir nomi',t:'text',req:1},
+      {k:'date',l:'Sana',t:'text',ph:'21-mart'},
+      {k:'duration',l:'Davomiyligi',t:'text',ph:'40-45 daqiqa'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-confetti'},
+      {k:'color',l:'Rang',t:'text',adv:1,def:'blue'},
+      {k:'event',l:'To\'liq ssenariy — JSON: {"scenes":[...],"roles":[...]}',t:'json'},
+    ]},
 };
 
 /* ── Holat ── */
@@ -491,6 +521,7 @@ function showView(which){
   document.getElementById('table-warn').style.display   = which==='content'&&!TABLE_OK?'block':'none';
 }
 async function selectType(t){
+  closeSidebar();
   document.querySelectorAll('#nav-types .nav-item').forEach(b=>b.classList.toggle('active',b.dataset.type===t));
 
   if(t==='__stats'){
@@ -558,6 +589,7 @@ function fieldHtml(f){
   if(f.t==='tags'||f.t==='tags-num') return `${lbl}<input class="inp" id="f-${f.k}" placeholder="${f.ph||'vergul bilan'}"/><div class="field-hint">Vergul bilan ajrating.</div>`;
   if(f.t==='list') return `${lbl}<div id="list-${f.k}"></div>
       <button class="btn-add-opt" onclick="addListItem('${f.k}')"><i class="ti ti-plus"></i> Qator qo'shish</button>`;
+  if(f.t==='json') return `${lbl}<textarea class="inp" id="f-${f.k}" rows="${f.rows||6}" placeholder='${f.ph||"[ ... ]"}' style="font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px"></textarea><div class="field-hint">JSON formatда yozing. Bo'sh qoldirsangiz — bo'sh bo'ladi.</div>`;
   return `${lbl}<input class="inp" id="f-${f.k}" value="${f.def?escapeHtml(f.def):''}" placeholder="${f.ph||''}"/>`;
 }
 function addListItem(key,val){
@@ -621,6 +653,16 @@ function readForm(){
       data[f.k]=(document.getElementById('f-'+f.k).value||'').split(',').map(x=>parseInt(x.trim(),10)).filter(n=>!isNaN(n));
     }else if(f.t==='number'){
       const v=document.getElementById('f-'+f.k).value;data[f.k]=v===''?(f.def??null):parseInt(v,10);
+    }else if(f.t==='json'){
+      const raw=(document.getElementById('f-'+f.k).value||'').trim();
+      if(!raw){ data[f.k]=[]; }
+      else{
+        try{ data[f.k]=JSON.parse(raw); }
+        catch(e){
+          try{ data[f.k]=(new Function('return ('+raw+')'))(); }
+          catch(e2){ data.__jsonerr__=f.l; data[f.k]=raw; }
+        }
+      }
     }else{
       let v=(document.getElementById('f-'+f.k).value||'').trim();
       if(!v&&f.def)v=f.def;data[f.k]=v;
@@ -650,6 +692,9 @@ function validate(data){
 async function saveRecord(){
   const s=SCHEMAS[TYPE];
   const {data}=readForm();
+
+  // JSON maydon xatosi bo'lsa — to'xtatamiz
+  if(data.__jsonerr__){ return toast('"'+data.__jsonerr__+'" — JSON formati noto\'g\'ri','err'); }
 
   // category (test)
   let cat=null,catTitle=null;
@@ -749,6 +794,7 @@ function editRecord(i){
       const v=d[f.k];
       if(f.t==='list'){const box=document.getElementById('list-'+f.k);box.innerHTML='';(v||[]).forEach(x=>addListItem(f.k,x));if(!(v||[]).length)addListItem(f.k);}
       else if(f.t==='tags'||f.t==='tags-num'){document.getElementById('f-'+f.k).value=(v||[]).join(', ');}
+      else if(f.t==='json'){document.getElementById('f-'+f.k).value=(v==null||v==='')?'':JSON.stringify(v,null,2);}
       else{document.getElementById('f-'+f.k).value=v??'';}
     });
   }
@@ -1097,6 +1143,11 @@ create policy "profiles_admin_update"
   box.classList.toggle('show');
   if(box.classList.contains('show')){navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});}
 }
+
+/* ═══════ MOBIL: yon menyu ochish/yopish ═══════ */
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-backdrop').classList.add('show');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-backdrop').classList.remove('show');}
+function toggleSidebar(){document.getElementById('sidebar').classList.contains('open')?closeSidebar():openSidebar();}
 
 gate();
 </script>
