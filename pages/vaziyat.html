@@ -380,7 +380,9 @@ function buildVariantGrid(proUser){
 
 function startVariant(idx){
   curVariant=VARIANTS[idx];
-  questions=ALL_Q.slice(curVariant.range[0],curVariant.range[1]);
+  questions = curVariant.questions
+            ? curVariant.questions.slice()
+            : ALL_Q.slice(curVariant.range[0],curVariant.range[1]);
   if(idx>=2){for(var i=questions.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=questions[i];questions[i]=questions[j];questions[j]=t;}}
   curIdx=0;score=0;
   document.getElementById('variantScreen').style.display='none';
@@ -468,6 +470,29 @@ function goVariants(){clearInterval(timerInt);document.getElementById('resultScr
 <script src="../js/auth.js"></script>
 <script src="../js/premium.js"></script>
 <script>
+// ── Admin panelda qo'shilgan variantlarni bazadan yuklaydi ──
+async function loadDBVariants(type){
+  if(typeof _sb==='undefined' || !_sb) return;
+  try{
+    var res=await _sb.from('content').select('category,category_title,data').eq('type',type);
+    if(res.error || !res.data) return;
+    var by={};
+    res.data.forEach(function(r){
+      if(!r.category || !r.data) return;
+      if(!by[r.category]) by[r.category]={title:r.category_title||r.category, qs:[]};
+      by[r.category].qs.push(r.data);
+    });
+    Object.keys(by).forEach(function(k){
+      VARIANTS.push({
+        name: by[k].title,
+        sub: by[k].qs.length+' ta savol • Bepul',
+        icon:'ti-bulb', color:'blue', free:true,
+        questions: by[k].qs
+      });
+    });
+  }catch(e){ console.warn('baza variantlari:',e); }
+}
+
 window.addEventListener('load', async function() {
   var proUser = false;
   if (typeof initAuth !== 'undefined') {
@@ -483,6 +508,7 @@ window.addEventListener('load', async function() {
     pill.className = 'plan-pill' + (proUser ? ' pro' : '');
     pill.innerHTML = (proUser ? '<i class="ti ti-crown"></i> ' : '<i class="ti ti-free-rights"></i> ') + planLabel;
   }
+  await loadDBVariants('vaziyat');
   buildVariantGrid(proUser);
 });
 </script>
