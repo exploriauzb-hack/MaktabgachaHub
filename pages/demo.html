@@ -133,7 +133,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <body>
 
 <!-- ══ KOD SCREEN ══ -->
-<div id="screen-code" class="screen active">
+<div id="screen-code" class="screen">
   <div class="code-wrap">
     <div class="code-topnav no-print">
       <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
@@ -142,7 +142,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="code-logo">🎓</div>
       <h2>Demo Test</h2>
       <p>Maktabgacha pedagogika bo'yicha attestatsiya formatidagi test.<br>Kirish uchun kod kiriting.</p>
-      <input class="code-input" id="codeInput" type="text" maxlength="7" placeholder="● ● ● ● ● ● ●" autocomplete="off" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')checkCode()"/>
+      <input class="code-input" id="codeInput" type="text" maxlength="20" placeholder="Kodni kiriting" autocomplete="off" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')checkCode()"/>
       <div class="code-err" id="codeErr"></div>
       <button class="btn-enter" onclick="checkCode()">Kirish →</button>
       <p class="code-hint">Kodni tarbiyachingizdan oling</p>
@@ -151,7 +151,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 </div>
 
 <!-- ══ HOME SCREEN ══ -->
-<div id="screen-home" class="screen">
+<div id="screen-home" class="screen active">
   <div class="topnav no-print">
     <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
   </div>
@@ -162,30 +162,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
     </div>
     <div class="info-box">
-      ℹ️ <span>Har variant <b>50 ta savol</b>. <b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
+      ℹ️ <span><b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
     </div>
-    <div class="var-grid">
-      <div class="var-card" id="vc-1" onclick="selectVar(1)">
-        <div class="var-num">1️⃣</div>
-        <h3>1-Variant</h3>
-        <p>Tarbiya tamoyillari, shaxs rivojlanishi va faoliyat turlari</p>
-        <div class="var-meta"><span>50 savol</span><span>90 daqiqa</span></div>
-      </div>
-      <div class="var-card" id="vc-2" onclick="selectVar(2)">
-        <div class="var-num">2️⃣</div>
-        <h3>2-Variant</h3>
-        <p>Yosh davrlari, jismoniy madaniyat va sog'lom turmush tarzi</p>
-        <div class="var-meta"><span>50 savol</span><span>90 daqiqa</span></div>
-      </div>
-      <div class="var-card" id="vc-3" onclick="selectVar(3)">
-        <div class="var-num">3️⃣</div>
-        <h3>3-Variant</h3>
-        <p>Aralash — nutq, ekologiya, loyiha, tarbiya va boshqaruv</p>
-        <div class="var-meta"><span>50 savol</span><span>90 daqiqa</span></div>
-      </div>
-    </div>
+    <div class="var-grid" id="var-grid"></div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
-    <span class="btn-back-code" onclick="goBackCode()">← Kodga qaytish</span>
   </div>
 </div>
 
@@ -529,20 +509,70 @@ async function checkCode(){
   }
 }
 function goBackCode(){showScreen('screen-code');}
-function selectVar(n){
-  selectedVar=n;
-  document.getElementById('vc-1').classList.toggle('selected',n===1);
-  document.getElementById('vc-2').classList.toggle('selected',n===2);
-  var v3=document.getElementById('vc-3');
-  if(v3)v3.classList.toggle('selected',n===3);
+
+// ══ KODSIZ: barcha demo variantlari (baza + zaxira) ══
+var ALL_VARIANTS=[], SELECTED=null;
+
+async function initDemo(){
+  ALL_VARIANTS=[];
+  // 1) Bazadan (admin panelda qo'shilganlar)
+  if(_sb){
+    try{
+      var res=await _sb.from('content').select('category,category_title,data').eq('type','demo');
+      if(!res.error && res.data){
+        var by={};
+        res.data.forEach(function(r){
+          if(!r.category||!r.data)return;
+          if(!by[r.category]) by[r.category]={title:r.category_title||r.category, qs:[]};
+          by[r.category].qs.push(r.data);
+        });
+        Object.keys(by).forEach(function(k){
+          ALL_VARIANTS.push({id:k,title:by[k].title,desc:'Test',questions:by[k].qs});
+        });
+      }
+    }catch(e){ console.warn('demo baza:',e); }
+  }
+  // 2) Zaxira: qattiq yozilgan variantlar (baza bo'sh bo'lsa)
+  if(!ALL_VARIANTS.length){
+    ALL_VARIANTS=[
+      {id:'V1',title:'1-Variant',desc:'Tarbiya tamoyillari, shaxs rivojlanishi',questions:V1},
+      {id:'V2',title:'2-Variant',desc:'Yosh davrlari, jismoniy madaniyat',questions:V2},
+      {id:'V3',title:'3-Variant',desc:'Aralash — nutq, ekologiya, loyiha',questions:V3}
+    ];
+  }
+  renderVariants();
+  showScreen('screen-home');
+}
+
+function renderVariants(){
+  var grid=document.getElementById('var-grid');
+  var nums=['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
+  grid.innerHTML=ALL_VARIANTS.map(function(v,i){
+    return '<div class="var-card" data-id="'+v.id+'" onclick="selectVar(\''+v.id+'\')">'
+      +'<div class="var-num">'+(nums[i]||'📘')+'</div>'
+      +'<h3>'+v.title+'</h3>'
+      +'<p>'+(v.desc||'Test')+'</p>'
+      +'<div class="var-meta"><span>'+v.questions.length+' savol</span><span>90 daqiqa</span></div>'
+      +'</div>';
+  }).join('');
+  // Birinchisini avtomatik tanlaymiz
+  if(ALL_VARIANTS.length) selectVar(ALL_VARIANTS[0].id);
+}
+
+function selectVar(id){
+  SELECTED=ALL_VARIANTS.filter(function(v){return String(v.id)===String(id);})[0]||null;
+  var cards=document.querySelectorAll('#var-grid .var-card');
+  cards.forEach(function(c){ c.classList.toggle('selected', c.getAttribute('data-id')===String(id)); });
 }
 function startExam(){
-  var raw = DB_VARIANT ? DB_VARIANT.questions
-          : (selectedVar===1?V1:selectedVar===2?V2:V3);
+  var raw = SELECTED ? SELECTED.questions
+          : (DB_VARIANT ? DB_VARIANT.questions
+          : (selectedVar===1?V1:selectedVar===2?V2:V3));
+  if(!raw || !raw.length){ alert('Bu variantda savol yo\'q.'); return; }
   examQ=shuffle(raw);
   userAns=new Array(examQ.length).fill(null);
   currentQ=0;examActive=true;timeLeft=90*60;
-  document.getElementById('var-label').textContent = DB_VARIANT ? DB_VARIANT.title : (selectedVar+'-Variant');
+  document.getElementById('var-label').textContent = SELECTED ? SELECTED.title : (DB_VARIANT ? DB_VARIANT.title : (selectedVar+'-Variant'));
   buildNav();renderQ();
   showScreen('screen-exam');
   startTimer();
@@ -650,7 +680,7 @@ function showCert(){
   document.getElementById('cert-score').textContent=pct+'%';
   document.getElementById('cert-stars').textContent=stars;
   document.getElementById('cert-grade').textContent=grade;
-  document.getElementById('cert-variant').textContent='📋 '+(DB_VARIANT?DB_VARIANT.title:(selectedVar+'-Variant'))+' | '+examQ.length+' ta savol';
+  document.getElementById('cert-variant').textContent='📋 '+(SELECTED?SELECTED.title:(DB_VARIANT?DB_VARIANT.title:(selectedVar+'-Variant')))+' | '+examQ.length+' ta savol';
   document.getElementById('cert-date').textContent='📅 '+new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
   showScreen('screen-cert');
 }
@@ -660,7 +690,7 @@ function goHome(){
   document.getElementById('btn-cert').style.display='none';
   showScreen('screen-home');
 }
-document.getElementById('codeInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkCode();});
+initDemo();
 </script>
 </body>
 </html>
