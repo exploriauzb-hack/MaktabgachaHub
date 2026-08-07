@@ -3,121 +3,1073 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin tekshiruv</title>
+<meta name="description" content="MaktabgachaHub admin paneli — testlar, vaziyatlar, qo'shiqlar, o'yinlar va boshqa bo'limlar kontentini forma orqali boshqarish."/>
+<title>MaktabgachaHub — Admin panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css"/>
 <style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:24px;line-height:1.6}
-  .wrap{max-width:760px;margin:0 auto}
-  h1{font-size:20px;margin:0 0 4px}
-  .sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
-  .step{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:14px 16px;margin-bottom:12px}
-  .step h2{font-size:13px;margin:0 0 8px;color:#cbd5e1;display:flex;align-items:center;gap:8px}
-  .badge{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
-  .ok{background:#14532d;color:#86efac}
-  .bad{background:#7f1d1d;color:#fca5a5}
-  .wait{background:#334155;color:#94a3b8}
-  pre{background:#0b1220;border-radius:8px;padding:12px;font-size:12px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:6px 0 0;color:#a5b4fc}
-  .verdict{margin-top:18px;padding:16px;border-radius:10px;font-size:14px;font-weight:600}
-  .verdict.good{background:#14532d;color:#bbf7d0}
-  .verdict.fail{background:#7f1d1d;color:#fecaca}
-  .verdict small{display:block;font-weight:400;margin-top:8px;font-size:12.5px;line-height:1.6}
-  code{background:#334155;padding:1px 6px;border-radius:4px;font-size:12px}
-  a{color:#93c5fd}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7ff;--white:#fff;--border:#e4e8f0;--border2:#d0d7e8;
+  --text:#1a1f36;--text2:#6b7694;--text3:#9aa3bf;
+  --accent:#1e40af;--accent2:#2563eb;--accent-soft:#eff6ff;--accent-mid:#3b82f6;--indigo:#6366f1;
+  --green:#15803d;--green-soft:#f0fdf4;--amber:#b45309;--amber-soft:#fffbeb;
+  --red:#b91c1c;--red-soft:#fef2f2;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
+  --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
+  --sidebar:250px;
+}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;background:var(--bg);min-height:100vh}
+
+/* GATE */
+.gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);text-align:center;padding:24px}
+.gate .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gate h2{font-size:18px;font-weight:700}
+.gate p{font-size:13px;color:var(--text2);max-width:340px}
+.gate .g-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.gate .g-icon.err{background:var(--red-soft);color:var(--red)}
+.gate a.g-btn{margin-top:4px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none}
+.gate a.g-btn:hover{opacity:.92}
+
+/* LAYOUT */
+.app{display:none;min-height:100vh}
+.app.show{display:flex}
+.sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:20;overflow-y:auto}
+.sb-logo{padding:18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.sb-logo .ic{width:36px;height:36px;background:linear-gradient(135deg,var(--accent2),var(--indigo));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;flex-shrink:0}
+.sb-logo .tx{font-size:13px;font-weight:700;line-height:1.25}
+.sb-logo .tx span{display:block;font-size:10px;font-weight:600;color:var(--indigo);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.sb-sec{padding:16px 18px 6px;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:var(--radius-sm);margin:1px 8px;color:var(--text2);text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,color .15s;border:none;background:none;width:calc(100% - 16px);text-align:left;font-family:inherit}
+.nav-item:hover{background:var(--accent-soft);color:var(--accent)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav-item i{font-size:16px;width:18px;text-align:center;flex-shrink:0}
+.nav-item .n-count{margin-left:auto;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;background:var(--bg);color:var(--text3)}
+.nav-item.active .n-count{background:var(--white);color:var(--accent)}
+.sb-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
+.who{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg)}
+.who .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--indigo));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.who .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .rl{font-size:11px;color:var(--indigo);font-weight:600}
+.sb-link{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;text-decoration:none;transition:all .15s;font-family:inherit}
+.sb-link:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
+
+.main{margin-left:var(--sidebar);flex:1;padding:24px 30px;max-width:1200px}
+.head h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.head p{font-size:13px;color:var(--text2);margin-top:3px}
+.head{margin-bottom:20px}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:960px){.cols{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.card-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.card-title i{color:var(--accent2);font-size:18px}
+
+label.lbl{display:block;font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 6px}
+label.lbl .req{color:var(--red);margin-left:2px}
+label.lbl:first-child{margin-top:0}
+.inp,select.inp,textarea.inp{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13.5px;font-family:'Inter',sans-serif;color:var(--text);background:#fafbff;outline:none;transition:border .18s,background .18s}
+.inp:focus{border-color:var(--accent2);background:var(--white)}
+textarea.inp{resize:vertical;min-height:62px;line-height:1.55}
+select.inp{cursor:pointer}
+.field-hint{font-size:11px;color:var(--text3);margin-top:4px}
+
+.cat-row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.cat-row select,.cat-row input{flex:1;min-width:140px}
+
+/* option builder (quiz) */
+.opt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.opt-row .radio{flex-shrink:0;width:26px;height:26px;border:2px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:var(--white)}
+.opt-row .radio.on{border-color:var(--green);background:var(--green-soft)}
+.opt-row .radio.on::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--green)}
+.opt-row .inp{flex:1}
+.opt-row .del{flex-shrink:0;width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px}
+.opt-row .del:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+.opt-hint{font-size:11px;color:var(--text3);margin:6px 0 10px;display:flex;align-items:center;gap:5px}
+.opt-hint i{color:var(--green);font-size:13px}
+.btn-add-opt{font-size:12px;font-weight:600;color:var(--accent2);background:none;border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:8px;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-family:inherit}
+.btn-add-opt:hover{background:var(--accent-soft);border-color:var(--accent-mid)}
+
+/* list-field (rules/steps) */
+.li-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.li-row .inp{flex:1}
+.li-row .del{flex-shrink:0;width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text3);cursor:pointer;font-size:14px}
+.li-row .del:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+
+/* advanced collapsible */
+.adv-toggle{font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:16px;padding:8px 0;user-select:none}
+.adv-toggle i{transition:transform .2s}
+.adv-toggle.open i{transform:rotate(90deg)}
+.adv-box{display:none;padding:12px;background:var(--bg);border-radius:var(--radius-sm);margin-top:4px}
+.adv-box.open{display:block}
+
+.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{padding:11px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s,transform .1s,background .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;flex:1;justify-content:center}
+.btn-primary:hover:not(:disabled){opacity:.93}
+.btn-ghost{background:var(--white);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg)}
+
+.list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.count-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
+.q-item{border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:10px;transition:box-shadow .15s}
+.q-item:hover{box-shadow:var(--shadow)}
+.q-item .q-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.q-item .q-text{font-size:13.5px;font-weight:600;line-height:1.5}
+.q-item .q-tools{display:flex;gap:4px;flex-shrink:0}
+.q-item .q-tools button{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.q-item .q-tools button:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
+.q-item .q-tools button.dl:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
+.q-opts{list-style:none;margin-top:9px;display:flex;flex-direction:column;gap:5px}
+.q-opts li{font-size:12.5px;color:var(--text2);padding:6px 10px;border-radius:6px;background:var(--bg);display:flex;align-items:center;gap:7px}
+.q-opts li.correct{background:var(--green-soft);color:var(--green);font-weight:600}
+.q-opts li i{font-size:14px;flex-shrink:0}
+.q-meta{font-size:11.5px;color:var(--text3);margin-top:7px;display:flex;flex-wrap:wrap;gap:6px}
+.q-meta span{background:var(--bg);padding:2px 8px;border-radius:20px}
+.q-exp{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5}
+.empty{text-align:center;padding:38px 16px;color:var(--text3)}
+.empty i{font-size:34px;opacity:.5;display:block;margin-bottom:10px}
+.empty p{font-size:13px}
+
+.tools-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.mini-btn{font-size:12px;font-weight:600;color:var(--text2);background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;font-family:inherit}
+.mini-btn:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
+pre.code{margin-top:12px;background:#0f172a;color:#e2e8f0;border-radius:var(--radius-sm);padding:16px;font-size:12px;line-height:1.6;overflow-x:auto;font-family:'SF Mono',Menlo,Consolas,monospace;white-space:pre;max-height:360px;overflow-y:auto;display:none}
+pre.code.show{display:block}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;font-size:13px;font-weight:500;padding:12px 20px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;display:flex;align-items:center;gap:8px;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+.toast i{font-size:16px}
+
+.warn{background:var(--amber-soft);border:1px solid #fde68a;border-left:3px solid var(--amber);border-radius:var(--radius-sm);padding:13px 15px;font-size:12.5px;color:#92400e;line-height:1.55;margin-bottom:16px;display:none}
+.warn.show{display:block}
+.warn b{color:#78350f}
+
+@media(max-width:760px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;padding:18px 16px}
+  .mobile-bar{display:flex!important}
+}
+.mobile-bar{display:none;align-items:center;gap:12px;margin-bottom:16px}
+.mobile-bar button{width:38px;height:38px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);cursor:pointer;font-size:18px;color:var(--text2)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>🔎 Admin panel tekshiruvi</h1>
-  <div class="sub">Bu sahifa sizni chiqarib yubormaydi — nima uchun admin panel ishlamayotganini ko'rsatadi.</div>
 
-  <div class="step" id="s1"><h2>1. Supabase ulanishi <span class="badge wait" id="b1">...</span></h2><pre id="p1">Tekshirilmoqda…</pre></div>
-  <div class="step" id="s2"><h2>2. Tizimga kirgansizmi (session) <span class="badge wait" id="b2">...</span></h2><pre id="p2">—</pre></div>
-  <div class="step" id="s3"><h2>3. Profil ma'lumoti (profiles jadvali) <span class="badge wait" id="b3">...</span></h2><pre id="p3">—</pre></div>
-  <div class="step" id="s4"><h2>4. role qiymati <span class="badge wait" id="b4">...</span></h2><pre id="p4">—</pre></div>
-  <div class="step" id="s5"><h2>5. is_admin() funksiyasi (RPC) <span class="badge wait" id="b5">...</span></h2><pre id="p5">—</pre></div>
-
-  <div class="verdict" id="verdict" style="display:none"></div>
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="spin" id="gate-spin"></div>
+  <div class="g-icon err" id="gate-icon" style="display:none"><i class="ti ti-lock"></i></div>
+  <h2 id="gate-title">Yuklanmoqda…</h2>
+  <p id="gate-msg">Hisobingiz va ruxsatingiz tekshirilmoqda.</p>
+  <a class="g-btn" id="gate-btn" href="dashboard.html" style="display:none">Dashboardga qaytish</a>
 </div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="ic">🎓</div>
+      <div class="tx">MaktabgachaHub<span>Admin panel</span></div>
+    </div>
+    <div class="sb-sec">Bo'limlar</div>
+    <div id="nav-types"></div>
+    <div class="sb-bottom">
+      <div class="who">
+        <div class="av" id="who-av">A</div>
+        <div style="min-width:0">
+          <div class="nm" id="who-nm">Admin</div>
+          <div class="rl"><i class="ti ti-shield-check" style="font-size:11px"></i> Administrator</div>
+        </div>
+      </div>
+      <a class="sb-link" href="dashboard.html"><i class="ti ti-arrow-left"></i> Dashboardga qaytish</a>
+      <button class="sb-link" onclick="doLogout()"><i class="ti ti-logout"></i> Chiqish</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="mobile-bar">
+      <button onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
+    </div>
+    <div class="head">
+      <h1 id="page-title">Kontentni boshqarish</h1>
+      <p id="page-sub">Bo'limni tanlang va forma orqali qo'shing — HTML yozish shart emas.</p>
+    </div>
+
+    <div class="warn" id="table-warn">
+      <b>Ma'lumotlar bazasida <code>content</code> jadvali topilmadi.</b><br/>
+      Bazaga saqlash uchun avval jadvalni yarating: <b>“SQL kodini ko'rsatish”</b> tugmasini bosing, kodni Supabase → SQL Editor'ga qo'yib ishga tushiring. U vaqtgacha <b>“JS sifatida nusxalash”</b> orqali sahifaga to'g'ridan-to'g'ri qo'sha olasiz.
+    </div>
+
+    <div class="cols" id="content-view">
+      <!-- FORM -->
+      <section class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px">
+          <div class="card-title" style="margin:0"><i class="ti ti-plus"></i> <span id="form-title">Yangi yozuv</span></div>
+          <button class="mini-btn" onclick="openBulk()"><i class="ti ti-upload"></i> Ko'p yuklash</button>
+        </div>
+        <div id="cat-block" style="display:none">
+          <label class="lbl">Toifa</label>
+          <div class="cat-row">
+            <select class="inp" id="cat-select" onchange="onCatChange()"></select>
+            <button class="mini-btn" onclick="toggleNewCat()"><i class="ti ti-folder-plus"></i> Yangi</button>
+          </div>
+          <div id="new-cat-box" style="display:none">
+            <label class="lbl">Yangi toifa nomi</label>
+            <input class="inp" id="new-cat-title" placeholder="Masalan: Metodika" oninput="syncCatId()"/>
+            <label class="lbl">Toifa kodi (avtomatik)</label>
+            <input class="inp" id="new-cat-id" placeholder="metodika"/>
+            <div class="field-hint">Faqat lotin harflari va pastki chiziq.</div>
+          </div>
+        </div>
+
+        <div id="fields"></div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="save-btn" onclick="saveRecord()"><i class="ti ti-device-floppy"></i> Saqlash</button>
+          <button class="btn btn-ghost" onclick="resetForm()"><i class="ti ti-eraser"></i> Tozalash</button>
+        </div>
+      </section>
+
+      <!-- LIST -->
+      <section class="card">
+        <div class="list-head">
+          <div class="card-title" style="margin:0"><i class="ti ti-list-check"></i> Yozuvlar</div>
+          <span class="count-pill" id="rec-count">0 ta</span>
+        </div>
+        <div id="rec-list"><div class="empty"><i class="ti ti-inbox"></i><p>Bo'limni tanlang.</p></div></div>
+        <div class="tools-row">
+          <button class="mini-btn" onclick="exportJS()"><i class="ti ti-code"></i> JS sifatida nusxalash</button>
+          <button class="mini-btn" onclick="toggleSQL()"><i class="ti ti-database"></i> SQL kodini ko'rsatish</button>
+        </div>
+        <pre class="code" id="export-box"></pre>
+        <pre class="code" id="sql-box"></pre>
+      </section>
+    </div>
+
+    <!-- ═══════ STATISTIKA ═══════ -->
+    <div id="stats-view" style="display:none">
+      <div id="stat-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px"></div>
+      <section class="card">
+        <div class="card-title"><i class="ti ti-chart-bar"></i> Kontent bo'limlar bo'yicha</div>
+        <div id="stat-content"><div class="empty"><i class="ti ti-loader-2"></i><p>Yuklanmoqda…</p></div></div>
+      </section>
+      <section class="card" style="margin-top:16px">
+        <div class="card-title"><i class="ti ti-user-plus"></i> So'nggi qo'shilgan foydalanuvchilar</div>
+        <div id="stat-recent"></div>
+      </section>
+    </div>
+
+    <!-- ═══════ PRO BERISH ═══════ -->
+    <div id="pro-view" style="display:none">
+      <div class="warn" id="pro-warn">
+        <b>Diqqat:</b> boshqa foydalanuvchi tarifini o'zgartirish uchun <code>profiles</code> jadvalida admin ruxsati kerak.
+        Agar "ruxsat yo'q" xatosi chiqsa — <b>“SQL: admin ruxsati”</b> tugmasidagi kodni Supabase SQL Editor'da ishga tushiring.
+      </div>
+      <section class="card">
+        <div class="card-title"><i class="ti ti-search"></i> Foydalanuvchini toping</div>
+        <div class="cat-row">
+          <input class="inp" id="pro-q" placeholder="Ism yoki telefon raqam bo'yicha qidiring"
+            onkeydown="if(event.key==='Enter')searchUsers()"/>
+          <button class="btn btn-primary" style="flex:0 0 auto;max-width:140px" onclick="searchUsers()"><i class="ti ti-search"></i> Qidirish</button>
+        </div>
+        <div class="tools-row"><button class="mini-btn" onclick="toggleProSQL()"><i class="ti ti-database"></i> SQL: admin ruxsati</button></div>
+        <pre class="code" id="pro-sql"></pre>
+        <div id="pro-results" style="margin-top:12px"><div class="empty"><i class="ti ti-users"></i><p>Ism yoki raqam kiritib qidiring.</p></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- ═══════ BULK IMPORT MODAL ═══════ -->
+<div id="bulk-modal" style="display:none;position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.45);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--white);border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.25);padding:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="card-title" style="margin:0"><i class="ti ti-upload"></i> Ko'p savol/yozuv yuklash</div>
+      <button class="mini-btn" onclick="closeBulk()"><i class="ti ti-x"></i></button>
+    </div>
+    <p style="font-size:12.5px;color:var(--text2);line-height:1.6;margin-bottom:14px">
+      Bo'lim: <b id="bulk-type-label"></b>. Ro'yxatni pastga yopishtiring — bir marta bosib hammasi bazaga tushadi.
+    </p>
+
+    <div id="bulk-cat-block" style="display:none">
+      <label class="lbl">Toifa kodi (masalan: <code>ilk_qadam</code>, <code>variant_1</code>, <code>V1</code>)</label>
+      <input class="inp" id="bulk-cat" placeholder="toifa kodi"/>
+      <label class="lbl">Toifa nomi (ko'rinadigan nom — ixtiyoriy)</label>
+      <input class="inp" id="bulk-cat-title" placeholder="Toifa nomi"/>
+    </div>
+
+    <label class="lbl">Ro'yxat (JSON yoki sahifadagi JS format)</label>
+    <textarea class="inp" id="bulk-text" style="min-height:200px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px" placeholder='[
+  { "q":"Savol?", "opts":["A","B","C","D"], "ans":2, "exp":"Izoh" },
+  { "q":"Ikkinchi savol?", "opts":["1","2","3"], "ans":0 }
+]'></textarea>
+    <div class="field-hint" id="bulk-hint">Test/attestatsiya/demo uchun har element: <code>q</code>, <code>opts</code>, <code>ans</code> (va ixtiyoriy <code>exp</code>).</div>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="mini-btn" onclick="bulkFromFile()"><i class="ti ti-file-upload"></i> Fayldan (.json / .txt)</button>
+      <input type="file" id="bulk-file" accept=".json,.txt" style="display:none" onchange="bulkFileChosen(event)"/>
+      <span id="bulk-parsed" style="font-size:12px;color:var(--text3)"></span>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="bulk-btn" onclick="doBulkImport()"><i class="ti ti-database-import"></i> Hammasini yuklash</button>
+      <button class="btn btn-ghost" onclick="closeBulk()">Bekor qilish</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ═══════════════════════════════════════════════════════════════
+   Supabase — mavjud loyihangizdagi qiymatlar (anon key ochiq bo'lishi normal).
+   HAQIQIY himoya RLS orqali server tomonda (pastdagi SQL).
+   ═══════════════════════════════════════════════════════════════ */
 const SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
+const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-function set(id,badge,cls,text){
-  document.getElementById('b'+id).className='badge '+cls;
-  document.getElementById('b'+id).textContent=badge;
-  document.getElementById('p'+id).textContent=text;
-}
-function verdict(good,msg){
-  const v=document.getElementById('verdict');
-  v.style.display='block';
-  v.className='verdict '+(good?'good':'fail');
-  v.innerHTML=msg;
-}
+/* ═══════════════════════════════════════════════════════════════
+   SCHEMAS — har bir bo'lim aynan o'sha sahifadagi shaklga mos.
+   kind:'quiz'  → savol + variantlar + to'g'ri javob (+ ixtiyoriy izoh)
+   kind:'record'→ maydonlar ro'yxati (text/textarea/number/list/tags)
+   target       → JS export'da hosil bo'ladigan o'zgaruvchi
+   ═══════════════════════════════════════════════════════════════ */
+const SCHEMAS={
+  test:{label:'Test savollari',icon:'ti-flask',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`QUESTIONS.${cat||'CATEGORY'}`,page:'pages/test.html'},
+  vaziyat:{label:'Vaziyatli savollar',icon:'ti-bulb',kind:'quiz',explanation:false,
+        target:()=>'var ALL_Q',page:'pages/vaziyat.html'},
+  qaror:{label:'Qaror / normativ',icon:'ti-gavel',kind:'quiz',explanation:false,
+        target:()=>'var ALL_Q',page:'pages/qarorlar.html'},
+  attestatsiya:{label:'Attestatsiya',icon:'ti-certificate',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`VARIANTS.${cat||'variant_1'}`,page:'pages/attestatsiya.html'},
+  demo:{label:'Demo test',icon:'ti-device-desktop-analytics',kind:'quiz',explanation:true,hasCategory:true,
+        target:cat=>`var ${cat||'V1'}`,page:'pages/demo.html'},
+  qoshiq:{label:"Qo'shiqlar",icon:'ti-music',kind:'record',target:()=>'var SONGS',page:'pages/qoshiqlar.html',
+    fields:[
+      {k:'title',l:'Nomi',t:'text',req:1},
+      {k:'tur',l:'Turi',t:'text',ph:"O'zbek xalq"},
+      {k:'soha',l:'Soha',t:'text',ph:'Nutq (3-soha)'},
+      {k:'yosh',l:'Yosh',t:'text',ph:'2-4 yosh'},
+      {k:'mavzu',l:'Mavzu',t:'text',ph:'Oila'},
+      {k:'note',l:'Izoh',t:'text',ph:'Uxlash vaqtida'},
+      {k:'lyrics',l:"Qo'shiq matni",t:'textarea',req:1},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-music'},
+      {k:'color',l:'Rang',t:'text',adv:1,def:'#7c3aed'},
+      {k:'bg',l:'Fon rang',t:'text',adv:1,def:'#f5f3ff'},
+    ]},
+  hikoya:{label:'Hikoya / ertak',icon:'ti-book',kind:'record',target:()=>'var STORIES',page:'pages/qoshiqlar.html',
+    fields:[
+      {k:'title',l:'Nomi',t:'text',req:1},
+      {k:'tur',l:'Turi',t:'text',ph:"O'zbek xalq ertagi"},
+      {k:'yosh',l:'Yosh',t:'text',ph:'3-5 yosh'},
+      {k:'mavzu',l:'Mavzu',t:'text',ph:'Hamkorlik, jasorat'},
+      {k:'matn',l:'Matn (HTML yoki oddiy)',t:'textarea',req:1,rows:6},
+      {k:'moral',l:'Xulosa / saboq',t:'textarea'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-book'},
+      {k:'color',l:'Rang',t:'text',adv:1,def:'#15803d'},
+      {k:'bg',l:'Fon rang',t:'text',adv:1,def:'#f0fdf4'},
+    ]},
+  oyin:{label:"O'yinlar",icon:'ti-puzzle',kind:'record',target:()=>'var games',page:'pages/oyinlar.html',
+    fields:[
+      {k:'name',l:'Nomi',t:'text',req:1},
+      {k:'cat',l:'Turkum',t:'text',ph:'Tabiat / Matematik / Sensor'},
+      {k:'age',l:'Yosh',t:'text',ph:'4-5 yosh'},
+      {k:'players',l:'Ishtirokchilar',t:'text',ph:'4-8 bola'},
+      {k:'time',l:'Davomiyligi',t:'text',ph:'12-15 daq'},
+      {k:'soha',l:'Soha',t:'text',ph:'4-soha: Bilish jarayonlari'},
+      {k:'goal',l:'Maqsad',t:'textarea',req:1},
+      {k:'materials',l:'Kerakli materiallar',t:'textarea'},
+      {k:'rules',l:"O'yin qoidalari (har biri alohida qator)",t:'list',req:1},
+      {k:'variant',l:"Variant / murakkablashtirish",t:'textarea'},
+      {k:'result',l:'Kutiladigan natija',t:'textarea'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-cards'},
+      {k:'ic',l:'Rang kodi (blue/green/amber/purple)',t:'text',adv:1,def:'blue'},
+    ]},
+  mashgulot:{label:"Mashg'ulotlar",icon:'ti-brush',kind:'record',target:()=>'var acts',page:'pages/mashgulot.html',
+    fields:[
+      {k:'name',l:'Nomi',t:'text',req:1},
+      {k:'desc',l:'Tavsif',t:'textarea',req:1},
+      {k:'steps',l:'Bosqichlar',t:'text',ph:"Qadam 1 → Qadam 2 → Qadam 3"},
+      {k:'soha',l:'Soha (raqam)',t:'number',def:5},
+      {k:'ages',l:'Yosh guruhlari (vergul bilan)',t:'tags',ph:'3-4, 4-5'},
+      {k:'icon',l:'Ikonka',t:'text',adv:1,def:'ti-brush'},
+    ]},
+  haftalik:{label:'Haftalik mavzular',icon:'ti-books',kind:'record',target:()=>'const baseWeeks',page:'pages/haftalik.html',
+    fields:[
+      {k:'n',l:'Hafta raqami',t:'number',req:1},
+      {k:'t',l:'Mavzu',t:'text',req:1},
+      {k:'soha',l:'Sohalar (raqamlar, vergul bilan)',t:'tags-num',ph:'2, 3'},
+    ]},
+};
 
-(async function(){
-  let _sb;
-  // 1) Ulanish
+/* ── Holat ── */
+let CURRENT_USER=null, TYPE='test', CURRENT_CAT='', EDIT_ID=null, TABLE_OK=true;
+let CATEGORIES={}, RECORDS=[];
+
+/* ── Toast ── */
+function toast(msg,type){const t=document.getElementById('toast');t.className='toast '+(type||'')+' show';
+  t.innerHTML=(type==='err'?'<i class="ti ti-alert-circle"></i>':type==='ok'?'<i class="ti ti-circle-check"></i>':'')+msg;
+  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3200);}
+function escapeHtml(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ═══════ GATE ═══════ */
+async function gate(){
+  // Admin bo'lmagan har qanday holatda — sassiz yo'naltiramiz.
+  // Hech qanday "admin" ekran ko'rsatilmaydi, ya'ni sahifa borligi bilinmaydi.
+  // replace() ishlatiladi: "orqaga" tugmasi bilan ham qaytib bo'lmaydi.
   try{
-    if(!window.supabase){ set(1,'XATO','bad','supabase-js yuklanmadi (internet yoki CDN muammosi).'); return; }
-    _sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-    set(1,'OK','ok','Supabase mijozi yaratildi.');
-  }catch(e){ set(1,'XATO','bad',String(e)); return; }
+    const {data:{session}}=await _sb.auth.getSession();
+    if(!session){ window.location.replace('index.html'); return; }
+    CURRENT_USER=session.user;
+    const {data:profile,error}=await _sb.from('profiles').select('full_name,role').eq('id',session.user.id).single();
+    if(error || !profile || profile.role!=='admin'){ window.location.replace('dashboard.html'); return; }
 
-  // 2) Session
-  let session;
-  try{
-    const {data,error}=await _sb.auth.getSession();
-    if(error){ set(2,'XATO','bad',error.message); }
-    session=data?.session;
-    if(!session){
-      set(2,'YO\'Q','bad','Tizimga kirilmagan. admin.html sizni index.html ga yuboradi.\n\nAvval saytga (index.html) kirib, keyin bu sahifani oching.');
-      verdict(false,'Siz tizimga kirmagansiz. <small>Avval saytga login qiling, so\'ng bu sahifani qayta oching.</small>');
-      return;
-    }
-    set(2,'OK','ok','Kirilgan.\nuser.id: '+session.user.id+'\nemail:   '+session.user.email);
-  }catch(e){ set(2,'XATO','bad',String(e)); return; }
-
-  // 3) Profil
-  let profile,perr;
-  try{
-    const {data,error}=await _sb.from('profiles').select('id,full_name,phone,role,subscription_tier').eq('id',session.user.id).maybeSingle();
-    profile=data; perr=error;
-    if(error){
-      set(3,'XATO','bad','So\'rov xatosi:\n'+error.message+'\n\n(Ehtimol RLS/is_admin muammosi — setup.sql qayta ishga tushirilishi kerak.)');
-    }else if(!data){
-      set(3,'YO\'Q','bad','Bu user.id uchun profiles jadvalida QATOR YO\'Q.\nDemak siz kirgan akkaunt uchun profil yaratilmagan yoki boshqa id.');
-    }else{
-      set(3,'OK','ok',JSON.stringify(data,null,2));
-    }
-  }catch(e){ set(3,'XATO','bad',String(e)); }
-
-  // 4) role
-  const role=profile?.role;
-  if(perr){ set(4,'—','wait','Profil o\'qilmadi (yuqoridagi xato).'); }
-  else if(role==='admin'){ set(4,'admin','ok','role = "admin" ✓ — bu to\'g\'ri.'); }
-  else{ set(4,String(role),'bad','role = "'+role+'" (admin EMAS).\nAynan shu sabab admin.html sizni qaytaryapti.'); }
-
-  // 5) is_admin() RPC
-  let rpcVal,rpcErr;
-  try{
-    const {data,error}=await _sb.rpc('is_admin');
-    rpcVal=data; rpcErr=error;
-    if(error){ set(5,'XATO','bad','is_admin() chaqirib bo\'lmadi:\n'+error.message+'\n\n(setup.sql dagi 1-QISM ishga tushmagan bo\'lishi mumkin.)'); }
-    else{ set(5,String(data),data?'ok':'bad','is_admin() => '+data); }
-  }catch(e){ set(5,'XATO','bad',String(e)); }
-
-  // Xulosa
-  if(!perr && role==='admin'){
-    verdict(true,'✅ Hammasi joyida — bu akkaunt admin. <small>Agar admin.html hali ham qaytarsa: (1) admin.html ni Ctrl+Shift+R bilan to\'liq yangilang; (2) brauzer keshini tozalang. Sizning session-ingiz aynan shu akkauntga tegishli va role=admin.</small>');
-  }else if(!perr && role && role!=='admin'){
-    verdict(false,'❌ Siz kirgan akkauntning role = "'+role+'", admin emas.<small>Yechim: Supabase → SQL Editor:<br><code>update public.profiles set role=\'admin\' where id=\''+session.user.id+'\';</code><br>So\'ng admin.html ni yangilang. (Yuqoridagi user.id — aynan hozir kirgan akkauntingiz.)</small>');
-  }else if(!profile && !perr){
-    verdict(false,'❌ Bu akkaunt uchun profil qatori yo\'q.<small>Siz boshqa (dublikat) akkaunt bilan kirgan bo\'lishingiz mumkin. Chiqib, to\'g\'ri raqam bilan qayta kiring, yoki:<br><code>update public.profiles set role=\'admin\' where id=\''+session.user.id+'\';</code></small>');
-  }else{
-    verdict(false,'❌ profiles so\'rovi xato berdi — bu RLS muammosi.<small>setup.sql (is_admin bilan) ni Supabase SQL Editor\'da QAYTA ishga tushiring, so\'ng bu sahifani yangilang.</small>');
+    // Ruxsat bor — panelni ochamiz
+    const name=profile.full_name||'Admin';
+    document.getElementById('who-nm').textContent=name;
+    document.getElementById('who-av').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').classList.add('show');
+    renderNav();
+    await selectType('test');
+  }catch(e){
+    window.location.replace('dashboard.html');
   }
-})();
+}
+async function doLogout(){await _sb.auth.signOut();window.location.href='index.html';}
+
+/* ═══════ NAV ═══════ */
+function renderNav(){
+  const box=document.getElementById('nav-types');
+  box.innerHTML=Object.entries(SCHEMAS).map(([k,s])=>
+    `<button class="nav-item${k===TYPE?' active':''}" data-type="${k}" onclick="selectType('${k}')">
+       <i class="ti ${s.icon}"></i> ${s.label}
+     </button>`).join('')
+    +`<div class="sb-sec">Boshqaruv</div>
+      <button class="nav-item" data-type="__stats" onclick="selectType('__stats')"><i class="ti ti-chart-histogram"></i> Statistika</button>
+      <button class="nav-item" data-type="__pro" onclick="selectType('__pro')"><i class="ti ti-crown"></i> Pro berish</button>`;
+}
+function showView(which){
+  document.getElementById('content-view').style.display = which==='content'?'':'none';
+  document.getElementById('stats-view').style.display   = which==='stats'?'':'none';
+  document.getElementById('pro-view').style.display     = which==='pro'?'':'none';
+  document.getElementById('table-warn').style.display   = which==='content'&&!TABLE_OK?'block':'none';
+}
+async function selectType(t){
+  document.querySelectorAll('#nav-types .nav-item').forEach(b=>b.classList.toggle('active',b.dataset.type===t));
+
+  if(t==='__stats'){
+    document.getElementById('page-title').textContent='Statistika';
+    document.getElementById('page-sub').textContent='Umumiy ko\'rsatkichlar va so\'nggi faoliyat.';
+    showView('stats'); await loadStats(); return;
+  }
+  if(t==='__pro'){
+    document.getElementById('page-title').textContent='Pro berish';
+    document.getElementById('page-sub').textContent='Foydalanuvchiga qo\'lda tarif bering yoki bekor qiling.';
+    showView('pro'); return;
+  }
+
+  TYPE=t; EDIT_ID=null; CURRENT_CAT='';
+  showView('content');
+  const s=SCHEMAS[t];
+  document.getElementById('page-title').textContent=s.label;
+  document.getElementById('page-sub').textContent=s.kind==='quiz'
+    ? 'Savol, variantlar va to\'g\'ri javobni kiriting.'
+    : 'Maydonlarni to\'ldiring va saqlang.';
+  document.getElementById('form-title').textContent='Yangi yozuv';
+  document.getElementById('cat-block').style.display=s.hasCategory?'block':'none';
+  document.getElementById('export-box').classList.remove('show');
+  document.getElementById('sql-box').classList.remove('show');
+  buildForm();
+  if(s.hasCategory){await loadCategories();}
+  await loadRecords();
+}
+
+/* ═══════ FORM BUILDER ═══════ */
+function buildForm(){
+  const s=SCHEMAS[TYPE], wrap=document.getElementById('fields');
+  if(s.kind==='quiz'){
+    let html=`<label class="lbl">Savol matni<span class="req">*</span></label>
+      <textarea class="inp" id="q-text" placeholder="Savolni yozing"></textarea>
+      <label class="lbl">Javob variantlari — to'g'risini belgilang<span class="req">*</span></label>
+      <div id="opts-wrap"></div>
+      <button class="btn-add-opt" onclick="addOption()"><i class="ti ti-plus"></i> Variant qo'shish</button>
+      <div class="opt-hint"><i class="ti ti-circle-check"></i> Yashil doirani bosib to'g'ri javobni belgilang.</div>`;
+    if(s.explanation){
+      html+=`<label class="lbl">Izoh (ixtiyoriy)</label>
+        <textarea class="inp" id="q-exp" placeholder="To'g'ri javob nega to'g'ri ekanini tushuntiring."></textarea>`;
+    }
+    wrap.innerHTML=html;
+    const ow=document.getElementById('opts-wrap');ow.innerHTML='';
+    addOption();addOption();addOption();addOption();
+  }else{
+    const main=s.fields.filter(f=>!f.adv), adv=s.fields.filter(f=>f.adv);
+    let html=main.map(fieldHtml).join('');
+    if(adv.length){
+      html+=`<div class="adv-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+        <i class="ti ti-chevron-right"></i> Qo'shimcha (ko'rinish sozlamalari)</div>
+        <div class="adv-box">${adv.map(fieldHtml).join('')}</div>`;
+    }
+    wrap.innerHTML=html;
+    // list-field default rows
+    s.fields.filter(f=>f.t==='list').forEach(f=>{ if(!document.querySelectorAll(`#list-${f.k} .li-row`).length){addListItem(f.k);addListItem(f.k);} });
+  }
+}
+function fieldHtml(f){
+  const req=f.req?'<span class="req">*</span>':'';
+  const lbl=`<label class="lbl">${f.l}${req}</label>`;
+  if(f.t==='textarea') return `${lbl}<textarea class="inp" id="f-${f.k}" rows="${f.rows||3}" placeholder="${f.ph||''}"></textarea>`;
+  if(f.t==='number')   return `${lbl}<input class="inp" id="f-${f.k}" type="number" value="${f.def??''}" placeholder="${f.ph||''}"/>`;
+  if(f.t==='tags'||f.t==='tags-num') return `${lbl}<input class="inp" id="f-${f.k}" placeholder="${f.ph||'vergul bilan'}"/><div class="field-hint">Vergul bilan ajrating.</div>`;
+  if(f.t==='list') return `${lbl}<div id="list-${f.k}"></div>
+      <button class="btn-add-opt" onclick="addListItem('${f.k}')"><i class="ti ti-plus"></i> Qator qo'shish</button>`;
+  return `${lbl}<input class="inp" id="f-${f.k}" value="${f.def?escapeHtml(f.def):''}" placeholder="${f.ph||''}"/>`;
+}
+function addListItem(key,val){
+  const box=document.getElementById('list-'+key);
+  const row=document.createElement('div');row.className='li-row';
+  row.innerHTML=`<input class="inp" value="${(val||'').replace(/"/g,'&quot;')}" placeholder="Qatorni yozing"/>
+    <button class="del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  box.appendChild(row);
+}
+
+/* quiz options */
+function addOption(text,isCorrect){
+  const wrap=document.getElementById('opts-wrap');if(!wrap)return;
+  if(wrap.children.length>=6){toast('Ko\'pi bilan 6 ta variant','err');return;}
+  const row=document.createElement('div');row.className='opt-row';
+  row.innerHTML=`<div class="radio${isCorrect?' on':''}" onclick="markCorrect(this)" title="To'g'ri javob"></div>
+    <input class="inp" placeholder="Variant matni" value="${(text||'').replace(/"/g,'&quot;')}"/>
+    <button class="del" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>`;
+  wrap.appendChild(row);
+}
+function markCorrect(el){document.querySelectorAll('#opts-wrap .radio').forEach(r=>r.classList.remove('on'));el.classList.add('on');}
+
+/* ═══════ CATEGORIES (test) ═══════ */
+async function loadCategories(){
+  if(!TABLE_OK){renderCatSelect();return;}
+  const {data,error}=await _sb.from('content').select('category,category_title').eq('type','test');
+  if(error){handleNoTable();renderCatSelect();return;}
+  CATEGORIES={};
+  (data||[]).forEach(r=>{if(r.category)CATEGORIES[r.category]=r.category_title||r.category;});
+  renderCatSelect();
+}
+function renderCatSelect(){
+  const sel=document.getElementById('cat-select');if(!sel)return;const cur=sel.value;
+  sel.innerHTML='<option value="">— Toifani tanlang —</option>'+
+    Object.entries(CATEGORIES).map(([c,t])=>`<option value="${c}">${escapeHtml(t)}</option>`).join('');
+  sel.value=cur;
+}
+function toggleNewCat(){const b=document.getElementById('new-cat-box');b.style.display=b.style.display==='none'?'block':'none';}
+function syncCatId(){document.getElementById('new-cat-id').value=slugify(document.getElementById('new-cat-title').value);}
+function slugify(s){return (s||'').toLowerCase().trim().replace(/['`']/g,'').replace(/[^a-z0-9\s_]/g,'').replace(/\s+/g,'_').slice(0,40);}
+async function onCatChange(){CURRENT_CAT=document.getElementById('cat-select').value;document.getElementById('new-cat-box').style.display='none';await loadRecords();}
+
+/* ═══════ READ FORM ═══════ */
+function readForm(){
+  const s=SCHEMAS[TYPE];
+  if(s.kind==='quiz'){
+    const rows=[...document.querySelectorAll('#opts-wrap .opt-row')];
+    const opts=rows.map(r=>r.querySelector('input').value.trim());
+    const ans=rows.findIndex(r=>r.querySelector('.radio').classList.contains('on'));
+    const data={q:document.getElementById('q-text').value.trim(),opts,ans};
+    if(s.explanation)data.exp=(document.getElementById('q-exp')?.value||'').trim();
+    return {data};
+  }
+  const data={};
+  s.fields.forEach(f=>{
+    if(f.t==='list'){
+      data[f.k]=[...document.querySelectorAll(`#list-${f.k} .li-row input`)].map(i=>i.value.trim()).filter(Boolean);
+    }else if(f.t==='tags'){
+      data[f.k]=(document.getElementById('f-'+f.k).value||'').split(',').map(x=>x.trim()).filter(Boolean);
+    }else if(f.t==='tags-num'){
+      data[f.k]=(document.getElementById('f-'+f.k).value||'').split(',').map(x=>parseInt(x.trim(),10)).filter(n=>!isNaN(n));
+    }else if(f.t==='number'){
+      const v=document.getElementById('f-'+f.k).value;data[f.k]=v===''?(f.def??null):parseInt(v,10);
+    }else{
+      let v=(document.getElementById('f-'+f.k).value||'').trim();
+      if(!v&&f.def)v=f.def;data[f.k]=v;
+    }
+  });
+  return {data};
+}
+function validate(data){
+  const s=SCHEMAS[TYPE];
+  if(s.kind==='quiz'){
+    if(!data.q)return 'Savol matnini kiriting';
+    const filled=data.opts.filter(o=>o.length);
+    if(filled.length<2)return 'Kamida 2 ta variant kiriting';
+    if(data.ans<0||!data.opts[data.ans])return 'To\'g\'ri javobni belgilang';
+    return null;
+  }
+  for(const f of s.fields){
+    if(!f.req)continue;
+    const v=data[f.k];
+    if(f.t==='list'){if(!v||!v.length)return `"${f.l}" — kamida bitta qator kerak`;}
+    else if(v===''||v==null){return `"${f.l}" to'ldirilishi shart`;}
+  }
+  return null;
+}
+
+/* ═══════ SAVE ═══════ */
+async function saveRecord(){
+  const s=SCHEMAS[TYPE];
+  const {data}=readForm();
+
+  // category (test)
+  let cat=null,catTitle=null;
+  if(s.hasCategory){
+    const newBox=document.getElementById('new-cat-box').style.display!=='none';
+    cat=newBox?document.getElementById('new-cat-id').value.trim():document.getElementById('cat-select').value;
+    catTitle=newBox?document.getElementById('new-cat-title').value.trim():(CATEGORIES[cat]||cat);
+    if(!cat)return toast('Toifani tanlang yoki yangi toifa kiriting','err');
+  }
+
+  // quiz: bo'sh variantlarni tozalash + ans indeksini moslash
+  if(s.kind==='quiz'){
+    const clean=[];let ans=0;
+    data.opts.forEach((o,i)=>{if(o.length){if(i===data.ans)ans=clean.length;clean.push(o);}});
+    data.opts=clean;data.ans=ans;
+  }
+  const err=validate(data);if(err)return toast(err,'err');
+
+  const row={type:TYPE,category:cat,category_title:catTitle,data};
+  const btn=document.getElementById('save-btn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Saqlanmoqda…';
+
+  if(!TABLE_OK){
+    if(s.hasCategory&&CURRENT_CAT!==cat){CURRENT_CAT=cat;CATEGORIES[cat]=catTitle;RECORDS=[];renderCatSelect();document.getElementById('cat-select').value=cat;}
+    if(EDIT_ID!==null&&typeof EDIT_ID==='number'){RECORDS[EDIT_ID]=row;}else{RECORDS.push(row);}
+    renderList();resetForm();btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';
+    toast('Saqlandi (mahalliy). SQL jadval yaratilsa bazaga yoziladi.','ok');return;
+  }
+
+  let res;
+  if(EDIT_ID!==null){res=await _sb.from('content').update(row).eq('id',EDIT_ID);}
+  else{res=await _sb.from('content').insert({...row,created_by:CURRENT_USER.id});}
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';
+  if(res.error)return toast('Saqlashda xatolik: '+res.error.message,'err');
+  toast(EDIT_ID!==null?'Yangilandi':'Qo\'shildi','ok');
+  if(s.hasCategory){if(!CATEGORIES[cat]){CATEGORIES[cat]=catTitle;renderCatSelect();}CURRENT_CAT=cat;document.getElementById('cat-select').value=cat;}
+  resetForm();await loadRecords();
+}
+function resetForm(){EDIT_ID=null;document.getElementById('form-title').textContent='Yangi yozuv';buildForm();
+  document.getElementById('save-btn').innerHTML='<i class="ti ti-device-floppy"></i> Saqlash';}
+
+/* ═══════ LIST ═══════ */
+function handleNoTable(){TABLE_OK=false;document.getElementById('table-warn').classList.add('show');}
+async function loadRecords(){
+  const s=SCHEMAS[TYPE];
+  if(s.hasCategory&&!CURRENT_CAT){RECORDS=[];renderList();return;}
+  if(!TABLE_OK){renderList();return;}
+  let q=_sb.from('content').select('*').eq('type',TYPE).order('created_at',{ascending:true});
+  if(s.hasCategory)q=q.eq('category',CURRENT_CAT);
+  const {data,error}=await q;
+  if(error){handleNoTable();renderList();return;}
+  RECORDS=data||[];renderList();updateNavCounts();
+}
+async function updateNavCounts(){/* soddalik uchun joriy tur sonini ko'rsatamiz */}
+function recTitle(r){
+  const d=r.data||{};
+  return d.q||d.title||d.name||d.t||('#'+(d.n||''))||'(nomsiz)';
+}
+function renderList(){
+  const s=SCHEMAS[TYPE],list=document.getElementById('rec-list');
+  document.getElementById('rec-count').textContent=RECORDS.length+' ta';
+  if(!RECORDS.length){
+    const hint=s.hasCategory&&!CURRENT_CAT?'Toifani tanlang.':'Hali yozuv yo\'q. Chapdan qo\'shing.';
+    list.innerHTML=`<div class="empty"><i class="ti ti-inbox"></i><p>${hint}</p></div>`;return;
+  }
+  list.innerHTML=RECORDS.map((r,i)=>{
+    const d=r.data||{};
+    let body='';
+    if(s.kind==='quiz'){
+      body='<ul class="q-opts">'+(d.opts||[]).map((o,oi)=>
+        `<li class="${oi===d.ans?'correct':''}"><i class="ti ${oi===d.ans?'ti-circle-check-filled':'ti-circle'}"></i>${escapeHtml(o)}</li>`).join('')+'</ul>'+
+        (d.exp?`<div class="q-exp"><i class="ti ti-info-circle" style="font-size:12px"></i> ${escapeHtml(d.exp)}</div>`:'');
+    }else{
+      const meta=s.fields.filter(f=>f.t!=='textarea'&&f.t!=='list'&&!f.adv&&d[f.k]!=null&&d[f.k]!=='')
+        .map(f=>`<span>${escapeHtml(f.l)}: ${escapeHtml(Array.isArray(d[f.k])?d[f.k].join(', '):d[f.k])}</span>`).join('');
+      body=meta?`<div class="q-meta">${meta}</div>`:'';
+    }
+    return `<div class="q-item"><div class="q-top">
+      <div class="q-text">${i+1}. ${escapeHtml(recTitle(r))}</div>
+      <div class="q-tools">
+        <button onclick="editRecord(${i})" title="Tahrirlash"><i class="ti ti-pencil"></i></button>
+        <button class="dl" onclick="deleteRecord(${i})" title="O'chirish"><i class="ti ti-trash"></i></button>
+      </div></div>${body}</div>`;
+  }).join('');
+}
+function editRecord(i){
+  const s=SCHEMAS[TYPE],r=RECORDS[i],d=r.data||{};
+  EDIT_ID=TABLE_OK?r.id:i;
+  document.getElementById('form-title').textContent='Tahrirlash';
+  buildForm();
+  if(s.kind==='quiz'){
+    document.getElementById('q-text').value=d.q||'';
+    if(s.explanation&&document.getElementById('q-exp'))document.getElementById('q-exp').value=d.exp||'';
+    const ow=document.getElementById('opts-wrap');ow.innerHTML='';
+    (d.opts||[]).forEach((o,oi)=>addOption(o,oi===d.ans));
+  }else{
+    s.fields.forEach(f=>{
+      const v=d[f.k];
+      if(f.t==='list'){const box=document.getElementById('list-'+f.k);box.innerHTML='';(v||[]).forEach(x=>addListItem(f.k,x));if(!(v||[]).length)addListItem(f.k);}
+      else if(f.t==='tags'||f.t==='tags-num'){document.getElementById('f-'+f.k).value=(v||[]).join(', ');}
+      else{document.getElementById('f-'+f.k).value=v??'';}
+    });
+  }
+  document.getElementById('save-btn').innerHTML='<i class="ti ti-check"></i> Yangilash';
+  window.scrollTo({top:0,behavior:'smooth'});toast('Tahrirlash rejimi','');
+}
+async function deleteRecord(i){
+  const r=RECORDS[i];
+  if(!confirm('Bu yozuvni o\'chirishni tasdiqlaysizmi?'))return;
+  if(!TABLE_OK){RECORDS.splice(i,1);renderList();toast('O\'chirildi (mahalliy)','ok');return;}
+  const {error}=await _sb.from('content').delete().eq('id',r.id);
+  if(error)return toast('O\'chirishda xatolik','err');
+  toast('O\'chirildi','ok');await loadRecords();
+}
+
+/* ═══════ EXPORT JS (sahifa formatida) ═══════ */
+function jsObj(d,keys){
+  const parts=keys.map(k=>{
+    let v=d[k];
+    if(v===undefined)v=null;
+    return `${k}:${JSON.stringify(v)}`;
+  });
+  return '{'+parts.join(', ')+'}';
+}
+function exportJS(){
+  const box=document.getElementById('export-box');
+  document.getElementById('sql-box').classList.remove('show');
+  const s=SCHEMAS[TYPE];
+  if(!RECORDS.length)return toast('Avval yozuv bo\'lsin','err');
+  if(s.hasCategory&&!CURRENT_CAT)return toast('Toifani tanlang','err');
+
+  let items='';
+  if(s.kind==='quiz'){
+    const keys=s.explanation?['q','opts','ans','exp']:['q','opts','ans'];
+    items=RECORDS.map(r=>'  '+jsObj(r.data,keys)).join(',\n');
+  }else{
+    const keys=s.fields.map(f=>f.k);
+    items=RECORDS.map(r=>'  '+jsObj(r.data,keys)).join(',\n');
+  }
+  const varName=s.target(CURRENT_CAT);
+  const code=`${varName} = [\n${items}\n];`;
+  box.textContent=code;box.classList.toggle('show');
+  if(box.classList.contains('show')){
+    navigator.clipboard?.writeText(code).then(
+      ()=>toast(`Nusxalandi — ${s.page} ga qo'ying`,'ok'),
+      ()=>toast('Kod tayyor — qo\'lda nusxalang',''));
+  }
+}
+
+/* ═══════ SQL migration ═══════ */
+function toggleSQL(){
+  const box=document.getElementById('sql-box');
+  document.getElementById('export-box').classList.remove('show');
+  box.textContent=`-- ═══ MaktabgachaHub: universal 'content' jadvali + himoya (RLS) ═══
+-- Supabase → SQL Editor'ga qo'ying va bir marta ishga tushiring.
+
+create table if not exists public.content (
+  id             uuid primary key default gen_random_uuid(),
+  type           text not null,        -- test, vaziyat, qaror, qoshiq, hikoya, oyin, mashgulot, haftalik
+  category       text,                 -- test uchun toifa kodi (masalan: ilk_qadam)
+  category_title text,
+  data           jsonb not null,       -- yozuvning sahifadagi aynan shakli
+  sort           int default 0,
+  created_by     uuid references auth.users(id),
+  created_at     timestamptz default now()
+);
+
+create index if not exists content_type_idx on public.content(type);
+create index if not exists content_cat_idx  on public.content(type, category);
+
+alter table public.content enable row level security;
+
+-- Har qanday tizimga kirgan foydalanuvchi kontentni O'QIY oladi
+create policy "content_read"
+  on public.content for select
+  to authenticated using (true);
+
+-- Faqat ADMIN yoza/tahrirlab/o'chira oladi (server tomonda tekshiriladi)
+create policy "content_admin_write"
+  on public.content for all
+  to authenticated
+  using   (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'));
+
+-- O'zingizni admin qiling (UUID'ni almashtiring):
+-- update public.profiles set role='admin' where id='SIZNING_USER_ID';`;
+  box.classList.toggle('show');
+  if(box.classList.contains('show')){
+    navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BULK IMPORT — ko'p savol/yozuvni bir marta yuklash
+   Qabul qilinadi: JSON massiv, YOKI sahifadagi JS format
+   (masalan  QUESTIONS.ilk_qadam = [ ... ];  yoki  var V1 = [ ... ];)
+   ═══════════════════════════════════════════════════════════════ */
+function openBulk(){
+  const s=SCHEMAS[TYPE];
+  document.getElementById('bulk-type-label').textContent=s.label;
+  document.getElementById('bulk-cat-block').style.display=s.hasCategory?'block':'none';
+  // Joriy tanlangan toifani oldindan qo'yamiz
+  if(s.hasCategory&&CURRENT_CAT){
+    document.getElementById('bulk-cat').value=CURRENT_CAT;
+    document.getElementById('bulk-cat-title').value=CATEGORIES[CURRENT_CAT]||'';
+  }else{
+    document.getElementById('bulk-cat').value='';
+    document.getElementById('bulk-cat-title').value='';
+  }
+  document.getElementById('bulk-hint').innerHTML = s.kind==='quiz'
+    ? 'Har element: <code>q</code>, <code>opts</code>, <code>ans</code>'+(s.explanation?' (va ixtiyoriy <code>exp</code>)':'')+'.'
+    : 'Har element — shu bo\'limning maydonlariga mos obyekt.';
+  document.getElementById('bulk-parsed').textContent='';
+  document.getElementById('bulk-modal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeBulk(){document.getElementById('bulk-modal').style.display='none';document.body.style.overflow='';}
+function bulkFromFile(){document.getElementById('bulk-file').click();}
+function bulkFileChosen(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{document.getElementById('bulk-text').value=r.result;toast('Fayl yuklandi — endi "Hammasini yuklash"ni bosing','ok');};
+  r.readAsText(f);
+}
+// Matnni massivga aylantiradi: JSON, yoki JS literal ("QUESTIONS.x = [...]" / "var V1=[...]")
+function parseBulk(text){
+  let t=(text||'').trim();
+  if(!t) throw new Error('Ro\'yxat bo\'sh');
+  // Old qismini olib tashlaymiz:  NOM = [ ... ] ;
+  const eq=t.indexOf('=');
+  if(t[0]!=='['&&t[0]!=='{'&&eq!==-1&&t.indexOf('[')>eq){ t=t.slice(eq+1); }
+  t=t.trim().replace(/;+\s*$/,'');
+  // 1) avval toza JSON sifatida
+  try{ const v=JSON.parse(t); return Array.isArray(v)?v:[v]; }catch(e){}
+  // 2) JS literal sifatida (unquoted kalit, backtick, trailing comma) — admin o'z brauzerida
+  try{ const v=(new Function('return ('+t+')'))(); return Array.isArray(v)?v:[v]; }
+  catch(e){ throw new Error('Formatni o\'qib bo\'lmadi. JSON yoki to\'g\'ri JS ro\'yxat kiriting.'); }
+}
+async function doBulkImport(){
+  const s=SCHEMAS[TYPE];
+  let items;
+  try{ items=parseBulk(document.getElementById('bulk-text').value); }
+  catch(e){ return toast(e.message,'err'); }
+  if(!items.length) return toast('Hech qanday element topilmadi','err');
+
+  let cat=null,catTitle=null;
+  if(s.hasCategory){
+    cat=document.getElementById('bulk-cat').value.trim();
+    catTitle=document.getElementById('bulk-cat-title').value.trim()||cat;
+    if(!cat) return toast('Toifa kodini kiriting','err');
+  }
+
+  // Validatsiya + normallashtirish
+  const rows=[];
+  for(let i=0;i<items.length;i++){
+    const it=items[i];
+    if(s.kind==='quiz'){
+      if(!it||typeof it.q!=='string'||!Array.isArray(it.opts)) return toast(`${i+1}-element noto'g'ri (q/opts yo'q)`,'err');
+      let ans=Number(it.ans);
+      if(isNaN(ans)||ans<0||ans>=it.opts.length) return toast(`${i+1}-element: 'ans' noto'g'ri`,'err');
+      const data={q:it.q,opts:it.opts,ans};
+      if(s.explanation)data.exp=it.exp||'';
+      rows.push({type:TYPE,category:cat,category_title:catTitle,data,created_by:CURRENT_USER?.id||null});
+    }else{
+      if(!it||typeof it!=='object'||Array.isArray(it)) return toast(`${i+1}-element obyekt bo'lishi kerak`,'err');
+      rows.push({type:TYPE,category:cat,category_title:catTitle,data:it,created_by:CURRENT_USER?.id||null});
+    }
+  }
+
+  const btn=document.getElementById('bulk-btn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Yuklanmoqda…';
+
+  if(!TABLE_OK){
+    // Baza yo'q — mahalliy ro'yxatga qo'shamiz (JS export orqali ishlatiladi)
+    if(s.hasCategory){CURRENT_CAT=cat;CATEGORIES[cat]=catTitle;if(!RECORDS)RECORDS=[];renderCatSelect();document.getElementById('cat-select').value=cat;}
+    rows.forEach(r=>RECORDS.push(r));
+    renderList();btn.disabled=false;btn.innerHTML='<i class="ti ti-database-import"></i> Hammasini yuklash';
+    closeBulk();toast(`${rows.length} ta qo'shildi (mahalliy)`,'ok');return;
+  }
+
+  // Bazaga bo'lak-bo'lak (100 tadan) yuklaymiz
+  let done=0;
+  try{
+    for(let i=0;i<rows.length;i+=100){
+      const chunk=rows.slice(i,i+100);
+      const {error}=await _sb.from('content').insert(chunk);
+      if(error){toast('Yuklashda xatolik: '+error.message,'err');break;}
+      done+=chunk.length;
+      document.getElementById('bulk-parsed').textContent=done+' / '+rows.length+' yuklandi';
+    }
+  }catch(e){toast('Xatolik: '+e.message,'err');}
+
+  btn.disabled=false;btn.innerHTML='<i class="ti ti-database-import"></i> Hammasini yuklash';
+  if(done>0){
+    if(s.hasCategory){if(!CATEGORIES[cat]){CATEGORIES[cat]=catTitle;renderCatSelect();}CURRENT_CAT=cat;document.getElementById('cat-select').value=cat;}
+    closeBulk();toast(`${done} ta yozuv yuklandi ✓`,'ok');
+    await loadRecords();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   STATISTIKA
+   ═══════════════════════════════════════════════════════════════ */
+function statCard(icon,val,label,color){
+  return `<div class="card" style="padding:16px 18px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:38px;height:38px;border-radius:10px;background:${color}1a;color:${color};display:flex;align-items:center;justify-content:center;font-size:20px"><i class="ti ${icon}"></i></div>
+      <div><div style="font-size:24px;font-weight:800;letter-spacing:-.02em">${val}</div>
+      <div style="font-size:12px;color:var(--text2)">${label}</div></div>
+    </div></div>`;
+}
+async function countOf(table,filters){
+  let q=_sb.from(table).select('*',{count:'exact',head:true});
+  (filters||[]).forEach(f=>{ q=q[f.op](f.col,f.val); });
+  const {count,error}=await q;
+  return error?null:(count||0);
+}
+async function loadStats(){
+  const cards=document.getElementById('stat-cards');
+  cards.innerHTML='';
+  // Umumiy ko'rsatkichlar (parallel)
+  const [users,pros,corps,tests] = await Promise.all([
+    countOf('profiles'),
+    countOf('profiles',[{op:'eq',col:'subscription_tier',val:'pro'}]),
+    countOf('profiles',[{op:'eq',col:'subscription_tier',val:'corporate'}]),
+    countOf('test_results')
+  ]);
+  // XP yig'indisi (xp ustunini olib qo'shamiz)
+  let totalXP='—';
+  try{ const {data}=await _sb.from('profiles').select('xp'); if(data) totalXP=data.reduce((s,r)=>s+(r.xp||0),0).toLocaleString('uz-UZ'); }catch(e){}
+
+  const proTotal=(pros||0)+(corps||0);
+  cards.innerHTML=
+    statCard('ti-users', users==null?'—':users.toLocaleString('uz-UZ'),'Foydalanuvchilar','#2563eb')+
+    statCard('ti-crown', proTotal.toLocaleString('uz-UZ'),'Pro / Korporativ','#7c3aed')+
+    statCard('ti-flask', tests==null?'—':tests.toLocaleString('uz-UZ'),'Ishlangan testlar','#15803d')+
+    statCard('ti-star', totalXP,'Jami XP','#b45309');
+
+  // Kontent bo'limlar bo'yicha
+  const cbox=document.getElementById('stat-content');
+  try{
+    const {data,error}=await _sb.from('content').select('type');
+    if(error){cbox.innerHTML='<div class="empty"><i class="ti ti-database-off"></i><p>content jadvali topilmadi.</p></div>';}
+    else{
+      const by={}; (data||[]).forEach(r=>{by[r.type]=(by[r.type]||0)+1;});
+      const rows=Object.entries(SCHEMAS).map(([k,s])=>{
+        const n=by[k]||0;
+        return `<div class="q-item" style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-weight:600"><i class="ti ${s.icon}" style="color:var(--accent2);margin-right:8px"></i>${s.label}</span>
+          <span class="count-pill">${n} ta</span></div>`;
+      }).join('');
+      cbox.innerHTML=rows;
+    }
+  }catch(e){cbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
+
+  // So'nggi foydalanuvchilar
+  const rbox=document.getElementById('stat-recent');
+  try{
+    const {data,error}=await _sb.from('profiles').select('full_name,phone,subscription_tier,xp,created_at').order('created_at',{ascending:false}).limit(10);
+    if(error||!data||!data.length){rbox.innerHTML='<div class="empty"><i class="ti ti-user"></i><p>Ma\'lumot yo\'q yoki ruxsat cheklangan.</p></div>';}
+    else{
+      rbox.innerHTML=data.map(u=>{
+        const tier=u.subscription_tier==='pro'?'⭐ Pro':u.subscription_tier==='corporate'?'🏢 Korp':'Bepul';
+        const d=u.created_at?new Date(u.created_at).toLocaleDateString('uz-UZ'):'';
+        return `<div class="q-item" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <div><div style="font-weight:600">${escapeHtml(u.full_name||'—')}</div>
+            <div class="q-meta" style="margin-top:3px"><span>${escapeHtml(u.phone||'')}</span><span>${d}</span><span>${(u.xp||0)} XP</span></div></div>
+          <span class="count-pill">${tier}</span></div>`;
+      }).join('');
+    }
+  }catch(e){rbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRO BERISH
+   ═══════════════════════════════════════════════════════════════ */
+async function searchUsers(){
+  const q=document.getElementById('pro-q').value.trim();
+  const box=document.getElementById('pro-results');
+  if(!q){box.innerHTML='<div class="empty"><i class="ti ti-users"></i><p>Ism yoki raqam kiriting.</p></div>';return;}
+  box.innerHTML='<div class="empty"><i class="ti ti-loader-2"></i><p>Qidirilmoqda…</p></div>';
+  const {data,error}=await _sb.from('profiles')
+    .select('id,full_name,phone,subscription_tier,xp')
+    .or(`full_name.ilike.%${q}%,phone.ilike.%${q}%`).limit(20);
+  if(error){box.innerHTML=`<div class="empty"><i class="ti ti-alert-triangle"></i><p>Xatolik: ${escapeHtml(error.message)}<br/>Admin ruxsati kerak bo'lishi mumkin (SQL tugmasi).</p></div>`;return;}
+  if(!data||!data.length){box.innerHTML='<div class="empty"><i class="ti ti-mood-empty"></i><p>Topilmadi.</p></div>';return;}
+  box.innerHTML=data.map(u=>renderUserRow(u)).join('');
+}
+function renderUserRow(u){
+  const tier=u.subscription_tier||'free';
+  const badge=tier==='pro'?'⭐ Pro':tier==='corporate'?'🏢 Korporativ':'Bepul';
+  const b=(plan,label,cls)=>`<button class="mini-btn${tier===plan?' active-plan':''}" ${tier===plan?'disabled':''} onclick="setPlan('${u.id}','${plan}',this)">${label}</button>`;
+  return `<div class="q-item" data-uid="${u.id}">
+    <div class="q-top">
+      <div><div class="q-text">${escapeHtml(u.full_name||'—')}</div>
+        <div class="q-meta" style="margin-top:4px"><span>${escapeHtml(u.phone||'')}</span><span>${(u.xp||0)} XP</span></div></div>
+      <span class="count-pill">${badge}</span>
+    </div>
+    <div class="tools-row" style="margin-top:10px">
+      ${b('free','Bepul')} ${b('pro','⭐ Pro berish')} ${b('corporate','🏢 Korporativ')}
+    </div></div>`;
+}
+async function setPlan(userId,plan,btn){
+  if(!confirm('Tarifni "'+plan+'" ga o\'zgartirasizmi?'))return;
+  btn.disabled=true;const old=btn.innerHTML;btn.innerHTML='...';
+  const {error}=await _sb.from('profiles').update({subscription_tier:plan}).eq('id',userId);
+  if(error){btn.disabled=false;btn.innerHTML=old;toast('Xatolik: '+error.message+' (admin ruxsati kerak)','err');return;}
+  // subscriptions jadvali bo'lsa — unga ham yozamiz (ixtiyoriy, xato bo'lsa e'tiborsiz)
+  try{ if(plan==='free'){await _sb.from('subscriptions').update({status:'expired'}).eq('user_id',userId);} }catch(e){}
+  toast('Tarif yangilandi: '+plan,'ok');
+  // Qatorni yangilaymiz
+  const {data}=await _sb.from('profiles').select('id,full_name,phone,subscription_tier,xp').eq('id',userId).single();
+  if(data){const row=document.querySelector(`#pro-results .q-item[data-uid="${userId}"]`);if(row)row.outerHTML=renderUserRow(data);}
+}
+function toggleProSQL(){
+  const box=document.getElementById('pro-sql');
+  box.textContent=`-- ═══ Admin uchun 'profiles' ruxsati (bir marta) ═══
+-- Admin barcha profillarni KO'RA va tarifni O'ZGARTIRA olishi uchun.
+-- Supabase → SQL Editor'ga qo'ying va Run bosing.
+
+alter table public.profiles enable row level security;
+
+-- Admin barcha profillarni o'qiy oladi (statistika + qidiruv uchun)
+drop policy if exists "profiles_admin_read" on public.profiles;
+create policy "profiles_admin_read"
+  on public.profiles for select
+  to authenticated
+  using (
+    auth.uid() = id
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+  );
+
+-- Admin har qanday profil tarifini/rolini yangilay oladi
+drop policy if exists "profiles_admin_update" on public.profiles;
+create policy "profiles_admin_update"
+  on public.profiles for update
+  to authenticated
+  using (
+    auth.uid() = id
+    or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+  );`;
+  box.classList.toggle('show');
+  if(box.classList.contains('show')){navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});}
+}
+
+gate();
 </script>
 </body>
 </html>
