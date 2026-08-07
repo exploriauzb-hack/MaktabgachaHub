@@ -1060,12 +1060,10 @@ function renderUserRow(u){
 async function setPlan(userId,plan,btn){
   if(!confirm('Tarifni "'+plan+'" ga o\'zgartirasizmi?'))return;
   btn.disabled=true;const old=btn.innerHTML;btn.innerHTML='...';
-  const {error}=await _sb.from('profiles').update({subscription_tier:plan}).eq('id',userId);
-  if(error){btn.disabled=false;btn.innerHTML=old;toast('Xatolik: '+error.message+' (admin ruxsati kerak)','err');return;}
-  // subscriptions jadvali bo'lsa — unga ham yozamiz (ixtiyoriy, xato bo'lsa e'tiborsiz)
-  try{ if(plan==='free'){await _sb.from('subscriptions').update({status:'expired'}).eq('user_id',userId);} }catch(e){}
+  // Xavfsiz yo'l: server tomonda admin tekshiruvi bilan (set_subscription RPC)
+  const {error}=await _sb.rpc('set_subscription',{p_user:userId,p_tier:plan});
+  if(error){btn.disabled=false;btn.innerHTML=old;toast('Xatolik: '+error.message,'err');return;}
   toast('Tarif yangilandi: '+plan,'ok');
-  // Qatorni yangilaymiz
   const {data}=await _sb.from('profiles').select('id,full_name,phone,subscription_tier,xp').eq('id',userId).single();
   if(data){const row=document.querySelector(`#pro-results .q-item[data-uid="${userId}"]`);if(row)row.outerHTML=renderUserRow(data);}
 }
