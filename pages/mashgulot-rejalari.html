@@ -673,5 +673,29 @@ document.querySelectorAll('.age-tab').forEach(tab => {
 
 renderPlans('all');
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ═══ Admin panelda qo'shilgan mashg'ulot rejalarini bazadan yuklaydi ═══ */
+(async function(){
+  try{
+    if(!window.supabase) return;
+    var _dbsb = window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ');
+    var res = await _dbsb.from('content').select('data').eq('type','mashgulot_rejalari');
+    if(res.error || !res.data || !res.data.length) return;
+    var okMethod = {montessori:1,reggio:1,steam:1,vygotsky:1,gardner:1,dewey:1};
+    res.data.forEach(function(r){
+      var p = r.data; if(!p || !p.title) return;
+      if(!okMethod[p.method]) p.method = 'montessori';
+      p.comps = Array.isArray(p.comps) ? p.comps : [];
+      p.steps = Array.isArray(p.steps) ? p.steps : [];
+      ['age','duration','code','soha','goal','resources','diffEasy','diffHard','assess'].forEach(function(k){ if(p[k]==null) p[k]=''; });
+      plans.push(p);
+    });
+    var active = document.querySelector('.age-tab.active');
+    renderPlans(active ? active.dataset.age : 'all');
+  }catch(e){ console.warn('rejalar DB:', e); }
+})();
+</script>
+
 </body>
 </html>
