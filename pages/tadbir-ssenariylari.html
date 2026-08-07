@@ -683,5 +683,44 @@ function showEvent(id){
   }
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ═══ Admin panelda qo'shilgan tadbir ssenariylarini bazadan yuklaydi ═══ */
+(async function(){
+  try{
+    if(!window.supabase) return;
+    var _dbsb = window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ');
+    var res = await _dbsb.from('content').select('data').eq('type','tadbir');
+    if(res.error || !res.data || !res.data.length) return;
+    var okColor = {green:1,blue:1,amber:1,pink:1,purple:1,teal:1};
+    var g = document.getElementById('eventGrid');
+    res.data.forEach(function(r, idx){
+      var d = r.data; if(!d || !d.title) return;
+      var id = 'db_' + idx;
+      var ev = Object.assign({}, (d.event && typeof d.event==='object') ? d.event : {});
+      ev.title = d.title; ev.date = d.date || ''; ev.duration = d.duration || '';
+      ev.icon = d.icon || 'ti-confetti';
+      ev.color = okColor[d.color] ? d.color : 'blue';
+      ev.intro = ev.intro || ''; ev.props = ev.props || '';
+      ev.roles  = Array.isArray(ev.roles)  ? ev.roles  : [];
+      ev.scenes = Array.isArray(ev.scenes) ? ev.scenes : [];
+      ev.full = true;
+      fullEvents[id] = ev;
+      eventOrder.push([id, ev]);
+      var c = colorMap[ev.color];
+      var card = document.createElement('button');
+      card.className = 'event-card'; card.id = 'card-' + id;
+      card.innerHTML =
+        '<span class="full-tag"><i class="ti ti-stars"></i> To\'liq ssenariy</span>' +
+        '<div class="event-icon" style="background:'+c.bg+';color:'+c.fg+'"><i class="ti '+ev.icon+'"></i></div>' +
+        '<div class="event-title">'+ev.title+'</div>' +
+        '<div class="event-meta">'+ev.date+' · '+ev.duration+'</div>';
+      card.addEventListener('click', function(){ showEvent(id); });
+      g.appendChild(card);
+    });
+  }catch(e){ console.warn('tadbir DB:', e); }
+})();
+</script>
+
 </body>
 </html>
