@@ -239,22 +239,18 @@ async function checkSubscriptionExpiry() {
   const plan = getUserPlan()
   if (plan === 'free') return
 
-  const { data } = await _sb
-    .from('subscriptions')
-    .select('current_period_end')
-    .eq('user_id', _currentUser.id)
-    .eq('status', 'active')
-    .single()
+  // Muddat profiles.subscription_end da. NULL bo'lsa — muddatsiz.
+  const end = _currentProfile?.subscription_end
+  if (!end) return
 
-  if (!data) return
-
-  const end      = new Date(data.current_period_end)
   const now      = new Date()
-  const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24))
+  const endDate  = new Date(end)
+  const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24))
 
   if (daysLeft <= 0) {
+    // Server o'zi tekshirib 'free' qiladi (faqat pasaytirish)
     await _sb.rpc('expire_own_subscription')
-    if (_currentProfile) _currentProfile.subscription_tier = 'free'
+    if (_currentProfile) { _currentProfile.subscription_tier = 'free'; _currentProfile.subscription_end = null }
     showToast('Obuna muddati tugadi. Yangilang!', 'err')
   } else if (daysLeft <= 3) {
     showToast(`⚠️ Obuna ${daysLeft} kundan keyin tugaydi!`, 'err')
