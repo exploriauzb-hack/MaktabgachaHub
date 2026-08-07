@@ -515,7 +515,18 @@ var ALL_VARIANTS=[], SELECTED=null;
 
 async function initDemo(){
   ALL_VARIANTS=[];
-  // 1) Bazadan (admin panelda qo'shilganlar)
+  var seen={};
+
+  // 1) Qattiq yozilgan asosiy variantlar (doim ko'rinadi)
+  [
+    {id:'V1',title:'1-Variant',desc:'Tarbiya tamoyillari, shaxs rivojlanishi',questions:V1},
+    {id:'V2',title:'2-Variant',desc:'Yosh davrlari, jismoniy madaniyat',questions:V2},
+    {id:'V3',title:'3-Variant',desc:'Aralash — nutq, ekologiya, loyiha',questions:V3}
+  ].forEach(function(v){
+    if(v.questions && v.questions.length){ ALL_VARIANTS.push(v); seen[v.id]=true; }
+  });
+
+  // 2) Bazadan qo'shilganlar (admin panel orqali) — ustiga qo'shiladi
   if(_sb){
     try{
       var res=await _sb.from('content').select('category,category_title,data').eq('type','demo');
@@ -527,19 +538,13 @@ async function initDemo(){
           by[r.category].qs.push(r.data);
         });
         Object.keys(by).forEach(function(k){
+          if(seen[k]) return; // xuddi shu nomli variant allaqachon bor
           ALL_VARIANTS.push({id:k,title:by[k].title,desc:'Test',questions:by[k].qs});
         });
       }
     }catch(e){ console.warn('demo baza:',e); }
   }
-  // 2) Zaxira: qattiq yozilgan variantlar (baza bo'sh bo'lsa)
-  if(!ALL_VARIANTS.length){
-    ALL_VARIANTS=[
-      {id:'V1',title:'1-Variant',desc:'Tarbiya tamoyillari, shaxs rivojlanishi',questions:V1},
-      {id:'V2',title:'2-Variant',desc:'Yosh davrlari, jismoniy madaniyat',questions:V2},
-      {id:'V3',title:'3-Variant',desc:'Aralash — nutq, ekologiya, loyiha',questions:V3}
-    ];
-  }
+
   renderVariants();
   showScreen('screen-home');
 }
