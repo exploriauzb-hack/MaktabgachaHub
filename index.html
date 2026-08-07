@@ -253,13 +253,13 @@ async function signInWithPhone(name,phone,btn){
         .eq('id',session.user.id);
       profileError=error;
     }else{
-      // Yangi: standart teacher/free bilan yaratamiz
+      // Yangi: role/subscription_tier YUBORILMAYDI — baza standarti ('teacher'/'free') qo'yiladi.
+      // (Xavfsizlik: foydalanuvchi o'zini pro/admin qila olmasligi uchun.)
       const{error}=await _sb.from('profiles').insert({
         id:session.user.id,
         full_name:name,
         phone:phone,
-        role:'teacher',
-        subscription_tier:'free'
+        xp:0
       });
       profileError=error;
     }
