@@ -284,6 +284,9 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .rk-me-foot{border-top:1px solid var(--border,#e4e8f0);padding:12px 16px;background:#f8fafc}
 .rk-empty{text-align:center;color:#94a3b8;padding:30px 10px;font-size:13px}
 .rk-load{text-align:center;color:#94a3b8;padding:30px 10px;font-size:13px}
+.rk-cert-btn{width:100%;border:none;cursor:pointer;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-weight:800;font-size:14px;padding:13px;border-radius:12px;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 18px rgba(245,158,11,.35)}
+.rk-cert-btn:active{transform:scale(.99)}
+.rk-cert-note{text-align:center;font-size:11px;color:#94a3b8;margin-top:6px}
 </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
@@ -392,6 +395,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
           <button class="rk-tab" data-p="all"   onclick="switchRank('all',this)">Umumiy</button>
         </div>
       </div>
+      <div id="rk-cert" style="display:none;padding:12px 16px 0"></div>
       <div class="rk-body" id="rk-body">
         <div class="rk-load">Yuklanmoqda…</div>
       </div>
@@ -639,11 +643,14 @@ async function loadRanking(period){
     });
     body.innerHTML=html;
 
-    var inList = rows.some(function(r){return r.is_me;});
-    if(!inList){
+    // O'z ma'lumotim (foot + sertifikat uchun)
+    var meRow = rows.filter(function(r){return r.is_me;})[0];
+    var myRank=null,myName=null,myXp=null;
+    if(meRow){ myRank=Number(meRow.rank); myName=meRow.name; myXp=meRow.xp; }
+    else{
       var mine=await _sb.rpc('leaderboard_my_rank',{p_period:period});
       if(!mine.error && mine.data && mine.data.length){
-        var m=mine.data[0];
+        var m=mine.data[0]; myRank=Number(m.rank); myName=m.name; myXp=m.xp;
         foot.innerHTML='<div class="rk-row me" style="margin:0"><div class="rk-pos">'+m.rank+'</div>'
           +'<div class="rk-name">'+rkEsc(m.name)+' <span class="me-tag">SIZ</span></div>'
           +'<div class="rk-xp">'+m.xp+' XP</div></div>';
@@ -653,7 +660,128 @@ async function loadRanking(period){
         foot.style.display='block';
       }
     }
+
+    // Sertifikat — faqat DASTLABKI TOP 5 uchun
+    var cert=document.getElementById('rk-cert');
+    if(myRank && myRank<=5){
+      RK_ME={rank:myRank, period:period, xp:myXp, name:myName};
+      cert.style.display='block';
+      cert.innerHTML='<button class="rk-cert-btn" onclick="downloadCertificate()"><i class="ti ti-award"></i> Sertifikatingizni yuklab oling</button>'
+        +'<div class="rk-cert-note">Do\'stlaringizga ulashing — siz TOP 5 dasiz! 🎉</div>';
+    }else{
+      cert.style.display='none'; cert.innerHTML='';
+    }
   }catch(e){ body.innerHTML='<div class="rk-empty">Xatolik yuz berdi.</div>'; console.warn('reyting:',e); }
+}
+
+/* ═══════ SERTIFIKAT (marketing — sayt nomi bilan) ═══════ */
+var RK_ME=null;
+function downloadCertificate(){
+  var c=RK_ME; if(!c||!c.rank) return;
+  drawCertificate(c.name||'Tarbiyachi', c.rank, c.period, c.xp||0);
+}
+async function drawCertificate(name, rank, period, xp){
+  try{ if(document.fonts && document.fonts.ready) await document.fonts.ready; }catch(e){}
+  var W=1080,H=1350;
+  var cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  var x=cv.getContext('2d');
+
+  // Fon gradienti
+  var g=x.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#1e3a8a'); g.addColorStop(.55,'#1e40af'); g.addColorStop(1,'#4f46e5');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  // dekorativ doiralar
+  x.globalAlpha=.10; x.fillStyle='#a5b4fc';
+  x.beginPath(); x.arc(W*0.85,H*0.12,240,0,7); x.fill();
+  x.beginPath(); x.arc(W*0.12,H*0.9,200,0,7); x.fill();
+  x.globalAlpha=1;
+
+  // Ichki oq karta
+  var m=70, cardW=W-m*2, cardH=H-m*2;
+  roundRect(x,m,m,cardW,cardH,34); x.fillStyle='#ffffff'; x.fill();
+  // Oltin ramka
+  roundRect(x,m+16,m+16,cardW-32,cardH-32,26); x.lineWidth=3; x.strokeStyle='#f59e0b'; x.stroke();
+
+  var cx=W/2;
+  function ctext(t,y,size,color,weight,spacing){
+    x.fillStyle=color; x.textAlign='center'; x.textBaseline='alphabetic';
+    x.font=(weight||'700')+' '+size+"px 'Inter', Arial, sans-serif";
+    if(spacing){ drawSpaced(x,t,cx,y,spacing,size,weight,color); }
+    else x.fillText(t,cx,y);
+  }
+
+  // Brend
+  ctext('MAKTABGACHAHUB', m+120, 34, '#1e40af', '800', 6);
+  // chiziq
+  x.strokeStyle='#e4e8f0'; x.lineWidth=2; x.beginPath(); x.moveTo(cx-160,m+150); x.lineTo(cx+160,m+150); x.stroke();
+
+  // Medal / taval
+  var medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'🏅';
+  x.textAlign='center'; x.font="120px 'Inter', Arial, sans-serif"; x.fillText(medal, cx, m+300);
+
+  // Sarlavha
+  ctext('SERTIFIKAT', m+390, 62, '#0f172a', '800', 2);
+  ctext('ushbu sertifikat quyidagi tarbiyachiga taqdim etiladi', m+435, 22, '#64748b', '500');
+
+  // Ism (uzun bo'lsa kichraytiramiz)
+  var nameSize=64; x.font='800 '+nameSize+"px 'Inter', Arial, sans-serif";
+  while(x.measureText(name).width > cardW-140 && nameSize>34){ nameSize-=2; x.font='800 '+nameSize+"px 'Inter', Arial, sans-serif"; }
+  ctext(name, m+530, nameSize, '#1e3a8a', '800');
+  // ism ostidagi chiziq
+  x.strokeStyle='#f59e0b'; x.lineWidth=3; x.beginPath(); x.moveTo(cx-220,m+560); x.lineTo(cx+220,m+560); x.stroke();
+
+  // O'rin pill
+  var rankTxt = rank===1?"1-O'RIN":rank===2?"2-O'RIN":rank===3?"3-O'RIN":"TOP 5";
+  var pillW=360,pillH=86,pillY=m+610;
+  roundRect(x,cx-pillW/2,pillY,pillW,pillH,43); var pg=x.createLinearGradient(0,pillY,0,pillY+pillH);
+  pg.addColorStop(0,'#fbbf24'); pg.addColorStop(1,'#f59e0b'); x.fillStyle=pg; x.fill();
+  ctext(rankTxt, pillY+57, 44, '#ffffff', '800', 2);
+
+  // Davr + XP
+  var periodTxt = period==='day'?'Bugungi reyting':period==='month'?'Oylik reyting':'Umumiy reyting';
+  ctext(periodTxt+' bo\'yicha', pillY+150, 26, '#334155', '600');
+  ctext(xp+' XP', pillY+205, 40, '#1e40af', '800');
+
+  // Marketing chaqiruvi
+  ctext('Siz ham qatnashing — o\'z o\'rningizni egallang!', pillY+285, 24, '#475569', '600');
+
+  // Sana
+  var d=new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
+  ctext(d, m+cardH-150, 22, '#94a3b8', '500');
+
+  // Footer — MARKETING (sayt nomi + manzil)
+  x.fillStyle='#1e40af'; roundRect(x,m+40,m+cardH-110,cardW-80,64,16); x.fill();
+  x.fillStyle='#ffffff'; x.textAlign='center';
+  x.font="700 26px 'Inter', Arial, sans-serif";
+  x.fillText('🎓 maktabgachahubuz-ten.vercel.app', cx, m+cardH-68);
+
+  // Yuklab olish
+  cv.toBlob(function(blob){
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download='MaktabgachaHub-sertifikat.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+    if(typeof showToast==='function') showToast('Sertifikat yuklab olindi! Do\'stlaringizga ulashing 🎉','ok');
+  },'image/png');
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function drawSpaced(ctx,text,cx,y,spacing,size,weight,color){
+  ctx.font=(weight||'700')+' '+size+"px 'Inter', Arial, sans-serif";
+  var total=0, ws=[];
+  for(var i=0;i<text.length;i++){ var w=ctx.measureText(text[i]).width; ws.push(w); total+=w+spacing; }
+  total-=spacing;
+  var sx=cx-total/2; ctx.textAlign='left'; ctx.fillStyle=color;
+  for(var j=0;j<text.length;j++){ ctx.fillText(text[j],sx,y); sx+=ws[j]+spacing; }
+  ctx.textAlign='center';
 }
 
 function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
