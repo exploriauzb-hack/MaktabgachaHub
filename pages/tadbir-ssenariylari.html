@@ -144,6 +144,12 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <meta name="twitter:title" content="Tadbir ssenariylari — MaktabgachaHub"/>
   <meta name="twitter:description" content="Bayram va tadbirlar uchun tayyor ssenariylar: rollar, sahnalar va dialoglar."/>
   <meta name="twitter:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#1e40af"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="MaktabgachaHub"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
 </head>
 <body>
 
@@ -736,5 +742,9 @@ function showEvent(id){
 })();
 </script>
 
+<script>
+/* PWA: service worker */
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('SW:',e);});});}
+</script>
 </body>
 </html>
