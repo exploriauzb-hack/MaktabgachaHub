@@ -163,6 +163,13 @@ pre.code.show{display:block}
 .mobile-bar button{width:40px;height:40px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);cursor:pointer;font-size:19px;color:var(--text2);flex-shrink:0}
 .mobile-bar .mb-title{font-size:16px;font-weight:700}
 </style>
+  <meta name="robots" content="noindex, nofollow"/>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#1e40af"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-title" content="MaktabgachaHub"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
 </head>
 <body>
 
@@ -1169,6 +1176,10 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 function toggleSidebar(){document.getElementById('sidebar').classList.contains('open')?closeSidebar():openSidebar();}
 
 gate();
+</script>
+<script>
+/* PWA: service worker */
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('SW:',e);});});}
 </script>
 </body>
 </html>
