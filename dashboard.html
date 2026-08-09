@@ -254,6 +254,36 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 @keyframes skelsh{0%{background-position:100% 50%}100%{background-position:0 50%}}
 .skel-num{width:52px;height:26px;vertical-align:middle}
 .skel-row{display:block;height:46px;margin-bottom:8px;border-radius:10px}
+.rank-btn{display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer;background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;font-weight:700;font-size:13px;padding:8px 14px;border-radius:999px;font-family:inherit;box-shadow:0 4px 14px rgba(245,158,11,.35);transition:transform .1s,box-shadow .15s}
+.rank-btn:hover{box-shadow:0 6px 20px rgba(245,158,11,.45)}
+.rank-btn:active{transform:scale(.97)}
+.rk-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);z-index:120;display:none;align-items:flex-end;justify-content:center}
+.rk-overlay.show{display:flex}
+.rk-sheet{background:#fff;width:100%;max-width:520px;max-height:88vh;border-radius:22px 22px 0 0;display:flex;flex-direction:column;box-shadow:0 -10px 50px rgba(0,0,0,.25);animation:rkup .25s ease}
+@media(min-width:560px){.rk-overlay{align-items:center}.rk-sheet{border-radius:22px}}
+@keyframes rkup{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
+.rk-head{padding:18px 20px 12px;border-bottom:1px solid var(--border,#e4e8f0);position:relative}
+.rk-head h2{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rk-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border:none;background:#f1f5f9;border-radius:50%;cursor:pointer;font-size:16px;color:#475569}
+.rk-tabs{display:flex;gap:6px;margin-top:12px}
+.rk-tab{flex:1;padding:8px;border:1px solid var(--border,#e4e8f0);background:#fff;border-radius:10px;font-size:12.5px;font-weight:600;color:#64748b;cursor:pointer;font-family:inherit}
+.rk-tab.active{background:#1e40af;color:#fff;border-color:#1e40af}
+.rk-body{overflow-y:auto;padding:14px 16px;flex:1}
+.rk-top1{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fcd34d;border-radius:16px;padding:16px;margin-bottom:14px}
+.rk-crown{font-size:34px;line-height:1}
+.rk-top1 .n{font-weight:800;font-size:16px;color:#78350f}
+.rk-top1 .x{font-size:13px;color:#b45309;font-weight:600}
+.rk-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;margin-bottom:6px}
+.rk-row:nth-child(odd){background:#f8fafc}
+.rk-row.me{background:#eff6ff;border:1.5px solid #bfdbfe}
+.rk-pos{width:28px;text-align:center;font-weight:800;color:#94a3b8;font-size:14px}
+.rk-pos.g{color:#f59e0b}.rk-pos.s{color:#94a3b8}.rk-pos.b{color:#b45309}
+.rk-name{flex:1;font-weight:600;font-size:14px;color:#1a1f36;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-name .me-tag{font-size:10px;background:#2563eb;color:#fff;padding:1px 7px;border-radius:20px;margin-left:6px;font-weight:700}
+.rk-xp{font-weight:800;font-size:14px;color:#1e40af}
+.rk-me-foot{border-top:1px solid var(--border,#e4e8f0);padding:12px 16px;background:#f8fafc}
+.rk-empty{text-align:center;color:#94a3b8;padding:30px 10px;font-size:13px}
+.rk-load{text-align:center;color:#94a3b8;padding:30px 10px;font-size:13px}
 </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
@@ -350,6 +380,25 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
 <!-- MAIN -->
 <main class="main">
+  <!-- ══ REYTING (leaderboard) modal ══ -->
+  <div class="rk-overlay" id="rk-overlay" onclick="if(event.target===this)closeRanking()">
+    <div class="rk-sheet">
+      <div class="rk-head">
+        <h2><i class="ti ti-trophy" style="color:#f59e0b"></i> Reyting</h2>
+        <button class="rk-close" onclick="closeRanking()"><i class="ti ti-x"></i></button>
+        <div class="rk-tabs">
+          <button class="rk-tab active" data-p="day"   onclick="switchRank('day',this)">Bugun</button>
+          <button class="rk-tab" data-p="month" onclick="switchRank('month',this)">Oylik</button>
+          <button class="rk-tab" data-p="all"   onclick="switchRank('all',this)">Umumiy</button>
+        </div>
+      </div>
+      <div class="rk-body" id="rk-body">
+        <div class="rk-load">Yuklanmoqda…</div>
+      </div>
+      <div class="rk-me-foot" id="rk-me-foot" style="display:none"></div>
+    </div>
+  </div>
+
   <div class="topbar">
     <div class="topbar-left">
       <div>
@@ -358,6 +407,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
       </div>
     </div>
     <div class="topbar-right">
+      <button class="rank-btn" onclick="openRanking()"><i class="ti ti-trophy"></i> Reyting</button>
       <span class="plan-pill" id="hero-plan"><i class="ti ti-free-rights"></i> Bepul</span>
       <span class="level-pill" id="hero-xp-badge"><i class="ti ti-medal"></i> 1-daraja</span>
     </div>
@@ -550,6 +600,62 @@ function toggleGroup(name){
   btn.classList.toggle('open',isOpen);
   btn.querySelector('span').textContent=isOpen?"Yopish":"Barchasini ko'rish";
 }
+/* ═══════ REYTING (leaderboard) ═══════ */
+var RK_PERIOD='day';
+function openRanking(){ document.getElementById('rk-overlay').classList.add('show'); document.body.style.overflow='hidden'; loadRanking(RK_PERIOD); }
+function closeRanking(){ document.getElementById('rk-overlay').classList.remove('show'); document.body.style.overflow=''; }
+function switchRank(p,btn){
+  RK_PERIOD=p;
+  document.querySelectorAll('.rk-tab').forEach(function(t){t.classList.toggle('active',t===btn);});
+  loadRanking(p);
+}
+function rkEsc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+async function loadRanking(period){
+  var body=document.getElementById('rk-body');
+  var foot=document.getElementById('rk-me-foot');
+  body.innerHTML='<div class="rk-load">Yuklanmoqda…</div>'; foot.style.display='none';
+  try{
+    var res=await _sb.rpc('leaderboard',{p_period:period,p_limit:50});
+    if(res.error){ body.innerHTML='<div class="rk-empty">Reyting hozircha mavjud emas.</div>'; console.warn('leaderboard:',res.error.message); return; }
+    var rows=res.data||[];
+    if(!rows.length){ body.innerHTML='<div class="rk-empty">Hali reyting shakllanmagan.<br>Test topshiring va birinchi bo\'ling! 🏆</div>'; return; }
+
+    var html='';
+    var top=rows[0];
+    var topLabel = period==='day'?'Bugungi eng zo\'r tarbiyachi':period==='month'?'Oyning eng zo\'r tarbiyachisi':'Eng zo\'r tarbiyachi';
+    html+='<div class="rk-top1"><div class="rk-crown">👑</div><div style="flex:1"><div style="font-size:11px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.03em">'+topLabel+'</div>'
+        +'<div class="n">'+rkEsc(top.name)+(top.is_me?' <span class="me-tag">SIZ</span>':'')+'</div>'
+        +'<div class="x">'+top.xp+' XP</div></div></div>';
+
+    rows.forEach(function(r,i){
+      if(i===0) return;
+      var pos=Number(r.rank);
+      var posCls = pos===2?'s':pos===3?'b':'';
+      var medal = pos===2?'🥈':pos===3?'🥉':pos;
+      html+='<div class="rk-row'+(r.is_me?' me':'')+'">'
+          +'<div class="rk-pos '+posCls+'">'+medal+'</div>'
+          +'<div class="rk-name">'+rkEsc(r.name)+(r.is_me?' <span class="me-tag">SIZ</span>':'')+'</div>'
+          +'<div class="rk-xp">'+r.xp+' XP</div></div>';
+    });
+    body.innerHTML=html;
+
+    var inList = rows.some(function(r){return r.is_me;});
+    if(!inList){
+      var mine=await _sb.rpc('leaderboard_my_rank',{p_period:period});
+      if(!mine.error && mine.data && mine.data.length){
+        var m=mine.data[0];
+        foot.innerHTML='<div class="rk-row me" style="margin:0"><div class="rk-pos">'+m.rank+'</div>'
+          +'<div class="rk-name">'+rkEsc(m.name)+' <span class="me-tag">SIZ</span></div>'
+          +'<div class="rk-xp">'+m.xp+' XP</div></div>';
+        foot.style.display='block';
+      }else{
+        foot.innerHTML='<div style="text-align:center;font-size:12.5px;color:#64748b">Siz hali reytingda yo\'qsiz — test topshiring! 💪</div>';
+        foot.style.display='block';
+      }
+    }
+  }catch(e){ body.innerHTML='<div class="rk-empty">Xatolik yuz berdi.</div>'; console.warn('reyting:',e); }
+}
+
 function openPremiumModal(){document.getElementById('premiumModal').classList.add('show');document.body.style.overflow='hidden'}
 function closePremiumModal(){document.getElementById('premiumModal').classList.remove('show');document.body.style.overflow=''}
 function openMoreSheet(){document.getElementById('moreSheet').classList.add('show');document.getElementById('moreOverlay').classList.add('show');document.body.style.overflow='hidden'}
