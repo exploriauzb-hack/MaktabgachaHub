@@ -698,8 +698,8 @@ window.addEventListener('load',async function(){
   var xp=profile&&profile.xp||0;
   document.getElementById('stat-xp').textContent=xp;
 
-  // Parallel: testlar (bitta so'rov) + bildirishnomalar bir vaqtda yuklanadi
-  var testsP = _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false});
+  // Parallel: testlar (bitta so'rov, SARALASHSIZ — created_at ustuni bo'lmasligi mumkin)
+  var testsP = _sb.from('test_results').select('*').eq('user_id',auth.user.id);
   var notifP = (typeof checkNotifications==='function') ? checkNotifications() : Promise.resolve();
 
   // Daraja/XP — so'rovsiz, darrov chiziladi
@@ -713,18 +713,26 @@ window.addEventListener('load',async function(){
 
   // Testlar natijasi kelgach — sanoq, o'rtacha va so'nggi 5 ta
   var testsRes = await testsP;
+  if(testsRes && testsRes.error){ console.warn('test_results:', testsRes.error.message); }
   var data = (testsRes && testsRes.data) ? testsRes.data : [];
   var count = data.length;
-  var avg = count ? Math.round(data.reduce(function(s,t){return s+(t.percentage||0)},0)/count) : 0;
+  var avg = count ? Math.round(data.reduce(function(s,t){return s+(Number(t.percentage)||0)},0)/count) : 0;
   document.getElementById('stat-test').textContent=count;
   document.getElementById('stat-avg').textContent=avg+'%';
 
+  // So'nggi testlar — mijoz tomonida saralaymiz (vaqt ustuni bo'lsa)
+  var sorted = data.slice().sort(function(a,b){
+    var ta=new Date(a.created_at||a.completed_at||0).getTime()||0;
+    var tb=new Date(b.created_at||b.completed_at||0).getTime()||0;
+    return tb-ta;
+  });
   var ul=document.getElementById('lastTests'); ul.innerHTML='';
   if(count){
-    data.slice(0,5).forEach(function(t){
-      var p=t.percentage||t.score||0;
+    sorted.slice(0,5).forEach(function(t){
+      var p=Number(t.percentage)||Number(t.score)||0;
       var cls=p>=80?'high':p>=60?'mid':'low';
-      var date=new Date(t.created_at).toLocaleDateString('uz-UZ');
+      var dt=t.created_at||t.completed_at;
+      var date=dt?new Date(dt).toLocaleDateString('uz-UZ'):'';
       var tname=t.test_name||t.category||'Test';
       var row=document.createElement('div');row.className='test-row';
       row.innerHTML='<div><div class="test-name">'+tname+'</div><div class="test-date">'+date+'</div></div><div class="test-score '+cls+'">'+p+'%</div>';
