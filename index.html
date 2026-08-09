@@ -56,6 +56,27 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
   .auth-title{font-size:18px}
 }
 </style>
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json"/>
+  <meta name="theme-color" content="#1e40af"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="MaktabgachaHub"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <!-- SEO -->
+  <meta name="description" content="Maktabgacha ta'lim (MTT) tarbiyachilari uchun yagona raqamli platforma: testlar, haftalik mavzular, mashg'ulotlar va attestatsiyaga tayyorgarlik."/>
+  <link rel="canonical" href="https://maktabgachahubuz-ten.vercel.app/index.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="MaktabgachaHub"/>
+  <meta property="og:title" content="MaktabgachaHub — Kirish"/>
+  <meta property="og:description" content="Maktabgacha ta'lim (MTT) tarbiyachilari uchun yagona raqamli platforma: testlar, haftalik mavzular, mashg'ulotlar va attestatsiyaga tayyorgarlik."/>
+  <meta property="og:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
+  <meta property="og:url" content="https://maktabgachahubuz-ten.vercel.app/index.html"/>
+  <meta property="og:locale" content="uz_UZ"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="MaktabgachaHub — Kirish"/>
+  <meta name="twitter:description" content="Maktabgacha ta'lim (MTT) tarbiyachilari uchun yagona raqamli platforma: testlar, haftalik mavzular, mashg'ulotlar va attestatsiyaga tayyorgarlik."/>
+  <meta name="twitter:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -74,6 +95,7 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
       <input class="inp" type="text" id="name-input" placeholder="Ismingizni kiriting" autocomplete="name"/>
       <input class="inp" type="tel" id="phone-input" placeholder="+998 90 123 45 67" autocomplete="tel"
         onkeydown="if(event.key==='Enter')doNameLogin()"/>
+      <div id="cf-container" style="display:flex;justify-content:center;margin:10px 0"></div>
       <button class="btn-primary" id="name-btn" onclick="doNameLogin()">Kirish</button>
       <p class="auth-hint" style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">
         Telefon raqamingiz orqali istalgan qurilmadan hisobingizga kirishingiz mumkin bo'ladi
@@ -152,10 +174,55 @@ function normalizePhone(raw){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
 <script src="js/auth.js"></script>
+<!-- CAPTCHA (Cloudflare Turnstile) — bepul bot himoyasi -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <script>
 const NAME_KEY='mgh_saved_name';
 const PHONE_KEY='mgh_saved_phone';
+
+/* ═══════════════════════════════════════════════════════════════
+   CAPTCHA sozlamasi (BEPUL — Cloudflare Turnstile).
+   1) Cloudflare → Turnstile → Add site → Site key va Secret key oling.
+   2) Site key'ni pastga qo'ying.
+   3) Supabase → Authentication → Settings → Bot & Abuse Protection →
+      Turnstile'ni yoqib, Secret key'ni kiriting.
+   Kalit bo'sh bo'lsa — CAPTCHA o'chiq, login avvalgidek ishlaydi (buzilmaydi).
+   ═══════════════════════════════════════════════════════════════ */
+const TURNSTILE_SITE_KEY = '0x4AAAAAAEK_hTmpT707hm_Z';   // ← Cloudflare Site key'ni shu yerga qo'ying
+
+let _tsWidgetId=null, _tsToken=null, _tsWaiters=[];
+function captchaEnabled(){ return !!TURNSTILE_SITE_KEY && typeof turnstile!=='undefined'; }
+function onTsToken(token){ _tsToken=token; _tsWaiters.forEach(function(r){r(token);}); _tsWaiters=[]; }
+function renderCaptcha(){
+  if(!captchaEnabled()) return;
+  try{
+    _tsWidgetId = turnstile.render('#cf-container', {
+      sitekey: TURNSTILE_SITE_KEY,
+      callback: onTsToken,
+      'error-callback': function(){ _tsToken=null; },
+      'expired-callback': function(){ _tsToken=null; }
+    });
+  }catch(e){ /* qayta render bo'lsa e'tiborsiz */ }
+}
+function _awaitToken(){
+  return new Promise(function(resolve){
+    var to=setTimeout(function(){resolve(undefined);}, 8000);
+    _tsWaiters.push(function(tok){ clearTimeout(to); resolve(tok); });
+  });
+}
+// Har auth so'rovi uchun BITTA yangi token (token bir marta ishlatiladi)
+async function nextCaptchaToken(){
+  if(!captchaEnabled()) return undefined;
+  if(_tsToken){ var t=_tsToken; _tsToken=null; return t; }
+  return await _awaitToken();
+}
+async function freshCaptchaToken(){
+  if(!captchaEnabled()) return undefined;
+  _tsToken=null;
+  try{ if(_tsWidgetId!==null) turnstile.reset(_tsWidgetId); }catch(e){}
+  return await _awaitToken();
+}
 
 window.addEventListener('load',async()=>{
   const{data:{session}}=await _sb.auth.getSession();
@@ -170,6 +237,8 @@ window.addEventListener('load',async()=>{
   if(savedName && savedPhone){
     showWelcomeForm(savedName);
   }
+  // CAPTCHA widget (yoqilgan bo'lsa)
+  renderCaptcha();
 });
 
 async function continueSession(){
@@ -206,19 +275,24 @@ async function signInWithPhone(name,phone,btn){
   try{
     let session=null;
 
+    // CAPTCHA tokeni (yoqilgan bo'lsa). O'chiq bo'lsa — undefined, e'tiborsiz.
+    const capToken1 = await nextCaptchaToken();
+
     // Avval mavjud hisobga kirishga urinamiz
     let{data:signInData,error:signInError}=await _sb.auth.signInWithPassword({
-      email:syntheticEmail,password:syntheticPassword
+      email:syntheticEmail,password:syntheticPassword,
+      options:{ captchaToken: capToken1 }
     });
 
     if(signInData && signInData.session){
       session=signInData.session;
     }else if(signInError){
-      // Hisob mavjud emas — yangisini yaratamiz
+      // Hisob mavjud emas — yangisini yaratamiz (yangi captcha tokeni bilan)
+      const capToken2 = await freshCaptchaToken();
       const{data:signUpData,error:signUpError}=await _sb.auth.signUp({
         email:syntheticEmail,
         password:syntheticPassword,
-        options:{data:{full_name:name}}
+        options:{data:{full_name:name}, captchaToken: capToken2}
       });
       if(signUpError){
         showErr("Kirishda xatolik: "+signUpError.message);
@@ -275,6 +349,14 @@ async function signInWithPhone(name,phone,btn){
     showErr("Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring.");
     btn.textContent=originalText;btn.disabled=false;
   }
+}
+</script>
+<script>
+/* PWA: service worker ro'yxatdan o'tkazish */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/sw.js').catch(function(e){ console.warn('SW:', e); });
+  });
 }
 </script>
 </body>
