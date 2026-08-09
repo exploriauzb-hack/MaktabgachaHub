@@ -187,6 +187,11 @@ function injectPremiumModal() {
 }
 
 // ── To'lov boshlash ──
+// Premium olish uchun @Azadib_way (Telegram) ga bog'lanadi.
+// Bu SHAXSIY akkaunt (bot emas) — shuning uchun matn oldindan yozilmaydi;
+// buyurtma matnini bufer (clipboard) ga nusxalaymiz, foydalanuvchi yopishtiradi.
+const TELEGRAM_CONTACT = 'Azadib_way';   // @siz, faqat username
+
 async function startPayment(planId) {
   const plan = PLANS[planId]
   if (!plan) return
@@ -196,22 +201,31 @@ async function startPayment(planId) {
     return
   }
 
-  const msg = encodeURIComponent(
-    `Salom! Men MaktabgachaHub ${plan.name} obunasini olmoqchiman.\n` +
-    `Email: ${_currentUser.email}\n` +
-    `Summa: ${plan.priceText} so'm/oy`
-  )
+  const who = (_currentProfile && (_currentProfile.full_name || _currentProfile.phone)) || 'Foydalanuvchi'
+  const phone = (_currentProfile && _currentProfile.phone) ? ('\nTelefon: ' + _currentProfile.phone) : ''
+  const msg =
+    `Salom! Men MaktabgachaHub "${plan.name}" obunasini olmoqchiman.\n` +
+    `Ism: ${who}${phone}\n` +
+    `Summa: ${plan.priceText} so'm`
 
-  await _sb.from('payment_logs').insert({
-    user_id : _currentUser.id,
-    amount  : plan.price,
-    currency: 'UZS',
-    provider: 'telegram',
-    status  : 'pending'
-  })
+  try {
+    await _sb.from('payment_logs').insert({
+      user_id : _currentUser.id,
+      amount  : plan.price,
+      currency: 'UZS',
+      provider: 'telegram',
+      status  : 'pending'
+    })
+  } catch (e) { /* log yozilmasa ham davom etamiz */ }
 
-  window.open(`https://t.me/maktabgachahub_bot?start=payment_${planId}_${_currentUser.id}`, '_blank')
-  showToast('Telegram bot orqali to\'lov amalga oshiriladi', 'ok')
+  // Buyurtma matnini bufergaga nusxalaymiz (yopishtirish oson bo'lishi uchun)
+  let copied = false
+  try { await navigator.clipboard.writeText(msg); copied = true } catch (e) {}
+
+  window.open('https://t.me/' + TELEGRAM_CONTACT, '_blank')
+  showToast(copied
+    ? 'Telegram ochildi. Xabar nusxalandi — @' + TELEGRAM_CONTACT + ' ga yuboring.'
+    : 'Telegram ochildi. @' + TELEGRAM_CONTACT + ' ga yozing.', 'ok')
 }
 
 // ── Obunani faollashtirish (admin tomonidan) ──
