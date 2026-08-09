@@ -250,6 +250,10 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   .bn-item.pro-item.active{color:var(--pro2)}
   .bn-item.pro-item.active .bn-dot{background:var(--pro2)}
 }
+.skel{display:inline-block;background:linear-gradient(90deg,#eef1f8 25%,#e2e8f5 37%,#eef1f8 63%);background-size:400% 100%;animation:skelsh 1.2s ease infinite;border-radius:6px}
+@keyframes skelsh{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.skel-num{width:52px;height:26px;vertical-align:middle}
+.skel-row{display:block;height:46px;margin-bottom:8px;border-radius:10px}
 </style>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
@@ -258,6 +262,20 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
   <meta name="apple-mobile-web-app-title" content="MaktabgachaHub"/>
   <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <!-- SEO -->
+  <meta name="description" content="Tarbiyachilar uchun shaxsiy sahifa: testlar, XP, rivojlanish va barcha bo'limlar bir joyda."/>
+  <link rel="canonical" href="https://maktabgachahubuz-ten.vercel.app/dashboard.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="MaktabgachaHub"/>
+  <meta property="og:title" content="MaktabgachaHub — Bosh sahifa"/>
+  <meta property="og:description" content="Tarbiyachilar uchun shaxsiy sahifa: testlar, XP, rivojlanish va barcha bo'limlar bir joyda."/>
+  <meta property="og:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
+  <meta property="og:url" content="https://maktabgachahubuz-ten.vercel.app/dashboard.html"/>
+  <meta property="og:locale" content="uz_UZ"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="MaktabgachaHub — Bosh sahifa"/>
+  <meta name="twitter:description" content="Tarbiyachilar uchun shaxsiy sahifa: testlar, XP, rivojlanish va barcha bo'limlar bir joyda."/>
+  <meta name="twitter:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
 </head>
 <body>
 <div class="bg-scene" aria-hidden="true">
@@ -634,6 +652,9 @@ async function checkNotifications(){
 window.addEventListener('load',async function(){
   var auth=await initAuth(true);if(!auth)return;
   if(typeof fillNav==='function')fillNav();
+  // Skeleton — so'rov natijasi kelguncha ko'rsatiladi
+  ['stat-test','stat-avg'].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML='<span class="skel skel-num"></span>';});
+  var _lt=document.getElementById('lastTests'); if(_lt)_lt.innerHTML='<div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div>';
   var profile=auth.profile;
   var name=getUserName();
   document.getElementById('hero-name').textContent=name;
@@ -676,13 +697,12 @@ window.addEventListener('load',async function(){
   }
   var xp=profile&&profile.xp||0;
   document.getElementById('stat-xp').textContent=xp;
-  var allTests=await _sb.from('test_results').select('percentage').eq('user_id',auth.user.id);
-  if(allTests.data&&allTests.data.length){
-    var count=allTests.data.length;
-    var avg=Math.round(allTests.data.reduce(function(s,t){return s+(t.percentage||0)},0)/count);
-    document.getElementById('stat-test').textContent=count;
-    document.getElementById('stat-avg').textContent=avg+'%';
-  }
+
+  // Parallel: testlar (bitta so'rov) + bildirishnomalar bir vaqtda yuklanadi
+  var testsP = _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false});
+  var notifP = (typeof checkNotifications==='function') ? checkNotifications() : Promise.resolve();
+
+  // Daraja/XP — so'rovsiz, darrov chiziladi
   var lv=getLevel(xp);
   document.getElementById('xp-label').textContent=lv.lvl+'-daraja: '+lv.title;
   document.getElementById('hero-xp-badge').innerHTML='<i class="ti ti-medal"></i> '+lv.lvl+'-daraja';
@@ -690,10 +710,18 @@ window.addEventListener('load',async function(){
   var pct=lv.next<9999?Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100):100;
   document.getElementById('xp-fill').style.width=pct+'%';
   document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
-  var tests=await _sb.from('test_results').select('*').eq('user_id',auth.user.id).order('created_at',{ascending:false}).limit(5);
-  if(tests.data&&tests.data.length){
-    var ul=document.getElementById('lastTests');ul.innerHTML='';
-    tests.data.forEach(function(t){
+
+  // Testlar natijasi kelgach — sanoq, o'rtacha va so'nggi 5 ta
+  var testsRes = await testsP;
+  var data = (testsRes && testsRes.data) ? testsRes.data : [];
+  var count = data.length;
+  var avg = count ? Math.round(data.reduce(function(s,t){return s+(t.percentage||0)},0)/count) : 0;
+  document.getElementById('stat-test').textContent=count;
+  document.getElementById('stat-avg').textContent=avg+'%';
+
+  var ul=document.getElementById('lastTests'); ul.innerHTML='';
+  if(count){
+    data.slice(0,5).forEach(function(t){
       var p=t.percentage||t.score||0;
       var cls=p>=80?'high':p>=60?'mid':'low';
       var date=new Date(t.created_at).toLocaleDateString('uz-UZ');
@@ -702,8 +730,11 @@ window.addEventListener('load',async function(){
       row.innerHTML='<div><div class="test-name">'+tname+'</div><div class="test-date">'+date+'</div></div><div class="test-score '+cls+'">'+p+'%</div>';
       ul.appendChild(row);
     });
+  } else {
+    ul.innerHTML='<div style="text-align:center;color:#9aa3bf;padding:16px;font-size:13px">Hali test topshirilmagan</div>';
   }
-  await checkNotifications();
+
+  await notifP;
 });
 </script>
 <script>
