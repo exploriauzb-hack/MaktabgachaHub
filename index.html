@@ -90,19 +90,35 @@ canvas{position:fixed;inset:0;z-index:1;pointer-events:none}
     <div class="msg msg-err" id="msg-err"></div>
     <div class="msg msg-ok"  id="msg-ok"></div>
 
-    <!-- Yangi kirish: ism + telefon -->
+    <!-- 1-BOSQICH: ism + telefon -->
     <div id="form-name">
       <input class="inp" type="text" id="name-input" placeholder="Ismingizni kiriting" autocomplete="name"/>
       <input class="inp" type="tel" id="phone-input" placeholder="+998 90 123 45 67" autocomplete="tel"
         onkeydown="if(event.key==='Enter')doNameLogin()"/>
-      <div id="cf-container" style="display:flex;justify-content:center;margin:10px 0"></div>
-      <button class="btn-primary" id="name-btn" onclick="doNameLogin()">Kirish</button>
+      <button class="btn-primary" id="name-btn" onclick="doNameLogin()">Davom etish</button>
       <p class="auth-hint" style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px">
-        Telefon raqamingiz orqali istalgan qurilmadan hisobingizga kirishingiz mumkin bo'ladi
+        Telefon raqamingiz orqali istalgan qurilmadan hisobingizga kirasiz
       </p>
     </div>
 
-    <!-- Qaytgan foydalanuvchi uchun -->
+    <!-- 2-BOSQICH: PIN kod -->
+    <div id="form-pin" style="display:none">
+      <p id="pin-title" style="font-weight:700;text-align:center;margin-bottom:4px"></p>
+      <p id="pin-sub" style="font-size:12.5px;color:var(--muted);text-align:center;margin-bottom:14px"></p>
+      <input class="inp" type="password" id="pin-input" inputmode="numeric" maxlength="6"
+        placeholder="PIN kod (4-6 raqam)" autocomplete="off"
+        style="text-align:center;letter-spacing:8px;font-size:20px"
+        oninput="this.value=this.value.replace(/\D/g,'')"
+        onkeydown="if(event.key==='Enter')submitPin()"/>
+      <div id="cf-container" style="display:flex;justify-content:center;margin:10px 0"></div>
+      <button class="btn-primary" id="pin-btn" onclick="submitPin()">Kirish</button>
+      <button class="btn-secondary" onclick="backToPhone()">← Orqaga</button>
+      <p id="pin-forgot" style="font-size:11.5px;color:var(--muted);text-align:center;margin-top:10px;display:none">
+        PIN esdan chiqdimi? <a href="https://t.me/Azadib_way" target="_blank" style="color:#2563eb;font-weight:600">Admin bilan bog'laning</a>
+      </p>
+    </div>
+
+    <!-- Qaytgan foydalanuvchi (shu qurilmada saqlangan) -->
     <div id="form-welcome" class="welcome-card">
       <p class="welcome-name" id="welcome-name-text"></p>
       <button class="btn-primary" id="continue-btn" onclick="continueSession()">Davom etish</button>
@@ -156,12 +172,15 @@ function clearMsgs(){document.getElementById('msg-err').style.display='none';doc
 
 function showNameForm(){
   document.getElementById('form-name').style.display='block';
+  document.getElementById('form-pin').style.display='none';
   document.getElementById('form-welcome').style.display='none';
   clearMsgs();
 }
+function backToPhone(){ showNameForm(); }
 function showWelcomeForm(name){
   document.getElementById('welcome-name-text').textContent='Xush kelibsiz, '+name+'!';
   document.getElementById('form-name').style.display='none';
+  document.getElementById('form-pin').style.display='none';
   document.getElementById('form-welcome').style.display='block';
 }
 
@@ -196,6 +215,7 @@ function captchaEnabled(){ return !!TURNSTILE_SITE_KEY && typeof turnstile!=='un
 function onTsToken(token){ _tsToken=token; _tsWaiters.forEach(function(r){r(token);}); _tsWaiters=[]; }
 function renderCaptcha(){
   if(!captchaEnabled()) return;
+  if(_tsWidgetId!==null) return;  // allaqachon render qilingan
   try{
     _tsWidgetId = turnstile.render('#cf-container', {
       sitekey: TURNSTILE_SITE_KEY,
@@ -237,119 +257,156 @@ window.addEventListener('load',async()=>{
   if(savedName && savedPhone){
     showWelcomeForm(savedName);
   }
-  // CAPTCHA widget (yoqilgan bo'lsa)
-  renderCaptcha();
 });
+
+// ═══════ PIN bilan kirish ═══════
+var AUTH = { name:'', digits:'', mode:'' };  // mode: login | migrate | register
+
+function synthEmail(d){ return d + '@phone.maktabgachahub.uz'; }
+function legacyPass(d){ return 'mgh_' + d + '_pass'; }
 
 async function continueSession(){
   const name=localStorage.getItem(NAME_KEY);
   const phone=localStorage.getItem(PHONE_KEY);
-  if(!name||!phone){showNameForm();return}
-  await signInWithPhone(name,phone,document.getElementById('continue-btn'));
+  if(!name||!phone){ showNameForm(); return; }
+  await proceedPhone(name, phone);
 }
 
 async function doNameLogin(){
   const name=document.getElementById('name-input').value.trim();
   const phoneRaw=document.getElementById('phone-input').value.trim();
   const phone=normalizePhone(phoneRaw);
-
-  if(!name||name.length<2){showErr("Iltimos, ismingizni to'liq kiriting!");return}
-  if(!phone||phone.length<9){showErr("Iltimos, to'g'ri telefon raqam kiriting!");return}
-
-  await signInWithPhone(name,phone,document.getElementById('name-btn'));
+  if(!name||name.length<2){ showErr("Iltimos, ismingizni to'liq kiriting!"); return; }
+  if(!phone||phone.length<9){ showErr("Iltimos, to'g'ri telefon raqam kiriting!"); return; }
+  await proceedPhone(name, phone);
 }
 
-async function signInWithPhone(name,phone,btn){
-  const originalText=btn.textContent;
-  btn.textContent='Kirilmoqda...';btn.disabled=true;
+// 1-bosqich: telefon holatini aniqlab, PIN bosqichiga o'tamiz
+async function proceedPhone(name, phoneRaw){
+  const btn=document.getElementById('name-btn')||document.getElementById('continue-btn');
+  const old=btn?btn.textContent:'';
+  if(btn){ btn.textContent='Tekshirilmoqda…'; btn.disabled=true; }
   clearMsgs();
 
-  // Telefonni HAMMA yo'lda bir xil normallashtiramiz (+, bo'sh joy, - olib tashlanadi).
-  // Aks holda "+998..." va "998..." ikki xil hisob ochib yuboradi.
-  phone=normalizePhone(phone);
+  const digits=normalizePhone(phoneRaw);
+  AUTH.name=name; AUTH.digits=digits;
 
-  // Telefon raqamdan sintetik email va parol hosil qilamiz
-  const syntheticEmail=phone+'@phone.maktabgachahub.uz';
-  const syntheticPassword='mgh_'+phone+'_pass';
+  // Hisob bor-yo'qligini va PIN o'rnatilganini so'raymiz
+  let exists=false, hasPin=false;
+  try{
+    const {data,error}=await _sb.rpc('phone_status',{p_phone:digits});
+    if(!error && data && data.length){ exists=data[0].user_exists; hasPin=data[0].has_pin; }
+  }catch(e){ console.warn('phone_status:',e); }
 
+  if(btn){ btn.textContent=old; btn.disabled=false; }
+
+  var t=document.getElementById('pin-title');
+  var s=document.getElementById('pin-sub');
+  var forgot=document.getElementById('pin-forgot');
+  if(exists && hasPin){
+    AUTH.mode='login';
+    t.textContent='PIN kodingizni kiriting';
+    s.textContent='Hisobingizga kirish uchun maxfiy PIN kodni kiriting.';
+    forgot.style.display='block';
+  }else if(exists && !hasPin){
+    AUTH.mode='migrate';
+    t.textContent='Hisobingizni himoyalang';
+    s.textContent='Endilikda kirish uchun maxfiy PIN kod kerak. Yangi PIN o\'ylab toping (4-6 raqam).';
+    forgot.style.display='none';
+  }else{
+    AUTH.mode='register';
+    t.textContent='Yangi PIN kod o\'rnating';
+    s.textContent='Hisobingizni himoyalash uchun 4-6 raqamli PIN o\'ylab toping. Buni eslab qoling!';
+    forgot.style.display='none';
+  }
+
+  document.getElementById('form-name').style.display='none';
+  document.getElementById('form-welcome').style.display='none';
+  document.getElementById('form-pin').style.display='block';
+  renderCaptcha();
+  var pin=document.getElementById('pin-input'); pin.value=''; pin.focus();
+}
+
+// 2-bosqich: PIN yuborish
+async function submitPin(){
+  const pin=(document.getElementById('pin-input').value||'').trim();
+  if(!/^\d{4,6}$/.test(pin)){ showErr('PIN 4-6 raqamdan iborat bo\'lishi kerak.'); return; }
+
+  const btn=document.getElementById('pin-btn');
+  const old=btn.textContent; btn.textContent='Kirilmoqda…'; btn.disabled=true;
+  clearMsgs();
+
+  const email=synthEmail(AUTH.digits);
   try{
     let session=null;
 
-    // CAPTCHA tokeni (yoqilgan bo'lsa). O'chiq bo'lsa — undefined, e'tiborsiz.
-    const capToken1 = await nextCaptchaToken();
+    if(AUTH.mode==='login'){
+      const cap=await nextCaptchaToken();
+      const {data,error}=await _sb.auth.signInWithPassword({email,password:pin,options:{captchaToken:cap}});
+      if(error||!data.session){ resetCaptcha(); showErr('PIN noto\'g\'ri. Qayta urinib ko\'ring.'); btn.textContent=old; btn.disabled=false; return; }
+      session=data.session;
 
-    // Avval mavjud hisobga kirishga urinamiz
-    let{data:signInData,error:signInError}=await _sb.auth.signInWithPassword({
-      email:syntheticEmail,password:syntheticPassword,
-      options:{ captchaToken: capToken1 }
-    });
+    }else if(AUTH.mode==='migrate'){
+      // Eski hisob: eski (raqamli) parol bilan kiramiz, so'ng PIN o'rnatamiz
+      const cap=await nextCaptchaToken();
+      let {data,error}=await _sb.auth.signInWithPassword({email,password:legacyPass(AUTH.digits),options:{captchaToken:cap}});
+      if(error||!data.session){
+        // Ehtimol allaqachon PIN bor — PIN bilan sinaymiz
+        const cap2=await freshCaptchaToken();
+        const r=await _sb.auth.signInWithPassword({email,password:pin,options:{captchaToken:cap2}});
+        if(r.error||!r.data.session){ resetCaptcha(); showErr('Kirib bo\'lmadi. PIN noto\'g\'ri bo\'lishi mumkin.'); btn.textContent=old; btn.disabled=false; return; }
+        session=r.data.session;
+      }else{
+        session=data.session;
+        // PIN'ni yangi parol qilib o'rnatamiz
+        const up=await _sb.auth.updateUser({password:pin});
+        if(up.error){ console.warn('PIN o\'rnatish:',up.error.message); }
+      }
+      try{ await _sb.rpc('mark_has_pin'); }catch(e){}
 
-    if(signInData && signInData.session){
-      session=signInData.session;
-    }else if(signInError){
-      // Hisob mavjud emas — yangisini yaratamiz (yangi captcha tokeni bilan)
-      const capToken2 = await freshCaptchaToken();
-      const{data:signUpData,error:signUpError}=await _sb.auth.signUp({
-        email:syntheticEmail,
-        password:syntheticPassword,
-        options:{data:{full_name:name}, captchaToken: capToken2}
-      });
-      if(signUpError){
-        showErr("Kirishda xatolik: "+signUpError.message);
-        btn.textContent=originalText;btn.disabled=false;
-        return;
+    }else{ // register
+      const cap=await nextCaptchaToken();
+      const {data,error}=await _sb.auth.signUp({email,password:pin,options:{data:{full_name:AUTH.name},captchaToken:cap}});
+      if(error){
+        // Hisob allaqachon bor bo'lsa — login/migrate yo'liga o'tamiz
+        if((error.message||'').toLowerCase().includes('already')){
+          const cap2=await freshCaptchaToken();
+          const r=await _sb.auth.signInWithPassword({email,password:pin,options:{captchaToken:cap2}});
+          if(r.error||!r.data.session){ resetCaptcha(); showErr('Bu raqam ro\'yxatdan o\'tgan. PIN noto\'g\'ri.'); btn.textContent=old; btn.disabled=false; return; }
+          session=r.data.session;
+        }else{
+          resetCaptcha(); showErr('Ro\'yxatdan o\'tishda xatolik: '+error.message); btn.textContent=old; btn.disabled=false; return;
+        }
+      }else if(!data.session){
+        showErr("Tasdiqlash kerak. Administrator Email confirmation'ni o'chirishi lozim."); btn.textContent=old; btn.disabled=false; return;
+      }else{
+        session=data.session;
       }
-      if(!signUpData.session){
-        showErr("Ro'yxatdan o'tish tasdiqlanishi kerak. Administratorga murojaat qiling (Email confirmation o'chirilishi kerak).");
-        btn.textContent=originalText;btn.disabled=false;
-        return;
-      }
-      session=signUpData.session;
+      try{ await _sb.rpc('mark_has_pin'); }catch(e){}
     }
 
-    if(!session){
-      showErr("Kutilmagan xatolik. Qayta urinib ko'ring.");
-      btn.textContent=originalText;btn.disabled=false;
-      return;
-    }
+    if(!session){ resetCaptcha(); showErr('Kutilmagan xatolik. Qayta urinib ko\'ring.'); btn.textContent=old; btn.disabled=false; return; }
 
-    // Profil: MAVJUD foydalanuvchining role/subscription_tier'iga TEGMAYMIZ.
-    // (Aks holda har login'da admin -> teacher, pro -> free bo'lib qolardi.)
-    // Faqat yangi foydalanuvchi uchun standart qiymatlar qo'yiladi.
-    const{data:existing}=await _sb.from('profiles')
-      .select('id').eq('id',session.user.id).maybeSingle();
-
-    let profileError=null;
+    // Profil: mavjudning role/tier'iga tegmaymiz. Ism/telefonni yangilaymiz; yangi bo'lsa yaratamiz.
+    const {data:existing}=await _sb.from('profiles').select('id').eq('id',session.user.id).maybeSingle();
     if(existing){
-      // Mavjud: faqat ism va telefonni yangilaymiz
-      const{error}=await _sb.from('profiles')
-        .update({full_name:name,phone:phone})
-        .eq('id',session.user.id);
-      profileError=error;
+      await _sb.from('profiles').update({full_name:AUTH.name,phone:AUTH.digits}).eq('id',session.user.id);
     }else{
-      // Yangi: role/subscription_tier YUBORILMAYDI — baza standarti ('teacher'/'free') qo'yiladi.
-      // (Xavfsizlik: foydalanuvchi o'zini pro/admin qila olmasligi uchun.)
-      const{error}=await _sb.from('profiles').insert({
-        id:session.user.id,
-        full_name:name,
-        phone:phone,
-        xp:0
-      });
-      profileError=error;
+      await _sb.from('profiles').insert({id:session.user.id,full_name:AUTH.name,phone:AUTH.digits,xp:0});
+      try{ await _sb.rpc('mark_has_pin'); }catch(e){}
     }
 
-    if(profileError){
-      console.warn('Profil yangilashda ogohlantirish:',profileError.message);
-    }
-
-    localStorage.setItem(NAME_KEY,name);
-    localStorage.setItem(PHONE_KEY,phone);
+    localStorage.setItem(NAME_KEY,AUTH.name);
+    localStorage.setItem(PHONE_KEY,AUTH.digits);
     window.location.href='dashboard.html';
   }catch(e){
+    resetCaptcha();
     showErr("Kutilmagan xatolik yuz berdi. Qayta urinib ko'ring.");
-    btn.textContent=originalText;btn.disabled=false;
+    btn.textContent=old; btn.disabled=false;
   }
 }
+function resetCaptcha(){ try{ if(typeof turnstile!=='undefined' && _tsWidgetId!==null){ turnstile.reset(_tsWidgetId); _tsToken=null; } }catch(e){} }
+
 </script>
 <script>
 /* PWA: service worker ro'yxatdan o'tkazish */
