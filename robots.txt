@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /premium.html
+Disallow: /pages/
+Disallow: /js/
+Disallow: /css/
+
+Sitemap: https://maktabgachahub.website/sitemap.xml
