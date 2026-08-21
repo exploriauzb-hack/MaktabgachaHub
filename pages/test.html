@@ -165,19 +165,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
   <meta property="og:site_name" content="MaktabgachaHub"/>
   <meta property="og:title" content="Testlar — MaktabgachaHub"/>
   <meta property="og:description" content="Attestatsiya formatidagi testlar bilan pedagogik bilimingizni sinang va mustahkamlang."/>
-  <meta property="og:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
   <meta property="og:url" content="https://maktabgachahubuz-ten.vercel.app/pages/test.html"/>
   <meta property="og:locale" content="uz_UZ"/>
-  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:card" content="summary"/>
   <meta name="twitter:title" content="Testlar — MaktabgachaHub"/>
   <meta name="twitter:description" content="Attestatsiya formatidagi testlar bilan pedagogik bilimingizni sinang va mustahkamlang."/>
-  <meta name="twitter:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#1e40af"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-title" content="MaktabgachaHub"/>
-  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -309,6 +306,18 @@ function showToast(msg,type){
   t.textContent=msg;
   t.className='toast show'+(type==='err'?' err':'');
   setTimeout(function(){t.className='toast'},3000);
+}
+
+// Bir qatorli matnni JS satr ichida (onclick="...") xavfsiz qilib qochirish.
+// Bunsiz sarlavha/ID ichida ' (apostrof) bo'lsa — masalan "Savodga O'rgatish" —
+// generatsiya qilingan onclick atributi buzilib, "missing ) after argument list"
+// xatosini keltirib chiqaradi.
+function jsq(str){
+  return String(str == null ? '' : str)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '&quot;')
+    .replace(/\n/g, ' ');
 }
 </script>
 
@@ -599,7 +608,7 @@ function renderAdabSubs() {
     var lockBadge = (s.pro && !isPro())
       ? '<div class="pro-lock"><i class="ti ti-crown"></i> PRO</div>'
       : '<div class="tc-count">' + qCount + ' savol</div>';
-    return '<div class="sub-card" onclick="startTest(\'' + s.id + '\',\'' + s.title + '\')">' +
+    return '<div class="sub-card" onclick="startTest(\'' + jsq(s.id) + '\',\'' + jsq(s.title) + '\')">' +
       lockBadge +
       '<div class="tc-icon" style="margin-bottom:8px"><i class="ti ' + s.icon + '"></i></div>' +
       '<h4>' + s.title + '</h4>' +
@@ -704,7 +713,7 @@ async function renderTestGrid() {
     var qCount = c.hasSub
       ? ADAB_SUBS.reduce(function(a, s) { return a + (QUESTIONS[s.id] ? QUESTIONS[s.id].length : 0); }, 0)
       : QUESTIONS[c.id].length;
-    var clickFn = c.hasSub ? 'showAdabiyotlarView()' : ('startTest(\'' + c.id + '\',\'' + c.title + '\')');
+    var clickFn = c.hasSub ? 'showAdabiyotlarView()' : ('startTest(\'' + jsq(c.id) + '\',\'' + jsq(c.title) + '\')');
     return '<div class="tc-card" onclick="' + clickFn + '">' +
       '<div class="tc-count">' + qCount + ' savol</div>' +
       '<div class="tc-icon"><i class="ti ' + c.icon + '"></i></div>' +
@@ -823,16 +832,12 @@ async function showResult() {
         '<div class="rb-row"><span>XP qoshildi</span><b style="color:var(--amber)">+' + xpEarned + ' XP</b></div>' +
       '</div>' +
       '<div class="res-actions">' +
-        '<button class="btn-next" onclick="startTest(\'' + s.catId + '\',\'' + s.catTitle + '\')">Qayta ishlash</button>' +
+        '<button class="btn-next" onclick="startTest(\'' + jsq(s.catId) + '\',\'' + jsq(s.catTitle) + '\')">Qayta ishlash</button>' +
         '<button class="btn-secondary" onclick="closeTest()">Yopish</button>' +
       '</div>' +
     '</div>';
   renderTestGrid();
 }
-</script>
-<script>
-/* PWA: service worker */
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('SW:',e);});});}
 </script>
 </body>
 </html>
