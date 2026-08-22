@@ -228,17 +228,17 @@ pre.code.show{display:block}
           <button class="mini-btn" onclick="openBulk()"><i class="ti ti-upload"></i> Ko'p yuklash</button>
         </div>
         <div id="cat-block" style="display:none">
-          <label class="lbl">Toifa</label>
+          <label class="lbl" id="cat-select-label">Toifa</label>
           <div class="cat-row">
             <select class="inp" id="cat-select" onchange="onCatChange()"></select>
             <button class="mini-btn" onclick="toggleNewCat()"><i class="ti ti-folder-plus"></i> Yangi</button>
           </div>
           <div id="new-cat-box" style="display:none">
-            <label class="lbl">Yangi toifa nomi</label>
+            <label class="lbl" id="new-cat-title-label">Yangi toifa nomi</label>
             <input class="inp" id="new-cat-title" placeholder="Masalan: Metodika" oninput="syncCatId()"/>
-            <label class="lbl">Toifa kodi (avtomatik)</label>
+            <label class="lbl" id="new-cat-id-label">Toifa kodi (avtomatik)</label>
             <input class="inp" id="new-cat-id" placeholder="metodika"/>
-            <div class="field-hint">Faqat lotin harflari va pastki chiziq.</div>
+            <div class="field-hint" id="cat-id-hint">Faqat lotin harflari va pastki chiziq.</div>
           </div>
         </div>
 
@@ -355,6 +355,8 @@ const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
    kind:'quiz'  → savol + variantlar + to'g'ri javob (+ ixtiyoriy izoh)
    kind:'record'→ maydonlar ro'yxati (text/textarea/number/list/tags)
    target       → JS export'da hosil bo'ladigan o'zgaruvchi
+   codeLabel    → hasCategory bo'limlar uchun: toifa maydoni haqiqatda nima
+                  vazifa bajarishini bildiradi (masalan demo uchun bu — kirish kodi)
    ═══════════════════════════════════════════════════════════════ */
 const SCHEMAS={
   test:{label:'Test savollari',icon:'ti-flask',kind:'quiz',explanation:true,hasCategory:true,
@@ -365,7 +367,7 @@ const SCHEMAS={
         target:()=>'var ALL_Q',page:'pages/qarorlar.html'},
   attestatsiya:{label:'Attestatsiya',icon:'ti-certificate',kind:'quiz',explanation:true,hasCategory:true,
         target:cat=>`VARIANTS.${cat||'variant_1'}`,page:'pages/attestatsiya.html'},
-  demo:{label:'Demo test',icon:'ti-device-desktop-analytics',kind:'quiz',explanation:true,hasCategory:true,
+  demo:{label:'Demo test',icon:'ti-device-desktop-analytics',kind:'quiz',explanation:true,hasCategory:true,isCode:true,
         target:cat=>`var ${cat||'V1'}`,page:'pages/demo.html'},
   qoshiq:{label:"Qo'shiqlar",icon:'ti-music',kind:'record',target:()=>'var SONGS',page:'pages/qoshiqlar.html',
     fields:[
@@ -551,11 +553,33 @@ async function selectType(t){
     : 'Maydonlarni to\'ldiring va saqlang.';
   document.getElementById('form-title').textContent='Yangi yozuv';
   document.getElementById('cat-block').style.display=s.hasCategory?'block':'none';
+  updateCategoryLabels(s);
   document.getElementById('export-box').classList.remove('show');
   document.getElementById('sql-box').classList.remove('show');
   buildForm();
   if(s.hasCategory){await loadCategories();}
   await loadRecords();
+}
+
+/* Toifa maydoni har bo'limda bir xil ma'noni bildirmaydi — demo uchun bu
+   foydalanuvchi kiritadigan "kirish kodi". Yorliqlarni shunga qarab o'zgartiramiz. */
+function updateCategoryLabels(s){
+  if(!s.hasCategory)return;
+  const selLbl=document.getElementById('cat-select-label');
+  const titleLbl=document.getElementById('new-cat-title-label');
+  const idLbl=document.getElementById('new-cat-id-label');
+  const hint=document.getElementById('cat-id-hint');
+  if(s.isCode){
+    selLbl.innerHTML='Kirish kodi';
+    titleLbl.textContent='Kodning izohi (ixtiyoriy, faqat siz uchun)';
+    idLbl.innerHTML='Kirish kodi (foydalanuvchi shu kod bilan kiradi, masalan <code>ILM450</code>)';
+    hint.textContent='Bolalar/tarbiyachilar shu kodni kiritib, aynan shu variantga kiradi. Xohlagan harf-raqamni yozishingiz mumkin.';
+  }else{
+    selLbl.textContent='Toifa';
+    titleLbl.textContent='Yangi toifa nomi';
+    idLbl.textContent='Toifa kodi (avtomatik)';
+    hint.textContent='Faqat lotin harflari va pastki chiziq.';
+  }
 }
 
 /* ═══════ FORM BUILDER ═══════ */
@@ -619,10 +643,12 @@ function addOption(text,isCorrect){
 }
 function markCorrect(el){document.querySelectorAll('#opts-wrap .radio').forEach(r=>r.classList.remove('on'));el.classList.add('on');}
 
-/* ═══════ CATEGORIES (test) ═══════ */
+/* ═══════ CATEGORIES (hasCategory bo'limlar: test, attestatsiya, demo) ═══════ */
 async function loadCategories(){
   if(!TABLE_OK){renderCatSelect();return;}
-  const {data,error}=await _sb.from('content').select('category,category_title').eq('type','test');
+  // MUHIM: kategoriya (yoki demo uchun "kirish kodi") har doim JORIY bo'lim (TYPE)
+  // bo'yicha o'qilishi kerak — aks holda demo/attestatsiya ro'yxati bo'sh chiqadi.
+  const {data,error}=await _sb.from('content').select('category,category_title').eq('type',TYPE);
   if(error){handleNoTable();renderCatSelect();return;}
   CATEGORIES={};
   (data||[]).forEach(r=>{if(r.category)CATEGORIES[r.category]=r.category_title||r.category;});
@@ -630,12 +656,19 @@ async function loadCategories(){
 }
 function renderCatSelect(){
   const sel=document.getElementById('cat-select');if(!sel)return;const cur=sel.value;
-  sel.innerHTML='<option value="">— Toifani tanlang —</option>'+
-    Object.entries(CATEGORIES).map(([c,t])=>`<option value="${c}">${escapeHtml(t)}</option>`).join('');
+  const s=SCHEMAS[TYPE];
+  const placeholder=s&&s.isCode?'— Kirish kodini tanlang —':'— Toifani tanlang —';
+  sel.innerHTML=`<option value="">${placeholder}</option>`+
+    Object.entries(CATEGORIES).map(([c,t])=>`<option value="${c}">${escapeHtml(t)} (${escapeHtml(c)})</option>`).join('');
   sel.value=cur;
 }
 function toggleNewCat(){const b=document.getElementById('new-cat-box');b.style.display=b.style.display==='none'?'block':'none';}
-function syncCatId(){document.getElementById('new-cat-id').value=slugify(document.getElementById('new-cat-title').value);}
+function syncCatId(){
+  const s=SCHEMAS[TYPE];
+  // Demo (kirish kodi) uchun avtomatik slugify emas — admin kodni o'zi tanlaydi/tahrirlaydi.
+  if(s&&s.isCode)return;
+  document.getElementById('new-cat-id').value=slugify(document.getElementById('new-cat-title').value);
+}
 function slugify(s){return (s||'').toLowerCase().trim().replace(/['`']/g,'').replace(/[^a-z0-9\s_]/g,'').replace(/\s+/g,'_').slice(0,40);}
 async function onCatChange(){CURRENT_CAT=document.getElementById('cat-select').value;document.getElementById('new-cat-box').style.display='none';await loadRecords();}
 
@@ -703,13 +736,14 @@ async function saveRecord(){
   // JSON maydon xatosi bo'lsa — to'xtatamiz
   if(data.__jsonerr__){ return toast('"'+data.__jsonerr__+'" — JSON formati noto\'g\'ri','err'); }
 
-  // category (test)
+  // category (test / attestatsiya / demo — demo uchun bu kirish kodi)
   let cat=null,catTitle=null;
   if(s.hasCategory){
     const newBox=document.getElementById('new-cat-box').style.display!=='none';
     cat=newBox?document.getElementById('new-cat-id').value.trim():document.getElementById('cat-select').value;
     catTitle=newBox?document.getElementById('new-cat-title').value.trim():(CATEGORIES[cat]||cat);
-    if(!cat)return toast('Toifani tanlang yoki yangi toifa kiriting','err');
+    if(s.isCode)cat=cat.toUpperCase();
+    if(!cat)return toast(s.isCode?'Kirish kodini tanlang yoki yangi kod kiriting':'Toifani tanlang yoki yangi toifa kiriting','err');
   }
 
   // quiz: bo'sh variantlarni tozalash + ans indeksini moslash
@@ -763,7 +797,7 @@ function renderList(){
   const s=SCHEMAS[TYPE],list=document.getElementById('rec-list');
   document.getElementById('rec-count').textContent=RECORDS.length+' ta';
   if(!RECORDS.length){
-    const hint=s.hasCategory&&!CURRENT_CAT?'Toifani tanlang.':'Hali yozuv yo\'q. Chapdan qo\'shing.';
+    const hint=s.hasCategory&&!CURRENT_CAT?(s.isCode?'Kirish kodini tanlang.':'Toifani tanlang.'):'Hali yozuv yo\'q. Chapdan qo\'shing.';
     list.innerHTML=`<div class="empty"><i class="ti ti-inbox"></i><p>${hint}</p></div>`;return;
   }
   list.innerHTML=RECORDS.map((r,i)=>{
@@ -831,7 +865,7 @@ function exportJS(){
   document.getElementById('sql-box').classList.remove('show');
   const s=SCHEMAS[TYPE];
   if(!RECORDS.length)return toast('Avval yozuv bo\'lsin','err');
-  if(s.hasCategory&&!CURRENT_CAT)return toast('Toifani tanlang','err');
+  if(s.hasCategory&&!CURRENT_CAT)return toast(s.isCode?'Kirish kodini tanlang':'Toifani tanlang','err');
 
   let items='';
   if(s.kind==='quiz'){
@@ -861,7 +895,7 @@ function toggleSQL(){
 create table if not exists public.content (
   id             uuid primary key default gen_random_uuid(),
   type           text not null,        -- test, vaziyat, qaror, qoshiq, hikoya, oyin, mashgulot, haftalik
-  category       text,                 -- test uchun toifa kodi (masalan: ilk_qadam)
+  category       text,                 -- test/attestatsiya uchun toifa kodi, demo uchun KIRISH KODI
   category_title text,
   data           jsonb not null,       -- yozuvning sahifadagi aynan shakli
   sort           int default 0,
@@ -903,7 +937,7 @@ function openBulk(){
   const s=SCHEMAS[TYPE];
   document.getElementById('bulk-type-label').textContent=s.label;
   document.getElementById('bulk-cat-block').style.display=s.hasCategory?'block':'none';
-  // Joriy tanlangan toifani oldindan qo'yamiz
+  // Joriy tanlangan toifani/kodni oldindan qo'yamiz
   if(s.hasCategory&&CURRENT_CAT){
     document.getElementById('bulk-cat').value=CURRENT_CAT;
     document.getElementById('bulk-cat-title').value=CATEGORIES[CURRENT_CAT]||'';
@@ -916,10 +950,12 @@ function openBulk(){
     : 'Har element — shu bo\'limning maydonlariga mos obyekt.';
   // Demo uchun toifa = KIRISH KODI
   var catLabels=document.querySelectorAll('#bulk-cat-block .lbl');
-  if(TYPE==='demo' && catLabels[0]){
+  if(s.isCode && catLabels[0]){
     catLabels[0].innerHTML='Kirish kodi (foydalanuvchi shu kod bilan kiradi, masalan <code>ILM150</code>)';
+    if(catLabels[1]) catLabels[1].textContent='Kodning izohi (ixtiyoriy, faqat siz uchun)';
   }else if(catLabels[0]){
     catLabels[0].innerHTML='Toifa kodi (masalan: <code>ilk_qadam</code>, <code>variant_1</code>, <code>V1</code>)';
+    if(catLabels[1]) catLabels[1].textContent='Toifa nomi (ko\'rinadigan nom — ixtiyoriy)';
   }
   document.getElementById('bulk-parsed').textContent='';
   document.getElementById('bulk-modal').style.display='flex';
@@ -957,8 +993,9 @@ async function doBulkImport(){
   let cat=null,catTitle=null;
   if(s.hasCategory){
     cat=document.getElementById('bulk-cat').value.trim();
+    if(s.isCode)cat=cat.toUpperCase();
     catTitle=document.getElementById('bulk-cat-title').value.trim()||cat;
-    if(!cat) return toast('Toifa kodini kiriting','err');
+    if(!cat) return toast(s.isCode?'Kirish kodini kiriting':'Toifa kodini kiriting','err');
   }
 
   // Validatsiya + normallashtirish
