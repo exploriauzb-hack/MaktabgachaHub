@@ -41,6 +41,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .code-err{font-size:12px;color:var(--red);margin-top:8px;min-height:18px}
 .btn-enter{width:100%;margin-top:20px;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
 .btn-enter:hover{background:#1c3a9e}
+.btn-enter:disabled{opacity:.6;cursor:default}
 .code-hint{font-size:11px;color:var(--muted);margin-top:16px}
 
 /* ── HOME ── */
@@ -59,7 +60,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:12px;padding:14px 18px;font-size:12.5px;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:10px}
 .btn-start{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-start:hover{background:#1c3a9e}
-.btn-back-code{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline}
+.btn-back-code{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
 
 /* ── EXAM ── */
 #timer-bar{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 0;margin-bottom:20px}
@@ -153,7 +154,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <body>
 
 <!-- ══ KOD SCREEN ══ -->
-<div id="screen-code" class="screen">
+<div id="screen-code" class="screen active">
   <div class="code-wrap">
     <div class="code-topnav no-print">
       <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
@@ -171,7 +172,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 </div>
 
 <!-- ══ HOME SCREEN ══ -->
-<div id="screen-home" class="screen active">
+<div id="screen-home" class="screen">
   <div class="topnav no-print">
     <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
   </div>
@@ -186,6 +187,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
     <div class="var-grid" id="var-grid"></div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
+    <button class="btn-back-code" onclick="backToCode()">← Boshqa kod kiritish</button>
   </div>
 </div>
 
@@ -238,7 +240,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div style="display:flex;justify-content:space-around;margin-top:20px;flex-wrap:wrap;gap:12px">
         <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--green)" id="res-correct"></div><div style="font-size:11px;color:var(--muted)">To'g'ri</div></div>
         <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--red)" id="res-wrong"></div><div style="font-size:11px;color:var(--muted)">Xato</div></div>
-        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--accent)">50</div><div style="font-size:11px;color:var(--muted)">Jami</div></div>
+        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--accent)" id="res-total">50</div><div style="font-size:11px;color:var(--muted)">Jami</div></div>
       </div>
     </div>
     <div class="result-btns no-print">
@@ -280,16 +282,17 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Kirish kodlari: qattiq yozilganlar (eskilari) + admin paneldan qo'shilganlar (bazadan).
-var CODES = { 'ILM150': 1, 'ILM250': 2, 'ILM350': 3 };
+// Bazadan yuklanmagan holatda ishlaydigan zaxira variantlar va ularning kirish kodlari.
+// Kod = variantga bog'langan parol. Har bir kod bitta variantni ochadi.
+var HARD_CODES = { 'ILM150':{id:'V1',title:'1-Variant'}, 'ILM250':{id:'V2',title:'2-Variant'}, 'ILM350':{id:'V3',title:'3-Variant'} };
 
-// Supabase (admin panelda qo'shilgan demo variantlarini o'qish uchun)
+// Supabase (admin panelda "Kirish kodi" bilan qo'shilgan demo variantlarini o'qish uchun)
 var SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
 var _sb = (window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null);
 
-// Bazadan yuklangan variant: { code, title, questions:[{q,opts,ans,exp}] }
-var DB_VARIANT = null;
+// Kod tasdiqlangach shu obyekt to'ldiriladi: { id, title, questions:[{q,opts,ans,exp}] }
+var SELECTED = null;
 
 var V1 = [
   {q:"Vaziyat. MTT tarbiyachisi 'Mening oilam' mavzusidagi faoliyat davomida bolalarga oila qadriyatlari haqida suhbat o'tkazdi. Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilgan edi. Mazkur vaziyatda asosiy tarbiya tamoyili qaysi?",opts:["Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada demokratik va insonparvarlik g'oyalarining ustunligi","Tarbiyada milliy va umumbashariy qadriyatlarning ustunligi","Tarbiyani ijtimoiy hayot bilan bog'lash"],ans:2,exp:"Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilganligi bu tamoyilni to'liq ifodalaydi."},
@@ -451,14 +454,6 @@ var V2 = [
   {q:"MTT da jismoniy tarbiya bo'yicha yillik rejani tuzing. Qaysi faoliyat to'plami eng to'liq yondashuvni ifodalaydi?",opts:["Harakatli o'yinlar, ertalabki badantarbiya, sport mashqlari, sayr va chiniqtirish","Faqat ertalabki badantarbiya va sport musobaqalari","Harakatli o'yinlar va faqat yozgi chiniqtirish","Gimnastika va faqat guruh mashg'ulotlari"],ans:0,exp:"Barcha vositalarni (o'yin, gimnastika, sport, sayr, chiniqtirish) yil davomida qo'llash eng to'liq yondashuv."}
 ];
 
-var selectedVar=1, examQ=[], userAns=[], currentQ=0;
-var timerInt=null, timeLeft=90*60, examActive=false;
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
 function shuffle(arr){
   var a=arr.slice();
   for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
@@ -469,135 +464,93 @@ function toast(msg,err){
   t.textContent=msg;t.className='toast show'+(err?' err':'');
   setTimeout(function(){t.className='toast'},3000);
 }
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+var examQ=[], userAns=[], currentQ=0;
+var timerInt=null, timeLeft=90*60, examActive=false;
+
 function confirmDashboard(){
   if(examActive){
     return confirm('Test to\'xtatiladi va natijalar saqlanmaydi. Dashboard ga o\'tishni tasdiqlaysizmi?');
   }
   return true;
 }
+
+/* ═══════ KOD TEKSHIRISH ═══════ */
 async function checkCode(){
   var val=document.getElementById('codeInput').value.trim().toUpperCase();
   var errEl=document.getElementById('codeErr');
   var btn=document.querySelector('.btn-enter');
   errEl.textContent='';
-  DB_VARIANT=null;
+  if(!val){errEl.textContent='Kodni kiriting.';return;}
 
-  // 1) AVVAL bazadan qidiramiz: admin panelda 'toifa kodi' = shu kirish kodi.
+  // 1) AVVAL bazadan qidiramiz: admin panelda "Kirish kodi" = shu category maydoni.
   if(_sb){
     try{
       if(btn){btn._t=btn.textContent;btn.textContent='Tekshirilmoqda…';btn.disabled=true;}
       var res=await _sb.from('content')
-        .select('category_title,data')
+        .select('category,category_title,data')
         .eq('type','demo').ilike('category',val);
-      if(btn){btn.textContent=btn._t||'Kirish';btn.disabled=false;}
+      if(btn){btn.textContent=btn._t||'Kirish →';btn.disabled=false;}
       if(!res.error && res.data && res.data.length){
-        DB_VARIANT={
-          code:val,
-          title:(res.data[0].category_title||val),
+        SELECTED={
+          id:val,
+          title:res.data[0].category_title||val,
           questions:res.data.map(function(r){return r.data;})
         };
-        showScreen('screen-home');
-        // Bitta karta ko'rsatamiz (bazadagi variant)
-        var c1=document.getElementById('vc-1');
-        document.getElementById('vc-2').style.display='none';
-        var vc3=document.getElementById('vc-3'); if(vc3)vc3.style.display='none';
-        c1.style.display=''; c1.classList.add('selected'); c1.setAttribute('onclick','');
-        var h=c1.querySelector('h3'); if(h) h.textContent=DB_VARIANT.title;
-        var p=c1.querySelector('p'); if(p) p.textContent='Admin panel orqali qo\'shilgan variant';
-        var meta=c1.querySelector('.var-meta'); if(meta) meta.innerHTML='<span>'+DB_VARIANT.questions.length+' savol</span><span>90 daqiqa</span>';
+        enterHome();
         return;
       }
     }catch(e){
-      if(btn){btn.textContent=btn._t||'Kirish';btn.disabled=false;}
+      if(btn){btn.textContent=btn._t||'Kirish →';btn.disabled=false;}
       console.warn('demo bazadan o\'qish:',e);
     }
   }
 
   // 2) Zaxira: qattiq yozilgan kodlar (ILM150/250/350)
-  if(CODES[val]!==undefined){
-    selectedVar=CODES[val];
-    showScreen('screen-home');
-    document.getElementById('vc-1').style.display=selectedVar===1?'':'none';
-    document.getElementById('vc-2').style.display=selectedVar===2?'':'none';
-    var vc3b=document.getElementById('vc-3');
-    if(vc3b)vc3b.style.display=selectedVar===3?'':'none';
-    selectVar(selectedVar);
-  } else {
-    document.getElementById('codeInput').classList.add('error');
-    setTimeout(function(){document.getElementById('codeInput').classList.remove('error')},500);
-    errEl.textContent='Noto\'g\'ri kod! Iltimos qayta urinib ko\'ring.';
+  var HARD_Q={V1:V1,V2:V2,V3:V3};
+  if(HARD_CODES[val]){
+    var h=HARD_CODES[val];
+    SELECTED={id:h.id,title:h.title,questions:HARD_Q[h.id]};
+    enterHome();
+    return;
   }
+
+  document.getElementById('codeInput').classList.add('error');
+  setTimeout(function(){document.getElementById('codeInput').classList.remove('error')},500);
+  errEl.textContent='Noto\'g\'ri kod! Iltimos qayta urinib ko\'ring.';
 }
-function goBackCode(){showScreen('screen-code');}
-
-// ══ KODSIZ: barcha demo variantlari (baza + zaxira) ══
-var ALL_VARIANTS=[], SELECTED=null;
-
-async function initDemo(){
-  ALL_VARIANTS=[];
-  var seen={};
-
-  // 1) Qattiq yozilgan asosiy variantlar (doim ko'rinadi)
-  [
-    {id:'V1',title:'1-Variant',desc:'Tarbiya tamoyillari, shaxs rivojlanishi',questions:V1},
-    {id:'V2',title:'2-Variant',desc:'Yosh davrlari, jismoniy madaniyat',questions:V2},
-    {id:'V3',title:'3-Variant',desc:'Aralash — nutq, ekologiya, loyiha',questions:V3}
-  ].forEach(function(v){
-    if(v.questions && v.questions.length){ ALL_VARIANTS.push(v); seen[v.id]=true; }
-  });
-
-  // 2) Bazadan qo'shilganlar (admin panel orqali) — ustiga qo'shiladi
-  if(_sb){
-    try{
-      var res=await _sb.from('content').select('category,category_title,data').eq('type','demo');
-      if(!res.error && res.data){
-        var by={};
-        res.data.forEach(function(r){
-          if(!r.category||!r.data)return;
-          if(!by[r.category]) by[r.category]={title:r.category_title||r.category, qs:[]};
-          by[r.category].qs.push(r.data);
-        });
-        Object.keys(by).forEach(function(k){
-          if(seen[k]) return; // xuddi shu nomli variant allaqachon bor
-          ALL_VARIANTS.push({id:k,title:by[k].title,desc:'Test',questions:by[k].qs});
-        });
-      }
-    }catch(e){ console.warn('demo baza:',e); }
-  }
-
-  renderVariants();
+function backToCode(){
+  SELECTED=null;
+  document.getElementById('codeInput').value='';
+  document.getElementById('codeErr').textContent='';
+  showScreen('screen-code');
+}
+function enterHome(){
+  renderSelectedCard();
   showScreen('screen-home');
 }
-
-function renderVariants(){
+function renderSelectedCard(){
   var grid=document.getElementById('var-grid');
-  var nums=['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟'];
-  grid.innerHTML=ALL_VARIANTS.map(function(v,i){
-    return '<div class="var-card" data-id="'+v.id+'" onclick="selectVar(\''+v.id+'\')">'
-      +'<div class="var-num">'+(nums[i]||'📘')+'</div>'
-      +'<h3>'+v.title+'</h3>'
-      +'<p>'+(v.desc||'Test')+'</p>'
-      +'<div class="var-meta"><span>'+v.questions.length+' savol</span><span>90 daqiqa</span></div>'
-      +'</div>';
-  }).join('');
-  // Birinchisini avtomatik tanlaymiz
-  if(ALL_VARIANTS.length) selectVar(ALL_VARIANTS[0].id);
+  grid.innerHTML='<div class="var-card selected" style="grid-column:1 / -1">'
+    +'<div class="var-num">📘</div>'
+    +'<h3>'+escapeHtmlLocal(SELECTED.title)+'</h3>'
+    +'<p>Kirish kodi qabul qilindi</p>'
+    +'<div class="var-meta"><span>'+SELECTED.questions.length+' savol</span><span>90 daqiqa</span></div>'
+    +'</div>';
 }
+function escapeHtmlLocal(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function selectVar(id){
-  SELECTED=ALL_VARIANTS.filter(function(v){return String(v.id)===String(id);})[0]||null;
-  var cards=document.querySelectorAll('#var-grid .var-card');
-  cards.forEach(function(c){ c.classList.toggle('selected', c.getAttribute('data-id')===String(id)); });
-}
+/* ═══════ EXAM ═══════ */
 function startExam(){
-  var raw = SELECTED ? SELECTED.questions
-          : (DB_VARIANT ? DB_VARIANT.questions
-          : (selectedVar===1?V1:selectedVar===2?V2:V3));
-  if(!raw || !raw.length){ alert('Bu variantda savol yo\'q.'); return; }
-  examQ=shuffle(raw);
+  if(!SELECTED || !SELECTED.questions || !SELECTED.questions.length){ toast('Avval to\'g\'ri kod kiriting.',true); return; }
+  examQ=shuffle(SELECTED.questions);
   userAns=new Array(examQ.length).fill(null);
   currentQ=0;examActive=true;timeLeft=90*60;
-  document.getElementById('var-label').textContent = SELECTED ? SELECTED.title : (DB_VARIANT ? DB_VARIANT.title : (selectedVar+'-Variant'));
+  document.getElementById('var-label').textContent=SELECTED.title;
   buildNav();renderQ();
   showScreen('screen-exam');
   startTimer();
@@ -629,7 +582,7 @@ function renderQ(){
     var cls='q-opt';
     if(isAns){cls+=' disabled';if(i===q.ans)cls+=' correct';else if(i===ua)cls+=' wrong';}
     else if(i===ua)cls+=' selected';
-    return '<button class="'+cls+'" onclick="selectAns('+i+')"><span class="opt-letter">'+letters[i]+'</span><span>'+o+'</span></button>';
+    return '<button class="'+cls+'" onclick="selectAns('+i+')"><span class="opt-letter">'+(letters[i]||'')+'</span><span>'+o+'</span></button>';
   }).join('');
   document.getElementById('next-btn').textContent=currentQ===examQ.length-1?'✅ Yakunlash':'Keyingi →';
   updateNav();
@@ -679,6 +632,7 @@ function finishExam(timeout){
   document.getElementById('result-msg').textContent=msg;
   document.getElementById('res-correct').textContent=correct;
   document.getElementById('res-wrong').textContent=total-correct;
+  document.getElementById('res-total').textContent=total;
   document.getElementById('btn-cert').style.display=pct>=75?'block':'none';
   showScreen('screen-result');
 }
@@ -705,7 +659,7 @@ function showCert(){
   document.getElementById('cert-score').textContent=pct+'%';
   document.getElementById('cert-stars').textContent=stars;
   document.getElementById('cert-grade').textContent=grade;
-  document.getElementById('cert-variant').textContent='📋 '+(SELECTED?SELECTED.title:(DB_VARIANT?DB_VARIANT.title:(selectedVar+'-Variant')))+' | '+examQ.length+' ta savol';
+  document.getElementById('cert-variant').textContent='📋 '+SELECTED.title+' | '+examQ.length+' ta savol';
   document.getElementById('cert-date').textContent='📅 '+new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
   showScreen('screen-cert');
 }
@@ -715,7 +669,6 @@ function goHome(){
   document.getElementById('btn-cert').style.display='none';
   showScreen('screen-home');
 }
-initDemo();
 </script>
 <script>
 /* PWA: service worker */
