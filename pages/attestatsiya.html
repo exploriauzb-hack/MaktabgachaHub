@@ -321,78 +321,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       </div>
     </div>
 
-    <!-- Variant (imtihon) -->
+    <!-- Variant (imtihon) — ENDI DINAMIK: VARIANTS obyektidagi har bir kalit uchun avtomatik karta chizadi -->
     <div id="variant-section" style="display:none;">
       <div class="sec-title"><i class="ti ti-list-numbers"></i> Variant tanlang</div>
-      <div class="variant-grid">
-        <div class="variant-card" id="vc-1" onclick="selectVariant(1)">
-          <div class="vnum">1️</div>
-          <h4>1-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-        <div class="variant-card" id="vc-2" onclick="selectVariant(2)">
-          <div class="vnum">2️</div>
-          <h4>2-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-        <div class="variant-card" id="vc-3" onclick="selectVariant(3)">
-          <div class="vnum">3️</div>
-          <h4>3-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-        <div class="variant-card" id="vc-4" onclick="selectVariant(4)">
-          <div class="vnum">4</div>
-          <h4>4-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-        <div class="variant-card" id="vc-5" onclick="selectVariant(5)">
-          <div class="vnum">5</div>
-          <h4>5-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-         <div class="variant-card" id="vc-6" onclick="selectVariant(6)">
-          <div class="vnum">6</div>
-          <h4>6-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-         <div class="variant-card" id="vc-7" onclick="selectVariant(7)">
-          <div class="vnum">7</div>
-          <h4>7-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-         <div class="variant-card" id="vc-8" onclick="selectVariant(8)">
-          <div class="vnum">8</div>
-          <h4>8-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-         <div class="variant-card" id="vc-9" onclick="selectVariant(9)">
-          <div class="vnum">9</div>
-          <h4>9-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-         <div class="variant-card" id="vc-10" onclick="selectVariant(10)">
-          <div class="vnum">10</div>
-          <h4>10-Variant</h4>
-          <p>40 ta savol</p>
-        </div>
-      </div>
+      <div class="variant-grid" id="variantGridDynamic"></div>
     </div>
 
-    <!-- Toifa (mashq) -->
+    <!-- Toifa (mashq) — ENDI DINAMIK -->
     <div id="mashq-cats" style="display:none;">
       <div class="sec-title"><i class="ti ti-category"></i> Toifa tanlang</div>
-      <div class="cat-grid">
-        <button class="cat-btn" onclick="selectCat('v1')">📘 1-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v2')">📗 2-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v3')">📙 3-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v4')">📗 4-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v5')">📙 5-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v6')">📘 6-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v7')">📗 7-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v8')">📙 8-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v9')">📗 9-Variant savollar<div class="cat-num">40 savol</div></button>
-        <button class="cat-btn" onclick="selectCat('v10')">📙 10-Variant savollar<div class="cat-num">40 savol</div></button>
-      </div>
+      <div class="cat-grid" id="mashqCatGridDynamic"></div>
     </div>
 
     <button class="btn-primary" onclick="startExam()" style="width:200px;margin-bottom:28px;">
@@ -1744,9 +1682,47 @@ const VARIANTS = {
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
-let mode='imtihon',selectedVariant=1,selectedCat=null;
+let mode='imtihon',selectedVariant=null,selectedCat=null;
 let examQuestions=[],userAnswers=[],currentQ=0;
 let timerInterval=null,timeLeft=90*60,examActive=false;
+
+// Har bir variant kalitiga mos ko'rinadigan nom (hardcoded 10 tasi uchun default,
+// bazadan qo'shilganlar uchun category_title bilan to'ldiriladi)
+let VARIANT_TITLES={
+  variant_1:'1-Variant',variant_2:'2-Variant',variant_3:'3-Variant',variant_4:'4-Variant',
+  variant_5:'5-Variant',variant_6:'6-Variant',variant_7:'7-Variant',variant_8:'8-Variant',
+  variant_9:'9-Variant',variant_10:'10-Variant'
+};
+
+// ════════════════════════════════════════
+// DINAMIK KARTALAR — VARIANTS obyektidagi HAR BIR kalit uchun karta chizadi
+// (shu jumladan admin panelda keyinchalik qo'shilgan yangi variantlar uchun ham)
+// ════════════════════════════════════════
+function buildVariantCards(){
+  var grid=document.getElementById('variantGridDynamic');
+  var catGrid=document.getElementById('mashqCatGridDynamic');
+  if(!grid||!catGrid)return;
+  var keys=Object.keys(VARIANTS);
+  var icons=['1️','2️','3️','4','5','6','7','8','9','10'];
+
+  grid.innerHTML=keys.map(function(k,i){
+    var label=VARIANT_TITLES[k]||k;
+    var count=(VARIANTS[k]||[]).length;
+    return '<div class="variant-card" id="vc-'+k+'" onclick="selectVariant(\''+k+'\')">'+
+      '<div class="vnum">'+(icons[i]||(i+1))+'</div>'+
+      '<h4>'+label+'</h4><p>'+count+' ta savol</p></div>';
+  }).join('');
+
+  catGrid.innerHTML=keys.map(function(k){
+    var label=VARIANT_TITLES[k]||k;
+    var count=(VARIANTS[k]||[]).length;
+    return '<button class="cat-btn" id="cb-'+k+'" onclick="selectCat(\''+k+'\')">📘 '+label+' savollar'+
+      '<div class="cat-num">'+count+' savol</div></button>';
+  }).join('');
+
+  if(selectedVariant){var vEl=document.getElementById('vc-'+selectedVariant);if(vEl)vEl.classList.add('selected');}
+  if(selectedCat){var cEl=document.getElementById('cb-'+selectedCat);if(cEl)cEl.classList.add('active');}
+}
 
 // ════════════════════════════════════════
 // INIT
@@ -1762,6 +1738,7 @@ let timerInterval=null,timeLeft=90*60,examActive=false;
 
   if(!hasAccess('attestation')){showScreen('screen-locked');return;}
   await loadHistory();
+  buildVariantCards();
   showScreen('screen-home');
   selectMode('imtihon');
 })();
@@ -1786,18 +1763,24 @@ function selectMode(m){
   document.getElementById('mode-imtihon').classList.toggle('selected',m==='imtihon');
   document.getElementById('variant-section').style.display=m==='imtihon'?'block':'none';
   document.getElementById('mashq-cats').style.display=m==='mashq'?'block':'none';
-  if(m==='imtihon')selectVariant(1);
+  if(m==='imtihon'&&!selectedVariant){
+    var first=Object.keys(VARIANTS)[0];
+    if(first)selectVariant(first);
+  }
 }
 
-function selectVariant(n){
-  selectedVariant=n;
-  [1,2,3,4,5,6,7,8,9,10].forEach(i=>document.getElementById('vc-'+i).classList.toggle('selected',i===n));
+function selectVariant(key){
+  selectedVariant=key;
+  document.querySelectorAll('.variant-card').forEach(el=>el.classList.remove('selected'));
+  var el=document.getElementById('vc-'+key);
+  if(el)el.classList.add('selected');
 }
 
-function selectCat(cat){
-  selectedCat=cat;
+function selectCat(key){
+  selectedCat=key;
   document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  var el=document.getElementById('cb-'+key);
+  if(el)el.classList.add('active');
 }
 
 // ════════════════════════════════════════
@@ -1806,16 +1789,17 @@ function selectCat(cat){
 function startExam(){
   if(mode==='mashq'){
     if(!selectedCat){showToast('Toifani tanlang','err');return;}
-    const key='variant_'+selectedCat.replace('v','');
-    examQuestions=shuffle(VARIANTS[key]);
+    examQuestions=shuffle(VARIANTS[selectedCat]||[]);
     timeLeft=0;
   } else {
-    examQuestions=shuffle(VARIANTS['variant_'+selectedVariant]);
+    if(!selectedVariant){showToast('Variantni tanlang','err');return;}
+    examQuestions=shuffle(VARIANTS[selectedVariant]||[]);
     timeLeft=90*60;
   }
+  if(!examQuestions.length){showToast('Bu bo\'limda hali savol yo\'q','err');return;}
   userAnswers=new Array(examQuestions.length).fill(null);
   currentQ=0;examActive=true;
-  document.getElementById('variant-label').textContent=mode==='imtihon'?selectedVariant+'-Variant':'Mashq';
+  document.getElementById('variant-label').textContent=mode==='imtihon'?(VARIANT_TITLES[selectedVariant]||selectedVariant):'Mashq';
   buildNavGrid();renderQuestion();
   showScreen('screen-exam');
   if(mode==='imtihon')startTimer();
@@ -1945,7 +1929,7 @@ async function finishExam(timeout){
   try{
     await _sb.from('test_results').insert({
       user_id:_currentUser.id,
-      category:mode==='imtihon'?`Attestatsiya ${selectedVariant}-Variant`:`Attestatsiya Mashq ${selectedCat}`,
+      category:mode==='imtihon'?`Attestatsiya ${VARIANT_TITLES[selectedVariant]||selectedVariant}`:`Attestatsiya Mashq ${VARIANT_TITLES[selectedCat]||selectedCat}`,
       score:correct,total,percentage:pct,xp_earned:xp,
       completed_at:new Date().toISOString()
     });
@@ -1994,7 +1978,7 @@ function showCert(){
   document.getElementById('cert-stars').textContent=stars;
   document.getElementById('cert-score').textContent=pct+'%';
   document.getElementById('cert-grade').textContent=grade;
-  document.getElementById('cert-variant').textContent=mode==='imtihon'?`📋 ${selectedVariant}-Variant | 40 ta savol`:'📚 Mashq rejimi';
+  document.getElementById('cert-variant').textContent=mode==='imtihon'?`📋 ${VARIANT_TITLES[selectedVariant]||selectedVariant} | ${examQuestions.length} ta savol`:'📚 Mashq rejimi';
   document.getElementById('cert-date').textContent='📅 '+new Date().toLocaleDateString('uz-UZ',{year:'numeric',month:'long',day:'numeric'});
   showScreen('screen-cert');
 }
@@ -2043,8 +2027,10 @@ function goHome(){
         if(!error&&data){ data.forEach(function(r){ if(!r||!r.data||!r.category)return;
           if(!VARIANTS[r.category]) VARIANTS[r.category]=[];
           VARIANTS[r.category].push({q:r.data.q,opts:r.data.opts||[],ans:r.data.ans,exp:r.data.exp||''});
+          if(r.category_title) VARIANT_TITLES[r.category]=r.category_title;
         }); } }
-    
+      // Yangi ma'lumot bilan kartalarni qayta chizamiz (tanlangan variant saqlanib qoladi)
+      buildVariantCards();
   }catch(e){ console.warn('DB kontent yuklashda ogohlantirish:', e); }
 })();
 </script>
