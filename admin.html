@@ -22,8 +22,6 @@
   --sidebar:250px;
 }
 body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;background:var(--bg);min-height:100vh}
-
-/* GATE */
 .gate{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);text-align:center;padding:24px}
 .gate .spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -33,8 +31,6 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .gate .g-icon.err{background:var(--red-soft);color:var(--red)}
 .gate a.g-btn{margin-top:4px;padding:10px 22px;background:var(--accent);color:#fff;border-radius:var(--radius-sm);font-size:13px;font-weight:600;text-decoration:none}
 .gate a.g-btn:hover{opacity:.92}
-
-/* LAYOUT */
 .app{display:none;min-height:100vh}
 .app.show{display:flex}
 .sidebar{width:var(--sidebar);background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:20;overflow-y:auto}
@@ -56,18 +52,15 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .who .rl{font-size:11px;color:var(--indigo);font-weight:600}
 .sb-link{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;text-decoration:none;transition:all .15s;font-family:inherit}
 .sb-link:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
-
 .main{margin-left:var(--sidebar);flex:1;padding:24px 30px;max-width:1200px}
 .head h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
 .head p{font-size:13px;color:var(--text2);margin-top:3px}
 .head{margin-bottom:20px}
-
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
 @media(max-width:960px){.cols{grid-template-columns:1fr}}
 .card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
 .card-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:16px}
 .card-title i{color:var(--accent2);font-size:18px}
-
 label.lbl{display:block;font-size:12px;font-weight:600;color:var(--text2);margin:12px 0 6px}
 label.lbl .req{color:var(--red);margin-left:2px}
 label.lbl:first-child{margin-top:0}
@@ -76,11 +69,8 @@ label.lbl:first-child{margin-top:0}
 textarea.inp{resize:vertical;min-height:62px;line-height:1.55}
 select.inp{cursor:pointer}
 .field-hint{font-size:11px;color:var(--text3);margin-top:4px}
-
 .cat-row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .cat-row select,.cat-row input{flex:1;min-width:140px}
-
-/* option builder (quiz) */
 .opt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .opt-row .radio{flex-shrink:0;width:26px;height:26px;border:2px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;background:var(--white)}
 .opt-row .radio.on{border-color:var(--green);background:var(--green-soft)}
@@ -92,20 +82,15 @@ select.inp{cursor:pointer}
 .opt-hint i{color:var(--green);font-size:13px}
 .btn-add-opt{font-size:12px;font-weight:600;color:var(--accent2);background:none;border:1px dashed var(--border2);border-radius:var(--radius-sm);padding:8px;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;font-family:inherit}
 .btn-add-opt:hover{background:var(--accent-soft);border-color:var(--accent-mid)}
-
-/* list-field (rules/steps) */
 .li-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .li-row .inp{flex:1}
 .li-row .del{flex-shrink:0;width:30px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--white);color:var(--text3);cursor:pointer;font-size:14px}
 .li-row .del:hover{background:var(--red-soft);color:var(--red);border-color:#fca5a5}
-
-/* advanced collapsible */
 .adv-toggle{font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;margin-top:16px;padding:8px 0;user-select:none}
 .adv-toggle i{transition:transform .2s}
 .adv-toggle.open i{transform:rotate(90deg)}
 .adv-box{display:none;padding:12px;background:var(--bg);border-radius:var(--radius-sm);margin-top:4px}
 .adv-box.open{display:block}
-
 .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
 .btn{padding:11px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:7px;transition:opacity .15s,transform .1s,background .15s}
 .btn:active{transform:scale(.98)}
@@ -114,7 +99,6 @@ select.inp{cursor:pointer}
 .btn-primary:hover:not(:disabled){opacity:.93}
 .btn-ghost{background:var(--white);color:var(--text2);border:1px solid var(--border)}
 .btn-ghost:hover{background:var(--bg)}
-
 .list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .count-pill{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
 .q-item{border:1px solid var(--border);border-radius:var(--radius-sm);padding:13px 14px;margin-bottom:10px;transition:box-shadow .15s}
@@ -135,22 +119,18 @@ select.inp{cursor:pointer}
 .empty{text-align:center;padding:38px 16px;color:var(--text3)}
 .empty i{font-size:34px;opacity:.5;display:block;margin-bottom:10px}
 .empty p{font-size:13px}
-
 .tools-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .mini-btn{font-size:12px;font-weight:600;color:var(--text2);background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;font-family:inherit}
 .mini-btn:hover{background:var(--accent-soft);color:var(--accent);border-color:#bfdbfe}
 pre.code{margin-top:12px;background:#0f172a;color:#e2e8f0;border-radius:var(--radius-sm);padding:16px;font-size:12px;line-height:1.6;overflow-x:auto;font-family:'SF Mono',Menlo,Consolas,monospace;white-space:pre;max-height:360px;overflow-y:auto;display:none}
 pre.code.show{display:block}
-
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;font-size:13px;font-weight:500;padding:12px 20px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:200;display:flex;align-items:center;gap:8px;max-width:90vw}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green)}.toast.err{background:var(--red)}
 .toast i{font-size:16px}
-
 .warn{background:var(--amber-soft);border:1px solid #fde68a;border-left:3px solid var(--amber);border-radius:var(--radius-sm);padding:13px 15px;font-size:12.5px;color:#92400e;line-height:1.55;margin-bottom:16px;display:none}
 .warn.show{display:block}
 .warn b{color:#78350f}
-
 @media(max-width:760px){
   .sidebar{width:82%;max-width:300px;transform:translateX(-100%);transition:transform .22s;z-index:60;box-shadow:0 0 40px rgba(0,0,0,.18)}
   .sidebar.open{transform:translateX(0)}
@@ -164,7 +144,6 @@ pre.code.show{display:block}
 .mobile-bar .mb-title{font-size:16px;font-weight:700}
 </style>
   <meta name="robots" content="noindex, nofollow"/>
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.json"/>
   <meta name="theme-color" content="#1e40af"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -173,7 +152,6 @@ pre.code.show{display:block}
 </head>
 <body>
 
-<!-- GATE -->
 <div class="gate" id="gate">
   <div class="spin" id="gate-spin"></div>
   <div class="g-icon err" id="gate-icon" style="display:none"><i class="ti ti-lock"></i></div>
@@ -182,7 +160,6 @@ pre.code.show{display:block}
   <a class="g-btn" id="gate-btn" href="dashboard.html" style="display:none">Dashboardga qaytish</a>
 </div>
 
-<!-- APP -->
 <div class="app" id="app">
   <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
@@ -217,11 +194,10 @@ pre.code.show{display:block}
 
     <div class="warn" id="table-warn">
       <b>Ma'lumotlar bazasida <code>content</code> jadvali topilmadi.</b><br/>
-      Bazaga saqlash uchun avval jadvalni yarating: <b>“SQL kodini ko'rsatish”</b> tugmasini bosing, kodni Supabase → SQL Editor'ga qo'yib ishga tushiring. U vaqtgacha <b>“JS sifatida nusxalash”</b> orqali sahifaga to'g'ridan-to'g'ri qo'sha olasiz.
+      Bazaga saqlash uchun avval jadvalni yarating: <b>"SQL kodini ko'rsatish"</b> tugmasini bosing, kodni Supabase → SQL Editor'ga qo'yib ishga tushiring. U vaqtgacha <b>"JS sifatida nusxalash"</b> orqali sahifaga to'g'ridan-to'g'ri qo'sha olasiz.
     </div>
 
     <div class="cols" id="content-view">
-      <!-- FORM -->
       <section class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px">
           <div class="card-title" style="margin:0"><i class="ti ti-plus"></i> <span id="form-title">Yangi yozuv</span></div>
@@ -250,7 +226,6 @@ pre.code.show{display:block}
         </div>
       </section>
 
-      <!-- LIST -->
       <section class="card">
         <div class="list-head">
           <div class="card-title" style="margin:0"><i class="ti ti-list-check"></i> Yozuvlar</div>
@@ -266,7 +241,6 @@ pre.code.show{display:block}
       </section>
     </div>
 
-    <!-- ═══════ STATISTIKA ═══════ -->
     <div id="stats-view" style="display:none">
       <div id="stat-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px"></div>
       <section class="card">
@@ -279,11 +253,10 @@ pre.code.show{display:block}
       </section>
     </div>
 
-    <!-- ═══════ PRO BERISH ═══════ -->
     <div id="pro-view" style="display:none">
       <div class="warn" id="pro-warn">
         <b>Diqqat:</b> boshqa foydalanuvchi tarifini o'zgartirish uchun <code>profiles</code> jadvalida admin ruxsati kerak.
-        Agar "ruxsat yo'q" xatosi chiqsa — <b>“SQL: admin ruxsati”</b> tugmasidagi kodni Supabase SQL Editor'da ishga tushiring.
+        Agar "ruxsat yo'q" xatosi chiqsa — <b>"SQL: admin ruxsati"</b> tugmasidagi kodni Supabase SQL Editor'da ishga tushiring.
       </div>
       <section class="card">
         <div class="card-title"><i class="ti ti-search"></i> Foydalanuvchini toping</div>
@@ -300,7 +273,6 @@ pre.code.show{display:block}
   </main>
 </div>
 
-<!-- ═══════ BULK IMPORT MODAL ═══════ -->
 <div id="bulk-modal" style="display:none;position:fixed;inset:0;z-index:150;background:rgba(15,23,42,.45);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--white);border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.25);padding:24px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
@@ -342,29 +314,28 @@ pre.code.show{display:block}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   Supabase — mavjud loyihangizdagi qiymatlar (anon key ochiq bo'lishi normal).
-   HAQIQIY himoya RLS orqali server tomonda (pastdagi SQL).
-   ═══════════════════════════════════════════════════════════════ */
 const SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
 const _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 /* ═══════════════════════════════════════════════════════════════
-   SCHEMAS — har bir bo'lim aynan o'sha sahifadagi shaklga mos.
-   kind:'quiz'  → savol + variantlar + to'g'ri javob (+ ixtiyoriy izoh)
-   kind:'record'→ maydonlar ro'yxati (text/textarea/number/list/tags)
-   target       → JS export'da hosil bo'ladigan o'zgaruvchi
-   codeLabel    → hasCategory bo'limlar uchun: toifa maydoni haqiqatda nima
-                  vazifa bajarishini bildiradi (masalan demo uchun bu — kirish kodi)
+   SCHEMAS
+   FIX (this version): vaziyat va qaror endi hasCategory:true.
+   Sabab: hasCategory yo'q bo'lgani uchun saveRecord() category'ni
+   HAR DOIM null qilib saqlar edi, va vaziyat.html / qarorlar.html
+   dagi loadDBVariants()/loadDBDocs() esa `if(!r.category) return;`
+   shartiga ko'ra category=null yozuvlarni JIMGINA tashlab yuborardi.
+   Shuning uchun admin panelda "qo'shildi" chiqardi-yu, saytda
+   ko'rinmasdi. Endi toifa (variant/hujjat nomi) majburiy bo'ladi
+   va category to'g'ri saqlanadi — sayt uni tanib oladi.
    ═══════════════════════════════════════════════════════════════ */
 const SCHEMAS={
   test:{label:'Test savollari',icon:'ti-flask',kind:'quiz',explanation:true,hasCategory:true,
         target:cat=>`QUESTIONS.${cat||'CATEGORY'}`,page:'pages/test.html'},
-  vaziyat:{label:'Vaziyatli savollar',icon:'ti-bulb',kind:'quiz',explanation:false,
-        target:()=>'var ALL_Q',page:'pages/vaziyat.html'},
-  qaror:{label:'Qaror / normativ',icon:'ti-gavel',kind:'quiz',explanation:false,
-        target:()=>'var ALL_Q',page:'pages/qarorlar.html'},
+  vaziyat:{label:'Vaziyatli savollar',icon:'ti-bulb',kind:'quiz',explanation:false,hasCategory:true,
+        target:cat=>`// ${cat||'yangi_variant'} — sayt bazadan avtomatik o'qiydi`,page:'pages/vaziyat.html'},
+  qaror:{label:'Qaror / normativ',icon:'ti-gavel',kind:'quiz',explanation:false,hasCategory:true,
+        target:cat=>`// ${cat||'yangi_hujjat'} — sayt bazadan avtomatik o'qiydi`,page:'pages/qarorlar.html'},
   attestatsiya:{label:'Attestatsiya',icon:'ti-certificate',kind:'quiz',explanation:true,hasCategory:true,
         target:cat=>`VARIANTS.${cat||'variant_1'}`,page:'pages/attestatsiya.html'},
   demo:{label:'Demo test',icon:'ti-device-desktop-analytics',kind:'quiz',explanation:true,hasCategory:true,isCode:true,
@@ -464,14 +435,11 @@ function escapeHtml(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').repla
 
 /* ═══════ GATE ═══════ */
 async function gate(){
-  // Admin tekshiruvi endi is_admin() RPC'ga asoslanadi (ishlashi isbotlangan).
-  // Profil o'qishdagi single() xatolari sabab bejiz qaytarib yubormaydi.
   try{
     const {data:{session}}=await _sb.auth.getSession();
     if(!session){ console.warn('[admin] session yo\'q → index.html'); window.location.replace('index.html'); return; }
     CURRENT_USER=session.user;
 
-    // 1) Asosiy: is_admin() RPC
     let isAdmin=false;
     try{
       const {data,error}=await _sb.rpc('is_admin');
@@ -479,7 +447,6 @@ async function gate(){
       else { isAdmin = data===true; }
     }catch(e){ console.warn('[admin] is_admin() istisno:', e); }
 
-    // 2) Zaxira: profildan role o'qish (maybeSingle — single() xatosidan xoli)
     if(!isAdmin){
       try{
         const {data,error}=await _sb.from('profiles').select('role').eq('id',session.user.id).maybeSingle();
@@ -493,7 +460,6 @@ async function gate(){
       window.location.replace('dashboard.html'); return;
     }
 
-    // Ruxsat bor — ismni olamiz (xato bo'lsa ham panel ochiladi)
     let name='Admin';
     try{
       const {data}=await _sb.from('profiles').select('full_name').eq('id',session.user.id).maybeSingle();
@@ -562,7 +528,8 @@ async function selectType(t){
 }
 
 /* Toifa maydoni har bo'limda bir xil ma'noni bildirmaydi — demo uchun bu
-   foydalanuvchi kiritadigan "kirish kodi". Yorliqlarni shunga qarab o'zgartiramiz. */
+   foydalanuvchi kiritadigan "kirish kodi"; vaziyat/qaror uchun bu yangi
+   variant yoki hujjat nomi hisoblanadi. Yorliqlarni shunga qarab o'zgartiramiz. */
 function updateCategoryLabels(s){
   if(!s.hasCategory)return;
   const selLbl=document.getElementById('cat-select-label');
@@ -574,6 +541,16 @@ function updateCategoryLabels(s){
     titleLbl.textContent='Kodning izohi (ixtiyoriy, faqat siz uchun)';
     idLbl.innerHTML='Kirish kodi (foydalanuvchi shu kod bilan kiradi, masalan <code>ILM450</code>)';
     hint.textContent='Bolalar/tarbiyachilar shu kodni kiritib, aynan shu variantga kiradi. Xohlagan harf-raqamni yozishingiz mumkin.';
+  }else if(TYPE==='vaziyat'){
+    selLbl.textContent='Variant (bo\'lim)';
+    titleLbl.textContent='Yangi variant nomi';
+    idLbl.textContent='Variant kodi (avtomatik)';
+    hint.textContent='Har bir variant saytda alohida karta sifatida chiqadi. Masalan: "6-variant".';
+  }else if(TYPE==='qaror'){
+    selLbl.textContent='Hujjat';
+    titleLbl.textContent='Yangi hujjat nomi';
+    idLbl.textContent='Hujjat kodi (avtomatik)';
+    hint.textContent='Har bir hujjat saytda alohida karta sifatida chiqadi. Masalan: "6-hujjat".';
   }else{
     selLbl.textContent='Toifa';
     titleLbl.textContent='Yangi toifa nomi';
@@ -608,7 +585,6 @@ function buildForm(){
         <div class="adv-box">${adv.map(fieldHtml).join('')}</div>`;
     }
     wrap.innerHTML=html;
-    // list-field default rows
     s.fields.filter(f=>f.t==='list').forEach(f=>{ if(!document.querySelectorAll(`#list-${f.k} .li-row`).length){addListItem(f.k);addListItem(f.k);} });
   }
 }
@@ -643,11 +619,9 @@ function addOption(text,isCorrect){
 }
 function markCorrect(el){document.querySelectorAll('#opts-wrap .radio').forEach(r=>r.classList.remove('on'));el.classList.add('on');}
 
-/* ═══════ CATEGORIES (hasCategory bo'limlar: test, attestatsiya, demo) ═══════ */
+/* ═══════ CATEGORIES ═══════ */
 async function loadCategories(){
   if(!TABLE_OK){renderCatSelect();return;}
-  // MUHIM: kategoriya (yoki demo uchun "kirish kodi") har doim JORIY bo'lim (TYPE)
-  // bo'yicha o'qilishi kerak — aks holda demo/attestatsiya ro'yxati bo'sh chiqadi.
   const {data,error}=await _sb.from('content').select('category,category_title').eq('type',TYPE);
   if(error){handleNoTable();renderCatSelect();return;}
   CATEGORIES={};
@@ -665,7 +639,6 @@ function renderCatSelect(){
 function toggleNewCat(){const b=document.getElementById('new-cat-box');b.style.display=b.style.display==='none'?'block':'none';}
 function syncCatId(){
   const s=SCHEMAS[TYPE];
-  // Demo (kirish kodi) uchun avtomatik slugify emas — admin kodni o'zi tanlaydi/tahrirlaydi.
   if(s&&s.isCode)return;
   document.getElementById('new-cat-id').value=slugify(document.getElementById('new-cat-title').value);
 }
@@ -733,10 +706,8 @@ async function saveRecord(){
   const s=SCHEMAS[TYPE];
   const {data}=readForm();
 
-  // JSON maydon xatosi bo'lsa — to'xtatamiz
   if(data.__jsonerr__){ return toast('"'+data.__jsonerr__+'" — JSON formati noto\'g\'ri','err'); }
 
-  // category (test / attestatsiya / demo — demo uchun bu kirish kodi)
   let cat=null,catTitle=null;
   if(s.hasCategory){
     const newBox=document.getElementById('new-cat-box').style.display!=='none';
@@ -746,7 +717,6 @@ async function saveRecord(){
     if(!cat)return toast(s.isCode?'Kirish kodini tanlang yoki yangi kod kiriting':'Toifani tanlang yoki yangi toifa kiriting','err');
   }
 
-  // quiz: bo'sh variantlarni tozalash + ans indeksini moslash
   if(s.kind==='quiz'){
     const clean=[];let ans=0;
     data.opts.forEach((o,i)=>{if(o.length){if(i===data.ans)ans=clean.length;clean.push(o);}});
@@ -788,7 +758,7 @@ async function loadRecords(){
   if(error){handleNoTable();renderList();return;}
   RECORDS=data||[];renderList();updateNavCounts();
 }
-async function updateNavCounts(){/* soddalik uchun joriy tur sonini ko'rsatamiz */}
+async function updateNavCounts(){}
 function recTitle(r){
   const d=r.data||{};
   return d.q||d.title||d.name||d.t||('#'+(d.n||''))||'(nomsiz)';
@@ -851,7 +821,7 @@ async function deleteRecord(i){
   toast('O\'chirildi','ok');await loadRecords();
 }
 
-/* ═══════ EXPORT JS (sahifa formatida) ═══════ */
+/* ═══════ EXPORT JS ═══════ */
 function jsObj(d,keys){
   const parts=keys.map(k=>{
     let v=d[k];
@@ -894,10 +864,10 @@ function toggleSQL(){
 
 create table if not exists public.content (
   id             uuid primary key default gen_random_uuid(),
-  type           text not null,        -- test, vaziyat, qaror, qoshiq, hikoya, oyin, mashgulot, haftalik
-  category       text,                 -- test/attestatsiya uchun toifa kodi, demo uchun KIRISH KODI
+  type           text not null,
+  category       text,
   category_title text,
-  data           jsonb not null,       -- yozuvning sahifadagi aynan shakli
+  data           jsonb not null,
   sort           int default 0,
   created_by     uuid references auth.users(id),
   created_at     timestamptz default now()
@@ -908,19 +878,16 @@ create index if not exists content_cat_idx  on public.content(type, category);
 
 alter table public.content enable row level security;
 
--- Har qanday tizimga kirgan foydalanuvchi kontentni O'QIY oladi
 create policy "content_read"
   on public.content for select
   to authenticated using (true);
 
--- Faqat ADMIN yoza/tahrirlab/o'chira oladi (server tomonda tekshiriladi)
 create policy "content_admin_write"
   on public.content for all
   to authenticated
   using   (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'))
   with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role='admin'));
 
--- O'zingizni admin qiling (UUID'ni almashtiring):
 -- update public.profiles set role='admin' where id='SIZNING_USER_ID';`;
   box.classList.toggle('show');
   if(box.classList.contains('show')){
@@ -928,16 +895,11 @@ create policy "content_admin_write"
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   BULK IMPORT — ko'p savol/yozuvni bir marta yuklash
-   Qabul qilinadi: JSON massiv, YOKI sahifadagi JS format
-   (masalan  QUESTIONS.ilk_qadam = [ ... ];  yoki  var V1 = [ ... ];)
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════ BULK IMPORT ═══════ */
 function openBulk(){
   const s=SCHEMAS[TYPE];
   document.getElementById('bulk-type-label').textContent=s.label;
   document.getElementById('bulk-cat-block').style.display=s.hasCategory?'block':'none';
-  // Joriy tanlangan toifani/kodni oldindan qo'yamiz
   if(s.hasCategory&&CURRENT_CAT){
     document.getElementById('bulk-cat').value=CURRENT_CAT;
     document.getElementById('bulk-cat-title').value=CATEGORIES[CURRENT_CAT]||'';
@@ -948,11 +910,16 @@ function openBulk(){
   document.getElementById('bulk-hint').innerHTML = s.kind==='quiz'
     ? 'Har element: <code>q</code>, <code>opts</code>, <code>ans</code>'+(s.explanation?' (va ixtiyoriy <code>exp</code>)':'')+'.'
     : 'Har element — shu bo\'limning maydonlariga mos obyekt.';
-  // Demo uchun toifa = KIRISH KODI
   var catLabels=document.querySelectorAll('#bulk-cat-block .lbl');
   if(s.isCode && catLabels[0]){
     catLabels[0].innerHTML='Kirish kodi (foydalanuvchi shu kod bilan kiradi, masalan <code>ILM150</code>)';
     if(catLabels[1]) catLabels[1].textContent='Kodning izohi (ixtiyoriy, faqat siz uchun)';
+  }else if(TYPE==='vaziyat' && catLabels[0]){
+    catLabels[0].innerHTML='Variant kodi (masalan: <code>6-variant</code>)';
+    if(catLabels[1]) catLabels[1].textContent='Variant nomi (ko\'rinadigan nom)';
+  }else if(TYPE==='qaror' && catLabels[0]){
+    catLabels[0].innerHTML='Hujjat kodi (masalan: <code>6-hujjat</code>)';
+    if(catLabels[1]) catLabels[1].textContent='Hujjat nomi (ko\'rinadigan nom)';
   }else if(catLabels[0]){
     catLabels[0].innerHTML='Toifa kodi (masalan: <code>ilk_qadam</code>, <code>variant_1</code>, <code>V1</code>)';
     if(catLabels[1]) catLabels[1].textContent='Toifa nomi (ko\'rinadigan nom — ixtiyoriy)';
@@ -969,17 +936,13 @@ function bulkFileChosen(ev){
   r.onload=()=>{document.getElementById('bulk-text').value=r.result;toast('Fayl yuklandi — endi "Hammasini yuklash"ni bosing','ok');};
   r.readAsText(f);
 }
-// Matnni massivga aylantiradi: JSON, yoki JS literal ("QUESTIONS.x = [...]" / "var V1=[...]")
 function parseBulk(text){
   let t=(text||'').trim();
   if(!t) throw new Error('Ro\'yxat bo\'sh');
-  // Old qismini olib tashlaymiz:  NOM = [ ... ] ;
   const eq=t.indexOf('=');
   if(t[0]!=='['&&t[0]!=='{'&&eq!==-1&&t.indexOf('[')>eq){ t=t.slice(eq+1); }
   t=t.trim().replace(/;+\s*$/,'');
-  // 1) avval toza JSON sifatida
   try{ const v=JSON.parse(t); return Array.isArray(v)?v:[v]; }catch(e){}
-  // 2) JS literal sifatida (unquoted kalit, backtick, trailing comma) — admin o'z brauzerida
   try{ const v=(new Function('return ('+t+')'))(); return Array.isArray(v)?v:[v]; }
   catch(e){ throw new Error('Formatni o\'qib bo\'lmadi. JSON yoki to\'g\'ri JS ro\'yxat kiriting.'); }
 }
@@ -998,7 +961,6 @@ async function doBulkImport(){
     if(!cat) return toast(s.isCode?'Kirish kodini kiriting':'Toifa kodini kiriting','err');
   }
 
-  // Validatsiya + normallashtirish
   const rows=[];
   for(let i=0;i<items.length;i++){
     const it=items[i];
@@ -1018,14 +980,12 @@ async function doBulkImport(){
   const btn=document.getElementById('bulk-btn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i> Yuklanmoqda…';
 
   if(!TABLE_OK){
-    // Baza yo'q — mahalliy ro'yxatga qo'shamiz (JS export orqali ishlatiladi)
     if(s.hasCategory){CURRENT_CAT=cat;CATEGORIES[cat]=catTitle;if(!RECORDS)RECORDS=[];renderCatSelect();document.getElementById('cat-select').value=cat;}
     rows.forEach(r=>RECORDS.push(r));
     renderList();btn.disabled=false;btn.innerHTML='<i class="ti ti-database-import"></i> Hammasini yuklash';
     closeBulk();toast(`${rows.length} ta qo'shildi (mahalliy)`,'ok');return;
   }
 
-  // Bazaga bo'lak-bo'lak (100 tadan) yuklaymiz
   let done=0;
   try{
     for(let i=0;i<rows.length;i+=100){
@@ -1045,9 +1005,7 @@ async function doBulkImport(){
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   STATISTIKA
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════ STATISTIKA ═══════ */
 function statCard(icon,val,label,color){
   return `<div class="card" style="padding:16px 18px">
     <div style="display:flex;align-items:center;gap:10px">
@@ -1065,14 +1023,12 @@ async function countOf(table,filters){
 async function loadStats(){
   const cards=document.getElementById('stat-cards');
   cards.innerHTML='';
-  // Umumiy ko'rsatkichlar (parallel)
   const [users,pros,corps,tests] = await Promise.all([
     countOf('profiles'),
     countOf('profiles',[{op:'eq',col:'subscription_tier',val:'pro'}]),
     countOf('profiles',[{op:'eq',col:'subscription_tier',val:'corporate'}]),
     countOf('test_results')
   ]);
-  // XP yig'indisi (xp ustunini olib qo'shamiz)
   let totalXP='—';
   try{ const {data}=await _sb.from('profiles').select('xp'); if(data) totalXP=data.reduce((s,r)=>s+(r.xp||0),0).toLocaleString('uz-UZ'); }catch(e){}
 
@@ -1083,7 +1039,6 @@ async function loadStats(){
     statCard('ti-flask', tests==null?'—':tests.toLocaleString('uz-UZ'),'Ishlangan testlar','#15803d')+
     statCard('ti-star', totalXP,'Jami XP','#b45309');
 
-  // Kontent bo'limlar bo'yicha
   const cbox=document.getElementById('stat-content');
   try{
     const {data,error}=await _sb.from('content').select('type');
@@ -1100,7 +1055,6 @@ async function loadStats(){
     }
   }catch(e){cbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
 
-  // So'nggi foydalanuvchilar
   const rbox=document.getElementById('stat-recent');
   try{
     const {data,error}=await _sb.from('profiles').select('full_name,phone,subscription_tier,xp,created_at').order('created_at',{ascending:false}).limit(10);
@@ -1118,9 +1072,7 @@ async function loadStats(){
   }catch(e){rbox.innerHTML='<div class="empty"><p>Xatolik</p></div>';}
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   PRO BERISH
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════ PRO BERISH ═══════ */
 async function searchUsers(){
   const q=document.getElementById('pro-q').value.trim();
   const box=document.getElementById('pro-results');
@@ -1164,7 +1116,6 @@ function renderUserRow(u){
   </div>`;
 }
 async function setPlan(userId,plan,btn){
-  // Muddat (oylarda). Bepul uchun 0.
   let months=0;
   if(plan!=='free'){ const sel=document.getElementById('dur-'+userId); months=sel?parseInt(sel.value,10):0; }
   const label=plan==='free'?'Bepul (bekor qilish)':plan+(months>0?(' — '+months+' oy'):' — muddatsiz');
@@ -1179,12 +1130,8 @@ async function setPlan(userId,plan,btn){
 function toggleProSQL(){
   const box=document.getElementById('pro-sql');
   box.textContent=`-- ═══ Admin uchun 'profiles' ruxsati (bir marta) ═══
--- Admin barcha profillarni KO'RA va tarifni O'ZGARTIRA olishi uchun.
--- Supabase → SQL Editor'ga qo'ying va Run bosing.
-
 alter table public.profiles enable row level security;
 
--- Admin barcha profillarni o'qiy oladi (statistika + qidiruv uchun)
 drop policy if exists "profiles_admin_read" on public.profiles;
 create policy "profiles_admin_read"
   on public.profiles for select
@@ -1194,7 +1141,6 @@ create policy "profiles_admin_read"
     or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
   );
 
--- Admin har qanday profil tarifini/rolini yangilay oladi
 drop policy if exists "profiles_admin_update" on public.profiles;
 create policy "profiles_admin_update"
   on public.profiles for update
@@ -1207,7 +1153,7 @@ create policy "profiles_admin_update"
   if(box.classList.contains('show')){navigator.clipboard?.writeText(box.textContent).then(()=>toast('SQL nusxalandi','ok'),()=>{});}
 }
 
-/* ═══════ MOBIL: yon menyu ochish/yopish ═══════ */
+/* ═══════ MOBIL ═══════ */
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-backdrop').classList.add('show');}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-backdrop').classList.remove('show');}
 function toggleSidebar(){document.getElementById('sidebar').classList.contains('open')?closeSidebar():openSidebar();}
@@ -1215,7 +1161,6 @@ function toggleSidebar(){document.getElementById('sidebar').classList.contains('
 gate();
 </script>
 <script>
-/* PWA: service worker */
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(e){console.warn('SW:',e);});});}
 </script>
 </body>
