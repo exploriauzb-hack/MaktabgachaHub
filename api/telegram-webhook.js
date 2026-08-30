@@ -1,32 +1,29 @@
 // /api/telegram-webhook.js
 // Telegram bot Update'larini qabul qiladi (masalan /start buyrug'i)
-// va foydalanuvchiga salomlashuv xabari + "Test ishlash" tugmasini yuboradi.
+// va foydalanuvchiga salomlashuv xabari + "Test ishlash" INLINE tugmasini yuboradi.
 //
-// KERAKLI MUHIT O'ZGARUVCHISI (Vercel):
-//   TELEGRAM_BOT_TOKEN — BotFather bergan token (telegram-auth.js bilan bir xil)
+// MUHIM: tugma turi reply-keyboard emas, balki INLINE (xabarning o'ziga
+// biriktirilgan) qilib qilingan — chunki Telegram Desktop'da reply-keyboard
+// web_app tugmalari ba'zan initData'ni bo'sh yuboradi, inline tugma esa
+// barcha platformalarda (Desktop, Mobile, Web) ishonchli ishlaydi.
 //
-// O'RNATISHDAN KEYIN QILISH KERAK BO'LGAN ISH:
-// Bu faylni deploy qilgach, Telegram'ga "mening update'larni shu manzilga yubor"
-// deb BIR MARTA aytishingiz kerak — buni brauzeringiz manzil qatoriga
-// quyidagi URL'ni ochib bajarasiz (TOKEN va DOMENni almashtiring):
-//
-//   https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://domeningiz.uz/api/telegram-webhook
-//
-// Muvaffaqiyatli bo'lsa {"ok":true,"result":true,...} degan javob chiqadi.
+// KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
+//   TELEGRAM_BOT_TOKEN — BotFather bergan token
+//   APP_URL             — masalan https://www.maktabgachahub.website (oxirida slash YO'Q)
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(200).send('OK'); // Telegram GET bilan tekshirmaydi, lekin xavfsizlik uchun
+    return res.status(200).send('OK');
   }
 
   try {
     const update = req.body;
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    const APP_URL = process.env.APP_URL || 'https://maktabgachahub.website';
+    const APP_URL = process.env.APP_URL || 'https://www.maktabgachahub.website';
 
     const message = update.message;
     if (!message || !message.text) {
-      return res.status(200).json({ ok: true }); // e'tiborsiz qoldiramiz
+      return res.status(200).json({ ok: true });
     }
 
     const chatId = message.chat.id;
@@ -40,14 +37,12 @@ module.exports = async (req, res) => {
           `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
           `Test ishlash uchun pastdagi tugmani bosing 👇`,
         reply_markup: {
-          keyboard: [
+          inline_keyboard: [
             [{ text: '📚 Test ishlash', web_app: { url: `${APP_URL}/telegram-login.html` } }]
-          ],
-          resize_keyboard: true
+          ]
         }
       });
     } else {
-      // boshqa har qanday matn uchun oddiy javob
       await sendMessage(BOT_TOKEN, chatId, {
         text: 'Botdan foydalanish uchun /start buyrug\'ini yuboring yoki pastdagi tugmani bosing.'
       });
@@ -56,7 +51,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true });
   } catch (e) {
     console.error('telegram-webhook xatolik:', e);
-    return res.status(200).json({ ok: true }); // Telegram'ga baribir 200 qaytaramiz, aks holda qayta-qayta yuboraveradi
+    return res.status(200).json({ ok: true });
   }
 };
 
