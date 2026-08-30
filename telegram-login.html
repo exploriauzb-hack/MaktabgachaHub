@@ -6,17 +6,19 @@
 <title>MaktabgachaHub — Kirish</title>
 <style>
   body{font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f4ff;margin:0}
-  .box{text-align:center;padding:24px}
+  .box{text-align:center;padding:24px;max-width:100%}
   .spin{width:40px;height:40px;border:3px solid #e5e7eb;border-top-color:#1e40af;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
   @keyframes spin{to{transform:rotate(360deg)}}
   p{color:#6b7280;font-size:13px}
   .err{color:#b91c1c;font-size:13px;margin-top:10px}
+  .debug{margin-top:16px;text-align:left;background:#111827;color:#a5f3fc;font-family:monospace;font-size:11px;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-all;max-width:340px}
 </style>
 </head>
 <body>
 <div class="box">
-  <div class="spin"></div>
+  <div class="spin" id="spinner"></div>
   <p id="msg">Telegram orqali tekshirilmoqda...</p>
+  <div class="debug" id="debug" style="display:none"></div>
 </div>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -26,11 +28,19 @@ const SUPABASE_URL = 'https://oxpbltvnbjzxqwsxrpvg.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
 const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+function showDebug(obj) {
+  document.getElementById('spinner').style.display = 'none';
+  const el = document.getElementById('debug');
+  el.style.display = 'block';
+  el.textContent = JSON.stringify(obj, null, 2);
+}
+
 async function loginViaTelegram() {
   const msg = document.getElementById('msg');
 
   if (!window.Telegram || !window.Telegram.WebApp) {
     msg.textContent = 'Bu sahifa faqat Telegram bot ichida ishlaydi.';
+    showDebug({ 'window.Telegram bormi': !!window.Telegram });
     return;
   }
 
@@ -39,8 +49,20 @@ async function loginViaTelegram() {
   tg.expand();
 
   const initData = tg.initData;
+
+  // DEBUG: hozircha har doim ko'rsatamiz, muammoni topgach olib tashlaymiz
+  showDebug({
+    platform: tg.platform,
+    version: tg.version,
+    initData_uzunligi: initData ? initData.length : 0,
+    initData_qiymati: initData || '(BO\'SH)',
+    initDataUnsafe: tg.initDataUnsafe,
+    colorScheme: tg.colorScheme,
+    isExpanded: tg.isExpanded
+  });
+
   if (!initData) {
-    msg.textContent = 'Telegram ma\'lumoti topilmadi. Botni qayta oching.';
+    msg.textContent = 'Telegram ma\'lumoti topilmadi (initData bo\'sh). Debug ma\'lumotni pastda ko\'ring.';
     return;
   }
 
@@ -53,7 +75,7 @@ async function loginViaTelegram() {
     const data = await res.json();
 
     if (!res.ok) {
-      msg.innerHTML = 'Kirishda xatolik: ' + (data.error || 'noma\'lum') + '<div class="err">Iltimos, /start orqali qayta urinib ko\'ring.</div>';
+      msg.innerHTML = 'Kirishda xatolik: ' + (data.error || 'noma\'lum');
       return;
     }
 
