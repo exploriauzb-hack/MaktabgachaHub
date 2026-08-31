@@ -1,18 +1,19 @@
 // /api/telegram-webhook.js
 // Telegram bot Update'larini qabul qiladi:
-//  - /start → salomlashuv + "🌐 Saytga o'tish" (Mini App) inline tugmasi
-//             + doimiy pastki tugmalar (⭐ Premium, 📖 Manba)
-//  - "⭐ Premium" tugmasi → Premium haqida ma'lumot
-//  - "📖 Manba" tugmasi → "Manba" platformasi haqida ma'lumot
-//
-// MUHIM: "Saytga o'tish" INLINE tugma qilib qilingan (reply-keyboard emas),
-// chunki reply-keyboard'dagi web_app tugmalari Telegram Desktop'da
-// initData'ni bo'sh yuborardi (avval sinab ko'rilgan va tasdiqlangan xato).
-// Inline tugma esa barcha platformalarda ishonchli ishlaydi.
+//  - Har qanday xabar → foydalanuvchi telegram_subscribers jadvaliga yoziladi
+//  - /start → salomlashuv + "🌐 Saytga o'tish" tugmasi + Premium/Manba tugmalari
+//  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
+//  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
 //
 // KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
-//   TELEGRAM_BOT_TOKEN — BotFather bergan token
-//   APP_URL             — masalan https://www.maktabgachahub.website (oxirida slash YO'Q)
+//   TELEGRAM_BOT_TOKEN        — BotFather bergan token
+//   APP_URL                    — masalan https://www.maktabgachahub.website
+//   SUPABASE_URL               — loyihangiz URL manzili
+//   SUPABASE_SERVICE_ROLE_KEY  — Supabase service_role kaliti
+//   ADMIN_TELEGRAM_ID          — SIZNING shaxsiy Telegram ID raqamingiz (masalan 5501793132)
+//                                 Faqat shu ID'dan kelgan /elon buyrug'i ishlaydi.
+
+const { createClient } = require('@supabase/supabase-js');
 
 const PREMIUM_BTN = '⭐ Premium';
 const MANBA_BTN = '📖 Manba';
@@ -51,6 +52,7 @@ module.exports = async (req, res) => {
     const update = req.body;
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const APP_URL = process.env.APP_URL || 'https://www.maktabgachahub.website';
+    const ADMIN_ID = process.env.ADMIN_TELEGRAM_ID;
 
     const message = update.message;
     if (!message || !message.text) {
@@ -60,14 +62,35 @@ module.exports = async (req, res) => {
     const chatId = message.chat.id;
     const text = message.text.trim();
     const firstName = message.from?.first_name || 'Tarbiyachi';
+    const username = message.from?.username || null;
+    const senderId = message.from?.id;
+
+    // Har qanday xabar yuborgan foydalanuvchini obunachilar ro'yxatiga qo'shamiz/yangilaymiz
+    await saveSubscriber(chatId, senderId, firstName, username);
+
+    // ═══ ADMIN: e'lon yuborish ═══
+    if (text.startsWith('/elon')) {
+      if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+        await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
+        return res.status(200).json({ ok: true });
+      }
+      const announceText = text.replace('/elon', '').trim();
+      if (!announceText) {
+        await sendMessage(BOT_TOKEN, chatId, {
+          text: 'Foydalanish: /elon Xabar matni\n\nMasalan: /elon Yangi test bo\'limi qo\'shildi!'
+        });
+        return res.status(200).json({ ok: true });
+      }
+      const { sent, failed, total } = await broadcastToAll(BOT_TOKEN, announceText);
+      await sendMessage(BOT_TOKEN, chatId, {
+        text: `✅ E'lon yuborildi.\nJami obunachi: ${total}\nYuborildi: ${sent}\nXato (bloklangan/o'chirilgan): ${failed}`
+      });
+      return res.status(200).json({ ok: true });
+    }
 
     if (text === '/start') {
-      // 1) Salomlashuv
-      await sendMessage(BOT_TOKEN, chatId, {
-        text: `Assalomu alaykum, ${firstName}! 👋`
-      });
+      await sendMessage(BOT_TOKEN, chatId, { text: `Assalomu alaykum, ${firstName}! 👋` });
 
-      // 2) Asosiy matn + INLINE "Saytga o'tish" tugmasi
       await sendMessage(BOT_TOKEN, chatId, {
         text:
           `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
@@ -79,23 +102,14 @@ module.exports = async (req, res) => {
         }
       });
 
-      // 3) Doimiy pastki tugmalar (Premium / Manba)
       await sendMessage(BOT_TOKEN, chatId, {
         text: '⭐ Premium va 📖 Manba haqida ma\'lumot uchun pastdagi tugmalardan foydalaning.',
         reply_markup: MAIN_KEYBOARD
       });
     } else if (text === PREMIUM_BTN || text === '/premium') {
-      await sendMessage(BOT_TOKEN, chatId, {
-        text: PREMIUM_INFO_TEXT,
-        parse_mode: 'HTML',
-        reply_markup: MAIN_KEYBOARD
-      });
+      await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else if (text === MANBA_BTN || text === '/manba') {
-      await sendMessage(BOT_TOKEN, chatId, {
-        text: MANBA_INFO_TEXT,
-        parse_mode: 'HTML',
-        reply_markup: MAIN_KEYBOARD
-      });
+      await sendMessage(BOT_TOKEN, chatId, { text: MANBA_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
         text: 'Botdan foydalanish uchun /start buyrug\'ini yuboring yoki pastdagi tugmalardan foydalaning.',
@@ -109,6 +123,50 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true });
   }
 };
+
+function getSupabaseAdmin() {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { autoRefreshToken: false, persistSession: false }
+  });
+}
+
+async function saveSubscriber(chatId, telegramId, firstName, username) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('telegram_subscribers').upsert({
+      chat_id: chatId,
+      telegram_id: telegramId,
+      first_name: firstName,
+      username,
+      updated_at: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error('saveSubscriber xatolik:', e);
+  }
+}
+
+async function broadcastToAll(botToken, text) {
+  const supabaseAdmin = getSupabaseAdmin();
+  const { data: subscribers, error } = await supabaseAdmin.from('telegram_subscribers').select('chat_id');
+  if (error || !subscribers) return { sent: 0, failed: 0, total: 0 };
+
+  let sent = 0;
+  let failed = 0;
+
+  for (const sub of subscribers) {
+    try {
+      const result = await sendMessage(botToken, sub.chat_id, { text });
+      if (result && result.ok) sent++;
+      else failed++;
+    } catch (e) {
+      failed++;
+    }
+    // Telegram bir soniyada juda ko'p xabarga cheklov qo'yadi — kichik pauza qilamiz
+    await new Promise((r) => setTimeout(r, 40));
+  }
+
+  return { sent, failed, total: subscribers.length };
+}
 
 async function sendMessage(botToken, chatId, payload) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
