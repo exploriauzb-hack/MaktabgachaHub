@@ -1,11 +1,15 @@
 // /api/telegram-webhook.js
 // Telegram bot Update'larini qabul qiladi:
-//  - /start buyrug'i → salomlashuv + 3 ta inline tugma
-//  - "premium_info" / "manba_info" callback tugmalari → ma'lumot xabari
+//  - /start → oddiy salomlashuv matni (Test ishlash uchun BotFather Menu Button ishlatiladi)
+//  - /premium → Premium haqida ma'lumot
+//  - /manba → "Manba" platformasi haqida ma'lumot
 //
-// KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
+// Bu 3 ta buyruq Telegram botning "menyu" ro'yxatida (input maydoni yonidagi
+// "/" yoki menyu belgisi orqali) ko'rinadi — endi xabar ostidagi tugmalar
+// shart emas.
+//
+// KERAKLI MUHIT O'ZGARUVCHISI (Vercel):
 //   TELEGRAM_BOT_TOKEN — BotFather bergan token
-//   APP_URL             — masalan https://www.maktabgachahub.website (oxirida slash YO'Q)
 
 const PREMIUM_INFO_TEXT =
   `⭐ *Premium haqida*\n\n` +
@@ -35,26 +39,7 @@ module.exports = async (req, res) => {
   try {
     const update = req.body;
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    const APP_URL = process.env.APP_URL || 'https://www.maktabgachahub.website';
 
-    // ═══ Callback tugmalar (Premium / Manba) ═══
-    if (update.callback_query) {
-      const cq = update.callback_query;
-      const chatId = cq.message.chat.id;
-      const data = cq.data;
-
-      await answerCallbackQuery(BOT_TOKEN, cq.id);
-
-      if (data === 'premium_info') {
-        await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'Markdown' });
-      } else if (data === 'manba_info') {
-        await sendMessage(BOT_TOKEN, chatId, { text: MANBA_INFO_TEXT, parse_mode: 'Markdown' });
-      }
-
-      return res.status(200).json({ ok: true });
-    }
-
-    // ═══ Oddiy xabarlar (/start va h.k.) ═══
     const message = update.message;
     if (!message || !message.text) {
       return res.status(200).json({ ok: true });
@@ -71,22 +56,19 @@ module.exports = async (req, res) => {
         reply_markup: { remove_keyboard: true }
       });
 
-      // Asosiy xabar + 3 ta inline tugma
       await sendMessage(BOT_TOKEN, chatId, {
         text:
           `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
-          `Test ishlash uchun pastdagi tugmani bosing 👇`,
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '📚 Test ishlash', web_app: { url: `${APP_URL}/telegram-login.html` } }],
-            [{ text: '⭐ Premium haqida', callback_data: 'premium_info' }],
-            [{ text: '📖 "Manba" platformasi haqida', callback_data: 'manba_info' }]
-          ]
-        }
+          `📚 Test ishlash uchun chap pastdagi menyu tugmasini bosing.\n` +
+          `⭐ Premium va 📖 Manba haqida ma'lumot uchun "/" menyusidan foydalaning.`
       });
+    } else if (text === '/premium') {
+      await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'Markdown' });
+    } else if (text === '/manba') {
+      await sendMessage(BOT_TOKEN, chatId, { text: MANBA_INFO_TEXT, parse_mode: 'Markdown' });
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
-        text: 'Botdan foydalanish uchun /start buyrug\'ini yuboring yoki yuqoridagi xabar ostidagi tugmalardan foydalaning.'
+        text: 'Mavjud buyruqlar: /start, /premium, /manba — yoki chap pastdagi menyu tugmasidan foydalaning.'
       });
     }
 
@@ -103,14 +85,5 @@ async function sendMessage(botToken, chatId, payload) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, ...payload })
-  });
-}
-
-async function answerCallbackQuery(botToken, callbackQueryId) {
-  const url = `https://api.telegram.org/bot${botToken}/answerCallbackQuery`;
-  await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ callback_query_id: callbackQueryId })
   });
 }
