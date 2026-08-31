@@ -1,15 +1,18 @@
 // /api/telegram-webhook.js
 // Telegram bot Update'larini qabul qiladi:
-//  - /start → salomlashuv + doimiy pastki tugmalar (⭐ Premium, 📖 Manba)
+//  - /start → salomlashuv + "🌐 Saytga o'tish" (Mini App) inline tugmasi
+//             + doimiy pastki tugmalar (⭐ Premium, 📖 Manba)
 //  - "⭐ Premium" tugmasi → Premium haqida ma'lumot
 //  - "📖 Manba" tugmasi → "Manba" platformasi haqida ma'lumot
 //
-// MUHIM TUZATISH: parse_mode endi 'HTML' (Markdown emas) — chunki
-// @AzadiB_way kabi pastki chiziqli so'zlar Markdown'da xato berib,
-// xabarni butunlay yubormay qo'yardi.
+// MUHIM: "Saytga o'tish" INLINE tugma qilib qilingan (reply-keyboard emas),
+// chunki reply-keyboard'dagi web_app tugmalari Telegram Desktop'da
+// initData'ni bo'sh yuborardi (avval sinab ko'rilgan va tasdiqlangan xato).
+// Inline tugma esa barcha platformalarda ishonchli ishlaydi.
 //
-// KERAKLI MUHIT O'ZGARUVCHISI (Vercel):
+// KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
 //   TELEGRAM_BOT_TOKEN — BotFather bergan token
+//   APP_URL             — masalan https://www.maktabgachahub.website (oxirida slash YO'Q)
 
 const PREMIUM_BTN = '⭐ Premium';
 const MANBA_BTN = '📖 Manba';
@@ -47,6 +50,7 @@ module.exports = async (req, res) => {
   try {
     const update = req.body;
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+    const APP_URL = process.env.APP_URL || 'https://www.maktabgachahub.website';
 
     const message = update.message;
     if (!message || !message.text) {
@@ -58,33 +62,40 @@ module.exports = async (req, res) => {
     const firstName = message.from?.first_name || 'Tarbiyachi';
 
     if (text === '/start') {
-      const result1 = await sendMessage(BOT_TOKEN, chatId, {
+      // 1) Salomlashuv
+      await sendMessage(BOT_TOKEN, chatId, {
         text: `Assalomu alaykum, ${firstName}! 👋`
       });
-      console.log('start msg1:', JSON.stringify(result1));
 
-      const result2 = await sendMessage(BOT_TOKEN, chatId, {
+      // 2) Asosiy matn + INLINE "Saytga o'tish" tugmasi
+      await sendMessage(BOT_TOKEN, chatId, {
         text:
           `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
-          `📚 Test ishlash uchun chap pastdagi menyu tugmasini bosing.\n` +
-          `⭐ Premium va 📖 Manba haqida ma'lumot uchun pastdagi tugmalardan foydalaning.`,
+          `Saytga o'tish uchun pastdagi tugmani bosing 👇`,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '🌐 Saytga o\'tish', web_app: { url: `${APP_URL}/telegram-login.html` } }]
+          ]
+        }
+      });
+
+      // 3) Doimiy pastki tugmalar (Premium / Manba)
+      await sendMessage(BOT_TOKEN, chatId, {
+        text: '⭐ Premium va 📖 Manba haqida ma\'lumot uchun pastdagi tugmalardan foydalaning.',
         reply_markup: MAIN_KEYBOARD
       });
-      console.log('start msg2:', JSON.stringify(result2));
     } else if (text === PREMIUM_BTN || text === '/premium') {
-      const result = await sendMessage(BOT_TOKEN, chatId, {
+      await sendMessage(BOT_TOKEN, chatId, {
         text: PREMIUM_INFO_TEXT,
         parse_mode: 'HTML',
         reply_markup: MAIN_KEYBOARD
       });
-      console.log('premium msg:', JSON.stringify(result));
     } else if (text === MANBA_BTN || text === '/manba') {
-      const result = await sendMessage(BOT_TOKEN, chatId, {
+      await sendMessage(BOT_TOKEN, chatId, {
         text: MANBA_INFO_TEXT,
         parse_mode: 'HTML',
         reply_markup: MAIN_KEYBOARD
       });
-      console.log('manba msg:', JSON.stringify(result));
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
         text: 'Botdan foydalanish uchun /start buyrug\'ini yuboring yoki pastdagi tugmalardan foydalaning.',
