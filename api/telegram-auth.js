@@ -1,14 +1,14 @@
 // /api/telegram-auth.js
-// Vercel serverless function. Telegram Mini App yuborgan initData'ni
-// tekshiradi, mos Supabase foydalanuvchisini topadi (yoki yaratadi)
-// va unga session (access_token/refresh_token) qaytaradi.
+// Telegram WebApp initData'ni tekshiradi, kanalga a'zolikni tasdiqlaydi,
+// mos Supabase foydalanuvchisini topadi (yoki yaratadi) va session qaytaradi.
 //
-// KERAKLI MUHIT O'ZGARUVCHILARI (Vercel → Project Settings → Environment Variables):
+// KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
 //   TELEGRAM_BOT_TOKEN        — BotFather bergan token
 //   SUPABASE_URL              — https://xxxx.supabase.co
-//   SUPABASE_SERVICE_ROLE_KEY — Supabase → Settings → API → service_role (MAXFIY, hech qachon frontendga chiqarmang)
-//   SUPABASE_ANON_KEY         — Supabase anon key (saytda allaqachon ishlatilyapti)
-//   TG_AUTH_SECRET            — o'zingiz o'ylab topgan uzun tasodifiy maxfiy satr (parol hosil qilish uchun)
+//   SUPABASE_SERVICE_ROLE_KEY — Supabase service_role kaliti (MAXFIY)
+//   SUPABASE_ANON_KEY         — Supabase anon key
+//   TG_AUTH_SECRET            — uzun tasodifiy maxfiy satr
+//   CHANNEL_USERNAME          — masalan @MaktabgachaHub (majburiy obuna kanali)
 
 const crypto = require('crypto');
 const { createClient } = require('@supabase/supabase-js');
@@ -27,11 +27,23 @@ function verifyTelegramInitData(initData, botToken) {
   const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
   const computedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
 
-  // timing-safe taqqoslash
   const a = Buffer.from(computedHash, 'hex');
   const b = Buffer.from(hash, 'hex');
   if (a.length !== b.length) return false;
   return crypto.timingSafeEqual(a, b);
+}
+
+async function checkChannelMembership(botToken, channelUsername, userId) {
+  try {
+    const url = `https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${encodeURIComponent(channelUsername)}&user_id=${userId}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.ok) return true; // API xatosida bloklamaymiz (masalan bot admin emas)
+    const status = data.result.status;
+    return ['creator', 'administrator', 'member'].includes(status);
+  } catch (e) {
+    return true;
+  }
 }
 
 module.exports = async (req, res) => {
@@ -65,6 +77,17 @@ module.exports = async (req, res) => {
     const telegramId = tgUser.id;
     const fullName = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') || 'Tarbiyachi';
 
+    // ═══ Majburiy kanalga obuna tekshiruvi ═══
+    const CHANNEL_USERNAME = process.env.CHANNEL_USERNAME || '@MaktabgachaHub';
+    const isMember = await checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, telegramId);
+    if (!isMember) {
+      return res.status(403).json({
+        error: 'not_subscribed',
+        channel: CHANNEL_USERNAME,
+        message: `Saytdan foydalanish uchun avval ${CHANNEL_USERNAME} kanaliga a'zo bo'ling.`
+      });
+    }
+
     const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
       auth: { autoRefreshToken: false, persistSession: false }
     });
@@ -76,7 +99,6 @@ module.exports = async (req, res) => {
       .update(String(telegramId))
       .digest('hex');
 
-    // Avval telegram_id bo'yicha mavjud profilni qidiramiz
     const { data: existingProfile } = await supabaseAdmin
       .from('profiles')
       .select('id')
@@ -88,7 +110,6 @@ module.exports = async (req, res) => {
     if (existingProfile) {
       userId = existingProfile.id;
     } else {
-      // Yangi auth foydalanuvchi yaratamiz
       const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
         email,
         password,
@@ -100,15 +121,12 @@ module.exports = async (req, res) => {
       }
       userId = created.user.id;
 
-      // ESLATMA: agar sizda auth.users → profiles avtomatik trigger bo'lmasa,
-      // profiles qatorini bu yerda o'zingiz yarating/yangilang.
       await supabaseAdmin
         .from('profiles')
         .update({ telegram_id: telegramId, full_name: fullName })
         .eq('id', userId);
     }
 
-    // Endi shu email/parol bilan haqiqiy session hosil qilamiz
     const { data: signInData, error: signInErr } = await supabaseAnon.auth.signInWithPassword({
       email,
       password
