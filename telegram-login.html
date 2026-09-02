@@ -4,20 +4,96 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Kirish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <style>
-  body{font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f4ff;margin:0}
-  .box{text-align:center;padding:24px}
-  .spin{width:40px;height:40px;border:3px solid #e5e7eb;border-top-color:#1e40af;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  p{color:#6b7280;font-size:13px}
-  .err{color:#b91c1c;font-size:13px;margin-top:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
+  --accent:#1e40af;--accent-soft:#eff6ff;--gold:#b45309;--gold-soft:#fffbeb;
+  --green:#15803d;--green-soft:#f0fdf4;--red:#b91c1c;--red-soft:#fef2f2;
+}
+body{
+  font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;margin:0;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#dbeafe 0%,#eff6ff 45%,#fef3c7 100%);
+}
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.card{
+  position:relative;z-index:2;background:var(--surface);border-radius:20px;
+  box-shadow:0 20px 60px rgba(30,64,175,.15);padding:36px 30px;max-width:340px;width:88%;
+  text-align:center;animation:pop .4s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.logo{
+  width:56px;height:56px;border-radius:16px;margin:0 auto 16px;
+  background:linear-gradient(135deg,var(--accent),#3b82f6);
+  display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;
+  box-shadow:0 8px 20px rgba(30,64,175,.3);
+}
+h1{font-size:15px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+.spin-wrap{margin:22px 0 14px}
+.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.icon-big{font-size:38px;margin:6px 0 4px;animation:bounce 1.6s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+p.msg{color:var(--muted);font-size:13px;line-height:1.6;margin-top:4px}
+p.msg b{color:var(--text)}
+.err-box{background:var(--red-soft);color:var(--red);border-radius:10px;padding:9px 12px;font-size:12px;margin-top:12px}
+.actions{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;
+  border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;
+  font-family:'Inter',sans-serif;cursor:pointer;border:none;transition:transform .12s,opacity .15s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#3b82f6);color:#fff;box-shadow:0 6px 16px rgba(30,64,175,.28)}
+.btn-secondary{background:var(--accent-soft);color:var(--accent)}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  padding:4px 10px;border-radius:20px;background:var(--gold-soft);color:var(--gold);margin-top:10px;
+}
+.success .logo{background:linear-gradient(135deg,var(--green),#22c55e)}
 </style>
 </head>
 <body>
-<div class="box">
-  <div class="spin" id="spinner"></div>
-  <p id="msg">Telegram orqali tekshirilmoqda...</p>
+<canvas id="bg-canvas"></canvas>
+
+<div class="card" id="card">
+  <div class="logo">🎓</div>
+  <h1>MaktabgachaHub</h1>
+
+  <div class="spin-wrap" id="spinner"><div class="spin"></div></div>
+  <div id="icon" style="display:none" class="icon-big">📢</div>
+
+  <p class="msg" id="msg">Telegram orqali tekshirilmoqda...</p>
+  <div class="actions" id="actions"></div>
 </div>
+
+<script>
+(function(){
+  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d'),W,H;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  var colors=['#93c5fd','#fcd34d','#c4b5fd','#86efac'];
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  var shapes=[];
+  for(var i=0;i<20;i++)shapes.push({color:colors[i%4],size:rnd(10,22),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-.2,.2),vy:rnd(-.3,-.08),op:rnd(.15,.35)});
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    shapes.forEach(function(s){
+      s.x+=s.vx;s.y+=s.vy;
+      if(s.y<-40){s.y=H+30;s.x=rnd(0,W)}
+      if(s.x<-40)s.x=W+30;if(s.x>W+40)s.x=-30;
+      ctx.save();ctx.globalAlpha=s.op;ctx.fillStyle=s.color;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.size*.5,0,Math.PI*2);ctx.fill();ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -27,8 +103,17 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function loginViaTelegram() {
+  const card = document.getElementById('card');
   const msg = document.getElementById('msg');
   const spinner = document.getElementById('spinner');
+  const icon = document.getElementById('icon');
+  const actions = document.getElementById('actions');
+
+  card.className = 'card';
+  spinner.style.display = 'block';
+  icon.style.display = 'none';
+  actions.innerHTML = '';
+  msg.innerHTML = 'Telegram orqali tekshirilmoqda...';
 
   if (!window.Telegram || !window.Telegram.WebApp) {
     spinner.style.display = 'none';
@@ -57,7 +142,20 @@ async function loginViaTelegram() {
 
     if (!res.ok) {
       spinner.style.display = 'none';
-      msg.innerHTML = 'Kirishda xatolik: ' + (data.error || 'noma\'lum') + '<div class="err">Iltimos, /start orqali qayta urinib ko\'ring.</div>';
+
+      if (data.error === 'not_subscribed') {
+        icon.style.display = 'block';
+        msg.innerHTML = `Saytdan foydalanish uchun avval <b>${data.channel}</b> kanaliga a'zo bo'ling.`;
+        const channelUrl = 'https://t.me/' + data.channel.replace('@', '');
+        actions.innerHTML = `
+          <a class="btn btn-primary" href="${channelUrl}" target="_blank"><i class="ti ti-brand-telegram"></i> Kanalga o'tish</a>
+          <button class="btn btn-secondary" onclick="loginViaTelegram()"><i class="ti ti-refresh"></i> Men a'zo bo'ldim, tekshirish</button>
+        `;
+        return;
+      }
+
+      msg.innerHTML = 'Kirishda xatolik: ' + (data.error || 'noma\'lum');
+      actions.innerHTML = `<div class="err-box">Iltimos, /start orqali qayta urinib ko'ring.</div>`;
       return;
     }
 
@@ -71,8 +169,13 @@ async function loginViaTelegram() {
       return;
     }
 
-    msg.textContent = 'Kirish muvaffaqiyatli! Yo\'naltirilmoqda...';
-    window.location.href = 'dashboard.html';
+    card.className = 'card success';
+    spinner.style.display = 'none';
+    icon.style.display = 'block';
+    icon.textContent = '✅';
+    msg.innerHTML = 'Kirish muvaffaqiyatli!';
+    actions.innerHTML = `<span class="badge"><i class="ti ti-loader-2"></i> Yo'naltirilmoqda...</span>`;
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
   } catch (e) {
     spinner.style.display = 'none';
     msg.textContent = 'Tarmoq xatoligi: ' + e.message;
