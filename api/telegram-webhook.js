@@ -1,17 +1,19 @@
 // /api/telegram-webhook.js
-// Telegram bot Update'larini qabul qiladi:
-//  - Har qanday xabar → foydalanuvchi telegram_subscribers jadvaliga yoziladi
-//  - /start → salomlashuv + "🌐 Saytga o'tish" tugmasi + Premium/Manba tugmalari
-//  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
-//  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
+// TEZLASHTIRISH UCHUN QILINGAN O'ZGARISHLAR:
+//  1) checkChannelMembership va saveSubscriber endi PARALLEL (Promise.all) —
+//     avval ketma-ket edi, endi ikkisi bir vaqtda bajariladi.
+//  2) /start endi 3 ta emas, 2 ta xabar yuboradi (salomlashuv + saytga
+//     o'tish tugmasi bitta xabarga birlashtirildi, ikkinchi xabar parallel).
+//  3) saveSubscriber faqat /start'da chaqiriladi, har bir xabarda emas —
+//     keraksiz baza yozuvlarini kamaytiradi.
 //
 // KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
 //   TELEGRAM_BOT_TOKEN        — BotFather bergan token
 //   APP_URL                    — masalan https://www.maktabgachahub.website
 //   SUPABASE_URL               — loyihangiz URL manzili
 //   SUPABASE_SERVICE_ROLE_KEY  — Supabase service_role kaliti
-//   ADMIN_TELEGRAM_ID          — SIZNING shaxsiy Telegram ID raqamingiz (masalan 5501793132)
-//                                 Faqat shu ID'dan kelgan /elon buyrug'i ishlaydi.
+//   ADMIN_TELEGRAM_ID          — sizning shaxsiy Telegram ID raqamingiz
+//   CHANNEL_USERNAME           — masalan @MaktabgachaHub
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -53,6 +55,30 @@ module.exports = async (req, res) => {
     const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const APP_URL = process.env.APP_URL || 'https://www.maktabgachahub.website';
     const ADMIN_ID = process.env.ADMIN_TELEGRAM_ID;
+    const CHANNEL_USERNAME = process.env.CHANNEL_USERNAME || '@MaktabgachaHub';
+
+    // ═══ "✅ Tekshirish" tugmasi (callback) ═══
+    if (update.callback_query) {
+      const cq = update.callback_query;
+      const chatId = cq.message.chat.id;
+      const senderId = cq.from.id;
+      const firstName = cq.from.first_name || 'Tarbiyachi';
+
+      const results = await Promise.all([
+        answerCallbackQuery(BOT_TOKEN, cq.id),
+        checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, senderId)
+      ]);
+      const isMember = results[1];
+
+      if (cq.data === 'check_subscription') {
+        if (isMember) {
+          await sendWelcomeFlow(BOT_TOKEN, chatId, firstName, APP_URL);
+        } else {
+          await sendSubscribeGate(BOT_TOKEN, chatId, CHANNEL_USERNAME);
+        }
+      }
+      return res.status(200).json({ ok: true });
+    }
 
     const message = update.message;
     if (!message || !message.text) {
@@ -64,9 +90,6 @@ module.exports = async (req, res) => {
     const firstName = message.from?.first_name || 'Tarbiyachi';
     const username = message.from?.username || null;
     const senderId = message.from?.id;
-
-    // Har qanday xabar yuborgan foydalanuvchini obunachilar ro'yxatiga qo'shamiz/yangilaymiz
-    await saveSubscriber(chatId, senderId, firstName, username);
 
     // ═══ ADMIN: e'lon yuborish ═══
     if (text.startsWith('/elon')) {
@@ -81,31 +104,25 @@ module.exports = async (req, res) => {
         });
         return res.status(200).json({ ok: true });
       }
-      const { sent, failed, total } = await broadcastToAll(BOT_TOKEN, announceText);
+      const result = await broadcastToAll(BOT_TOKEN, announceText);
       await sendMessage(BOT_TOKEN, chatId, {
-        text: `✅ E'lon yuborildi.\nJami obunachi: ${total}\nYuborildi: ${sent}\nXato (bloklangan/o'chirilgan): ${failed}`
+        text: `✅ E'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
       });
       return res.status(200).json({ ok: true });
     }
 
     if (text === '/start') {
-      await sendMessage(BOT_TOKEN, chatId, { text: `Assalomu alaykum, ${firstName}! 👋` });
+      const results = await Promise.all([
+        checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, senderId),
+        saveSubscriber(chatId, senderId, firstName, username)
+      ]);
+      const isMember = results[0];
 
-      await sendMessage(BOT_TOKEN, chatId, {
-        text:
-          `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
-          `Saytga o'tish uchun pastdagi tugmani bosing 👇`,
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: '🌐 Saytga o\'tish', web_app: { url: `${APP_URL}/telegram-login.html` } }]
-          ]
-        }
-      });
-
-      await sendMessage(BOT_TOKEN, chatId, {
-        text: '⭐ Premium va 📖 Manba haqida ma\'lumot uchun pastdagi tugmalardan foydalaning.',
-        reply_markup: MAIN_KEYBOARD
-      });
+      if (isMember) {
+        await sendWelcomeFlow(BOT_TOKEN, chatId, firstName, APP_URL);
+      } else {
+        await sendSubscribeGate(BOT_TOKEN, chatId, CHANNEL_USERNAME);
+      }
     } else if (text === PREMIUM_BTN || text === '/premium') {
       await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else if (text === MANBA_BTN || text === '/manba') {
@@ -123,6 +140,57 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true });
   }
 };
+
+// Endi 2 ta xabar (avval 3 ta edi), ikkisi PARALLEL jo'natiladi
+async function sendWelcomeFlow(botToken, chatId, firstName, appUrl) {
+  await Promise.all([
+    sendMessage(botToken, chatId, {
+      text:
+        `Assalomu alaykum, ${firstName}! 👋\n\n` +
+        `MaktabgachaHub — tarbiyachilar uchun professional rivojlanish va attestatsiyaga tayyorgarlik platformasi.\n\n` +
+        `Saytga o'tish uchun pastdagi tugmani bosing 👇`,
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '🌐 Saytga o\'tish', web_app: { url: `${appUrl}/telegram-login.html` } }]
+        ]
+      }
+    }),
+    sendMessage(botToken, chatId, {
+      text: '⭐ Premium va 📖 Manba haqida ma\'lumot uchun pastdagi tugmalardan foydalaning.',
+      reply_markup: MAIN_KEYBOARD
+    })
+  ]);
+}
+
+async function sendSubscribeGate(botToken, chatId, channelUsername) {
+  const channelLink = `https://t.me/${channelUsername.replace('@', '')}`;
+  await sendMessage(botToken, chatId, {
+    text:
+      `📢 <b>Diqqat:</b> saytdan foydalanish uchun avval ${channelUsername} kanaliga a'zo bo'lishingiz kerak.\n\n` +
+      `A'zo bo'lgach, pastdagi "✅ Tekshirish" tugmasini bosing.`,
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '📢 Kanalga o\'tish', url: channelLink }],
+        [{ text: '✅ Tekshirish', callback_data: 'check_subscription' }]
+      ]
+    }
+  });
+}
+
+async function checkChannelMembership(botToken, channelUsername, userId) {
+  try {
+    const url = `https://api.telegram.org/bot${botToken}/getChatMember?chat_id=${encodeURIComponent(channelUsername)}&user_id=${userId}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.ok) return true;
+    const status = data.result.status;
+    return ['creator', 'administrator', 'member'].includes(status);
+  } catch (e) {
+    console.error('checkChannelMembership xatolik:', e);
+    return true;
+  }
+}
 
 function getSupabaseAdmin() {
   return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
@@ -161,7 +229,6 @@ async function broadcastToAll(botToken, text) {
     } catch (e) {
       failed++;
     }
-    // Telegram bir soniyada juda ko'p xabarga cheklov qo'yadi — kichik pauza qilamiz
     await new Promise((r) => setTimeout(r, 40));
   }
 
@@ -176,4 +243,13 @@ async function sendMessage(botToken, chatId, payload) {
     body: JSON.stringify({ chat_id: chatId, ...payload })
   });
   return res.json();
+}
+
+async function answerCallbackQuery(botToken, callbackQueryId) {
+  const url = `https://api.telegram.org/bot${botToken}/answerCallbackQuery`;
+  await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ callback_query_id: callbackQueryId })
+  });
 }
