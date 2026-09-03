@@ -96,12 +96,7 @@ p.msg b{color:var(--text)}
 </script>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://oxpbltvnbjzxqwsxrpvg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
-const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 async function loginViaTelegram() {
   const card = document.getElementById('card');
   const msg = document.getElementById('msg');
@@ -159,23 +154,23 @@ async function loginViaTelegram() {
       return;
     }
 
-    const { error } = await _sb.auth.setSession({
-      access_token: data.access_token,
-      refresh_token: data.refresh_token
-    });
-    if (error) {
-      spinner.style.display = 'none';
-      msg.textContent = 'Session o\'rnatishda xatolik: ' + error.message;
-      return;
-    }
-
     card.className = 'card success';
     spinner.style.display = 'none';
     icon.style.display = 'block';
     icon.textContent = '✅';
     msg.innerHTML = 'Kirish muvaffaqiyatli!';
     actions.innerHTML = `<span class="badge"><i class="ti ti-loader-2"></i> Yo'naltirilmoqda...</span>`;
-    setTimeout(() => { window.location.href = 'dashboard.html'; }, 500);
+
+    // MUHIM: session token'larni URL orqali dashboard.html'ga uzatamiz —
+    // Telegram WebView'dagi localStorage nomukammalligini chetlab o'tish uchun.
+    // dashboard.html shu tokenlarni o'zi setSession() bilan o'rnatadi.
+    const params = new URLSearchParams({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token
+    });
+    setTimeout(() => {
+      window.location.href = 'dashboard.html?' + params.toString();
+    }, 400);
   } catch (e) {
     spinner.style.display = 'none';
     msg.textContent = 'Tarmoq xatoligi: ' + e.message;
