@@ -884,6 +884,16 @@ async function checkNotifications(){
 }
 
 window.addEventListener('load',async function(){
+  // Telegram orqali kelgan session token'larini URL'dan olib, avval o'rnatamiz.
+  // localStorage'ga tayangan avvalgi usul Telegram WebView'da ishonchsiz edi —
+  // bu esa tokenlarni to'g'ridan-to'g'ri havola orqali oladi.
+  var urlParams = new URLSearchParams(window.location.search);
+  var tgAccessToken = urlParams.get('access_token');
+  var tgRefreshToken = urlParams.get('refresh_token');
+  if (tgAccessToken && tgRefreshToken) {
+    await _sb.auth.setSession({ access_token: tgAccessToken, refresh_token: tgRefreshToken });
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
   var auth=await initAuth(true);if(!auth)return;
   if(typeof fillNav==='function')fillNav();
   // Skeleton — so'rov natijasi kelguncha ko'rsatiladi
