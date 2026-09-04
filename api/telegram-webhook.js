@@ -1,11 +1,14 @@
 // /api/telegram-webhook.js
-// TEZLASHTIRISH UCHUN QILINGAN O'ZGARISHLAR:
-//  1) checkChannelMembership va saveSubscriber endi PARALLEL (Promise.all) —
-//     avval ketma-ket edi, endi ikkisi bir vaqtda bajariladi.
-//  2) /start endi 3 ta emas, 2 ta xabar yuboradi (salomlashuv + saytga
-//     o'tish tugmasi bitta xabarga birlashtirildi, ikkinchi xabar parallel).
-//  3) saveSubscriber faqat /start'da chaqiriladi, har bir xabarda emas —
-//     keraksiz baza yozuvlarini kamaytiradi.
+// Telegram bot Update'larini qabul qiladi:
+//  - Har qanday xabar → foydalanuvchi telegram_subscribers jadvaliga yoziladi (faqat /start'da)
+//  - /start → AVVAL kanalga a'zolik tekshiriladi. A'zo bo'lmasa — a'zo bo'lish
+//    havolasi va "✅ Tekshirish" tugmasi bilan xabar ko'rsatiladi.
+//    A'zo bo'lsa — salomlashuv + "🌐 Saytga o'tish" + Premium/Manba tugmalari.
+//  - "check_subscription" callback → qayta tekshiradi
+//  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
+//  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
+//  - RASM + izohda "/elon <matn>" → FAQAT ADMIN uchun: barcha obunachilarga
+//    shu rasm va matnni birga yuboradi (sendPhoto)
 //
 // KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
 //   TELEGRAM_BOT_TOKEN        — BotFather bergan token
@@ -81,33 +84,61 @@ module.exports = async (req, res) => {
     }
 
     const message = update.message;
-    if (!message || !message.text) {
+    if (!message) {
       return res.status(200).json({ ok: true });
     }
 
     const chatId = message.chat.id;
-    const text = message.text.trim();
+    // Matn oddiy xabarda `text`da, rasm izohida esa `caption`da keladi
+    const rawText = message.text || message.caption || '';
+    const text = rawText.trim();
     const firstName = message.from?.first_name || 'Tarbiyachi';
     const username = message.from?.username || null;
     const senderId = message.from?.id;
+    const hasPhoto = Array.isArray(message.photo) && message.photo.length > 0;
 
-    // ═══ ADMIN: e'lon yuborish ═══
+    // ═══ ADMIN: e'lon yuborish (matn yoki RASM + matn) ═══
     if (text.startsWith('/elon')) {
       if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
         await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
         return res.status(200).json({ ok: true });
       }
+
       const announceText = text.replace('/elon', '').trim();
-      if (!announceText) {
+
+      if (hasPhoto) {
+        // Eng katta o'lchamdagi rasm file_id'sini olamiz
+        const fileId = message.photo[message.photo.length - 1].file_id;
+        const result = await broadcastPhotoToAll(BOT_TOKEN, fileId, announceText);
         await sendMessage(BOT_TOKEN, chatId, {
-          text: 'Foydalanish: /elon Xabar matni\n\nMasalan: /elon Yangi test bo\'limi qo\'shildi!'
+          text: `✅ Rasmli e'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
         });
         return res.status(200).json({ ok: true });
       }
+
+      if (!announceText) {
+        await sendMessage(BOT_TOKEN, chatId, {
+          text:
+            'Foydalanish:\n' +
+            '• Matn: /elon Xabar matni\n' +
+            '• Rasm bilan: rasmni yuboring, izohga (caption) "/elon Xabar matni" deb yozing'
+        });
+        return res.status(200).json({ ok: true });
+      }
+
       const result = await broadcastToAll(BOT_TOKEN, announceText);
       await sendMessage(BOT_TOKEN, chatId, {
         text: `✅ E'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
       });
+      return res.status(200).json({ ok: true });
+    }
+
+    // Rasm bilan lekin /elon bo'lmagan izoh — e'tiborsiz qoldiramiz
+    if (hasPhoto) {
+      return res.status(200).json({ ok: true });
+    }
+
+    if (!message.text) {
       return res.status(200).json({ ok: true });
     }
 
@@ -141,7 +172,6 @@ module.exports = async (req, res) => {
   }
 };
 
-// Endi 2 ta xabar (avval 3 ta edi), ikkisi PARALLEL jo'natiladi
 async function sendWelcomeFlow(botToken, chatId, firstName, appUrl) {
   await Promise.all([
     sendMessage(botToken, chatId, {
@@ -235,12 +265,49 @@ async function broadcastToAll(botToken, text) {
   return { sent, failed, total: subscribers.length };
 }
 
+// Rasm + izoh (caption) ni barcha obunachilarga yuboradi
+async function broadcastPhotoToAll(botToken, fileId, caption) {
+  const supabaseAdmin = getSupabaseAdmin();
+  const { data: subscribers, error } = await supabaseAdmin.from('telegram_subscribers').select('chat_id');
+  if (error || !subscribers) return { sent: 0, failed: 0, total: 0 };
+
+  let sent = 0;
+  let failed = 0;
+
+  for (const sub of subscribers) {
+    try {
+      const result = await sendPhoto(botToken, sub.chat_id, fileId, caption);
+      if (result && result.ok) sent++;
+      else failed++;
+    } catch (e) {
+      failed++;
+    }
+    await new Promise((r) => setTimeout(r, 40));
+  }
+
+  return { sent, failed, total: subscribers.length };
+}
+
 async function sendMessage(botToken, chatId, payload) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, ...payload })
+  });
+  return res.json();
+}
+
+async function sendPhoto(botToken, chatId, fileId, caption) {
+  const url = `https://api.telegram.org/bot${botToken}/sendPhoto`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: chatId,
+      photo: fileId,
+      caption: caption || undefined
+    })
   });
   return res.json();
 }
