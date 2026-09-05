@@ -55,6 +55,37 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .hero-section h1{font-size:24px;font-weight:700;margin-bottom:8px}
 .hero-section p{color:var(--muted);font-size:14px;max-width:440px;margin:0 auto}
 
+/* PROMO BANNER */
+.promo-banner{
+  max-width:520px;margin:0 auto 28px;display:flex;align-items:center;gap:10px;
+  justify-content:center;background:linear-gradient(90deg,#fff7ed,#fef3c7);
+  border:1.5px dashed #f59e0b;color:#92400e;font-weight:700;font-size:12.5px;
+  padding:10px 16px;border-radius:10px;
+}
+.promo-banner i{font-size:16px}
+
+/* COUNTDOWN */
+.countdown-wrap{
+  max-width:520px;margin:0 auto 28px;display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;
+}
+.countdown-label{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#dc2626}
+.countdown-label i{font-size:15px}
+.cd-boxes{display:flex;align-items:center;gap:6px}
+.cd-box{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#fff;border:2px solid #dc2626;border-radius:9px;
+  min-width:46px;padding:6px 4px;
+  animation:cd-pulse 1.6s ease-in-out infinite;
+}
+@keyframes cd-pulse{0%,100%{box-shadow:0 0 0 rgba(220,38,38,0)}50%{box-shadow:0 0 10px rgba(220,38,38,.35)}}
+.cd-num{font-size:19px;font-weight:800;color:#dc2626;font-variant-numeric:tabular-nums;line-height:1.1}
+.cd-unit{font-size:9px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.cd-colon{font-size:18px;font-weight:800;color:#dc2626;margin-bottom:12px}
+.countdown-wrap.expired .countdown-label{color:var(--muted)}
+.countdown-wrap.expired .cd-box{border-color:var(--border);animation:none}
+.countdown-wrap.expired .cd-num{color:var(--muted)}
+
 /* PLAN CARDS */
 .plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
 .plan-card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:24px;cursor:pointer;transition:all .2s;position:relative}
@@ -63,11 +94,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .plan-card.pro-card:hover{box-shadow:0 12px 32px rgba(124,58,237,.15)}
 .plan-card.corp-card:hover{box-shadow:0 12px 32px rgba(180,83,9,.12)}
 .popular-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--pro);color:#fff;font-size:10px;font-weight:700;padding:3px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.04em}
+.discount-tag{position:absolute;top:14px;right:14px;background:#dc2626;color:#fff;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px}
 .plan-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .plan-head-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .plan-name{font-size:14px;font-weight:700}
-.plan-price{font-size:26px;font-weight:700;margin-bottom:2px}
+.plan-price{font-size:26px;font-weight:700;margin-bottom:2px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .plan-price span{font-size:13px;font-weight:400;color:var(--muted)}
+.plan-price .old{font-size:14px;font-weight:600;color:#b0b3bd;text-decoration:line-through}
 .plan-hint{font-size:11px;color:var(--muted);margin-bottom:16px}
 .feat-list{display:flex;flex-direction:column;gap:7px;margin-bottom:20px}
 .feat-item{display:flex;align-items:center;gap:8px;font-size:12.5px}
@@ -180,17 +213,38 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <p>MTT tarbiyachilari uchun professional vositalar — testlar, konspektlar va ko'plab qulayliklar</p>
   </div>
 
+  <!-- PROMO -->
+  <div class="promo-banner"><i class="ti ti-discount-2"></i> Aksiya: Professional tarif 5 oyga atigi 60 000 so'm — chegirma −76%</div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-wrap" id="countdownWrap">
+    <div class="countdown-label"><i class="ti ti-clock-hour-4"></i> <span id="cdLabel">Aksiya tugashiga qoldi:</span></div>
+    <div class="cd-boxes">
+      <div class="cd-box"><span class="cd-num" id="cd-d">00</span><span class="cd-unit">kun</span></div>
+      <span class="cd-colon">:</span>
+      <div class="cd-box"><span class="cd-num" id="cd-h">00</span><span class="cd-unit">soat</span></div>
+      <span class="cd-colon">:</span>
+      <div class="cd-box"><span class="cd-num" id="cd-m">00</span><span class="cd-unit">daqiqa</span></div>
+      <span class="cd-colon">:</span>
+      <div class="cd-box"><span class="cd-num" id="cd-s">00</span><span class="cd-unit">soniya</span></div>
+    </div>
+  </div>
+
   <!-- PLAN CARDS -->
   <div class="plans-grid">
     <!-- PRO -->
     <div class="plan-card pro-card">
       <div class="popular-tag">ENG MASHHUR</div>
+      <div class="discount-tag">−76%</div>
       <div class="plan-head">
         <div class="plan-head-icon" style="background:var(--pro-soft);color:var(--pro)"><i class="ti ti-crown"></i></div>
         <div class="plan-name" style="color:var(--pro)">Professional</div>
       </div>
-      <div class="plan-price" style="color:var(--pro)">49 000 <span>so'm/oy</span></div>
-      <div class="plan-hint">~ 4 500 so'm/kun</div>
+      <div class="plan-price" style="color:var(--pro)">
+        60 000 <span>so'm / 5 oy</span>
+        <span class="old">245 000 so'm</span>
+      </div>
+      <div class="plan-hint">~ 400 so'm/kun — aksiya muddati cheklangan</div>
       <div class="feat-list">
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Cheksiz testlar (6 toifa)</span></div>
         <div class="feat-item yes"><i class="ti ti-circle-check"></i><span>Barcha konspektlar (30+)</span></div>
@@ -272,8 +326,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="faq-a">Hozircha to'lov Telegram bot orqali amalga oshiriladi. "Hozir olish" tugmasini bosing, Telegram botga o'ting va ko'rsatmalarni bajaring. To'lovdan so'ng 1 soat ichida obuna faollashtiriladi.</div>
     </div>
     <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Aksiya narxi qanchaga amal qiladi?<i class="ti ti-chevron-down"></i></div>
+      <div class="faq-a">60 000 so'mlik to'lov Professional tarifni 5 oy davomida faol saqlaydi. Muddat tugagach, obunani odatdagi narxda yangilashingiz mumkin.</div>
+    </div>
+    <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Obunani bekor qilish mumkinmi?<i class="ti ti-chevron-down"></i></div>
-      <div class="faq-a">Ha, istalgan vaqt bekor qilishingiz mumkin. Bekor qilish uchun Telegram orqali murojaat qiling. Joriy oy tugaguncha obuna davom etadi.</div>
+      <div class="faq-a">Ha, istalgan vaqt bekor qilishingiz mumkin. Bekor qilish uchun Telegram orqali murojaat qiling. Joriy davr tugaguncha obuna davom etadi.</div>
     </div>
     <div class="faq-item">
       <div class="faq-q" onclick="toggleFaq(this)">Korporativ rejada nechta tarbiyachi?<i class="ti ti-chevron-down"></i></div>
@@ -291,7 +349,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <h2>Bugun boshlang!</h2>
     <p>O'zbekistonning ilmga intilgan MTT tarbiyachilari bilan birga professional bo'ling</p>
     <button class="btn-cta" onclick="startPayment('pro')">
-      <i class="ti ti-crown"></i> 49 000 so'm/oydan boshlash
+      <i class="ti ti-crown"></i> 60 000 so'm / 5 oydan boshlash
     </button>
   </div>
 </main>
@@ -339,6 +397,45 @@ function toggleFaq(el){
   const a=el.nextElementSibling;
   a.classList.toggle('open');
 }
+</script>
+<script>
+// ── Aksiya muddati countdown ──
+// Boshlang'ich muddat shu yerda. Muddat tugasa, avtomatik yana 7 kun qo'shiladi —
+// hisoblagich hech qachon to'xtamaydi.
+let PROMO_DEADLINE = new Date('2026-09-12T23:59:59');
+const PROMO_RENEW_MS = 7 * 24 * 60 * 60 * 1000; // 7 kun
+
+(function(){
+  const dEl = document.getElementById('cd-d');
+  const hEl = document.getElementById('cd-h');
+  const mEl = document.getElementById('cd-m');
+  const sEl = document.getElementById('cd-s');
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function tick(){
+    const now = new Date();
+
+    // Muddat o'tib ketgan bo'lsa, yetib olguncha 7 kundan qo'shib boramiz
+    while (PROMO_DEADLINE - now <= 0) {
+      PROMO_DEADLINE = new Date(PROMO_DEADLINE.getTime() + PROMO_RENEW_MS);
+    }
+
+    const diff = PROMO_DEADLINE - now;
+    const days    = Math.floor(diff / (1000*60*60*24));
+    const hours   = Math.floor((diff / (1000*60*60)) % 24);
+    const minutes = Math.floor((diff / (1000*60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    dEl.textContent = pad(days);
+    hEl.textContent = pad(hours);
+    mEl.textContent = pad(minutes);
+    sEl.textContent = pad(seconds);
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase.js"></script>
