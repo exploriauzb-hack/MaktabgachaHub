@@ -5,113 +5,276 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Kirish</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
-  --accent:#1e40af;--accent-soft:#eff6ff;--gold:#b45309;--gold-soft:#fffbeb;
-  --green:#15803d;--green-soft:#f0fdf4;--red:#b91c1c;--red-soft:#fef2f2;
-}
-body{
-  font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;margin:0;
-  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
-  background:linear-gradient(160deg,#dbeafe 0%,#eff6ff 45%,#fef3c7 100%);
-}
-#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-.card{
-  position:relative;z-index:2;background:var(--surface);border-radius:20px;
-  box-shadow:0 20px 60px rgba(30,64,175,.15);padding:36px 30px;max-width:340px;width:88%;
-  text-align:center;animation:pop .4s ease;
-}
-@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.logo{
-  width:56px;height:56px;border-radius:16px;margin:0 auto 16px;
-  background:linear-gradient(135deg,var(--accent),#3b82f6);
-  display:flex;align-items:center;justify-content:center;font-size:26px;color:#fff;
-  box-shadow:0 8px 20px rgba(30,64,175,.3);
-}
-h1{font-size:15px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
-.spin-wrap{margin:22px 0 14px}
-.spin{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
-@keyframes spin{to{transform:rotate(360deg)}}
-.icon-big{font-size:38px;margin:6px 0 4px;animation:bounce 1.6s ease infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-p.msg{color:var(--muted);font-size:13px;line-height:1.6;margin-top:4px}
-p.msg b{color:var(--text)}
-.err-box{background:var(--red-soft);color:var(--red);border-radius:10px;padding:9px 12px;font-size:12px;margin-top:12px}
-.actions{margin-top:18px;display:flex;flex-direction:column;gap:8px}
-.btn{
-  display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;
-  border-radius:10px;font-size:13px;font-weight:700;text-decoration:none;
-  font-family:'Inter',sans-serif;cursor:pointer;border:none;transition:transform .12s,opacity .15s;
-}
-.btn:active{transform:scale(.97)}
-.btn-primary{background:linear-gradient(135deg,var(--accent),#3b82f6);color:#fff;box-shadow:0 6px 16px rgba(30,64,175,.28)}
-.btn-secondary{background:var(--accent-soft);color:var(--accent)}
-.badge{
-  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
-  padding:4px 10px;border-radius:20px;background:var(--gold-soft);color:var(--gold);margin-top:10px;
-}
-.success .logo{background:linear-gradient(135deg,var(--green),#22c55e)}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --navy1:#0c1633; --navy2:#132352; --navy3:#1c3170;
+    --gold:#d4af37; --gold-light:#f3d987; --gold-deep:#a67c1e;
+    --card:#fffaf0;
+    --ink:#20233d; --ink-soft:#6c7091;
+
+    --warn:#c9821f;  --warn-soft:#fbeed9;
+    --ok:#1f8a5f;    --ok-soft:#e3f7ee;
+    --err:#c8433f;   --err-soft:#fbe6e5;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+
+  html,body{height:100%}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+    background:radial-gradient(circle at 30% 15%, var(--navy3) 0%, var(--navy2) 45%, var(--navy1) 100%);
+  }
+
+  /* ---------- floating achievement icons ---------- */
+  .float-icons{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .float-icons i{
+    position:absolute;bottom:-40px;color:var(--gold);opacity:0;
+    animation:float-up linear infinite;
+  }
+  @keyframes float-up{
+    0%{opacity:0; transform:translateY(0) rotate(0deg);}
+    10%{opacity:.35;}
+    90%{opacity:.28;}
+    100%{opacity:0; transform:translateY(-112vh) rotate(20deg);}
+  }
+
+  /* ---------- badge medal ---------- */
+  .medal-wrap{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;
+    animation:drop-in .55s cubic-bezier(.22,1.3,.4,1) both;}
+  @keyframes drop-in{from{opacity:0;transform:translateY(-14px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+  .medal{
+    width:64px;height:64px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-light), var(--gold) 65%, var(--gold-deep) 100%);
+    border:3px solid var(--gold-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;color:var(--navy1);
+    box-shadow:0 6px 18px rgba(212,175,55,.45);
+    position:relative;z-index:3;
+    animation:shine 3.2s ease-in-out infinite;
+  }
+  @keyframes shine{0%,100%{box-shadow:0 6px 18px rgba(212,175,55,.35)}50%{box-shadow:0 6px 26px rgba(212,175,55,.7)}}
+  .ribbons{display:flex;gap:4px;margin-top:-6px;z-index:2}
+  .ribbon{width:14px;height:26px;background:linear-gradient(180deg,var(--navy3),var(--navy1));clip-path:polygon(0 0,100% 0,100% 80%,50% 100%,0 80%)}
+  .ribbon.right{background:linear-gradient(180deg,var(--gold-deep),var(--navy1))}
+
+  /* ---------- card: certificate style ---------- */
+  .card{
+    margin-top:14px;
+    background:var(--card);
+    border:2px solid var(--gold-deep);
+    border-radius:16px;
+    box-shadow:0 0 0 4px rgba(212,175,55,.15), 0 20px 50px rgba(0,0,0,.4);
+    padding:30px 26px 28px;
+    width:296px;
+    text-align:center;
+    position:relative;
+    z-index:2;
+  }
+  .card::before,.card::after,.corner-tl,.corner-br{content:"";position:absolute;width:16px;height:16px;border:2px solid var(--gold);}
+  .card::before{top:6px;left:6px;border-right:none;border-bottom:none}
+  .card::after{bottom:6px;right:6px;border-left:none;border-top:none}
+  .corner-tl{top:6px;right:6px;border-left:none;border-bottom:none}
+  .corner-br{bottom:6px;left:6px;border-right:none;border-top:none}
+
+  h1{
+    font-family:'Baloo 2',sans-serif;
+    font-size:20px;font-weight:700;letter-spacing:-.01em;
+    margin-bottom:6px;color:var(--navy1);
+  }
+  .sub{font-size:12.5px;color:var(--gold-deep);margin-bottom:6px;font-weight:700;line-height:1.5}
+  .sub-line{font-size:11.5px;color:var(--ink-soft);margin-bottom:20px;line-height:1.5}
+
+  /* ---------- book loader ---------- */
+  .book-loader{display:flex;justify-content:center;gap:10px;margin:8px 0 18px}
+  .book{
+    width:30px;height:30px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--navy2);color:var(--gold);font-size:15px;
+    border:2px solid var(--navy1);
+    animation:bounce-book 1s ease-in-out infinite;
+  }
+  .book:nth-child(1){animation-delay:0s}
+  .book:nth-child(2){animation-delay:.15s;background:var(--gold-deep);color:var(--card)}
+  .book:nth-child(3){animation-delay:.3s}
+  @keyframes bounce-book{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-10px)}}
+
+  /* ---------- state icon ---------- */
+  .icon-badge{
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:4px auto 10px;font-size:24px;
+    border:2px solid var(--ink);
+    animation:pop-in .35s cubic-bezier(.22,1.4,.4,1) both;
+  }
+  @keyframes pop-in{from{transform:scale(.4) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .icon-badge.warn{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+  .icon-badge.ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+  .icon-badge.err{background:var(--err-soft);color:var(--err);border-color:var(--err)}
+
+  p.msg{color:var(--ink-soft);font-size:13.5px;line-height:1.65}
+  p.msg b{color:var(--ink)}
+
+  .err-box{
+    background:var(--err-soft);color:var(--err);
+    border:1.5px dashed var(--err);
+    border-radius:10px;padding:9px 12px;font-size:12px;margin-top:14px;
+  }
+
+  .actions{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:11px 16px;border-radius:11px;
+    font-size:13.5px;font-weight:700;text-decoration:none;
+    font-family:'Inter',sans-serif;cursor:pointer;
+    border:2px solid var(--navy1);
+    background:var(--card);color:var(--navy1);
+    box-shadow:3px 3px 0 var(--navy1);
+    transition:transform .1s, box-shadow .1s;
+  }
+  .btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--navy1)}
+  .btn-primary{
+    background:linear-gradient(90deg,var(--gold-deep),var(--gold));
+    color:var(--navy1);
+    animation:glow 2.4s ease-in-out infinite;
+  }
+  @keyframes glow{0%,100%{box-shadow:3px 3px 0 var(--navy1), 0 0 0 rgba(212,175,55,0)}50%{box-shadow:3px 3px 0 var(--navy1), 0 0 18px rgba(212,175,55,.6)}}
+  .btn-secondary{background:var(--card);color:var(--navy1)}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11.5px;font-weight:700;
+    padding:5px 12px;border-radius:20px;
+    background:var(--ok-soft);color:var(--ok);
+    border:1.5px solid var(--ok);
+  }
+  .badge i{animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  #coins{position:fixed;inset:0;z-index:6;pointer-events:none}
 </style>
 </head>
 <body>
-<canvas id="bg-canvas"></canvas>
 
-<div class="card" id="card">
-  <div class="logo">🎓</div>
-  <h1>MaktabgachaHub</h1>
+<div class="float-icons" id="floatIcons"></div>
+<canvas id="coins"></canvas>
 
-  <div class="spin-wrap" id="spinner"><div class="spin"></div></div>
-  <div id="icon" style="display:none" class="icon-big">📢</div>
+<div class="medal-wrap">
+  <div class="medal"><i class="ti ti-school"></i></div>
+  <div class="ribbons"><div class="ribbon"></div><div class="ribbon right"></div></div>
 
-  <p class="msg" id="msg">Telegram orqali tekshirilmoqda...</p>
-  <div class="actions" id="actions"></div>
+  <div class="card" id="card">
+    <span class="corner-tl"></span><span class="corner-br"></span>
+    <h1>MaktabgachaHub</h1>
+    <p class="sub">Tarbiyachilar attestatsiyasiga tayyorgarlik platformasi</p>
+    <p class="sub-line">Testlar, metodik materiallar va yakuniy nazorat — bir joyda</p>
+
+    <div class="book-loader" id="spinner">
+      <div class="book"><i class="ti ti-book"></i></div>
+      <div class="book"><i class="ti ti-trophy"></i></div>
+      <div class="book"><i class="ti ti-certificate"></i></div>
+    </div>
+    <div id="icon" style="display:none" class="icon-badge"></div>
+
+    <p class="msg" id="msg">Telegram orqali tekshirilmoqda...</p>
+    <div class="actions" id="actions"></div>
+  </div>
 </div>
 
 <script>
+/* ---------- background floating book / trophy / coin / certificate icons ---------- */
 (function(){
-  var c=document.getElementById('bg-canvas'),ctx=c.getContext('2d'),W,H;
-  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
-  resize();window.addEventListener('resize',resize);
-  var colors=['#93c5fd','#fcd34d','#c4b5fd','#86efac'];
+  var wrap=document.getElementById('floatIcons');
+  var glyphs=['ti-book','ti-trophy','ti-coin','ti-certificate','ti-books'];
+  var count=16;
+  for(var i=0;i<count;i++){
+    var el=document.createElement('i');
+    el.className='ti '+glyphs[i%glyphs.length];
+    el.style.left=(Math.random()*94)+'vw';
+    el.style.fontSize=(16+Math.random()*16)+'px';
+    var dur=(10+Math.random()*10);
+    el.style.animationDuration=dur+'s';
+    el.style.animationDelay=(-Math.random()*dur)+'s';
+    wrap.appendChild(el);
+  }
+})();
+
+/* ---------- one-shot gold coin burst for success ---------- */
+function coinBurst(){
+  var c=document.getElementById('coins'),ctx=c.getContext('2d');
+  var W=c.width=window.innerWidth, H=c.height=window.innerHeight;
   function rnd(a,b){return a+Math.random()*(b-a)}
-  var shapes=[];
-  for(var i=0;i<20;i++)shapes.push({color:colors[i%4],size:rnd(10,22),x:rnd(0,1)*window.innerWidth,y:rnd(0,1)*window.innerHeight,vx:rnd(-.2,.2),vy:rnd(-.3,-.08),op:rnd(.15,.35)});
+  var cx=W/2, cy=H/2-60;
+  var parts=[];
+  for(var i=0;i<50;i++){
+    var ang=rnd(0,Math.PI*2), spd=rnd(2,6.5);
+    parts.push({
+      x:cx,y:cy,
+      vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd - 3,
+      r:rnd(4,7),
+      rot:rnd(0,Math.PI*2), vr:rnd(-.25,.25),
+      life:1
+    });
+  }
   function frame(){
     ctx.clearRect(0,0,W,H);
-    shapes.forEach(function(s){
-      s.x+=s.vx;s.y+=s.vy;
-      if(s.y<-40){s.y=H+30;s.x=rnd(0,W)}
-      if(s.x<-40)s.x=W+30;if(s.x>W+40)s.x=-30;
-      ctx.save();ctx.globalAlpha=s.op;ctx.fillStyle=s.color;
-      ctx.beginPath();ctx.arc(s.x,s.y,s.size*.5,0,Math.PI*2);ctx.fill();ctx.restore();
+    var alive=false;
+    parts.forEach(function(p){
+      if(p.life<=0)return;
+      alive=true;
+      p.vy+=0.14; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life-=0.011;
+      ctx.save();
+      ctx.globalAlpha=Math.max(p.life,0);
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      var grad=ctx.createRadialGradient(-1,-1,0,0,0,p.r);
+      grad.addColorStop(0,'#f3d987'); grad.addColorStop(1,'#a67c1e');
+      ctx.fillStyle=grad;
+      ctx.beginPath();
+      ctx.ellipse(0,0,p.r,p.r*Math.abs(Math.cos(p.rot*2))+1.5,0,0,Math.PI*2);
+      ctx.fill();
+      ctx.strokeStyle='#8a6416'; ctx.lineWidth=.6; ctx.stroke();
+      ctx.restore();
     });
-    requestAnimationFrame(frame);
+    if(alive)requestAnimationFrame(frame);
+    else ctx.clearRect(0,0,W,H);
   }
   frame();
-})();
+}
+window.addEventListener('resize', function(){
+  var c=document.getElementById('coins');
+  c.width=window.innerWidth; c.height=window.innerHeight;
+});
 </script>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 async function loginViaTelegram() {
-  const card = document.getElementById('card');
   const msg = document.getElementById('msg');
   const spinner = document.getElementById('spinner');
   const icon = document.getElementById('icon');
   const actions = document.getElementById('actions');
 
-  card.className = 'card';
-  spinner.style.display = 'block';
+  spinner.style.display = 'flex';
   icon.style.display = 'none';
+  icon.className = 'icon-badge';
   actions.innerHTML = '';
   msg.innerHTML = 'Telegram orqali tekshirilmoqda...';
 
   if (!window.Telegram || !window.Telegram.WebApp) {
     spinner.style.display = 'none';
+    icon.style.display = 'flex';
+    icon.classList.add('err');
+    icon.innerHTML = '<i class="ti ti-device-mobile-off"></i>';
     msg.textContent = 'Bu sahifa faqat Telegram bot ichida ishlaydi.';
     return;
   }
@@ -123,6 +286,9 @@ async function loginViaTelegram() {
   const initData = tg.initData;
   if (!initData) {
     spinner.style.display = 'none';
+    icon.style.display = 'flex';
+    icon.classList.add('err');
+    icon.innerHTML = '<i class="ti ti-alert-triangle"></i>';
     msg.textContent = 'Telegram ma\'lumoti topilmadi. Botni yopib, qaytadan oching.';
     return;
   }
@@ -139,7 +305,9 @@ async function loginViaTelegram() {
       spinner.style.display = 'none';
 
       if (data.error === 'not_subscribed') {
-        icon.style.display = 'block';
+        icon.style.display = 'flex';
+        icon.classList.add('warn');
+        icon.innerHTML = '<i class="ti ti-speakerphone"></i>';
         msg.innerHTML = `Saytdan foydalanish uchun avval <b>${data.channel}</b> kanaliga a'zo bo'ling.`;
         const channelUrl = 'https://t.me/' + data.channel.replace('@', '');
         actions.innerHTML = `
@@ -149,17 +317,21 @@ async function loginViaTelegram() {
         return;
       }
 
+      icon.style.display = 'flex';
+      icon.classList.add('err');
+      icon.innerHTML = '<i class="ti ti-mood-sad"></i>';
       msg.innerHTML = 'Kirishda xatolik: ' + (data.error || 'noma\'lum');
       actions.innerHTML = `<div class="err-box">Iltimos, /start orqali qayta urinib ko'ring.</div>`;
       return;
     }
 
-    card.className = 'card success';
     spinner.style.display = 'none';
-    icon.style.display = 'block';
-    icon.textContent = '✅';
+    icon.style.display = 'flex';
+    icon.classList.add('ok');
+    icon.innerHTML = '<i class="ti ti-circle-check"></i>';
     msg.innerHTML = 'Kirish muvaffaqiyatli!';
     actions.innerHTML = `<span class="badge"><i class="ti ti-loader-2"></i> Yo'naltirilmoqda...</span>`;
+    coinBurst();
 
     // MUHIM: session token'larni URL orqali dashboard.html'ga uzatamiz —
     // Telegram WebView'dagi localStorage nomukammalligini chetlab o'tish uchun.
@@ -170,9 +342,12 @@ async function loginViaTelegram() {
     });
     setTimeout(() => {
       window.location.href = 'dashboard.html?' + params.toString();
-    }, 400);
+    }, 900);
   } catch (e) {
     spinner.style.display = 'none';
+    icon.style.display = 'flex';
+    icon.classList.add('err');
+    icon.innerHTML = '<i class="ti ti-wifi-off"></i>';
     msg.textContent = 'Tarmoq xatoligi: ' + e.message;
   }
 }
