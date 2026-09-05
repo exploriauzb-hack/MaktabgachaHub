@@ -2,13 +2,14 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
 <title>MaktabgachaHub — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.17.0/dist/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;width:100%;max-width:100vw}
 :root{
   --bg:#f5f7ff;--white:#ffffff;--border:#e4e8f0;--border2:#d0d7e8;
   --text:#1a1f36;--text2:#6b7694;--text3:#9aa3bf;
@@ -18,8 +19,9 @@
   --sidebar:256px;--bottomnav:62px;--radius:12px;--radius-sm:8px;
   --shadow:0 1px 4px rgba(30,40,115,.07),0 4px 16px rgba(30,40,115,.05);
   --shadow-md:0 2px 8px rgba(30,40,115,.1),0 8px 24px rgba(30,40,115,.07);
+  --tg-vh: 100vh;
 }
-body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;background:var(--bg);overflow-x:hidden;position:relative}
+body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;display:flex;min-height:100vh;min-height:var(--tg-vh);background:var(--bg);overflow-x:hidden;max-width:100vw;position:relative}
 .bg-scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse 70% 50% at 15% 0%,#dbe6ff 0%,transparent 60%),radial-gradient(ellipse 60% 45% at 100% 10%,#e6e0ff 0%,transparent 55%),var(--bg)}
 .bg-shape{position:absolute;will-change:transform;opacity:.85}
 .bg-dot{border-radius:50%;opacity:.5;animation:dot-drift ease-in-out infinite}
@@ -61,7 +63,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .btn-logout:hover{background:#fef2f2;color:var(--red);border-color:#fca5a5}
 
 /* MAIN */
-.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:22px 30px;max-width:1020px}
+.main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:22px 30px;max-width:1020px;min-width:0}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
 .topbar h1{font-size:21px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -96,7 +98,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 /* PREMIUM BANNER */
 .premium-banner{background:linear-gradient(135deg,#1e3a8a 0%,#4338ca 60%,#7c3aed 100%);border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:16px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(37,99,235,.25)}
 .premium-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.07);border-radius:50%}
-.premium-banner-left{display:flex;align-items:center;gap:16px;z-index:1}
+.premium-banner-left{display:flex;align-items:center;gap:16px;z-index:1;min-width:0}
 .premium-banner-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
 .premium-banner-icon i{font-size:22px;color:#fde68a}
 .premium-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
@@ -110,7 +112,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
 /* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
-.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);transition:box-shadow .2s}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;box-shadow:var(--shadow);transition:box-shadow .2s;min-width:0}
 .stat-card:hover{box-shadow:var(--shadow-md)}
 .stat-card .val{font-size:26px;font-weight:800;color:var(--text);margin-bottom:3px;letter-spacing:-.02em}
 .stat-card .lbl{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px}
@@ -137,7 +139,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .btn-seeall:hover{background:var(--accent-soft);box-shadow:var(--shadow-md);transform:translateY(-1px)}
 .btn-seeall i{font-size:15px;transition:transform .2s}
 .btn-seeall.open i{transform:rotate(180deg)}
-.mod-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.mod-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:2px;transition:border-color .15s,box-shadow .15s,transform .15s;cursor:pointer;position:relative;overflow:hidden;box-shadow:var(--shadow);min-width:0}
 .mod-card:hover{border-color:var(--accent-mid);box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-2px)}
 .mod-card.locked:hover{border-color:#c4b5fd;box-shadow:0 4px 16px rgba(124,58,237,.1);transform:translateY(-2px)}
 .mod-card .icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:16px;flex-shrink:0}
@@ -227,7 +229,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 @media(max-width:900px){.mod-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .sidebar{display:none}
-  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 22px)}
+  .main{margin-left:0;padding:14px 14px calc(var(--bottomnav) + 22px);max-width:100vw}
   .topbar{margin-bottom:16px}
   .topbar h1{font-size:16px}
   .topbar-right .level-pill{display:none}
@@ -311,6 +313,30 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <meta name="twitter:image" content="https://maktabgachahubuz-ten.vercel.app/icons/icon-512.png"/>
 </head>
 <body>
+<!-- ═══ TELEGRAM WEBAPP INIT — SAYT TELEGRAM ICHIDA TO'LIQ VA TO'G'RI O'LCHAMDA OCHILISHI UCHUN ═══ -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+(function(){
+  var tg = window.Telegram && window.Telegram.WebApp;
+  if(!tg) return;
+  try{
+    tg.ready();
+    tg.expand(); // WebView'ni to'liq balandlik/kenglikka yoyadi — "yon tomonlari kesilishi"ning asosiy sababi shu chaqirilmagani edi
+    if (tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+    if (tg.setHeaderColor) tg.setHeaderColor('#1e40af');
+    if (tg.setBackgroundColor) tg.setBackgroundColor('#f5f7ff');
+  }catch(e){ console.warn('Telegram WebApp init:', e); }
+
+  function applyTgViewport(){
+    var h = tg.viewportStableHeight || tg.viewportHeight || window.innerHeight;
+    document.documentElement.style.setProperty('--tg-vh', h + 'px');
+  }
+  applyTgViewport();
+  if (tg.onEvent) tg.onEvent('viewportChanged', applyTgViewport);
+  window.addEventListener('resize', applyTgViewport);
+  window.addEventListener('orientationchange', applyTgViewport);
+})();
+</script>
 <div class="bg-scene" aria-hidden="true">
   <div class="bg-shape bg-dot" style="top:8%;left:42%;width:18px;height:18px;background:#fecaca;animation-duration:9s"></div>
   <div class="bg-shape bg-dot" style="top:14%;left:78%;width:26px;height:26px;background:#fda4af;animation-duration:11s;animation-delay:-3s"></div>
