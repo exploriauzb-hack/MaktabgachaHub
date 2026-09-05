@@ -4,11 +4,16 @@
 
 const PLANS = {
   pro: {
-    id       : 'pro',
-    name     : 'Professional ⭐',
-    price    : 49000,
-    priceText: '49 000',
-    color    : '#7c3aed',
+    id            : 'pro',
+    name          : 'Professional ⭐',
+    price         : 60000,
+    priceText     : '60 000',
+    periodMonths  : 5,
+    periodText    : '5 oy',
+    oldPrice      : 245000,
+    oldPriceText  : '245 000',
+    discountText  : '−76%',
+    color         : '#7c3aed',
     features : [
       'Cheksiz testlar (6 toifa)',
       'Barcha konspektlar (30+)',
@@ -23,6 +28,8 @@ const PLANS = {
     name     : 'MTT Korporativ 🏢',
     price    : 299000,
     priceText: '299 000',
+    periodMonths: 1,
+    periodText  : 'oy',
     color    : '#b45309',
     features : [
       'Professional + hamma narsa',
@@ -153,6 +160,8 @@ function injectPremiumModal() {
     document.head.appendChild(style)
   }
 
+  const pro = PLANS.pro
+
   document.body.insertAdjacentHTML('beforeend', `
     <div id="premium-modal" onclick="if(event.target===this)closePremiumModal()">
       <div class="pm-box">
@@ -164,7 +173,7 @@ function injectPremiumModal() {
           Barcha PRO imkoniyatlarga to'liq kirish oling.
         </p>
         <div class="pm-features">
-          ${PLANS.pro.features.map(f => `
+          ${pro.features.map(f => `
             <div class="pm-feat">
               <i class="ti ti-circle-check pm-feat-icon"></i> ${f}
             </div>
@@ -172,10 +181,10 @@ function injectPremiumModal() {
         </div>
         <div class="pm-price-box">
           <div>
-            <div class="pm-price">49 000 so'm <span>/ oy</span></div>
-            <div class="pm-old">Avval: 79 000 so'm</div>
+            <div class="pm-price">${pro.priceText} so'm <span>/ ${pro.periodText}</span></div>
+            <div class="pm-old">Avval: ${pro.oldPriceText} so'm</div>
           </div>
-          <div class="pm-discount">−38%</div>
+          <div class="pm-discount">${pro.discountText}</div>
         </div>
         <button class="pm-btn-buy" onclick="window.location.href=(location.pathname.includes('/pages/')?'../':'')+'premium.html'">
           <i class="ti ti-credit-card"></i> Hoziroq obuna bo'lish
@@ -203,9 +212,11 @@ async function startPayment(planId) {
 
   const who = (_currentProfile && (_currentProfile.full_name || _currentProfile.phone)) || 'Foydalanuvchi'
   const phone = (_currentProfile && _currentProfile.phone) ? ('\nTelefon: ' + _currentProfile.phone) : ''
+  const periodLabel = plan.periodMonths ? `${plan.periodMonths} oylik` : plan.periodText
   const msg =
     `Salom! Men MaktabgachaHub "${plan.name}" obunasini olmoqchiman.\n` +
     `Ism: ${who}${phone}\n` +
+    `Tarif: ${periodLabel} (aksiya)\n` +
     `Summa: ${plan.priceText} so'm`
 
   try {
@@ -230,8 +241,9 @@ async function startPayment(planId) {
 
 // ── Obunani faollashtirish (admin tomonidan) ──
 async function activateSubscription(userId, planId) {
+  const plan = PLANS[planId]
   const periodEnd = new Date()
-  periodEnd.setMonth(periodEnd.getMonth() + 1)
+  periodEnd.setMonth(periodEnd.getMonth() + (plan?.periodMonths || 1))
 
   await _sb.from('subscriptions').upsert({
     user_id             : userId,
