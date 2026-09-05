@@ -57,6 +57,10 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .sidebar-bottom{margin-top:auto;padding:14px;border-top:1px solid var(--border)}
 .user-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);background:var(--bg)}
 .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0}
+.avatar-ring{width:42px;height:42px;border-radius:50%;padding:3px;flex-shrink:0;background:conic-gradient(var(--accent2) calc(var(--xppct,0)*1%),#e2e8f5 0);transition:background 1s ease}
+.avatar-ring .avatar{width:100%;height:100%}
+.hero-avatar-ring{width:48px;height:48px;border-radius:50%;padding:3px;flex-shrink:0;background:conic-gradient(var(--accent2) calc(var(--xppct,0)*1%),#e2e8f5 0);transition:background 1s ease}
+.hero-avatar-ring-inner{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--accent2),#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800}
 .user-info .name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .user-info .plan{font-size:11px;color:var(--text3)}
 .btn-logout{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--white);color:var(--text2);font-size:12px;font-weight:500;cursor:pointer;width:100%;margin-top:8px;transition:all .15s}
@@ -66,7 +70,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .main{position:relative;z-index:2;margin-left:var(--sidebar);flex:1;padding:22px 30px;max-width:1020px;min-width:0}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:12px}
 .topbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.topbar-left>div{min-width:0;flex:1}
+.topbar-left>div:not(.hero-avatar-ring){min-width:0;flex:1}
 .topbar h1{font-size:21px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .topbar h1 span{color:var(--accent2)}
 .hero-sub{font-size:12.5px;color:var(--text2);margin-top:2px}
@@ -74,6 +78,25 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .plan-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);border:1px solid #bfdbfe;white-space:nowrap}
 .plan-pill.pro{background:var(--pro-soft);color:var(--pro2);border-color:#ddd6fe}
 .level-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;background:var(--white);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
+.hero-greet-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent2);font-size:14px;vertical-align:middle;margin-right:2px}
+.topbar h1 #hero-name{background:linear-gradient(90deg,var(--accent2),#818cf8,var(--accent2));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:heroShine 4s linear infinite}
+@keyframes heroShine{to{background-position:200% center}}
+.streak-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#fff7ed,#ffedd5);color:#c2410c;border:1px solid #fed7aa;white-space:nowrap}
+.streak-chip i{font-size:13px;color:#f97316}
+
+/* Kirish animatsiyasi */
+@keyframes fadeUpIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.anim-fadeup{animation:fadeUpIn .55s cubic-bezier(.22,1,.36,1) both}
+.anim-fadeup.d1{animation-delay:.02s}
+.anim-fadeup.d2{animation-delay:.09s}
+.anim-fadeup.d3{animation-delay:.16s}
+.anim-fadeup.d4{animation-delay:.23s}
+.anim-fadeup.d5{animation-delay:.30s}
+.anim-fadeup.d6{animation-delay:.37s}
+@media(prefers-reduced-motion:reduce){
+  .anim-fadeup,.xp-fill::after,.topbar h1 #hero-name{animation:none}
+}
+#confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:600}
 
 /* QUICK SEARCH */
 .quick-search{position:relative;margin-bottom:16px}
@@ -143,12 +166,41 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .xp-header span{font-size:12px;color:var(--text3)}
 .xp-header strong{font-size:13px;color:var(--text);font-weight:600}
 .xp-bar{height:7px;background:var(--bg);border-radius:99px;overflow:hidden;border:1px solid var(--border)}
-.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#818cf8);border-radius:99px;transition:width .5s ease}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--accent2),#818cf8);border-radius:99px;transition:width .5s ease;position:relative;overflow:hidden}
+.xp-fill::after{content:'';position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:xpShine 2.2s ease-in-out infinite}
+@keyframes xpShine{0%{transform:translateX(-140%)}100%{transform:translateX(340%)}}
 
 /* SEC TITLE */
 .sec-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .sec-title i{font-size:14px}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* YUTUQLAR / BADGES */
+.badges-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+.badges-summary{font-size:12px;color:var(--text2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.badges-summary b{color:var(--text);font-weight:700}
+.badges-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer;padding:8px 2px;border-radius:12px;transition:background .15s,transform .15s;position:relative;border:none;background:none;font-family:'Inter',sans-serif}
+.badge-item:hover{background:var(--bg);transform:translateY(-2px)}
+.badge-icon{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;position:relative;transition:all .2s;flex-shrink:0}
+.badge-item.locked .badge-icon{background:#f1f5f9;color:#c3cade}
+.badge-item.locked .badge-title{color:var(--text3)}
+.badge-item.unlocked .badge-icon{box-shadow:0 4px 14px rgba(0,0,0,.14)}
+.badge-item.unlocked .badge-icon.c1{background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff}
+.badge-item.unlocked .badge-icon.c2{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff}
+.badge-item.unlocked .badge-icon.c3{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fff}
+.badge-item.unlocked .badge-icon.c4{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+.badge-item.unlocked .badge-icon.c5{background:linear-gradient(135deg,#db2777,#f472b6);color:#fff}
+.badge-lock-mark,.badge-check-mark{position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px}
+.badge-lock-mark{background:#fff;border:1px solid var(--border);color:var(--text3)}
+.badge-check-mark{background:#16a34a;border:2px solid #fff;color:#fff}
+.badge-title{font-size:10px;font-weight:600;line-height:1.25;color:var(--text)}
+.badge-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:10px 18px;border-radius:10px;font-size:12.5px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:all .25s;z-index:500;max-width:88vw;display:flex;align-items:center;gap:8px}
+.badge-toast i{font-size:16px;color:#fbbf24;flex-shrink:0}
+.badge-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:768px){
+  .badges-grid{grid-template-columns:repeat(4,1fr);gap:10px 6px}
+}
 
 /* MOD GRID */
 .mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px}
@@ -298,7 +350,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .rk-tab.active{background:#1e40af;color:#fff;border-color:#1e40af}
 .rk-body{overflow-y:auto;padding:14px 16px;flex:1}
 .rk-top1{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fcd34d;border-radius:16px;padding:16px;margin-bottom:14px}
-.rk-crown{font-size:34px;line-height:1}
+.rk-crown{font-size:34px;line-height:1;color:#f59e0b}
 .rk-top1 .n{font-weight:800;font-size:16px;color:#78350f}
 .rk-top1 .x{font-size:13px;color:#b45309;font-weight:600}
 .rk-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;margin-bottom:6px}
@@ -423,7 +475,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 
   <div class="sidebar-bottom">
     <div class="user-card">
-      <div class="avatar" id="sb-avatar">T</div>
+      <div class="avatar-ring" id="sb-avatar-ring" style="--xppct:0"><div class="avatar" id="sb-avatar">T</div></div>
       <div class="user-info">
         <div class="name" id="sb-name">Tarbiyachi</div>
         <div class="plan" id="sb-plan">Bepul tarif</div>
@@ -455,10 +507,11 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
     </div>
   </div>
 
-  <div class="topbar">
+  <div class="topbar anim-fadeup d1">
     <div class="topbar-left">
+      <div class="hero-avatar-ring" id="hero-avatar-ring" style="--xppct:0"><div class="hero-avatar-ring-inner" id="hero-avatar">T</div></div>
       <div>
-        <h1>Xush kelibsiz, <span id="hero-name">Tarbiyachi</span>!</h1>
+        <h1><span class="hero-greet-icon" id="heroEmoji"><i class="ti ti-sun"></i></span> <span id="heroGreetText">Xush kelibsiz</span>, <span id="hero-name">Tarbiyachi</span>!</h1>
         <p class="hero-sub" id="hero-sub"></p>
       </div>
     </div>
@@ -477,13 +530,13 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   </div>
 
   <!-- BANNER CAROUSEL: Premium taklifi + Test ishlashga chaqiruv, avtomatik almashinib turadi -->
-  <div class="banner-carousel" id="bannerCarousel">
+  <div class="banner-carousel anim-fadeup d2" id="bannerCarousel">
     <div class="banner-track" id="bannerTrack"></div>
     <div class="banner-dots" id="bannerDots"></div>
   </div>
 
   <!-- TIP CARD -->
-  <div class="tip-card" id="dailyTipCard">
+  <div class="tip-card anim-fadeup d3" id="dailyTipCard">
     <div class="tip-icon"><i class="ti ti-bulb"></i></div>
     <div>
       <div class="tip-label">Kunning xalqaro maslahati</div>
@@ -493,19 +546,26 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   </div>
 
   <!-- STATS -->
-  <div class="stats-grid">
+  <div class="stats-grid anim-fadeup d4">
     <div class="stat-card"><div class="val" id="stat-test">0</div><div class="lbl"><i class="ti ti-flask"></i> Testlar</div></div>
     <div class="stat-card"><div class="val" id="stat-avg">0%</div><div class="lbl"><i class="ti ti-target"></i> O'rtacha</div></div>
     <div class="stat-card"><div class="val" id="stat-xp">0</div><div class="lbl"><i class="ti ti-star"></i> Jami XP</div></div>
   </div>
 
   <!-- XP -->
-  <div class="xp-card">
+  <div class="xp-card anim-fadeup d5">
     <div class="xp-header">
       <strong id="xp-label">1-daraja: Yangi Tarbiyachi</strong>
       <span id="xp-next">Keyingi: 80 XP</span>
     </div>
     <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- YUTUQLAR -->
+  <div class="sec-title"><i class="ti ti-medal"></i> Yutuqlar</div>
+  <div class="badges-card anim-fadeup d6">
+    <div class="badges-summary" id="badgesSummary">Yuklanmoqda...</div>
+    <div class="badges-grid" id="badgesGrid"></div>
   </div>
 
   <!-- BO'LIMLAR -->
@@ -556,7 +616,7 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   <!-- SO'NGGI TESTLAR -->
   <div class="sec-title"><i class="ti ti-history"></i> So'nggi testlar</div>
   <div id="lastTests">
-    <div class="empty-state">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash →</a></div>
+    <div class="empty-state">Hali test ishlamadingiz. <a href="pages/test.html">Testni boshlash <i class="ti ti-arrow-right"></i></a></div>
   </div>
 </main>
 
@@ -643,6 +703,157 @@ function toggleGroup(name){
   var isOpen=grid.classList.toggle('expanded');
   btn.classList.toggle('open',isOpen);
   btn.querySelector('span').textContent=isOpen?"Yopish":"Barchasini ko'rish";
+}
+
+/* ═══════ YUTUQLAR (BADGES) ═══════ */
+var BADGES=[
+  {id:'first_test',icon:'ti-flag-3',title:'Birinchi test',desc:'Kamida 1 ta test yeching',check:function(s){return s.count>=1}},
+  {id:'ten_tests',icon:'ti-notebook',title:"Faol o'quvchi",desc:'10 ta test yeching',check:function(s){return s.count>=10}},
+  {id:'fifty_tests',icon:'ti-trophy',title:'Test ustasi',desc:'50 ta test yeching',check:function(s){return s.count>=50}},
+  {id:'good_avg',icon:'ti-target',title:'Yaxshi natija',desc:"Testlarda o'rtacha 75%+ natija ko'rsating",check:function(s){return s.avg>=75}},
+  {id:'high_avg',icon:'ti-star',title:"A'lochi",desc:"Testlarda o'rtacha 90%+ natija ko'rsating",check:function(s){return s.avg>=90}},
+  {id:'level_up',icon:'ti-rocket',title:'Tajribali',desc:'4-darajaga yeting',check:function(s){return s.lvl>=4}},
+  {id:'top5',icon:'ti-crown',title:'TOP 5',desc:"Umumiy reytingda TOP 5ga kiring",check:function(s){return s.topRank && s.topRank<=5}},
+  {id:'premium',icon:'ti-diamond',title:'Professional',desc:'Professional obunaga ega bo\'ling',check:function(s){return !!s.proUser}}
+];
+var _badgeColorClasses=['c1','c2','c3','c4','c5'];
+function renderBadges(stats){
+  var grid=document.getElementById('badgesGrid');
+  var summary=document.getElementById('badgesSummary');
+  if(!grid)return;
+  var unlockedCount=0;
+  grid.innerHTML=BADGES.map(function(b,i){
+    var unlocked=!!b.check(stats);
+    if(unlocked)unlockedCount++;
+    var colorClass=_badgeColorClasses[i%_badgeColorClasses.length];
+    var descText=(unlocked?'<i class="ti ti-check" style="color:#4ade80"></i> Ochildi — ':'<i class="ti ti-lock" style="color:#94a3b8"></i> Ochish uchun: ')+b.desc;
+    return '<button type="button" class="badge-item '+(unlocked?'unlocked':'locked')+'" data-desc="'+descText.replace(/"/g,'&quot;')+'">'+
+      '<div class="badge-icon '+(unlocked?colorClass:'')+'"><i class="ti '+b.icon+'"></i>'+
+        (unlocked?'<span class="badge-check-mark"><i class="ti ti-check"></i></span>':'<span class="badge-lock-mark"><i class="ti ti-lock"></i></span>')+
+      '</div>'+
+      '<div class="badge-title">'+b.title+'</div>'+
+    '</button>';
+  }).join('');
+  if(summary)summary.innerHTML='<b>'+unlockedCount+'/'+BADGES.length+'</b> yutuq qo\'lga kiritildi';
+  grid.querySelectorAll('.badge-item').forEach(function(el){
+    el.addEventListener('click',function(){ showBadgeToast(el.getAttribute('data-desc')); });
+  });
+}
+var _badgeToastTimer=null;
+function showBadgeToast(html){
+  var t=document.getElementById('badgeToast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='badgeToast';
+    t.className='badge-toast';
+    document.body.appendChild(t);
+  }
+  t.innerHTML=html;
+  requestAnimationFrame(function(){t.classList.add('show');});
+  clearTimeout(_badgeToastTimer);
+  _badgeToastTimer=setTimeout(function(){t.classList.remove('show');},2600);
+}
+
+/* ═══════ KONFETTI ═══════ */
+function fireConfetti(durationMs){
+  durationMs=durationMs||1600;
+  var old=document.getElementById('confettiCanvas'); if(old) old.remove();
+  var canvas=document.createElement('canvas');
+  canvas.id='confettiCanvas';
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+  var colors=['#2563eb','#f59e0b','#22c55e','#db2777','#7c3aed'];
+  var particles=[];
+  for(var i=0;i<90;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:-20-Math.random()*canvas.height*0.3,
+      w:6+Math.random()*6,
+      h:8+Math.random()*8,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      speedY:2+Math.random()*3,
+      speedX:(Math.random()-.5)*2,
+      rot:Math.random()*360,
+      rotSpeed:(Math.random()-.5)*10
+    });
+  }
+  var start=Date.now();
+  function frame(){
+    var elapsed=Date.now()-start;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(function(p){
+      p.y+=p.speedY; p.x+=p.speedX; p.rot+=p.rotSpeed;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    if(elapsed<durationMs){ requestAnimationFrame(frame); } else { canvas.remove(); }
+  }
+  frame();
+}
+
+/* ═══════ DARAJA OSHISHI / YANGI YUTUQ BILDIRISHNOMASI (faqat qurilmada, keyingi tashrifda solishtiriladi) ═══════ */
+function checkLevelUp(uid,lvl){
+  try{
+    var key='mgh_last_level_'+uid;
+    var raw=localStorage.getItem(key);
+    var prevLevel=raw?parseInt(raw,10):null;
+    if(prevLevel!==null && lvl>prevLevel){
+      fireConfetti();
+      showBadgeToast('<i class="ti ti-trending-up"></i> Tabriklaymiz! Siz '+lvl+'-darajaga yetdingiz.');
+    }
+    localStorage.setItem(key,String(lvl));
+  }catch(e){}
+}
+function checkNewBadges(stats,uid){
+  try{
+    var key='mgh_seen_badges_'+uid;
+    var raw=localStorage.getItem(key);
+    var prevBadges=raw?JSON.parse(raw):null;
+    var nowUnlocked=BADGES.filter(function(b){return b.check(stats)}).map(function(b){return b.id});
+    if(prevBadges){
+      var newlyUnlocked=nowUnlocked.filter(function(id){return prevBadges.indexOf(id)===-1});
+      if(newlyUnlocked.length){
+        var firstNew=BADGES.filter(function(b){return b.id===newlyUnlocked[0]})[0];
+        fireConfetti();
+        showBadgeToast('<i class="ti ti-award"></i> Yangi yutuq qo\'lga kiritildi: '+(firstNew?firstNew.title:''));
+      }
+    }
+    localStorage.setItem(key, JSON.stringify(nowUnlocked));
+  }catch(e){}
+}
+
+/* ═══════ KUNLIK STREAK (ketma-ket kirgan kunlar) ═══════ */
+function updateStreak(uid){
+  try{
+    var key='mgh_visits_'+uid;
+    var today=new Date(); today.setHours(0,0,0,0);
+    var todayStr=today.toISOString().slice(0,10);
+    var raw=localStorage.getItem(key);
+    var dates=raw?JSON.parse(raw):[];
+    if(dates.indexOf(todayStr)===-1) dates.push(todayStr);
+    dates=dates.slice(-60);
+    localStorage.setItem(key, JSON.stringify(dates));
+    var streak=0, cursor=new Date(today);
+    while(true){
+      var cs=cursor.toISOString().slice(0,10);
+      if(dates.indexOf(cs)!==-1){ streak++; cursor.setDate(cursor.getDate()-1); } else break;
+    }
+    return streak;
+  }catch(e){ return 0; }
+}
+
+/* ═══════ DINAMIK SALOMLASHUV (kun vaqtiga qarab) ═══════ */
+function getGreeting(){
+  var h=new Date().getHours();
+  if(h>=5&&h<11) return {icon:'ti-sunrise',text:'Xayrli tong'};
+  if(h>=11&&h<17) return {icon:'ti-sun',text:'Xayrli kun'};
+  if(h>=17&&h<22) return {icon:'ti-sunset-2',text:'Xayrli kech'};
+  return {icon:'ti-moon-stars',text:'Xayrli tun'};
 }
 
 /* ═══════ BANNER CAROUSEL (Premium + Test ishlashga chaqiruv) ═══════ */
@@ -734,12 +945,12 @@ async function loadRanking(period){
     var res=await _sb.rpc('leaderboard',{p_period:period,p_limit:50});
     if(res.error){ body.innerHTML='<div class="rk-empty">Reyting hozircha mavjud emas.</div>'; console.warn('leaderboard:',res.error.message); return; }
     var rows=res.data||[];
-    if(!rows.length){ body.innerHTML='<div class="rk-empty">Hali reyting shakllanmagan.<br>Test topshiring va birinchi bo\'ling! 🏆</div>'; return; }
+    if(!rows.length){ body.innerHTML='<div class="rk-empty">Hali reyting shakllanmagan.<br>Test topshiring va birinchi bo\'ling!</div>'; return; }
 
     var html='';
     var top=rows[0];
     var topLabel = period==='day'?'Bugungi eng zo\'r tarbiyachi':period==='month'?'Oyning eng zo\'r tarbiyachisi':'Eng zo\'r tarbiyachi';
-    html+='<div class="rk-top1"><div class="rk-crown">👑</div><div style="flex:1"><div style="font-size:11px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.03em">'+topLabel+'</div>'
+    html+='<div class="rk-top1"><div class="rk-crown"><i class="ti ti-crown"></i></div><div style="flex:1"><div style="font-size:11px;color:#b45309;font-weight:700;text-transform:uppercase;letter-spacing:.03em">'+topLabel+'</div>'
         +'<div class="n">'+rkEsc(top.name)+(top.is_me?' <span class="me-tag">SIZ</span>':'')+'</div>'
         +'<div class="x">'+top.xp+' XP</div></div></div>';
 
@@ -747,7 +958,7 @@ async function loadRanking(period){
       if(i===0) return;
       var pos=Number(r.rank);
       var posCls = pos===2?'s':pos===3?'b':'';
-      var medal = pos===2?'🥈':pos===3?'🥉':pos;
+      var medal = pos===2?'<i class="ti ti-medal" style="color:#94a3b8"></i>':pos===3?'<i class="ti ti-medal" style="color:#b45309"></i>':pos;
       html+='<div class="rk-row'+(r.is_me?' me':'')+'">'
           +'<div class="rk-pos '+posCls+'">'+medal+'</div>'
           +'<div class="rk-name">'+rkEsc(r.name)+(r.is_me?' <span class="me-tag">SIZ</span>':'')+'</div>'
@@ -768,7 +979,7 @@ async function loadRanking(period){
           +'<div class="rk-xp">'+m.xp+' XP</div></div>';
         foot.style.display='block';
       }else{
-        foot.innerHTML='<div style="text-align:center;font-size:12.5px;color:#64748b">Siz hali reytingda yo\'qsiz — test topshiring! 💪</div>';
+        foot.innerHTML='<div style="text-align:center;font-size:12.5px;color:#64748b">Siz hali reytingda yo\'qsiz — test topshiring!</div>';
         foot.style.display='block';
       }
     }
@@ -779,7 +990,7 @@ async function loadRanking(period){
       RK_ME={rank:myRank, period:period, xp:myXp, name:myName};
       cert.style.display='block';
       cert.innerHTML='<button class="rk-cert-btn" onclick="downloadCertificate()"><i class="ti ti-award"></i> Sertifikatingizni yuklab oling</button>'
-        +'<div class="rk-cert-note">Do\'stlaringizga ulashing — siz TOP 5 dasiz! 🎉</div>';
+        +'<div class="rk-cert-note">Do\'stlaringizga ulashing — siz TOP 5 dasiz!</div>';
     }else{
       cert.style.display='none'; cert.innerHTML='';
     }
@@ -828,8 +1039,8 @@ async function drawCertificate(name, rank, period, xp){
   x.strokeStyle='#e4e8f0'; x.lineWidth=2; x.beginPath(); x.moveTo(cx-160,m+150); x.lineTo(cx+160,m+150); x.stroke();
 
   // Medal / taval
-  var medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'🏅';
-  x.textAlign='center'; x.font="120px 'Inter', Arial, sans-serif"; x.fillText(medal, cx, m+300);
+  var medalColors = rank===1?['#fde68a','#f59e0b']:rank===2?['#e2e8f0','#94a3b8']:rank===3?['#fbcfa0','#b45309']:['#93c5fd','#2563eb'];
+  drawMedal(x, cx, m+270, 62, medalColors[0], medalColors[1]);
 
   // Sarlavha
   ctext('SERTIFIKAT', m+390, 62, '#0f172a', '800', 2);
@@ -865,7 +1076,7 @@ async function drawCertificate(name, rank, period, xp){
   x.fillStyle='#1e40af'; roundRect(x,m+40,m+cardH-110,cardW-80,64,16); x.fill();
   x.fillStyle='#ffffff'; x.textAlign='center';
   x.font="700 26px 'Inter', Arial, sans-serif";
-  x.fillText('🎓 maktabgachahubuz-ten.vercel.app', cx, m+cardH-68);
+  x.fillText('maktabgachahubuz-ten.vercel.app', cx, m+cardH-68);
 
   // Yuklab olish
   cv.toBlob(function(blob){
@@ -874,8 +1085,30 @@ async function drawCertificate(name, rank, period, xp){
     a.href=url; a.download='MaktabgachaHub-sertifikat.png';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){URL.revokeObjectURL(url);},1500);
-    if(typeof showToast==='function') showToast('Sertifikat yuklab olindi! Do\'stlaringizga ulashing 🎉','ok');
+    if(typeof showToast==='function') showToast('Sertifikat yuklab olindi! Do\'stlaringizga ulashing.','ok');
   },'image/png');
+}
+function drawMedal(ctx,cx,cy,radius,colorLight,colorDark){
+  var grad=ctx.createLinearGradient(cx-radius,cy-radius,cx+radius,cy+radius);
+  grad.addColorStop(0,colorLight); grad.addColorStop(1,colorDark);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,radius,0,Math.PI*2);
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.lineWidth=radius*0.09; ctx.strokeStyle='#ffffff'; ctx.stroke();
+  drawStar(ctx,cx,cy,5,radius*0.5,radius*0.22,'#ffffff');
+  ctx.restore();
+}
+function drawStar(ctx,cx,cy,spikes,outerR,innerR,color){
+  var rot=Math.PI/2*3, step=Math.PI/spikes;
+  ctx.beginPath();
+  ctx.moveTo(cx,cy-outerR);
+  for(var i=0;i<spikes;i++){
+    ctx.lineTo(cx+Math.cos(rot)*outerR, cy+Math.sin(rot)*outerR); rot+=step;
+    ctx.lineTo(cx+Math.cos(rot)*innerR, cy+Math.sin(rot)*innerR); rot+=step;
+  }
+  ctx.lineTo(cx,cy-outerR);
+  ctx.closePath();
+  ctx.fillStyle=color; ctx.fill();
 }
 function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
@@ -1014,11 +1247,25 @@ window.addEventListener('load',async function(){
   var profile=auth.profile;
   var name=getUserName();
   document.getElementById('hero-name').textContent=name;
+  var greet=getGreeting();
+  var heroEmojiEl=document.getElementById('heroEmoji'), heroGreetEl=document.getElementById('heroGreetText');
+  if(heroEmojiEl)heroEmojiEl.innerHTML='<i class="ti '+greet.icon+'"></i>';
+  if(heroGreetEl)heroGreetEl.textContent=greet.text;
+  var heroAvatarEl=document.getElementById('hero-avatar');
+  if(heroAvatarEl)heroAvatarEl.textContent=name.charAt(0).toUpperCase();
   var heroLines=["Bugun yangi narsa kashf qilamizmi?","Bolalar siz uchun sabrsizlik bilan kutmoqda!","Kichik qadamlar katta natijalar beradi.","Ajoyib bir kun uchun hammasi tayyor.","Ilhom va g'oyalar — bir qadam naridan."];
   var heroSub=document.getElementById('hero-sub');
   if(heroSub)heroSub.textContent=heroLines[Math.floor(Math.random()*heroLines.length)];
   document.getElementById('sb-name').textContent=name;
   document.getElementById('sb-avatar').textContent=name.charAt(0).toUpperCase();
+  var streakDays=updateStreak(auth.user.id);
+  if(streakDays>=2){
+    var streakChip=document.createElement('span');
+    streakChip.className='streak-chip';
+    streakChip.innerHTML='<i class="ti ti-flame"></i> '+streakDays+' kun';
+    var planPillEl=document.getElementById('hero-plan');
+    if(planPillEl) planPillEl.insertAdjacentElement('afterend', streakChip);
+  }
   var proUser=isPro(),corpUser=isCorporate();
   var planLabel=corpUser?'Korporativ':proUser?'Professional':'Bepul';
   document.getElementById('hero-plan').innerHTML=proUser?'<i class="ti ti-crown"></i> '+planLabel:'<i class="ti ti-free-rights"></i> '+planLabel;
@@ -1065,6 +1312,10 @@ window.addEventListener('load',async function(){
   var pct=lv.next<9999?Math.min(((xp-prevMin)/(lv.next-prevMin))*100,100):100;
   document.getElementById('xp-fill').style.width=pct+'%';
   document.getElementById('xp-next').textContent=lv.next<9999?'Keyingi: '+lv.next+' XP':'Maksimal daraja!';
+  ['sb-avatar-ring','hero-avatar-ring'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.style.setProperty('--xppct', pct);
+  });
+  checkLevelUp(auth.user.id, lv.lvl);
 
   // Testlar natijasi kelgach — sanoq, o'rtacha va so'nggi 5 ta
   var testsRes = await testsP;
@@ -1096,6 +1347,17 @@ window.addEventListener('load',async function(){
   } else {
     ul.innerHTML='<div style="text-align:center;color:#9aa3bf;padding:16px;font-size:13px">Hali test topshirilmagan</div>';
   }
+
+  var badgeStats={xp:xp,lvl:lv.lvl,count:count,avg:avg,proUser:proUser,topRank:null};
+  renderBadges(badgeStats);
+  checkNewBadges(badgeStats, auth.user.id);
+  _sb.rpc('leaderboard_my_rank',{p_period:'all'}).then(function(r){
+    if(!r.error && r.data && r.data.length){
+      badgeStats.topRank=Number(r.data[0].rank);
+      renderBadges(badgeStats);
+      checkNewBadges(badgeStats, auth.user.id);
+    }
+  }).catch(function(){});
 
   await notifP;
 });
