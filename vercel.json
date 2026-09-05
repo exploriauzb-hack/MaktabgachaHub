@@ -1,6 +1,7 @@
 {
   "crons": [
     { "path": "/api/send-reminders?slot=morning", "schedule": "0 4 * * *" },
-    { "path": "/api/send-reminders?slot=evening", "schedule": "0 13 * * *" }
+    { "path": "/api/send-reminders?slot=evening", "schedule": "0 13 * * *" },
+    { "path": "/api/monthly-referral-reward", "schedule": "10 4 1 * *" }
   ]
 }
