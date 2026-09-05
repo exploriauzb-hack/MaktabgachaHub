@@ -270,7 +270,9 @@ async function sendReferralInfo(botToken, chatId, senderId) {
       `Havolangiz orqali kirgan har bir do'stingiz hisobga qo'shiladi.\n\n` +
       `📊 Hozirgi taklif qilganlaringiz: <b>${count} ta</b>\n\n` +
       `${discountLine}` +
-      `${premiumLine}`,
+      `${premiumLine}\n\n` +
+      `🏆 Bundan tashqari: har oy eng ko'p taklif qilgan TOP-3 ishtirokchi ham 1 oylik BEPUL Premium yutadi! ` +
+      `"🏆 Reyting" tugmasi orqali kim yetakchi ekanini kuzatib boring.`,
     parse_mode: 'HTML',
     reply_markup: MAIN_KEYBOARD
   });
