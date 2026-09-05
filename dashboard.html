@@ -199,7 +199,13 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .badge-toast i{font-size:16px;color:#fbbf24;flex-shrink:0}
 .badge-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:768px){
-  .badges-grid{grid-template-columns:repeat(4,1fr);gap:10px 6px}
+  .badges-card{padding:12px 14px;position:relative}
+  .badges-card::after{content:'';position:absolute;top:42px;right:14px;bottom:8px;width:24px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.92));pointer-events:none;border-radius:0 10px 10px 0}
+  .badges-grid{display:flex;grid-template-columns:none;overflow-x:auto;overflow-y:hidden;gap:14px;padding:2px 2px 4px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .badges-grid::-webkit-scrollbar{display:none}
+  .badge-item{flex:0 0 58px;padding:4px 0;scroll-snap-align:start}
+  .badge-icon{width:40px;height:40px;font-size:17px}
+  .badge-title{font-size:9.5px}
 }
 
 /* MOD GRID */
