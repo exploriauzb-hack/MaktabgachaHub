@@ -1,0 +1,7 @@
+{
+  "_izoh": "Bu bo'lakni o'zingizning vercel.json fayliga qo'shing (agar fayl bo'lmasa, project root'da yangi vercel.json yarating). Vaqtlar UTC bo'yicha: 04:00 UTC = 09:00 O'zbekiston vaqti, 13:00 UTC = 18:00 O'zbekiston vaqti.",
+  "crons": [
+    { "path": "/api/send-reminders?slot=morning", "schedule": "0 4 * * *" },
+    { "path": "/api/send-reminders?slot=evening", "schedule": "0 13 * * *" }
+  ]
+}
