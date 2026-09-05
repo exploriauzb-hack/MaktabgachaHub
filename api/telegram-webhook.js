@@ -11,6 +11,8 @@
 //    hozirgi taklif qilganlar sonini ko'rsatadi.
 //  - "🏆 Reyting" tugmasi → eng ko'p taklif qilgan top-10 foydalanuvchini
 //    va so'rovchining o'z o'rnini ko'rsatadi.
+//  - /statistika → FAQAT ADMIN uchun: obunachilar soni, Premium/Referal
+//    tugmalarini necha kishi bosgani (7/30 kun va jami) haqida hisobot.
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
@@ -181,13 +183,21 @@ module.exports = async (req, res) => {
         await sendSubscribeGate(BOT_TOKEN, chatId, CHANNEL_USERNAME);
       }
     } else if (text === PREMIUM_BTN || text === '/premium') {
+      await logEvent(senderId, 'premium_click');
       await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else if (text === MANBA_BTN || text === '/manba') {
       await sendMessage(BOT_TOKEN, chatId, { text: MANBA_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else if (text === REFERRAL_BTN || text === '/referral') {
+      await logEvent(senderId, 'referral_click');
       await sendReferralInfo(BOT_TOKEN, chatId, senderId);
     } else if (text === LEADERBOARD_BTN || text === '/reyting') {
       await sendLeaderboard(BOT_TOKEN, chatId, senderId);
+    } else if (text === '/statistika') {
+      if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+        await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
+      } else {
+        await sendStatistics(BOT_TOKEN, chatId);
+      }
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
         text: 'Botdan foydalanish uchun /start buyrug\'ini yuboring yoki pastdagi tugmalardan foydalaning.',
@@ -376,6 +386,68 @@ async function sendLeaderboard(botToken, chatId, senderId) {
     parse_mode: 'HTML',
     reply_markup: MAIN_KEYBOARD
   });
+}
+
+async function logEvent(telegramId, eventType) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('bot_events').insert({ telegram_id: telegramId, event_type: eventType });
+  } catch (e) {
+    console.error('logEvent xatolik:', e);
+  }
+}
+
+async function sendStatistics(botToken, chatId) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+
+    const [{ count: totalSubs }, premium7, premium30, premiumAll, referral7, referral30, referralAll] = await Promise.all([
+      supabaseAdmin.from('telegram_subscribers').select('*', { count: 'exact', head: true }),
+      countEvents(supabaseAdmin, 'premium_click', 7),
+      countEvents(supabaseAdmin, 'premium_click', 30),
+      countEvents(supabaseAdmin, 'premium_click', null),
+      countEvents(supabaseAdmin, 'referral_click', 7),
+      countEvents(supabaseAdmin, 'referral_click', 30),
+      countEvents(supabaseAdmin, 'referral_click', null)
+    ]);
+
+    const { count: totalReferrals } = await supabaseAdmin
+      .from('referrals')
+      .select('*', { count: 'exact', head: true });
+
+    const text =
+      `📊 <b>Bot statistikasi</b>\n\n` +
+      `👥 Jami obunachilar: <b>${totalSubs || 0}</b>\n\n` +
+      `⭐ "Premium" tugmasini bosganlar:\n` +
+      `— Oxirgi 7 kun: <b>${premium7}</b>\n` +
+      `— Oxirgi 30 kun: <b>${premium30}</b>\n` +
+      `— Jami: <b>${premiumAll}</b>\n\n` +
+      `🎁 "Do'st taklif qilish" tugmasini bosganlar:\n` +
+      `— Oxirgi 7 kun: <b>${referral7}</b>\n` +
+      `— Oxirgi 30 kun: <b>${referral30}</b>\n` +
+      `— Jami: <b>${referralAll}</b>\n\n` +
+      `🔗 Haqiqiy amalga oshgan referallar: <b>${totalReferrals || 0}</b>`;
+
+    await sendMessage(botToken, chatId, { text, parse_mode: 'HTML' });
+  } catch (e) {
+    console.error('sendStatistics xatolik:', e);
+    await sendMessage(botToken, chatId, { text: 'Statistikani olishda xatolik yuz berdi.' });
+  }
+}
+
+async function countEvents(supabaseAdmin, eventType, days) {
+  let query = supabaseAdmin
+    .from('bot_events')
+    .select('*', { count: 'exact', head: true })
+    .eq('event_type', eventType);
+
+  if (days) {
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+    query = query.gte('created_at', since);
+  }
+
+  const { count, error } = await query;
+  return error ? 0 : count || 0;
 }
 
 async function checkChannelMembership(botToken, channelUsername, userId) {
