@@ -22,6 +22,8 @@
 //    qiymatni o'zgartiradi (masalan aksiya narxi/muddati), qayta deploy shart emas.
 //  - "💳 To'lov qilish" bosilib, 6 soatdan keyin ham screenshot kelmasa —
 //    alohida cron (/api/payment-reminder) avtomatik eslatma yuboradi.
+//  - /premium_push → FAQAT ADMIN uchun: Premium tugmasini HALI BOSMAGAN
+//    obunachilarga bir martalik maxsus taklif yuboradi (takror yubormaydi).
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
@@ -95,6 +97,9 @@ module.exports = async (req, res) => {
       } else if (cq.data === 'pay_premium') {
         await markPendingPayment(chatId, senderId, firstName);
         await sendPaymentInstructions(BOT_TOKEN, chatId);
+      } else if (cq.data === 'view_premium') {
+        await logEvent(senderId, 'premium_click');
+        await sendPremiumOffer(BOT_TOKEN, chatId);
       } else if (cq.data === 'sample_question') {
         await sendSampleQuestion(BOT_TOKEN, chatId);
       }
@@ -240,6 +245,20 @@ module.exports = async (req, res) => {
               : `✅ "${key}" sozlamasi o'chirildi.`
           });
         }
+      }
+    } else if (text === '/premium_push') {
+      if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+        await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
+      } else {
+        await sendMessage(BOT_TOKEN, chatId, { text: '⏳ Yuborilmoqda, biroz kuting...' });
+        const result = await sendTargetedPremiumBroadcast(BOT_TOKEN);
+        await sendMessage(BOT_TOKEN, chatId, {
+          text:
+            `✅ Maxsus Premium taklifi yuborildi.\n\n` +
+            `Nishonga olingan (hali bosmaganlar): ${result.total}\n` +
+            `Yuborildi: ${result.sent}\n` +
+            `Xato: ${result.failed}`
+        });
       }
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
@@ -559,6 +578,79 @@ async function sendSampleQuestion(botToken, chatId) {
     ? `🔍 <b>Bepul namuna savol:</b>\n\n${sample}`
     : `🔍 Hozircha namuna savol qo'shilmagan. Tez orada qo'shamiz!`;
   await sendMessage(botToken, chatId, { text, parse_mode: 'HTML' });
+}
+
+// ═══ MAQSADLI TAKLIF: Premium'ni hali bosmaganlarga bir martalik xabar ═══
+
+async function sendTargetedPremiumBroadcast(botToken) {
+  const supabaseAdmin = getSupabaseAdmin();
+
+  const [{ data: subscribers, error: subError }, { data: touched, error: evError }] = await Promise.all([
+    supabaseAdmin.from('telegram_subscribers').select('chat_id, telegram_id, first_name'),
+    supabaseAdmin
+      .from('bot_events')
+      .select('telegram_id')
+      .in('event_type', ['premium_click', 'premium_broadcast_sent'])
+  ]);
+
+  if (subError || !subscribers) return { total: 0, sent: 0, failed: 0 };
+
+  const touchedIds = new Set((touched || []).map((r) => String(r.telegram_id)));
+  const targets = subscribers.filter((s) => !touchedIds.has(String(s.telegram_id)));
+
+  const [premiumCount, promoDeadline, promoPrice] = await Promise.all([
+    getSetting('premium_count'),
+    getSetting('promo_deadline'),
+    getSetting('promo_price')
+  ]);
+
+  let sent = 0;
+  let failed = 0;
+
+  for (const t of targets) {
+    try {
+      const name = t.first_name || 'Tarbiyachi';
+      let text =
+        `👋 Salom, ${name}!\n\n` +
+        `Bilasizmi — MaktabgachaHub'da bepul qismdan tashqari <b>⭐ Premium</b> ham bor: ` +
+        `barcha testlar, qo'shiqlar va mashg'ulotlar cheksiz ochiq.\n\n`;
+
+      if (premiumCount) {
+        text += `👥 Hozircha <b>${premiumCount}+ tarbiyachi</b> Premium'dan foydalanmoqda!\n\n`;
+      }
+
+      if (promoDeadline) {
+        const deadline = new Date(promoDeadline);
+        if (!isNaN(deadline.getTime()) && deadline.getTime() > Date.now()) {
+          const hoursLeft = Math.ceil((deadline.getTime() - Date.now()) / (1000 * 60 * 60));
+          const daysLeft = Math.ceil(hoursLeft / 24);
+          const timeLabel = daysLeft > 1 ? `${daysLeft} kun` : `${hoursLeft} soat`;
+          text += `🔥 Hozir aksiya bor — faqat ${timeLabel} qoldi`;
+          text += promoPrice ? `, narx atigi <b>${promoPrice}</b>!\n\n` : '!\n\n';
+        }
+      }
+
+      text += `Batafsil ko'rish uchun pastdagi tugmani bosing 👇`;
+
+      const result = await sendMessage(botToken, t.chat_id, {
+        text,
+        parse_mode: 'HTML',
+        reply_markup: {
+          inline_keyboard: [[{ text: '⭐ Premium\'ni ko\'rish', callback_data: 'view_premium' }]]
+        }
+      });
+
+      if (result && result.ok) sent++;
+      else failed++;
+
+      await supabaseAdmin.from('bot_events').insert({ telegram_id: t.telegram_id, event_type: 'premium_broadcast_sent' });
+    } catch (e) {
+      failed++;
+    }
+    await new Promise((r) => setTimeout(r, 40));
+  }
+
+  return { total: targets.length, sent, failed };
 }
 
 async function logEvent(telegramId, eventType) {
