@@ -20,6 +20,8 @@
 //    screenshot yuboradi → bot uni AVTOMATIK adminga forward qiladi.
 //  - /sozlash <kalit> <qiymat> → FAQAT ADMIN uchun: bot_settings jadvalidagi
 //    qiymatni o'zgartiradi (masalan aksiya narxi/muddati), qayta deploy shart emas.
+//  - "💳 To'lov qilish" bosilib, 6 soatdan keyin ham screenshot kelmasa —
+//    alohida cron (/api/payment-reminder) avtomatik eslatma yuboradi.
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
@@ -91,6 +93,7 @@ module.exports = async (req, res) => {
           await sendSubscribeGate(BOT_TOKEN, chatId, CHANNEL_USERNAME);
         }
       } else if (cq.data === 'pay_premium') {
+        await markPendingPayment(chatId, senderId, firstName);
         await sendPaymentInstructions(BOT_TOKEN, chatId);
       } else if (cq.data === 'sample_question') {
         await sendSampleQuestion(BOT_TOKEN, chatId);
@@ -154,9 +157,12 @@ module.exports = async (req, res) => {
       if (ADMIN_ID && String(senderId) !== String(ADMIN_ID)) {
         const fileId = message.photo[message.photo.length - 1].file_id;
         const username = message.from?.username ? `@${message.from.username}` : '(username yo\'q)';
-        await sendPhoto(BOT_TOKEN, ADMIN_ID, fileId,
-          `💳 To'lov screenshoti\n\nKimdan: ${firstName} ${username}\nTelegram ID: ${senderId}\n\n` +
-          `Tekshirib, tasdiqlansa Premium'ni faollashtiring.`);
+        await Promise.all([
+          sendPhoto(BOT_TOKEN, ADMIN_ID, fileId,
+            `💳 To'lov screenshoti\n\nKimdan: ${firstName} ${username}\nTelegram ID: ${senderId}\n\n` +
+            `Tekshirib, tasdiqlansa Premium'ni faollashtiring.`),
+          clearPendingPayment(senderId)
+        ]);
         await sendMessage(BOT_TOKEN, chatId, {
           text: '✅ Rahmat! To\'lovingiz qabul qilindi, tez orada tekshirib, Premium\'ni faollashtiramiz.'
         });
@@ -499,6 +505,30 @@ async function sendPremiumOffer(botToken, chatId) {
       ]
     }
   });
+}
+
+async function markPendingPayment(chatId, telegramId, firstName) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('pending_payments').upsert({
+      telegram_id: telegramId,
+      chat_id: chatId,
+      first_name: firstName,
+      clicked_at: new Date().toISOString(),
+      reminded_at: null
+    });
+  } catch (e) {
+    console.error('markPendingPayment xatolik:', e);
+  }
+}
+
+async function clearPendingPayment(telegramId) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('pending_payments').delete().eq('telegram_id', telegramId);
+  } catch (e) {
+    console.error('clearPendingPayment xatolik:', e);
+  }
 }
 
 async function sendPaymentInstructions(botToken, chatId) {
