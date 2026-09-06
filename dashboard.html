@@ -140,16 +140,18 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
 .pf-item i{font-size:13px;color:#86efac}
 .btn-premium{background:#fff;color:var(--accent);font-size:13px;font-weight:700;padding:10px 22px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.15)}
 
-/* TEST TAKLIFI BANNERI */
-.test-banner{background:linear-gradient(135deg,#0f766e 0%,#0e7490 55%,#2563eb 100%);border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(8,145,178,.25)}
-.test-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.08);border-radius:50%}
-.test-banner-left{display:flex;align-items:center;gap:16px;z-index:1;min-width:0}
-.test-banner-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
-.test-banner-icon i{font-size:22px;color:#fde68a}
-.test-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
-.test-banner p{font-size:12px;color:#cffafe}
-.btn-test-cta{background:#fff;color:#0e7490;font-size:13px;font-weight:700;padding:10px 22px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.15);text-decoration:none}
-.btn-premium:hover,.btn-test-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+/* UMUMIY PROMO BANNERI (Testlar, Demo, Haftalik, Ommalashtirish va h.k. uchun) */
+.promo-banner{border-radius:var(--radius);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(15,20,50,.18);color:#fff}
+.promo-banner::before{content:'';position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:rgba(255,255,255,.08);border-radius:50%}
+.promo-banner-left{display:flex;align-items:center;gap:16px;z-index:1;min-width:0}
+.promo-icon{width:46px;height:46px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(255,255,255,.2)}
+.promo-icon i{font-size:22px;color:#fde68a}
+.promo-banner h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.promo-banner p{font-size:12px;color:rgba(255,255,255,.85)}
+.btn-promo{background:#fff;font-size:13px;font-weight:700;padding:10px 22px;border-radius:9px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;z-index:1;display:flex;align-items:center;gap:6px;transition:transform .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.15);text-decoration:none}
+.btn-promo:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.promo-badge{position:absolute;top:14px;right:16px;font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.22);color:#fff;z-index:1;letter-spacing:.03em}
+.btn-premium:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
 .btn-premium i{font-size:14px;color:var(--pro2)}
 
 /* STATS */
@@ -317,8 +319,8 @@ body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height
   .topbar-right .level-pill{display:none}
   .rank-btn{padding:7px 11px;font-size:12px;gap:4px}
   .plan-pill{padding:5px 10px;font-size:11px}
-  .premium-banner,.test-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
-  .btn-premium,.btn-test-cta{width:100%;justify-content:center}
+  .premium-banner,.promo-banner{flex-direction:column;align-items:flex-start;gap:12px;padding:16px}
+  .btn-premium,.btn-promo{width:100%;justify-content:center}
   .premium-features{display:none}
   .stats-grid{gap:8px}
   .stat-card{padding:12px 14px}
@@ -862,7 +864,20 @@ function getGreeting(){
   return {icon:'ti-moon-stars',text:'Xayrli tun'};
 }
 
-/* ═══════ BANNER CAROUSEL (Premium + Test ishlashga chaqiruv) ═══════ */
+/* ═══════ BANNER CAROUSEL (Premium + boshqa bo'limlarga taklif) ═══════ */
+function buildPromoSlide(o){
+  return '<div class="promo-banner" style="background:'+o.gradient+'">'+
+    (o.badge?'<span class="promo-badge">'+o.badge+'</span>':'')+
+    '<div class="promo-banner-left">'+
+      '<div class="promo-icon"><i class="ti '+o.icon+'"></i></div>'+
+      '<div>'+
+        '<h3>'+o.title+'</h3>'+
+        '<p>'+o.desc+'</p>'+
+      '</div>'+
+    '</div>'+
+    '<a class="btn-promo" style="color:'+o.color+'" href="'+o.href+'"'+(o.external?' target="_blank" rel="noopener"':'')+'><i class="ti ti-player-play"></i> '+o.cta+'</a>'+
+  '</div>';
+}
 function buildBannerSlides(proUser){
   var slides=[];
   if(!proUser){
@@ -885,24 +900,36 @@ function buildBannerSlides(proUser){
       '</div>'
     );
   }
-  // Pro foydalanuvchi uchun — asosiy Testlar bo'limiga, bepul foydalanuvchi uchun — kafolatlangan bepul Demo testga yo'naltiramiz
-  var testHref = proUser ? 'pages/test.html' : 'pages/demo.html';
-  var testLabel = proUser ? 'Test ishlash' : 'Demo testni sinash';
-  var testDesc = proUser
-    ? 'Haftalik mavzular bo\'yicha bilimingizni mustahkamlang.'
-    : 'Ro\'yxatdan cheklovsiz — bepul Demo testni hoziroq yeching!';
-  slides.push(
-    '<div class="test-banner">'+
-      '<div class="test-banner-left">'+
-        '<div class="test-banner-icon"><i class="ti ti-flask"></i></div>'+
-        '<div>'+
-          '<h3>Bilimingizni sinab ko\'ring!</h3>'+
-          '<p>'+testDesc+'</p>'+
-        '</div>'+
-      '</div>'+
-      '<a class="btn-test-cta" href="'+testHref+'"><i class="ti ti-player-play"></i> '+testLabel+'</a>'+
-    '</div>'
-  );
+  slides.push(buildPromoSlide({
+    gradient:'linear-gradient(135deg,#1e3a8a 0%,#1e40af 55%,#3b82f6 100%)',
+    icon:'ti-flask', title:'Testlar bo\'limi',
+    desc:'Haftalik mavzular bo\'yicha bilimingizni sinab, XP to\'plang.',
+    href:'pages/test.html', cta:'Testni boshlash', color:'#1e40af'
+  }));
+  slides.push(buildPromoSlide({
+    gradient:'linear-gradient(135deg,#0f766e 0%,#0e9488 55%,#22c55e 100%)',
+    icon:'ti-device-desktop-analytics', title:'Demo Test',
+    desc:'Ro\'yxatdan cheklovsiz — attestatsiya formatidagi demo testni hoziroq yeching!',
+    href:'pages/demo.html', cta:'Demo testni sinash', color:'#0f766e', badge:'BEPUL'
+  }));
+  slides.push(buildPromoSlide({
+    gradient:'linear-gradient(135deg,#4338ca 0%,#6d28d9 55%,#a855f7 100%)',
+    icon:'ti-books', title:'Haftalik mavzular',
+    desc:'Yillik tematik reja bo\'yicha bugungi mavzuni ko\'rib chiqing.',
+    href:'pages/haftalik.html', cta:'Mavzuni ko\'rish', color:'#4338ca'
+  }));
+  slides.push(buildPromoSlide({
+    gradient:'linear-gradient(135deg,#9d174d 0%,#be185d 55%,#ec4899 100%)',
+    icon:'ti-speakerphone', title:'Ommalashtirish',
+    desc:'Loyiha va metodlaringizni qanday taqdim etishni o\'rganing.',
+    href:'pages/ommalashtirish.html', cta:'Ko\'rib chiqish', color:'#9d174d', badge:'YANGI'
+  }));
+  slides.push(buildPromoSlide({
+    gradient:'linear-gradient(135deg,#0c4a6e 0%,#0284c7 55%,#38bdf8 100%)',
+    icon:'ti-brand-telegram', title:'Telegram kanalimizga obuna bo\'ling',
+    desc:'Yangiliklar, foydali materiallar va e\'lonlardan birinchi bo\'lib xabardor bo\'ling.',
+    href:'https://t.me/MaktabgachaHub', cta:'Obuna bo\'lish', color:'#0284c7', external:true
+  }));
   return slides;
 }
 var _bannerTimer=null;
