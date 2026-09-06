@@ -13,6 +13,13 @@
 //    va so'rovchining o'z o'rnini ko'rsatadi.
 //  - /statistika → FAQAT ADMIN uchun: obunachilar soni, Premium/Referal
 //    tugmalarini necha kishi bosgani (7/30 kun va jami) haqida hisobot.
+//  - "⭐ Premium" → endi ijtimoiy isbot (necha kishi Premium'da) va aktiv
+//    aksiya (agar sozlangan bo'lsa) bilan ko'rsatiladi, "💳 To'lov qilish"
+//    va "🔍 Bepul namuna" inline tugmalari bilan.
+//  - "💳 To'lov qilish" → karta raqami ko'rsatiladi, foydalanuvchi to'lagach
+//    screenshot yuboradi → bot uni AVTOMATIK adminga forward qiladi.
+//  - /sozlash <kalit> <qiymat> → FAQAT ADMIN uchun: bot_settings jadvalidagi
+//    qiymatni o'zgartiradi (masalan aksiya narxi/muddati), qayta deploy shart emas.
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
@@ -27,6 +34,8 @@
 //   SUPABASE_SERVICE_ROLE_KEY  — Supabase service_role kaliti
 //   ADMIN_TELEGRAM_ID          — sizning shaxsiy Telegram ID raqamingiz
 //   CHANNEL_USERNAME           — masalan @MaktabgachaHub
+//   PAYMENT_CARD_NUMBER        — to'lov qabul qilinadigan karta raqami
+//   PAYMENT_CARD_OWNER         — karta egasining ismi
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -38,18 +47,6 @@ const LEADERBOARD_BTN = '🏆 Reyting';
 const REFERRAL_DISCOUNT_THRESHOLD = 5;
 const REFERRAL_PREMIUM_THRESHOLD = 10;
 const REFERRAL_PREMIUM_MONTHS = 1; // har 10 ta yangi referal uchun necha oy bepul Premium beriladi
-
-const PREMIUM_INFO_TEXT =
-  `⭐ <b>Premium haqida</b>\n\n` +
-  `MaktabgachaHub 3 ta tarifda ishlaydi:\n\n` +
-  `🆓 <b>Bepul</b> — asosiy testlar va materiallarga kirish\n\n` +
-  `⭐ <b>Professional</b> — 49 000 so'm/oy\n` +
-  `— Barcha test va attestatsiya bo'limlari\n` +
-  `— Qo'shiqlar, o'yinlar, mashg'ulotlar\n` +
-  `— Cheksiz foydalanish\n\n` +
-  `🎉 <b>5 oylik obuna — 60 000 so'm</b> (tejamli aksiya narxi)\n\n` +
-  `Obuna bo'lish uchun @AzadiB_way ga yozing.\n\n` +
-  `💡 Yoki do'stlaringizni taklif qilib, chegirma yoki bepul Premium qo'lga kiriting — "🎁 Do'st taklif qilish" tugmasini bosing.`;
 
 const MANBA_INFO_TEXT =
   `🔥 Qog'ozbozlik va izlanishga sarflanadigan soatlab vaqtingizni tejang!\n\n` +
@@ -77,25 +74,26 @@ module.exports = async (req, res) => {
     const ADMIN_ID = process.env.ADMIN_TELEGRAM_ID;
     const CHANNEL_USERNAME = process.env.CHANNEL_USERNAME || '@MaktabgachaHub';
 
-    // ═══ "✅ Tekshirish" tugmasi (callback) ═══
+    // ═══ "✅ Tekshirish" / "💳 To'lov qilish" / "🔍 Bepul namuna" tugmalari (callback) ═══
     if (update.callback_query) {
       const cq = update.callback_query;
       const chatId = cq.message.chat.id;
       const senderId = cq.from.id;
       const firstName = cq.from.first_name || 'Tarbiyachi';
 
-      const results = await Promise.all([
-        answerCallbackQuery(BOT_TOKEN, cq.id),
-        checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, senderId)
-      ]);
-      const isMember = results[1];
+      await answerCallbackQuery(BOT_TOKEN, cq.id);
 
       if (cq.data === 'check_subscription') {
+        const isMember = await checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, senderId);
         if (isMember) {
           await sendWelcomeFlow(BOT_TOKEN, chatId, firstName, APP_URL);
         } else {
           await sendSubscribeGate(BOT_TOKEN, chatId, CHANNEL_USERNAME);
         }
+      } else if (cq.data === 'pay_premium') {
+        await sendPaymentInstructions(BOT_TOKEN, chatId);
+      } else if (cq.data === 'sample_question') {
+        await sendSampleQuestion(BOT_TOKEN, chatId);
       }
       return res.status(200).json({ ok: true });
     }
@@ -151,8 +149,18 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
-    // Rasm bilan lekin /elon bo'lmagan izoh — e'tiborsiz qoldiramiz
+    // Admindan kelmagan rasm — bu to'lov screenshoti deb hisoblanadi va adminga forward qilinadi
     if (hasPhoto) {
+      if (ADMIN_ID && String(senderId) !== String(ADMIN_ID)) {
+        const fileId = message.photo[message.photo.length - 1].file_id;
+        const username = message.from?.username ? `@${message.from.username}` : '(username yo\'q)';
+        await sendPhoto(BOT_TOKEN, ADMIN_ID, fileId,
+          `💳 To'lov screenshoti\n\nKimdan: ${firstName} ${username}\nTelegram ID: ${senderId}\n\n` +
+          `Tekshirib, tasdiqlansa Premium'ni faollashtiring.`);
+        await sendMessage(BOT_TOKEN, chatId, {
+          text: '✅ Rahmat! To\'lovingiz qabul qilindi, tez orada tekshirib, Premium\'ni faollashtiramiz.'
+        });
+      }
       return res.status(200).json({ ok: true });
     }
 
@@ -184,7 +192,7 @@ module.exports = async (req, res) => {
       }
     } else if (text === PREMIUM_BTN || text === '/premium') {
       await logEvent(senderId, 'premium_click');
-      await sendMessage(BOT_TOKEN, chatId, { text: PREMIUM_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
+      await sendPremiumOffer(BOT_TOKEN, chatId);
     } else if (text === MANBA_BTN || text === '/manba') {
       await sendMessage(BOT_TOKEN, chatId, { text: MANBA_INFO_TEXT, parse_mode: 'HTML', reply_markup: MAIN_KEYBOARD });
     } else if (text === REFERRAL_BTN || text === '/referral') {
@@ -197,6 +205,35 @@ module.exports = async (req, res) => {
         await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
       } else {
         await sendStatistics(BOT_TOKEN, chatId);
+      }
+    } else if (text.startsWith('/sozlash')) {
+      if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+        await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
+      } else {
+        const rest = text.replace('/sozlash', '').trim();
+        const spaceIdx = rest.indexOf(' ');
+        const key = spaceIdx === -1 ? rest : rest.slice(0, spaceIdx);
+        const value = spaceIdx === -1 ? '' : rest.slice(spaceIdx + 1).trim();
+
+        if (!key) {
+          await sendMessage(BOT_TOKEN, chatId, {
+            text:
+              'Foydalanish: /sozlash <kalit> <qiymat>\n\n' +
+              'Mavjud kalitlar:\n' +
+              '• premium_count — masalan: /sozlash premium_count 56\n' +
+              '• promo_deadline — masalan: /sozlash promo_deadline 2026-09-20T23:59:00+05:00\n' +
+              '• promo_price — masalan: /sozlash promo_price 39 000 so\'m\n' +
+              '• sample_question — masalan: /sozlash sample_question Bola nechchi yoshda birinchi so\'zini aytadi?\n\n' +
+              'Qiymatni o\'chirish uchun: /sozlash <kalit> (bo\'sh qiymat bilan)'
+          });
+        } else {
+          await setSetting(key, value);
+          await sendMessage(BOT_TOKEN, chatId, {
+            text: value
+              ? `✅ "${key}" sozlamasi yangilandi: ${value}`
+              : `✅ "${key}" sozlamasi o'chirildi.`
+          });
+        }
       }
     } else {
       await sendMessage(BOT_TOKEN, chatId, {
@@ -386,6 +423,112 @@ async function sendLeaderboard(botToken, chatId, senderId) {
     parse_mode: 'HTML',
     reply_markup: MAIN_KEYBOARD
   });
+}
+
+// ═══ SOZLAMALAR (bot_settings) ═══
+
+async function getSetting(key) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
+      .from('bot_settings')
+      .select('value')
+      .eq('key', key)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data.value || null;
+  } catch (e) {
+    console.error('getSetting xatolik:', e);
+    return null;
+  }
+}
+
+async function setSetting(key, value) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('bot_settings').upsert({ key, value, updated_at: new Date().toISOString() });
+  } catch (e) {
+    console.error('setSetting xatolik:', e);
+  }
+}
+
+// ═══ PREMIUM TAKLIFI (ijtimoiy isbot + aksiya + to'lov/namuna tugmalari) ═══
+
+async function sendPremiumOffer(botToken, chatId) {
+  const [premiumCount, promoDeadline, promoPrice] = await Promise.all([
+    getSetting('premium_count'),
+    getSetting('promo_deadline'),
+    getSetting('promo_price')
+  ]);
+
+  let text =
+    `⭐ <b>Premium haqida</b>\n\n` +
+    `MaktabgachaHub 3 ta tarifda ishlaydi:\n\n` +
+    `🆓 <b>Bepul</b> — asosiy testlar va materiallarga kirish\n\n` +
+    `⭐ <b>Professional</b> — 49 000 so'm/oy\n` +
+    `— Barcha test va attestatsiya bo'limlari\n` +
+    `— Qo'shiqlar, o'yinlar, mashg'ulotlar\n` +
+    `— Cheksiz foydalanish\n\n` +
+    `🎉 <b>5 oylik obuna — 60 000 so'm</b> (tejamli aksiya narxi)\n\n`;
+
+  if (premiumCount) {
+    text += `👥 Hozircha <b>${premiumCount}+ tarbiyachi</b> Premium'dan foydalanmoqda!\n\n`;
+  }
+
+  if (promoDeadline) {
+    const deadline = new Date(promoDeadline);
+    const now = new Date();
+    if (!isNaN(deadline.getTime()) && deadline.getTime() > now.getTime()) {
+      const hoursLeft = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60));
+      const daysLeft = Math.ceil(hoursLeft / 24);
+      const timeLabel = daysLeft > 1 ? `${daysLeft} kun` : `${hoursLeft} soat`;
+      text += `🔥 <b>Muddatli aksiya!</b> Faqat ${timeLabel} qoldi`;
+      text += promoPrice ? ` — narx atigi <b>${promoPrice}</b>!\n\n` : '!\n\n';
+    }
+  }
+
+  text += `💡 Do'stlaringizni taklif qilib, chegirma yoki bepul Premium ham qo'lga kiritishingiz mumkin — "🎁 Do'st taklif qilish" tugmasini bosing.`;
+
+  await sendMessage(botToken, chatId, {
+    text,
+    parse_mode: 'HTML',
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: '💳 To\'lov qilish', callback_data: 'pay_premium' }],
+        [{ text: '🔍 Bepul namuna savol', callback_data: 'sample_question' }]
+      ]
+    }
+  });
+}
+
+async function sendPaymentInstructions(botToken, chatId) {
+  const cardNumber = process.env.PAYMENT_CARD_NUMBER;
+  const cardOwner = process.env.PAYMENT_CARD_OWNER || 'MaktabgachaHub';
+
+  if (!cardNumber) {
+    await sendMessage(botToken, chatId, {
+      text: 'Hozircha to\'lov ma\'lumotlari sozlanmagan. Iltimos, @AzadiB_way ga yozing.'
+    });
+    return;
+  }
+
+  await sendMessage(botToken, chatId, {
+    text:
+      `💳 <b>To'lov qilish</b>\n\n` +
+      `Quyidagi kartaga to'lovni amalga oshiring:\n\n` +
+      `<code>${cardNumber}</code>\n${cardOwner}\n\n` +
+      `To'lovni amalga oshirgach, shu yerga <b>to'lov skrinshotini (rasm)</b> yuboring — biz tekshirib, ` +
+      `Premium'ni tez orada faollashtiramiz. ✅`,
+    parse_mode: 'HTML'
+  });
+}
+
+async function sendSampleQuestion(botToken, chatId) {
+  const sample = await getSetting('sample_question');
+  const text = sample
+    ? `🔍 <b>Bepul namuna savol:</b>\n\n${sample}`
+    : `🔍 Hozircha namuna savol qo'shilmagan. Tez orada qo'shamiz!`;
+  await sendMessage(botToken, chatId, { text, parse_mode: 'HTML' });
 }
 
 async function logEvent(telegramId, eventType) {
