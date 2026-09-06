@@ -26,9 +26,9 @@
 //    obunachilarga bir martalik maxsus taklif yuboradi (takror yubormaydi).
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
-//  - /elon <matn> → FAQAT ADMIN uchun: barcha obunachilarga shu matnni yuboradi
-//  - RASM + izohda "/elon <matn>" → FAQAT ADMIN uchun: barcha obunachilarga
-//    shu rasm va matnni birga yuboradi (sendPhoto)
+//  - /elon <matn> → FAQAT ADMIN uchun: DARHOL yubormaydi — avval "✅ Ha, yuborish /
+//    ❌ Bekor qilish" bilan tasdiqlatadi, shundan keyingina barcha obunachilarga yuboradi.
+//  - RASM + izohda "/elon <matn>" → xuddi shunday, avval tasdiqlash so'raladi.
 //
 // KERAKLI MUHIT O'ZGARUVCHILARI (Vercel):
 //   TELEGRAM_BOT_TOKEN        — BotFather bergan token
@@ -102,6 +102,30 @@ module.exports = async (req, res) => {
         await sendPremiumOffer(BOT_TOKEN, chatId);
       } else if (cq.data === 'sample_question') {
         await sendSampleQuestion(BOT_TOKEN, chatId);
+      } else if (cq.data === 'confirm_broadcast') {
+        if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+          return res.status(200).json({ ok: true });
+        }
+        const pending = await takePendingAnnouncement(senderId); // o'qib, DARHOL o'chiradi (ikki marta bosilsa ham qayta yubormaslik uchun)
+        if (!pending) {
+          await sendMessage(BOT_TOKEN, chatId, { text: 'Bu e\'lon allaqachon yuborilgan yoki bekor qilingan.' });
+        } else if (pending.photo_file_id) {
+          const result = await broadcastPhotoToAll(BOT_TOKEN, pending.photo_file_id, pending.announce_text);
+          await sendMessage(BOT_TOKEN, chatId, {
+            text: `✅ Rasmli e'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
+          });
+        } else {
+          const result = await broadcastToAll(BOT_TOKEN, pending.announce_text);
+          await sendMessage(BOT_TOKEN, chatId, {
+            text: `✅ E'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
+          });
+        }
+      } else if (cq.data === 'cancel_broadcast') {
+        if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
+          return res.status(200).json({ ok: true });
+        }
+        await takePendingAnnouncement(senderId);
+        await sendMessage(BOT_TOKEN, chatId, { text: '❌ Bekor qilindi, hech kimga yuborilmadi.' });
       }
       return res.status(200).json({ ok: true });
     }
@@ -131,11 +155,19 @@ module.exports = async (req, res) => {
       const announceText = text.replace('/elon', '').trim();
 
       if (hasPhoto) {
-        // Eng katta o'lchamdagi rasm file_id'sini olamiz
         const fileId = message.photo[message.photo.length - 1].file_id;
-        const result = await broadcastPhotoToAll(BOT_TOKEN, fileId, announceText);
+        await savePendingAnnouncement(senderId, announceText, fileId);
+        await sendPhoto(BOT_TOKEN, chatId, fileId,
+          `👆 Shu rasm + matn TASDIQLANGANDAN keyin hammaga yuboriladi.\n\n` +
+          `Matn: ${announceText || '(matnsiz)'}`);
         await sendMessage(BOT_TOKEN, chatId, {
-          text: `✅ Rasmli e'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
+          text: '⚠️ Buni barcha obunachilarga yuborishni tasdiqlaysizmi?',
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: '✅ Ha, yuborish', callback_data: 'confirm_broadcast' }],
+              [{ text: '❌ Bekor qilish', callback_data: 'cancel_broadcast' }]
+            ]
+          }
         });
         return res.status(200).json({ ok: true });
       }
@@ -150,9 +182,18 @@ module.exports = async (req, res) => {
         return res.status(200).json({ ok: true });
       }
 
-      const result = await broadcastToAll(BOT_TOKEN, announceText);
+      await savePendingAnnouncement(senderId, announceText, null);
       await sendMessage(BOT_TOKEN, chatId, {
-        text: `✅ E'lon yuborildi.\nJami obunachi: ${result.total}\nYuborildi: ${result.sent}\nXato (bloklangan/o'chirilgan): ${result.failed}`
+        text:
+          `👆 Shu matn TASDIQLANGANDAN keyin hammaga yuboriladi:\n\n` +
+          `"${announceText}"\n\n` +
+          `⚠️ Barcha obunachilarga yuborishni tasdiqlaysizmi?`,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '✅ Ha, yuborish', callback_data: 'confirm_broadcast' }],
+            [{ text: '❌ Bekor qilish', callback_data: 'cancel_broadcast' }]
+          ]
+        }
       });
       return res.status(200).json({ ok: true });
     }
@@ -524,6 +565,42 @@ async function sendPremiumOffer(botToken, chatId) {
       ]
     }
   });
+}
+
+// ═══ /elon TASDIQLASH: yuborishdan oldin vaqtincha saqlash ═══
+
+async function savePendingAnnouncement(adminId, announceText, photoFileId) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    await supabaseAdmin.from('pending_announcements').upsert({
+      admin_id: adminId,
+      announce_text: announceText || null,
+      photo_file_id: photoFileId || null,
+      created_at: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error('savePendingAnnouncement xatolik:', e);
+  }
+}
+
+// O'qiydi VA darhol o'chiradi — shuning uchun "✅ Ha, yuborish" ikki marta
+// bosilsa ham, e'lon faqat BIR marta jo'natiladi.
+async function takePendingAnnouncement(adminId) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
+      .from('pending_announcements')
+      .select('announce_text, photo_file_id')
+      .eq('admin_id', adminId)
+      .maybeSingle();
+    if (error || !data) return null;
+
+    await supabaseAdmin.from('pending_announcements').delete().eq('admin_id', adminId);
+    return data;
+  } catch (e) {
+    console.error('takePendingAnnouncement xatolik:', e);
+    return null;
+  }
 }
 
 async function markPendingPayment(chatId, telegramId, firstName) {
