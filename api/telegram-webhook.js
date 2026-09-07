@@ -49,6 +49,8 @@ const PREMIUM_BTN = '⭐ Premium';
 const MANBA_BTN = '📖 Manba';
 const REFERRAL_BTN = '🎁 Do\'st taklif qilish';
 const LEADERBOARD_BTN = '🏆 Reyting';
+const SITE_BTN = '🌐 Saytga o\'tish';
+const SITE_URL = `${process.env.APP_URL || 'https://www.maktabgachahub.website'}/telegram-login.html`;
 
 const REFERRAL_DISCOUNT_THRESHOLD = 5;
 const REFERRAL_PREMIUM_THRESHOLD = 10;
@@ -64,7 +66,11 @@ const MANBA_INFO_TEXT =
   `Obunani faollashtirish uchun @AzadiB_way ga murojaat qiling.`;
 
 const MAIN_KEYBOARD = {
-  keyboard: [[{ text: PREMIUM_BTN }, { text: MANBA_BTN }], [{ text: REFERRAL_BTN }, { text: LEADERBOARD_BTN }]],
+  keyboard: [
+    [{ text: PREMIUM_BTN }, { text: MANBA_BTN }],
+    [{ text: REFERRAL_BTN }, { text: LEADERBOARD_BTN }],
+    [{ text: SITE_BTN, web_app: { url: SITE_URL } }]
+  ],
   resize_keyboard: true
 };
 
