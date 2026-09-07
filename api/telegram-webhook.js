@@ -69,7 +69,7 @@ const MAIN_KEYBOARD = {
   keyboard: [
     [{ text: PREMIUM_BTN }, { text: MANBA_BTN }],
     [{ text: REFERRAL_BTN }, { text: LEADERBOARD_BTN }],
-    [{ text: SITE_BTN, web_app: { url: SITE_URL } }]
+    [{ text: SITE_BTN }]
   ],
   resize_keyboard: true
 };
@@ -266,6 +266,15 @@ module.exports = async (req, res) => {
       await sendReferralInfo(BOT_TOKEN, chatId, senderId);
     } else if (text === LEADERBOARD_BTN || text === '/reyting') {
       await sendLeaderboard(BOT_TOKEN, chatId, senderId);
+    } else if (text === SITE_BTN) {
+      await sendMessage(BOT_TOKEN, chatId, {
+        text: 'Saytga o\'tish uchun pastdagi tugmani bosing 👇',
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '🌐 Saytga o\'tish', web_app: { url: SITE_URL } }]
+          ]
+        }
+      });
     } else if (text === '/statistika') {
       if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
         await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
