@@ -18,6 +18,8 @@
 //    va "🔍 Bepul namuna" inline tugmalari bilan.
 //  - "💳 To'lov qilish" → karta raqami ko'rsatiladi, foydalanuvchi to'lagach
 //    screenshot yuboradi → bot uni AVTOMATIK adminga forward qiladi.
+//    (Rasm FAQAT "To'lov qilish"ni bosgan kishidan qabul qilinadi — boshqa
+//    aloqasiz rasmlar e'tiborsiz qoldiriladi.)
 //  - /sozlash <kalit> <qiymat> → FAQAT ADMIN uchun: bot_settings jadvalidagi
 //    qiymatni o'zgartiradi (masalan aksiya narxi/muddati), qayta deploy shart emas.
 //  - "💳 To'lov qilish" bosilib, 6 soatdan keyin ham screenshot kelmasa —
@@ -198,20 +200,26 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
-    // Admindan kelmagan rasm — bu to'lov screenshoti deb hisoblanadi va adminga forward qilinadi
+    // Admindan kelmagan rasm — FAQAT "To'lov qilish" tugmasini bosgan
+    // (ya'ni pending_payments'da yozuvi bor) kishilardan to'lov screenshoti deb qabul qilinadi.
+    // Bog'liqsiz rasmlar (tasodifiy surat va h.k.) e'tiborsiz qoldiriladi.
     if (hasPhoto) {
       if (ADMIN_ID && String(senderId) !== String(ADMIN_ID)) {
-        const fileId = message.photo[message.photo.length - 1].file_id;
-        const username = message.from?.username ? `@${message.from.username}` : '(username yo\'q)';
-        await Promise.all([
-          sendPhoto(BOT_TOKEN, ADMIN_ID, fileId,
-            `💳 To'lov screenshoti\n\nKimdan: ${firstName} ${username}\nTelegram ID: ${senderId}\n\n` +
-            `Tekshirib, tasdiqlansa Premium'ni faollashtiring.`),
-          clearPendingPayment(senderId)
-        ]);
-        await sendMessage(BOT_TOKEN, chatId, {
-          text: '✅ Rahmat! To\'lovingiz qabul qilindi, tez orada tekshirib, Premium\'ni faollashtiramiz.'
-        });
+        const isPendingPayment = await hasPendingPayment(senderId);
+        if (isPendingPayment) {
+          const fileId = message.photo[message.photo.length - 1].file_id;
+          const username = message.from?.username ? `@${message.from.username}` : '(username yo\'q)';
+          await Promise.all([
+            sendPhoto(BOT_TOKEN, ADMIN_ID, fileId,
+              `💳 To'lov screenshoti\n\nKimdan: ${firstName} ${username}\nTelegram ID: ${senderId}\n\n` +
+              `Tekshirib, tasdiqlansa Premium'ni faollashtiring.`),
+            clearPendingPayment(senderId)
+          ]);
+          await sendMessage(BOT_TOKEN, chatId, {
+            text: '✅ Rahmat! To\'lovingiz qabul qilindi, tez orada tekshirib, Premium\'ni faollashtiramiz.'
+          });
+        }
+        // isPendingPayment=false bo'lsa — aloqasiz rasm, jim o'tkazamiz
       }
       return res.status(200).json({ ok: true });
     }
@@ -600,6 +608,22 @@ async function takePendingAnnouncement(adminId) {
   } catch (e) {
     console.error('takePendingAnnouncement xatolik:', e);
     return null;
+  }
+}
+
+async function hasPendingPayment(telegramId) {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
+      .from('pending_payments')
+      .select('telegram_id')
+      .eq('telegram_id', telegramId)
+      .maybeSingle();
+    if (error || !data) return false;
+    return true;
+  } catch (e) {
+    console.error('hasPendingPayment xatolik:', e);
+    return false;
   }
 }
 
