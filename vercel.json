@@ -3,7 +3,7 @@
     { "path": "/api/send-reminders?slot=morning", "schedule": "0 4 * * *" },
     { "path": "/api/send-reminders?slot=evening", "schedule": "0 13 * * *" },
     { "path": "/api/monthly-referral-reward", "schedule": "10 4 1 * *" },
-    { "path": "/api/payment-reminder", "schedule": "0 * * * *" }
+    { "path": "/api/payment-reminder", "schedule": "0 10 * * *" }
   ],
   "functions": {
     "api/telegram-webhook.js": { "maxDuration": 60 },
