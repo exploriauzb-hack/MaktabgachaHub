@@ -29,6 +29,9 @@
 //  - /sertifikat <ball> → foydalanuvchining o'zi o'z ballini kiritib,
 //    chiroyli SERTIFIKAT rasmini olishi mumkin (ijtimoiy tarmoqqa ulashish uchun).
 //    Sayt ham /api/generate-certificate orqali buni avtomatik chaqira oladi.
+//  - "🏆 Sertifikat olish" tugmasi → botning o'zi "Ballingizni kiriting"
+//    deb so'raydi (force_reply), foydalanuvchi javob yozganda sertifikat
+//    avtomatik yaratiladi — buyruq yozish shart emas.
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: DARHOL yubormaydi — avval "✅ Ha, yuborish /
@@ -54,6 +57,8 @@ const REFERRAL_BTN = '🎁 Do\'st taklif qilish';
 const LEADERBOARD_BTN = '🏆 Reyting';
 const SITE_BTN = '🌐 Saytga o\'tish';
 const SITE_URL = `${process.env.APP_URL || 'https://www.maktabgachahub.website'}/telegram-login.html`;
+const CERT_BTN = '🏆 Sertifikat olish';
+const CERT_PROMPT = 'Ballingizni kiriting (masalan: 92/100):';
 
 const REFERRAL_DISCOUNT_THRESHOLD = 5;
 const REFERRAL_PREMIUM_THRESHOLD = 10;
@@ -72,7 +77,7 @@ const MAIN_KEYBOARD = {
   keyboard: [
     [{ text: PREMIUM_BTN }, { text: MANBA_BTN }],
     [{ text: REFERRAL_BTN }, { text: LEADERBOARD_BTN }],
-    [{ text: SITE_BTN }]
+    [{ text: SITE_BTN }, { text: CERT_BTN }]
   ],
   resize_keyboard: true
 };
@@ -237,6 +242,25 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
+    // ═══ Sertifikat: "Ballingizni kiriting" so'roviga javob kelgan bo'lsa ═══
+    if (message.reply_to_message && message.reply_to_message.text === CERT_PROMPT) {
+      await sendMessage(BOT_TOKEN, chatId, { text: '⏳ Sertifikat tayyorlanmoqda...' });
+      try {
+        const { renderCertificatePng, sendCertificatePhoto, formatDate } = require('../lib/certificate');
+        const png = await renderCertificatePng({
+          name: firstName,
+          score: text,
+          testName: 'Attestatsiya testi',
+          dateStr: formatDate(new Date())
+        });
+        await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`);
+      } catch (e) {
+        console.error('sertifikat xatolik:', e);
+        await sendMessage(BOT_TOKEN, chatId, { text: 'Sertifikat yaratishda xatolik yuz berdi.' });
+      }
+      return res.status(200).json({ ok: true });
+    }
+
     if (command === '/start') {
       const results = await Promise.all([
         checkChannelMembership(BOT_TOKEN, CHANNEL_USERNAME, senderId),
@@ -277,6 +301,11 @@ module.exports = async (req, res) => {
             [{ text: '🌐 Saytga o\'tish', web_app: { url: SITE_URL } }]
           ]
         }
+      });
+    } else if (text === CERT_BTN) {
+      await sendMessage(BOT_TOKEN, chatId, {
+        text: CERT_PROMPT,
+        reply_markup: { force_reply: true }
       });
     } else if (text.startsWith('/sertifikat')) {
       const scoreArg = text.replace('/sertifikat', '').trim();
