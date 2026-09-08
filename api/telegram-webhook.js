@@ -26,6 +26,9 @@
 //    alohida cron (/api/payment-reminder) avtomatik eslatma yuboradi.
 //  - /premium_push → FAQAT ADMIN uchun: Premium tugmasini HALI BOSMAGAN
 //    obunachilarga bir martalik maxsus taklif yuboradi (takror yubormaydi).
+//  - /sertifikat <ball> → foydalanuvchining o'zi o'z ballini kiritib,
+//    chiroyli SERTIFIKAT rasmini olishi mumkin (ijtimoiy tarmoqqa ulashish uchun).
+//    Sayt ham /api/generate-certificate orqali buni avtomatik chaqira oladi.
 //  - "check_subscription" callback → qayta tekshiradi
 //  - "⭐ Premium" / "📖 Manba" → mos ma'lumot
 //  - /elon <matn> → FAQAT ADMIN uchun: DARHOL yubormaydi — avval "✅ Ha, yuborish /
@@ -275,6 +278,28 @@ module.exports = async (req, res) => {
           ]
         }
       });
+    } else if (text.startsWith('/sertifikat')) {
+      const scoreArg = text.replace('/sertifikat', '').trim();
+      if (!scoreArg) {
+        await sendMessage(BOT_TOKEN, chatId, {
+          text: 'Foydalanish: /sertifikat <ball>\n\nMasalan: /sertifikat 92/100'
+        });
+      } else {
+        await sendMessage(BOT_TOKEN, chatId, { text: '⏳ Sertifikat tayyorlanmoqda...' });
+        try {
+          const { renderCertificatePng, sendCertificatePhoto, formatDate } = require('../lib/certificate');
+          const png = await renderCertificatePng({
+            name: firstName,
+            score: scoreArg,
+            testName: 'Attestatsiya testi',
+            dateStr: formatDate(new Date())
+          });
+          await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`);
+        } catch (e) {
+          console.error('sertifikat xatolik:', e);
+          await sendMessage(BOT_TOKEN, chatId, { text: 'Sertifikat yaratishda xatolik yuz berdi.' });
+        }
+      }
     } else if (text === '/statistika') {
       if (!ADMIN_ID || String(senderId) !== String(ADMIN_ID)) {
         await sendMessage(BOT_TOKEN, chatId, { text: 'Bu buyruq faqat admin uchun.' });
