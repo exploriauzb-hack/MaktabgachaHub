@@ -253,7 +253,7 @@ module.exports = async (req, res) => {
           testName: 'Attestatsiya testi',
           dateStr: formatDate(new Date())
         });
-        await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`);
+        await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`, MAIN_KEYBOARD);
       } catch (e) {
         console.error('sertifikat xatolik:', e);
         await sendMessage(BOT_TOKEN, chatId, { text: 'Sertifikat yaratishda xatolik yuz berdi.' });
@@ -323,7 +323,7 @@ module.exports = async (req, res) => {
             testName: 'Attestatsiya testi',
             dateStr: formatDate(new Date())
           });
-          await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`);
+          await sendCertificatePhoto(BOT_TOKEN, chatId, png, `🎉 Tabriklaymiz, ${firstName}!`, MAIN_KEYBOARD);
         } catch (e) {
           console.error('sertifikat xatolik:', e);
           await sendMessage(BOT_TOKEN, chatId, { text: 'Sertifikat yaratishda xatolik yuz berdi.' });
