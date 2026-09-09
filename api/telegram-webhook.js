@@ -997,3 +997,4 @@ async function answerCallbackQuery(botToken, callbackQueryId) {
     body: JSON.stringify({ callback_query_id: callbackQueryId })
   });
 }
+
