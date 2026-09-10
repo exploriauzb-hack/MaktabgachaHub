@@ -36,53 +36,58 @@ function buildCertificateSvg({ name, score, testName, dateStr }) {
 <svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f3d3e"/>
-      <stop offset="100%" stop-color="#1a5c4a"/>
+      <stop offset="0%" stop-color="#6C5CE7"/>
+      <stop offset="50%" stop-color="#5B4FE8"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
     </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#f4d160"/>
-      <stop offset="100%" stop-color="#d4af37"/>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFD166"/>
+      <stop offset="100%" stop-color="#FF9F43"/>
     </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#1e1b4b" flood-opacity="0.35"/>
+    </filter>
   </defs>
 
   <rect width="1200" height="800" fill="url(#bg)"/>
 
-  <!-- Ichki ramka -->
-  <rect x="40" y="40" width="1120" height="720" fill="none" stroke="url(#gold)" stroke-width="4"/>
-  <rect x="55" y="55" width="1090" height="690" fill="none" stroke="#f4d160" stroke-width="1" opacity="0.5"/>
+  <!-- Fon bezaklari (yumaloq shakllar) -->
+  <circle cx="90" cy="90" r="140" fill="#ffffff" opacity="0.06"/>
+  <circle cx="1130" cy="720" r="180" fill="#ffffff" opacity="0.06"/>
+  <circle cx="1080" cy="120" r="70" fill="#FFD166" opacity="0.15"/>
+  <circle cx="120" cy="700" r="50" fill="#FFD166" opacity="0.12"/>
 
-  <!-- Burchak bezaklari -->
-  <path d="M 60 60 L 110 60 M 60 60 L 60 110" stroke="#f4d160" stroke-width="4"/>
-  <path d="M 1140 60 L 1090 60 M 1140 60 L 1140 110" stroke="#f4d160" stroke-width="4"/>
-  <path d="M 60 740 L 110 740 M 60 740 L 60 690" stroke="#f4d160" stroke-width="4"/>
-  <path d="M 1140 740 L 1090 740 M 1140 740 L 1140 690" stroke="#f4d160" stroke-width="4"/>
+  <!-- Markaziy kartochka -->
+  <rect x="90" y="70" width="1020" height="660" rx="32" fill="#ffffff" filter="url(#shadow)"/>
 
-  <!-- Medal / rozetka -->
-  <circle cx="600" cy="150" r="55" fill="url(#gold)"/>
-  <circle cx="600" cy="150" r="40" fill="none" stroke="#0f3d3e" stroke-width="3"/>
-  <path d="M 600 122 L 608 142 L 630 144 L 613 158 L 619 180 L 600 168 L 581 180 L 587 158 L 570 144 L 592 142 Z" fill="#0f3d3e"/>
+  <!-- Yuqori aksent chiziq -->
+  <rect x="90" y="70" width="1020" height="10" rx="5" fill="url(#accent)"/>
+
+  <!-- Nishon (badge) -->
+  <circle cx="600" cy="185" r="52" fill="url(#accent)"/>
+  <path d="M600 155 L611 178 L636 181 L618 199 L622 224 L600 212 L578 224 L582 199 L564 181 L589 178 Z" fill="#ffffff"/>
 
   <!-- Sarlavha -->
-  <text x="600" y="255" font-family="DejaVu Serif" font-size="52" font-weight="bold" fill="#f4d160" text-anchor="middle" letter-spacing="4">SERTIFIKAT</text>
-  <text x="600" y="295" font-family="DejaVu Sans" font-size="20" fill="#cfe8df" text-anchor="middle" letter-spacing="2">MUVAFFAQIYATLI YAKUNLANISHI UCHUN</text>
-
-  <!-- Chiziq -->
-  <line x1="450" y1="330" x2="750" y2="330" stroke="#f4d160" stroke-width="2"/>
+  <text x="600" y="278" font-family="DejaVu Sans" font-size="26" font-weight="bold" fill="#6C5CE7" text-anchor="middle" letter-spacing="6">SERTIFIKAT</text>
 
   <!-- Ism -->
-  <text x="600" y="410" font-family="DejaVu Serif" font-size="46" font-weight="bold" fill="#ffffff" text-anchor="middle">${safeName}</text>
+  <text x="600" y="360" font-family="DejaVu Sans" font-size="54" font-weight="bold" fill="#1e1b4b" text-anchor="middle">${safeName}</text>
+
+  <!-- Ajratuvchi -->
+  <rect x="520" y="392" width="160" height="5" rx="2.5" fill="url(#accent)"/>
 
   <!-- Matn -->
-  <text x="600" y="470" font-family="DejaVu Sans" font-size="24" fill="#cfe8df" text-anchor="middle">quyidagi testni muvaffaqiyatli yakunladi:</text>
-  <text x="600" y="510" font-family="DejaVu Sans" font-size="28" font-weight="bold" fill="#f4d160" text-anchor="middle">${safeTest}</text>
+  <text x="600" y="450" font-family="DejaVu Sans" font-size="22" fill="#64748b" text-anchor="middle">quyidagi testni muvaffaqiyatli yakunladi</text>
+  <text x="600" y="488" font-family="DejaVu Sans" font-size="26" font-weight="bold" fill="#3B82F6" text-anchor="middle">${safeTest}</text>
 
-  <!-- Ball -->
-  <text x="600" y="600" font-family="DejaVu Serif" font-size="64" font-weight="bold" fill="#ffffff" text-anchor="middle">${safeScore}</text>
-  <text x="600" y="635" font-family="DejaVu Sans" font-size="20" fill="#cfe8df" text-anchor="middle" letter-spacing="2">NATIJA</text>
+  <!-- Ball kartochkasi -->
+  <rect x="470" y="530" width="260" height="130" rx="24" fill="#F5F3FF"/>
+  <text x="600" y="605" font-family="DejaVu Sans" font-size="56" font-weight="bold" fill="#6C5CE7" text-anchor="middle">${safeScore}</text>
+  <text x="600" y="635" font-family="DejaVu Sans" font-size="16" font-weight="bold" fill="#8b7ff0" text-anchor="middle" letter-spacing="3">NATIJA</text>
 
-  <!-- Sana va brend -->
-  <text x="600" y="700" font-family="DejaVu Sans" font-size="18" fill="#9fc9bb" text-anchor="middle">${safeDate}</text>
-  <text x="600" y="735" font-family="DejaVu Serif" font-size="24" font-weight="bold" fill="#f4d160" text-anchor="middle" letter-spacing="3">MaktabgachaHub</text>
+  <!-- Pastki qism: sana va brend -->
+  <text x="600" y="700" font-family="DejaVu Sans" font-size="16" fill="#94a3b8" text-anchor="middle">${safeDate}</text>
+  <text x="600" y="726" font-family="DejaVu Sans" font-size="20" font-weight="bold" fill="#1e1b4b" text-anchor="middle" letter-spacing="2">MaktabgachaHub</text>
 </svg>`.trim();
 }
 
@@ -110,10 +115,11 @@ async function renderCertificatePng(params) {
 
 // Telegram'ga rasm sifatida yuboradi (fayl sifatida, file_id emas —
 // chunki rasm har safar yangidan generatsiya qilinadi)
-async function sendCertificatePhoto(botToken, chatId, pngBuffer, caption) {
+async function sendCertificatePhoto(botToken, chatId, pngBuffer, caption, replyMarkup) {
   const form = new FormData();
   form.append('chat_id', String(chatId));
   if (caption) form.append('caption', caption);
+  if (replyMarkup) form.append('reply_markup', JSON.stringify(replyMarkup));
   form.append('photo', new Blob([pngBuffer], { type: 'image/png' }), 'sertifikat.png');
 
   const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
