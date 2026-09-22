@@ -216,7 +216,11 @@ window.addEventListener('load',async()=>{
 var AUTH = { name:'', digits:'', mode:'' };  // mode: login | migrate | register
 
 function synthEmail(d){ return d + '@phone.maktabgachahub.uz'; }
-function legacyPass(d){ return 'mgh_' + d + '_pass'; }
+/* XAVFSIZLIK TUZATISHI: legacyPass(d) funksiyasi olib tashlandi.
+   Eski parol formulasi endi FAQAT Supabase'dagi migrate_legacy_pin()
+   SQL funksiyasi ichida (SECURITY DEFINER) saqlanadi va client kodga
+   hech qachon chiqmaydi. Supabase SQL Editor'da migrate_legacy_pin.sql
+   faylini bir marta ishga tushirishni unutmang. */
 
 async function continueSession(){
   const name=localStorage.getItem(NAME_KEY);
@@ -298,20 +302,23 @@ async function submitPin(){
       session=data.session;
 
     }else if(AUTH.mode==='migrate'){
-      // Eski hisob: eski (raqamli) parol bilan kiramiz, so'ng PIN o'rnatamiz
-      let {data,error}=await _sb.auth.signInWithPassword({email,password:legacyPass(AUTH.digits)});
-      if(error||!data.session){
-        // Ehtimol allaqachon PIN bor — PIN bilan sinaymiz
+      /* XAVFSIZLIK TUZATISHI: eski parolni client hisoblamaydi.
+         Server (SECURITY DEFINER RPC) o'zi eski parolni tekshirib,
+         muvaffaqiyatli bo'lsa PIN'ni yangi parol qilib o'rnatadi. */
+      const {data:ok,error:mErr}=await _sb.rpc('migrate_legacy_pin',{
+        p_phone: AUTH.digits,
+        p_new_pin: pin
+      });
+      if(mErr || !ok){
+        // Ehtimol foydalanuvchi PIN'ni allaqachon o'rnatgan — to'g'ridan-to'g'ri sinaymiz
         const r=await _sb.auth.signInWithPassword({email,password:pin});
         if(r.error||!r.data.session){ showErr('Kirib bo\'lmadi. PIN noto\'g\'ri bo\'lishi mumkin.'); btn.textContent=old; btn.disabled=false; return; }
         session=r.data.session;
       }else{
-        session=data.session;
-        // PIN'ni yangi parol qilib o'rnatamiz
-        const up=await _sb.auth.updateUser({password:pin});
-        if(up.error){ console.warn('PIN o\'rnatish:',up.error.message); }
+        const r=await _sb.auth.signInWithPassword({email,password:pin});
+        if(r.error||!r.data.session){ showErr('Kutilmagan xatolik. Qayta urinib ko\'ring.'); btn.textContent=old; btn.disabled=false; return; }
+        session=r.data.session;
       }
-      try{ await _sb.rpc('mark_has_pin'); }catch(e){}
 
     }else{ // register
       const {data,error}=await _sb.auth.signUp({email,password:pin,options:{data:{full_name:AUTH.name}}});
