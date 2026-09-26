@@ -747,9 +747,9 @@ function finishExam(timeout){
 function saveResult(correct,total,pct){
   if(!_sb || !SELECTED) return;
   var deviceId=getDeviceId();
-  _sb.from(LB_TABLE).select('id,pct').eq('variant_code',SELECTED.id).eq('device_id',deviceId).maybeSingle().then(function(existing){
-    if(existing && existing.data && existing.data.pct>=pct) return; // eski natija yaxshiroq yoki teng
-    _sb.from(LB_TABLE).upsert({
+  _sb.from(LB_TABLE).select('id').eq('variant_code',SELECTED.id).eq('device_id',deviceId).maybeSingle().then(function(existing){
+    if(existing && existing.data) return; // birinchi natija allaqachon bor — qayta yozilmaydi
+    _sb.from(LB_TABLE).insert({
       variant_code:SELECTED.id,
       variant_title:SELECTED.title,
       participant_name:PARTICIPANT_NAME||'Anonim',
@@ -757,7 +757,7 @@ function saveResult(correct,total,pct){
       correct:correct,
       total:total,
       pct:pct
-    }, {onConflict:'variant_code,device_id'}).then(function(res){
+    }).then(function(res){
       if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
     });
   }).catch(function(e){ console.warn('Reyting tekshiruvi xato:',e); });
