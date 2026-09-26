@@ -122,6 +122,25 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.err{background:var(--red)}
 
+/* ── NAME INPUT ── */
+.name-field{margin-bottom:20px;text-align:left}
+.name-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.name-input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;color:var(--text)}
+.name-input:focus{border-color:var(--accent)}
+
+/* ── LEADERBOARD ── */
+.lb-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.lb-row.lb-me{border-color:var(--accent);background:var(--accent-soft)}
+.lb-rank{width:32px;height:32px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--text)}
+.lb-rank.gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.lb-rank.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
+.lb-rank.bronze{background:linear-gradient(135deg,#c2703d,#9a5324);color:#fff}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-weight:700;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-date{font-size:11px;color:var(--muted)}
+.lb-score{font-weight:800;font-size:16px;color:var(--accent);flex-shrink:0}
+.lb-empty,.lb-loading{text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
+
 @media(max-width:600px){
   .var-grid{grid-template-columns:1fr}
   .exam-body{padding:0 12px 60px}
@@ -180,12 +199,16 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="home-top">
       <div style="font-size:40px;margin-bottom:10px">📚</div>
       <h1>Demo Test</h1>
-      <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
+      <p>MaktabgachaHub | Biz bilan birga rivojlaning</p>
     </div>
     <div class="info-box">
       ℹ️ <span><b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
     </div>
     <div class="var-grid" id="var-grid"></div>
+    <div class="name-field">
+      <label for="participantName">Ismingiz va familiyangiz (reytingda ko'rinadi)</label>
+      <input class="name-input" type="text" id="participantName" maxlength="60" placeholder="Masalan: Aliyeva Nodira" autocomplete="off"/>
+    </div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
     <button class="btn-back-code" onclick="backToCode()">← Boshqa kod kiritish</button>
   </div>
@@ -245,10 +268,29 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
     <div class="result-btns no-print">
       <button class="btn-primary" onclick="showWrong()" style="flex:1">❌ Xato savollar</button>
-      <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🏆 Sertifikat</button>
+      <button class="btn-secondary" onclick="showLeaderboard()" style="flex:1">🏆 Reyting</button>
+      <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🎖️ Sertifikat</button>
       <button class="btn-secondary" onclick="goHome()" style="flex:1">🔄 Qayta</button>
     </div>
     <div id="wrong-section" class="wrong-section" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══ LEADERBOARD SCREEN ══ -->
+<div id="screen-leaderboard" class="screen">
+  <div class="topnav no-print">
+    <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
+  </div>
+  <div class="result-wrap">
+    <div class="result-card">
+      <div style="font-size:36px;margin-bottom:6px">🏆</div>
+      <h2 style="font-size:18px;margin-bottom:4px">Reyting jadvali</h2>
+      <p style="color:var(--muted);font-size:12.5px" id="lb-variant-name"></p>
+    </div>
+    <div id="lb-list"></div>
+    <div class="result-btns no-print" style="margin-top:16px">
+      <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1">← Natijaga qaytish</button>
+    </div>
   </div>
 </div>
 
@@ -471,6 +513,8 @@ function showScreen(id){
 }
 var examQ=[], userAns=[], currentQ=0;
 var timerInt=null, timeLeft=90*60, examActive=false;
+var PARTICIPANT_NAME='', lastResult=null;
+var LB_TABLE='demo_leaderboard';
 
 function confirmDashboard(){
   if(examActive){
@@ -531,6 +575,10 @@ function backToCode(){
 }
 function enterHome(){
   renderSelectedCard();
+  var nameEl=document.getElementById('participantName');
+  if(nameEl && !nameEl.value){
+    try{ var saved=localStorage.getItem('demoParticipantName'); if(saved) nameEl.value=saved; }catch(e){}
+  }
   showScreen('screen-home');
 }
 function renderSelectedCard(){
@@ -547,6 +595,11 @@ function escapeHtmlLocal(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').
 /* ═══════ EXAM ═══════ */
 function startExam(){
   if(!SELECTED || !SELECTED.questions || !SELECTED.questions.length){ toast('Avval to\'g\'ri kod kiriting.',true); return; }
+  var nameEl=document.getElementById('participantName');
+  var nm=(nameEl?nameEl.value:'').trim();
+  if(!nm){ toast('Iltimos, ismingizni kiriting.',true); if(nameEl)nameEl.focus(); return; }
+  PARTICIPANT_NAME=nm;
+  try{ localStorage.setItem('demoParticipantName',nm); }catch(e){}
   examQ=shuffle(SELECTED.questions);
   userAns=new Array(examQ.length).fill(null);
   currentQ=0;examActive=true;timeLeft=90*60;
@@ -634,7 +687,51 @@ function finishExam(timeout){
   document.getElementById('res-wrong').textContent=total-correct;
   document.getElementById('res-total').textContent=total;
   document.getElementById('btn-cert').style.display=pct>=75?'block':'none';
+  lastResult={correct:correct,total:total,pct:pct};
+  saveResult(correct,total,pct);
   showScreen('screen-result');
+}
+function saveResult(correct,total,pct){
+  if(!_sb || !SELECTED) return;
+  _sb.from(LB_TABLE).insert({
+    variant_code:SELECTED.id,
+    variant_title:SELECTED.title,
+    participant_name:PARTICIPANT_NAME||'Anonim',
+    correct:correct,
+    total:total,
+    pct:pct
+  }).then(function(res){
+    if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
+  });
+}
+async function showLeaderboard(){
+  showScreen('screen-leaderboard');
+  document.getElementById('lb-variant-name').textContent=SELECTED?SELECTED.title:'';
+  var list=document.getElementById('lb-list');
+  list.innerHTML='<div class="lb-loading">Yuklanmoqda…</div>';
+  if(!_sb || !SELECTED){ list.innerHTML='<div class="lb-empty">Reyting mavjud emas.</div>'; return; }
+  try{
+    var res=await _sb.from(LB_TABLE).select('*')
+      .eq('variant_code',SELECTED.id)
+      .order('pct',{ascending:false})
+      .order('correct',{ascending:false})
+      .order('created_at',{ascending:true})
+      .limit(20);
+    if(res.error){ list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>'; return; }
+    if(!res.data || !res.data.length){ list.innerHTML='<div class="lb-empty">Hozircha natijalar yo\'q. Birinchi bo\'ling!</div>'; return; }
+    var medals=['gold','silver','bronze'];
+    list.innerHTML=res.data.map(function(r,i){
+      var rankCls='lb-rank'+(medals[i]?' '+medals[i]:'');
+      var isMe=lastResult && r.participant_name===PARTICIPANT_NAME && r.correct===lastResult.correct && r.pct===lastResult.pct;
+      var d='';
+      try{ d=r.created_at?new Date(r.created_at).toLocaleDateString('uz-UZ',{day:'numeric',month:'short'}):''; }catch(e){}
+      return '<div class="lb-row'+(isMe?' lb-me':'')+'"><div class="'+rankCls+'">'+(i+1)+'</div>'
+        +'<div class="lb-info"><div class="lb-name">'+escapeHtmlLocal(r.participant_name)+'</div><div class="lb-date">'+d+'</div></div>'
+        +'<div class="lb-score">'+r.pct+'%</div></div>';
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>';
+  }
 }
 function showWrong(){
   var sec=document.getElementById('wrong-section');
@@ -656,6 +753,7 @@ function showCert(){
   if(pct>=90){grade="A'lo — Eng yuqori toifa";stars="⭐⭐⭐⭐⭐";}
   else if(pct>=75){grade="Birinchi toifa";stars="⭐⭐⭐⭐";}
   else{grade="Ikkinchi toifa";stars="⭐⭐⭐";}
+  document.getElementById('cert-name').textContent=PARTICIPANT_NAME||'Ishtirokchi';
   document.getElementById('cert-score').textContent=pct+'%';
   document.getElementById('cert-stars').textContent=stars;
   document.getElementById('cert-grade').textContent=grade;
