@@ -547,22 +547,6 @@ function getDeviceId(){
     return id;
   }catch(e){ return 'anon-'+Date.now(); }
 }
-var CURRENT_USER=null;
-async function ensureAuth(){
-  if(!_sb) return null;
-  if(CURRENT_USER) return CURRENT_USER;
-  try{
-    var ses=await _sb.auth.getSession();
-    if(ses && ses.data && ses.data.session && ses.data.session.user){
-      CURRENT_USER=ses.data.session.user;
-      return CURRENT_USER;
-    }
-    var res=await _sb.auth.signInAnonymously();
-    if(res.error){ console.warn('Anonim kirish xatosi:',res.error); return null; }
-    CURRENT_USER=res.data.user;
-    return CURRENT_USER;
-  }catch(e){ console.warn('Anonim kirishda xato:',e); return null; }
-}
 function saveSession(){
   if(!examActive || !SELECTED) return;
   try{
@@ -780,25 +764,23 @@ function finishExam(timeout){
   saveResult(correct,total,pct);
   showScreen('screen-result');
 }
-async function saveResult(correct,total,pct){
+function saveResult(correct,total,pct){
   if(!_sb || !SELECTED) return;
-  var user=await ensureAuth();
-  if(!user){ console.warn('Anonim sessiya yaratilmadi — reyting saqlanmadi.'); return; }
-  var uid=user.id;
-  try{
-    var existing=await _sb.from(LB_TABLE).select('id,pct').eq('variant_code',SELECTED.id).eq('user_id',uid).maybeSingle();
+  var deviceId=getDeviceId();
+  _sb.from(LB_TABLE).select('id,pct').eq('variant_code',SELECTED.id).eq('device_id',deviceId).maybeSingle().then(function(existing){
     if(existing && existing.data && existing.data.pct>=pct) return; // eski natija yaxshiroq yoki teng
-    var res=await _sb.from(LB_TABLE).upsert({
+    _sb.from(LB_TABLE).upsert({
       variant_code:SELECTED.id,
       variant_title:SELECTED.title,
       participant_name:PARTICIPANT_NAME||'Anonim',
-      user_id:uid,
+      device_id:deviceId,
       correct:correct,
       total:total,
       pct:pct
-    }, {onConflict:'variant_code,user_id'});
-    if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
-  }catch(e){ console.warn('Reyting saqlashda xato:',e); }
+    }, {onConflict:'variant_code,device_id'}).then(function(res){
+      if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
+    });
+  }).catch(function(e){ console.warn('Reyting tekshiruvi xato:',e); });
 }
 async function showLeaderboard(){
   showScreen('screen-leaderboard');
@@ -816,11 +798,10 @@ async function showLeaderboard(){
     if(res.error){ list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>'; return; }
     if(!res.data || !res.data.length){ list.innerHTML='<div class="lb-empty">Hozircha natijalar yo\'q. Birinchi bo\'ling!</div>'; return; }
     var medals=['gold','silver','bronze'];
-    var user=await ensureAuth();
-    var uid=user?user.id:null;
+    var deviceId=getDeviceId();
     var foundMe=false;
     var html=res.data.map(function(r,i){
-      var isMe=uid && r.user_id===uid;
+      var isMe=r.device_id===deviceId;
       if(isMe) foundMe=true;
       var rankCls='lb-rank'+(medals[i]?' '+medals[i]:'');
       var d='';
@@ -936,7 +917,6 @@ function goHome(){
   showScreen('screen-home');
 }
 tryResumeSession();
-ensureAuth();
 </script>
 <script>
 /* PWA: service worker */
