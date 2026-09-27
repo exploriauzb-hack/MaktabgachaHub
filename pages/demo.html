@@ -202,7 +202,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
     </div>
     <div class="info-box">
-      ℹ️ <span><b>30 ta savol</b> (bazadan tasodifiy tanlanadi), <b>45 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa! Orqaga qaytib bo'lmaydi.</span>
+      ℹ️ <span><b>90 daqiqa</b> vaqt, <b>barcha savollar</b> (variant bo'yicha to'liq savollar banki). <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa! Orqaga qaytib bo'lmaydi.</span>
     </div>
     <div class="var-grid" id="var-grid"></div>
     <div class="name-field">
@@ -220,11 +220,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="timer-inner">
       <div>
         <div class="timer-label">Qolgan vaqt</div>
-        <div id="timer-display">45:00</div>
+        <div id="timer-display">90:00</div>
       </div>
       <div style="text-align:center">
         <div class="timer-label" id="var-label">1-Variant</div>
-        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/30</div>
+        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/50</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <a href="../dashboard.html" class="btn-dashboard-back no-print" onclick="return confirmDashboard()">← Dashboard</a>
@@ -532,7 +532,7 @@ function showScreen(id){
 }
 var examQ=[], userAns=[], currentQ=0;
 var timerInt=null, timeLeft=90*60, examActive=false;
-var QUESTIONS_PER_EXAM=30, EXAM_TIME_SECONDS=45*60;
+var QUESTIONS_PER_EXAM=Infinity, EXAM_TIME_SECONDS=90*60;
 var tabSwitchCount=0;
 var PARTICIPANT_NAME='', lastResult=null;
 var LB_TABLE='demo_leaderboard';
@@ -659,7 +659,7 @@ function renderSelectedCard(){
     +'<div class="var-num">📘</div>'
     +'<h3>'+escapeHtmlLocal(SELECTED.title)+'</h3>'
     +'<p>Kirish kodi qabul qilindi</p>'
-    +'<div class="var-meta"><span>'+Math.min(QUESTIONS_PER_EXAM,SELECTED.questions.length)+' savol (jamida '+SELECTED.questions.length+' tadan)</span><span>'+Math.round(EXAM_TIME_SECONDS/60)+' daqiqa</span></div>'
+    +'<div class="var-meta"><span>'+SELECTED.questions.length+' savol</span><span>'+Math.round(EXAM_TIME_SECONDS/60)+' daqiqa</span></div>'
     +'</div>';
 }
 function escapeHtmlLocal(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
