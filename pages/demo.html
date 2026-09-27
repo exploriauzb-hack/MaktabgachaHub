@@ -202,7 +202,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
     </div>
     <div class="info-box">
-      ℹ️ <span><b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
+      ℹ️ <span><b>30 ta savol</b> (bazadan tasodifiy tanlanadi), <b>45 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa! Orqaga qaytib bo'lmaydi.</span>
     </div>
     <div class="var-grid" id="var-grid"></div>
     <div class="name-field">
@@ -220,11 +220,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="timer-inner">
       <div>
         <div class="timer-label">Qolgan vaqt</div>
-        <div id="timer-display">90:00</div>
+        <div id="timer-display">45:00</div>
       </div>
       <div style="text-align:center">
         <div class="timer-label" id="var-label">1-Variant</div>
-        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/50</div>
+        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/30</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <a href="../dashboard.html" class="btn-dashboard-back no-print" onclick="return confirmDashboard()">← Dashboard</a>
@@ -241,8 +241,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <div class="q-opts" id="q-opts"></div>
     </div>
     <div class="q-nav">
-      <button class="btn-secondary" onclick="prevQ()">← Oldingi</button>
-      <button class="btn-primary" onclick="nextQ()" id="next-btn">Keyingi →</button>
+      <button class="btn-primary" onclick="nextQ()" id="next-btn" style="width:100%">Keyingi →</button>
     </div>
   </div>
 </div>
@@ -533,6 +532,8 @@ function showScreen(id){
 }
 var examQ=[], userAns=[], currentQ=0;
 var timerInt=null, timeLeft=90*60, examActive=false;
+var QUESTIONS_PER_EXAM=30, EXAM_TIME_SECONDS=45*60;
+var tabSwitchCount=0;
 var PARTICIPANT_NAME='', lastResult=null;
 var LB_TABLE='demo_leaderboard';
 var SESSION_KEY='demoExamSession_v1';
@@ -576,7 +577,8 @@ function tryResumeSession(){
   examQ=data.examQ;
   userAns=data.userAns||new Array(examQ.length).fill(null);
   currentQ=data.currentQ||0;
-  timeLeft=(data.timeLeft!=null)?data.timeLeft:90*60;
+  timeLeft=(data.timeLeft!=null)?data.timeLeft:EXAM_TIME_SECONDS;
+  tabSwitchCount=0;
   examActive=true;
   document.getElementById('var-label').textContent=SELECTED.title;
   buildNav();renderQ();
@@ -657,7 +659,7 @@ function renderSelectedCard(){
     +'<div class="var-num">📘</div>'
     +'<h3>'+escapeHtmlLocal(SELECTED.title)+'</h3>'
     +'<p>Kirish kodi qabul qilindi</p>'
-    +'<div class="var-meta"><span>'+SELECTED.questions.length+' savol</span><span>90 daqiqa</span></div>'
+    +'<div class="var-meta"><span>'+Math.min(QUESTIONS_PER_EXAM,SELECTED.questions.length)+' savol (jamida '+SELECTED.questions.length+' tadan)</span><span>'+Math.round(EXAM_TIME_SECONDS/60)+' daqiqa</span></div>'
     +'</div>';
 }
 function escapeHtmlLocal(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -670,9 +672,9 @@ function startExam(){
   if(!nm){ toast('Iltimos, ismingizni kiriting.',true); if(nameEl)nameEl.focus(); return; }
   PARTICIPANT_NAME=nm;
   try{ localStorage.setItem('demoParticipantName',nm); }catch(e){}
-  examQ=shuffle(SELECTED.questions);
+  examQ=shuffle(SELECTED.questions).slice(0, Math.min(QUESTIONS_PER_EXAM, SELECTED.questions.length));
   userAns=new Array(examQ.length).fill(null);
-  currentQ=0;examActive=true;timeLeft=90*60;
+  currentQ=0;examActive=true;timeLeft=EXAM_TIME_SECONDS;tabSwitchCount=0;
   document.getElementById('var-label').textContent=SELECTED.title;
   buildNav();renderQ();
   showScreen('screen-exam');
@@ -704,8 +706,7 @@ function renderQ(){
   var ua=userAns[currentQ];
   document.getElementById('q-opts').innerHTML=q.opts.map(function(o,i){
     var cls='q-opt';
-    if(isAns){cls+=' disabled';if(i===q.ans)cls+=' correct';else if(i===ua)cls+=' wrong';}
-    else if(i===ua)cls+=' selected';
+    if(isAns){cls+=' disabled';if(i===ua)cls+=' selected';}
     return '<button class="'+cls+'" onclick="selectAns('+i+')"><span class="opt-letter">'+(letters[i]||'')+'</span><span>'+o+'</span></button>';
   }).join('');
   document.getElementById('next-btn').textContent=currentQ===examQ.length-1?'✅ Yakunlash':'Keyingi →';
@@ -718,7 +719,7 @@ function selectAns(i){
 }
 function buildNav(){
   document.getElementById('nav-grid').innerHTML=examQ.map(function(_,i){
-    return '<button class="nav-btn" id="nb-'+i+'" onclick="goQ('+i+')">'+(i+1)+'</button>';
+    return '<button class="nav-btn" id="nb-'+i+'" style="cursor:default;pointer-events:none">'+(i+1)+'</button>';
   }).join('');
 }
 function updateNav(){
@@ -730,7 +731,6 @@ function updateNav(){
   });
 }
 function goQ(i){currentQ=i;renderQ();}
-function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
 function nextQ(){if(currentQ<examQ.length-1){currentQ++;renderQ();}else confirmFinish();}
 function confirmFinish(){
   var answered=userAns.filter(function(a){return a!==null}).length;
@@ -738,10 +738,11 @@ function confirmFinish(){
   if(!confirm('Testni yakunlashni tasdiqlaysizmi?\nJavob berildi: '+answered+'/'+examQ.length))return;
   finishExam(false);
 }
-function finishExam(timeout){
+function finishExam(timeout,cheat){
   clearInterval(timerInt);examActive=false;
   clearSession();
   if(timeout)toast('⏰ Vaqt tugadi!',true);
+  if(cheat)toast('🚫 Qoidabuzarlik aniqlandi — test avtomatik yakunlandi.',true);
   var correct=0;
   examQ.forEach(function(q,i){if(userAns[i]===q.ans)correct++;});
   var total=examQ.length;
@@ -916,6 +917,15 @@ function goHome(){
   document.getElementById('btn-cert').style.display='none';
   showScreen('screen-home');
 }
+document.addEventListener('visibilitychange', function(){
+  if(!document.hidden || !examActive) return;
+  tabSwitchCount++;
+  if(tabSwitchCount>=3){
+    finishExam(false,true);
+  } else {
+    toast('⚠️ Ogohlantirish ('+tabSwitchCount+'/3): test paytida boshqa oyna/tabga o\'tmang!',true);
+  }
+});
 tryResumeSession();
 </script>
 <script>
