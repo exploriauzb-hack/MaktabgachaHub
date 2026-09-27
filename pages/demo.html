@@ -210,6 +210,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
       <input class="name-input" type="text" id="participantName" maxlength="60" placeholder="Masalan: Aliyeva Nodira" autocomplete="off"/>
     </div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
+    <button class="btn-secondary" onclick="showLeaderboard('screen-home')" style="width:100%;margin-top:10px">🏆 Reytingni ko'rish</button>
     <button class="btn-back-code" onclick="backToCode()">← Boshqa kod kiritish</button>
   </div>
 </div>
@@ -268,7 +269,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="result-btns no-print">
       <button class="btn-primary" onclick="showWrong()" style="flex:1">❌ Xato savollar</button>
       <button class="btn-secondary" onclick="showAllReview()" style="flex:1">📖 Barcha javoblar</button>
-      <button class="btn-secondary" onclick="showLeaderboard()" style="flex:1">🏆 Reyting</button>
+      <button class="btn-secondary" onclick="showLeaderboard('screen-result')" style="flex:1">🏆 Reyting</button>
       <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🎖️ Sertifikat</button>
       <button class="btn-secondary" onclick="goHome()" style="flex:1">🔄 Qayta</button>
     </div>
@@ -290,7 +291,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div id="lb-list"></div>
     <div class="result-btns no-print" style="margin-top:16px">
       <button class="btn-secondary" onclick="showStats()" style="flex:1">📊 Statistika</button>
-      <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1">← Natijaga qaytish</button>
+      <button class="btn-secondary" onclick="goBackFromLeaderboard()" style="flex:1" id="lb-back-btn">← Orqaga</button>
     </div>
   </div>
 </div>
@@ -783,7 +784,10 @@ function saveResult(correct,total,pct){
     });
   }).catch(function(e){ console.warn('Reyting tekshiruvi xato:',e); });
 }
-async function showLeaderboard(){
+var LB_RETURN_SCREEN='screen-result';
+function goBackFromLeaderboard(){ showScreen(LB_RETURN_SCREEN||'screen-result'); }
+async function showLeaderboard(fromScreen){
+  LB_RETURN_SCREEN=fromScreen||(examActive?'screen-home':'screen-result');
   showScreen('screen-leaderboard');
   document.getElementById('lb-variant-name').textContent=SELECTED?SELECTED.title:'';
   var list=document.getElementById('lb-list');
