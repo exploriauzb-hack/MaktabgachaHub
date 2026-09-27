@@ -181,11 +181,11 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="code-box">
       <div class="code-logo">🎓</div>
       <h2>Demo Test</h2>
-      <p>Maktabgacha ta'lim bo'yicha attestatsiya formatidagi test.<br>Kirish uchun kod kiriting.</p>
+      <p>Maktabgacha pedagogika bo'yicha attestatsiya formatidagi test.<br>Kirish uchun kod kiriting.</p>
       <input class="code-input" id="codeInput" type="text" maxlength="20" placeholder="Kodni kiriting" autocomplete="off" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')checkCode()"/>
       <div class="code-err" id="codeErr"></div>
       <button class="btn-enter" onclick="checkCode()">Kirish →</button>
-      <p class="code-hint">Kodni Premium obunasidan oling</p>
+      <p class="code-hint">Kodni tarbiyachingizdan oling</p>
     </div>
   </div>
 </div>
@@ -199,7 +199,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="home-top">
       <div style="font-size:40px;margin-bottom:10px">📚</div>
       <h1>Demo Test</h1>
-      <p>MaktabgachaHub | Biz bilan rivojlaning</p>
+      <p>Maktabgacha pedagogika | Qodirova Saidabonu Bozorova</p>
     </div>
     <div class="info-box">
       ℹ️ <span><b>90 daqiqa</b> vaqt. <b>75%</b>+ — Birinchi toifa. <b>90%</b>+ — A'lo toifa!</span>
@@ -207,7 +207,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <div class="var-grid" id="var-grid"></div>
     <div class="name-field">
       <label for="participantName">Ismingiz va familiyangiz (reytingda ko'rinadi)</label>
-      <input class="name-input" type="text" id="participantName" maxlength="60" placeholder="Masalan: Muhiddinova Gulmira" autocomplete="off"/>
+      <input class="name-input" type="text" id="participantName" maxlength="60" placeholder="Masalan: Aliyeva Nodira" autocomplete="off"/>
     </div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
     <button class="btn-back-code" onclick="backToCode()">← Boshqa kod kiritish</button>
@@ -268,6 +268,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
     <div class="result-btns no-print">
       <button class="btn-primary" onclick="showWrong()" style="flex:1">❌ Xato savollar</button>
+      <button class="btn-secondary" onclick="showAllReview()" style="flex:1">📖 Barcha javoblar</button>
       <button class="btn-secondary" onclick="showLeaderboard()" style="flex:1">🏆 Reyting</button>
       <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🎖️ Sertifikat</button>
       <button class="btn-secondary" onclick="goHome()" style="flex:1">🔄 Qayta</button>
@@ -289,7 +290,26 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     </div>
     <div id="lb-list"></div>
     <div class="result-btns no-print" style="margin-top:16px">
+      <button class="btn-secondary" onclick="showStats()" style="flex:1">📊 Statistika</button>
       <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1">← Natijaga qaytish</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STATS SCREEN ══ -->
+<div id="screen-stats" class="screen">
+  <div class="topnav no-print">
+    <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
+  </div>
+  <div class="result-wrap">
+    <div class="result-card">
+      <div style="font-size:36px;margin-bottom:6px">📊</div>
+      <h2 style="font-size:18px;margin-bottom:4px">Umumiy statistika</h2>
+      <p style="color:var(--muted);font-size:12.5px" id="stats-variant-name"></p>
+    </div>
+    <div id="stats-body"></div>
+    <div class="result-btns no-print" style="margin-top:16px">
+      <button class="btn-secondary" onclick="showScreen('screen-leaderboard')" style="flex:1">← Reytingga qaytish</button>
     </div>
   </div>
 </div>
@@ -527,6 +547,22 @@ function getDeviceId(){
     return id;
   }catch(e){ return 'anon-'+Date.now(); }
 }
+var CURRENT_USER=null;
+async function ensureAuth(){
+  if(!_sb) return null;
+  if(CURRENT_USER) return CURRENT_USER;
+  try{
+    var ses=await _sb.auth.getSession();
+    if(ses && ses.data && ses.data.session && ses.data.session.user){
+      CURRENT_USER=ses.data.session.user;
+      return CURRENT_USER;
+    }
+    var res=await _sb.auth.signInAnonymously();
+    if(res.error){ console.warn('Anonim kirish xatosi:',res.error); return null; }
+    CURRENT_USER=res.data.user;
+    return CURRENT_USER;
+  }catch(e){ console.warn('Anonim kirishda xato:',e); return null; }
+}
 function saveSession(){
   if(!examActive || !SELECTED) return;
   try{
@@ -744,23 +780,25 @@ function finishExam(timeout){
   saveResult(correct,total,pct);
   showScreen('screen-result');
 }
-function saveResult(correct,total,pct){
+async function saveResult(correct,total,pct){
   if(!_sb || !SELECTED) return;
-  var deviceId=getDeviceId();
-  _sb.from(LB_TABLE).select('id').eq('variant_code',SELECTED.id).eq('device_id',deviceId).maybeSingle().then(function(existing){
-    if(existing && existing.data) return; // birinchi natija allaqachon bor — qayta yozilmaydi
-    _sb.from(LB_TABLE).insert({
+  var user=await ensureAuth();
+  if(!user){ console.warn('Anonim sessiya yaratilmadi — reyting saqlanmadi.'); return; }
+  var uid=user.id;
+  try{
+    var existing=await _sb.from(LB_TABLE).select('id,pct').eq('variant_code',SELECTED.id).eq('user_id',uid).maybeSingle();
+    if(existing && existing.data && existing.data.pct>=pct) return; // eski natija yaxshiroq yoki teng
+    var res=await _sb.from(LB_TABLE).upsert({
       variant_code:SELECTED.id,
       variant_title:SELECTED.title,
       participant_name:PARTICIPANT_NAME||'Anonim',
-      device_id:deviceId,
+      user_id:uid,
       correct:correct,
       total:total,
       pct:pct
-    }).then(function(res){
-      if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
-    });
-  }).catch(function(e){ console.warn('Reyting tekshiruvi xato:',e); });
+    }, {onConflict:'variant_code,user_id'});
+    if(res && res.error) console.warn('Reyting saqlanmadi:',res.error);
+  }catch(e){ console.warn('Reyting saqlashda xato:',e); }
 }
 async function showLeaderboard(){
   showScreen('screen-leaderboard');
@@ -778,10 +816,11 @@ async function showLeaderboard(){
     if(res.error){ list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>'; return; }
     if(!res.data || !res.data.length){ list.innerHTML='<div class="lb-empty">Hozircha natijalar yo\'q. Birinchi bo\'ling!</div>'; return; }
     var medals=['gold','silver','bronze'];
-    var deviceId=getDeviceId();
+    var user=await ensureAuth();
+    var uid=user?user.id:null;
     var foundMe=false;
     var html=res.data.map(function(r,i){
-      var isMe=r.device_id===deviceId;
+      var isMe=uid && r.user_id===uid;
       if(isMe) foundMe=true;
       var rankCls='lb-rank'+(medals[i]?' '+medals[i]:'');
       var d='';
@@ -804,6 +843,50 @@ async function showLeaderboard(){
     list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>';
   }
 }
+function statBox(val,label){
+  return '<div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--accent)">'+val+'</div><div style="font-size:11px;color:var(--muted)">'+label+'</div></div>';
+}
+function gradeBar(label,count,total,color){
+  var pct=total?Math.round(count/total*100):0;
+  return '<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+label+'</span><span>'+count+' ta ('+pct+'%)</span></div>'
+    +'<div style="height:8px;background:var(--bg);border-radius:99px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+color+'"></div></div></div>';
+}
+async function showStats(){
+  showScreen('screen-stats');
+  document.getElementById('stats-variant-name').textContent=SELECTED?SELECTED.title:'';
+  var body=document.getElementById('stats-body');
+  body.innerHTML='<div class="lb-loading">Yuklanmoqda…</div>';
+  if(!_sb || !SELECTED){ body.innerHTML='<div class="lb-empty">Statistika mavjud emas.</div>'; return; }
+  try{
+    var res=await _sb.from(LB_TABLE).select('pct').eq('variant_code',SELECTED.id);
+    if(res.error){ body.innerHTML='<div class="lb-empty">Statistikani yuklashda xatolik.</div>'; return; }
+    var rows=res.data||[];
+    if(!rows.length){ body.innerHTML='<div class="lb-empty">Hozircha statistik ma\'lumot yo\'q.</div>'; return; }
+    var n=rows.length, sum=0, max=-Infinity, min=Infinity, alo=0, birinchi=0, ikkinchi=0, past=0;
+    rows.forEach(function(r){
+      sum+=r.pct;
+      if(r.pct>max)max=r.pct;
+      if(r.pct<min)min=r.pct;
+      if(r.pct>=90)alo++;
+      else if(r.pct>=75)birinchi++;
+      else if(r.pct>=60)ikkinchi++;
+      else past++;
+    });
+    var avg=Math.round(sum/n);
+    body.innerHTML='<div class="result-card" style="text-align:left">'
+      +'<div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:14px;margin-bottom:20px">'
+      +statBox(n,'Jami urinish')+statBox(avg+'%','O\'rtacha')+statBox(max+'%','Eng yuqori')+statBox(min+'%','Eng past')
+      +'</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px">'
+      +gradeBar("A'lo (90%+)",alo,n,'#f59e0b')
+      +gradeBar('1-toifa (75-89%)',birinchi,n,'#22c55e')
+      +gradeBar('2-toifa (60-74%)',ikkinchi,n,'#3b82f6')
+      +gradeBar('Yetarli emas (<60%)',past,n,'#ef4444')
+      +'</div></div>';
+  }catch(e){
+    body.innerHTML='<div class="lb-empty">Statistikani yuklashda xatolik.</div>';
+  }
+}
 function showWrong(){
   var sec=document.getElementById('wrong-section');
   sec.style.display='block';
@@ -815,6 +898,19 @@ function showWrong(){
       '<div class="w-wrong">❌ Sizning javobingiz: '+(x.ua!==null?letters[x.ua]+') '+x.q.opts[x.ua]:'Javob berilmadi')+'</div>'+
       '<div class="w-correct">✅ To\'g\'ri javob: '+letters[x.q.ans]+') '+x.q.opts[x.q.ans]+'</div>'+
       '<div class="w-exp">💡 '+x.q.exp+'</div></div>';
+  }).join('');
+}
+function showAllReview(){
+  var sec=document.getElementById('wrong-section');
+  sec.style.display='block';
+  var letters=['A','B','D','E'];
+  sec.innerHTML=examQ.map(function(q,i){
+    var ua=userAns[i];
+    var ok=ua===q.ans;
+    return '<div class="w-card"><div class="w-num">'+(i+1)+'-savol '+(ok?'✅ To\'g\'ri':'❌ Xato')+'</div><div class="w-q">'+q.q+'</div>'+
+      (ok?'':'<div class="w-wrong">Sizning javobingiz: '+(ua!==null?letters[ua]+') '+q.opts[ua]:'Javob berilmadi')+'</div>')+
+      '<div class="w-correct">✅ To\'g\'ri javob: '+letters[q.ans]+') '+q.opts[q.ans]+'</div>'+
+      '<div class="w-exp">💡 '+q.exp+'</div></div>';
   }).join('');
 }
 function showCert(){
@@ -840,6 +936,7 @@ function goHome(){
   showScreen('screen-home');
 }
 tryResumeSession();
+ensureAuth();
 </script>
 <script>
 /* PWA: service worker */
