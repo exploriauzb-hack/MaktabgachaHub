@@ -351,7 +351,7 @@ async function loadPubs() {
 function renderCard(p) {
   var liked = userLikes.indexOf(p.id) !== -1;
   var imgHtml = p.image_url
-    ? '<img class="pub-img" src="' + p.image_url + '" alt="" loading="lazy"/>'
+    ? '<img class="pub-img" src="' + esc(p.image_url) + '" alt="" loading="lazy"/>'
     : '<div class="pub-img-placeholder">' + typeEmoji(p.type) + '</div>';
   var authorName = p.author_name || 'Tarbiyachi';
   var initials = authorName.charAt(0).toUpperCase();
@@ -373,7 +373,7 @@ function renderCard(p) {
       '</div>' +
       '<div class="pub-stats">' +
         '<button class="like-btn' + (liked ? ' liked' : '') + '" data-pub-like="' + p.id + '" onclick="event.stopPropagation();toggleLike(\'' + p.id + '\',this)">' +
-          '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' + (p.likes_count || 0) +
+          '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> <span class="like-count">' + (p.likes_count || 0) + '</span>' +
         '</button>' +
         '<span class="pub-stat"><i class="ti ti-message-circle"></i> ' + (p.comments_count || 0) + '</span>' +
         pdfBadge +
@@ -387,7 +387,7 @@ function renderCard(p) {
     '<div class="card-comment-form" onclick="event.stopPropagation()">' +
       '<div class="card-avatar-sm">' + initials + '</div>' +
       '<input class="card-comment-input" id="ci-' + p.id + '" type="text" placeholder="Izoh yozing..." onkeydown="if(event.key===\'Enter\')postCardComment(\'' + p.id + '\')"/>' +
-      '<button class="card-comment-send" onclick="postCardComment(\'' + p.id + '\')"><i class="ti ti-send"></i></button>' +
+      '<button class="card-comment-send" id="cs-' + p.id + '" onclick="postCardComment(\'' + p.id + '\')"><i class="ti ti-send"></i></button>' +
     '</div>' +
   '</div>';
 }
@@ -419,27 +419,38 @@ async function loadCardComments(pubId) {
   }).join('');
 }
 
+var _cardCommentSending = {};
 async function postCardComment(pubId) {
   if (!currentUser) { showToast('Izoh yozish uchun tizimga kiring!', 'err'); return; }
+  if (_cardCommentSending[pubId]) return;
   var inp = document.getElementById('ci-' + pubId);
   if (!inp) return;
   var txt = inp.value.trim();
   if (!txt) return;
 
-  var profR = await sb.from('profiles').select('full_name').eq('id', currentUser.id).single();
-  var authorName = (profR.data && profR.data.full_name) ? profR.data.full_name : (currentUser.email || 'Foydalanuvchi');
+  _cardCommentSending[pubId] = true;
+  var sendBtn = document.getElementById('cs-' + pubId);
+  if (sendBtn) sendBtn.disabled = true;
 
-  var r = await sb.from('pub_comments').insert({
-    pub_id: pubId,
-    user_id: currentUser.id,
-    author_name: authorName,
-    text: txt
-  });
-  if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
-  await sb.rpc('increment_comments', { pub_id: pubId });
-  inp.value = '';
-  loadCardComments(pubId);
-  showToast('Izoh qo\'shildi!', 'ok');
+  try {
+    var profR = await sb.from('profiles').select('full_name').eq('id', currentUser.id).single();
+    var authorName = (profR.data && profR.data.full_name) ? profR.data.full_name : (currentUser.email || 'Foydalanuvchi');
+
+    var r = await sb.from('pub_comments').insert({
+      pub_id: pubId,
+      user_id: currentUser.id,
+      author_name: authorName,
+      text: txt
+    });
+    if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
+    await sb.rpc('increment_comments', { pub_id: pubId });
+    inp.value = '';
+    loadCardComments(pubId);
+    showToast('Izoh qo\'shildi!', 'ok');
+  } finally {
+    _cardCommentSending[pubId] = false;
+    if (sendBtn) sendBtn.disabled = false;
+  }
 }
 
 // ── DETAIL ──
@@ -457,9 +468,9 @@ async function openDetail(id) {
   var authorName = p.author_name || 'Tarbiyachi';
   var initials = authorName.charAt(0).toUpperCase();
   var meta = [p.city, p.school, p.age_group].filter(Boolean).join(' • ');
-  var imgHtml = p.image_url ? '<img class="detail-img" src="' + p.image_url + '"/>' : '';
+  var imgHtml = p.image_url ? '<img class="detail-img" src="' + esc(p.image_url) + '"/>' : '';
   var pdfHtml = p.pdf_url
-    ? '<a href="' + p.pdf_url + '" target="_blank" class="btn-pdf"><i class="ti ti-file-type-pdf"></i> PDF hujjatni ochish</a>'
+    ? '<a href="' + esc(p.pdf_url) + '" target="_blank" rel="noopener noreferrer" class="btn-pdf"><i class="ti ti-file-type-pdf"></i> PDF hujjatni ochish</a>'
     : '';
   var date = new Date(p.created_at).toLocaleDateString('uz-UZ', {year:'numeric',month:'long',day:'numeric'});
 
@@ -481,14 +492,14 @@ async function openDetail(id) {
     '<div class="detail-actions">' +
       '<button class="btn-like-big' + (liked ? ' liked' : '') + '" id="detail-like-btn" data-pub-like="' + id + '" onclick="toggleLike(\'' + id + '\',this)">' +
         '<i class="ti ti-heart' + (liked ? '-filled' : '') + '"></i> ' +
-        '<span id="detail-like-count">' + (p.likes_count || 0) + '</span> ta like' +
+        '<span class="like-count" id="detail-like-count">' + (p.likes_count || 0) + '</span> ta like' +
       '</button>' +
     '</div>' +
     '<div class="comments-title"><i class="ti ti-message-circle"></i> Izohlar</div>' +
     '<div id="comments-list"><div class="loading"><i class="ti ti-loader"></i></div></div>' +
     '<div class="comment-form">' +
       '<textarea class="comment-input" id="comment-input" rows="2" placeholder="Izoh yozing..."></textarea>' +
-      '<button class="btn-comment" onclick="postComment()"><i class="ti ti-send"></i></button>' +
+      '<button class="btn-comment" id="btn-comment-send" onclick="postComment()"><i class="ti ti-send"></i></button>' +
     '</div>';
 
   loadComments(id);
@@ -520,21 +531,32 @@ async function loadComments(pubId) {
   }).join('');
 }
 
+var _detailCommentSending = false;
 async function postComment() {
   if (!currentUser) { showToast('Iltimos tizimga kiring', 'err'); return; }
+  if (_detailCommentSending) return;
   var inp = document.getElementById('comment-input');
   var txt = inp ? inp.value.trim() : '';
   if (!txt) return;
 
-  var r = await sb.from('pub_comments').insert({ pub_id: currentPubId, user_id: currentUser.id, text: txt });
-  if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
+  _detailCommentSending = true;
+  var sendBtn = document.getElementById('btn-comment-send');
+  if (sendBtn) sendBtn.disabled = true;
 
-  // update comments_count
-  await sb.rpc('increment_comments', { pub_id: currentPubId });
+  try {
+    var r = await sb.from('pub_comments').insert({ pub_id: currentPubId, user_id: currentUser.id, text: txt });
+    if (r.error) { showToast('Xato yuz berdi', 'err'); return; }
 
-  inp.value = '';
-  loadComments(currentPubId);
-  showToast('Izoh qo\'shildi', 'ok');
+    // update comments_count
+    await sb.rpc('increment_comments', { pub_id: currentPubId });
+
+    inp.value = '';
+    loadComments(currentPubId);
+    showToast('Izoh qo\'shildi', 'ok');
+  } finally {
+    _detailCommentSending = false;
+    if (sendBtn) sendBtn.disabled = false;
+  }
 }
 
 function closeDetail() {
@@ -588,10 +610,8 @@ async function toggleLike(pubId, btn) {
   var r = await sb.from('publications').select('likes_count').eq('id', pubId).single();
   if (r.data) {
     document.querySelectorAll('[data-pub-like="' + pubId + '"]').forEach(function(b) {
-      var txt = b.childNodes[b.childNodes.length - 1];
-      if (txt && txt.nodeType === 3) txt.textContent = ' ' + r.data.likes_count;
-      var countEl = document.getElementById('detail-like-count');
-      if (countEl) countEl.textContent = r.data.likes_count;
+      var cnt = b.querySelector('.like-count');
+      if (cnt) cnt.textContent = r.data.likes_count;
     });
   }
 
