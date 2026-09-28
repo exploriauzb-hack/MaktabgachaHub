@@ -4,134 +4,160 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Demo Test</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#f0f4ff;--surface:#fff;--border:#e5e7eb;--text:#111827;--muted:#6b7280;
-  --accent:#1e40af;--accent-soft:#eff6ff;--accent-mid:#3b82f6;
-  --green:#15803d;--green-soft:#f0fdf4;
-  --red:#b91c1c;--red-soft:#fef2f2;
-  --pro:#7c3aed;--pro-soft:#f5f3ff;
-  --sidebar:240px;
+  --page:#eef0f3;--bg:#e3e6ea;--surface:#fff;--card:#f3f4f6;--card-sel:#e2e4e8;--line:#e6e8eb;
+  --text:#15181c;--muted:#8b9099;
+  --accent:#1e40af;--accent-soft:#eef2ff;--accent-mid:#3b82f6;
+  --green:#2e9d5a;--green-soft:#e2f4e8;--red:#e0464b;--red-soft:#fde9e9;
+  --gold:#c76a00;--gold-soft:#fff1d6;
 }
-body{font-family:'Inter',sans-serif;color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;background:var(--bg);overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#dbeafe 0%,#ede9fe 40%,#fce7f3 80%,#d1fae5 100%)}
+body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-size:15px;line-height:1.55;min-height:100vh;background:var(--page);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
 .screen{display:none;position:relative;z-index:2}
-.screen.active{display:block}
+.screen.active{display:block;max-width:480px;margin:0 auto;background:var(--surface);min-height:100vh}
+@media(min-width:520px){.screen.active{box-shadow:0 10px 40px rgba(20,24,28,.10)}}
 
-/* ── BACK BUTTON ── */
-.btn-dashboard-back{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s,box-shadow .15s;box-shadow:0 1px 4px rgba(30,64,175,.08)}
-.btn-dashboard-back:hover{background:var(--accent-soft);box-shadow:0 2px 8px rgba(30,64,175,.12)}
-.btn-dashboard-back i{font-size:16px}
-.topnav{position:relative;z-index:10;display:flex;align-items:center;padding:14px 20px;max-width:800px;margin:0 auto}
+/* ── BACK BUTTON / TOPNAV ── */
+.btn-dashboard-back{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--card);border:none;border-radius:12px;font-size:13px;font-weight:700;color:var(--text);text-decoration:none;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-dashboard-back:hover{background:var(--card-sel)}
+.topnav{position:relative;z-index:10;display:flex;align-items:center;padding:14px 16px}
 
 /* ── CODE SCREEN ── */
-.code-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.code-topnav{position:absolute;top:0;left:0;right:0;padding:14px 20px}
-.code-box{background:var(--surface);border-radius:20px;padding:40px 36px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(30,64,175,.13)}
-.code-logo{font-size:48px;margin-bottom:16px}
-.code-box h2{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:8px}
-.code-box p{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.6}
-.code-input{width:100%;padding:14px 18px;border:2px solid var(--border);border-radius:12px;font-size:18px;font-weight:700;font-family:'Inter',sans-serif;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s;color:var(--text)}
-.code-input:focus{border-color:var(--accent)}
+.code-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 22px 30px;position:relative}
+.code-topnav{position:absolute;top:0;left:0;right:0;padding:14px 16px}
+.code-box{width:100%;text-align:center}
+.code-logo{font-size:54px;margin-bottom:14px}
+.code-box h2{font-size:24px;font-weight:800;margin-bottom:8px}
+.code-box p{font-size:13.5px;color:var(--muted);margin-bottom:26px;line-height:1.6}
+.code-input{width:100%;padding:16px 18px;border:2px solid transparent;background:var(--card);border-radius:16px;font-size:18px;font-weight:800;font-family:inherit;text-align:center;letter-spacing:4px;outline:none;transition:border-color .2s,background .2s;color:var(--text)}
+.code-input:focus{border-color:var(--accent);background:#fff}
 .code-input.error{border-color:var(--red);animation:shake .3s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.code-err{font-size:12px;color:var(--red);margin-top:8px;min-height:18px}
-.btn-enter{width:100%;margin-top:20px;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.code-err{font-size:12.5px;color:var(--red);margin-top:8px;min-height:18px}
+.btn-enter{width:100%;margin-top:18px;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:background .15s}
 .btn-enter:hover{background:#1c3a9e}
 .btn-enter:disabled{opacity:.6;cursor:default}
-.code-hint{font-size:11px;color:var(--muted);margin-top:16px}
+.code-box .code-hint{font-size:12px;color:var(--muted);margin:16px 0 0}
 
 /* ── HOME ── */
-.home-wrap{min-height:100vh;padding:0 20px 30px;max-width:700px;margin:0 auto}
-.home-top{text-align:center;margin-bottom:30px;padding-top:10px}
-.home-top h1{font-size:24px;font-weight:800;color:var(--accent);margin-bottom:6px}
+.home-wrap{padding:0 18px 30px}
+.home-top{text-align:center;margin-bottom:20px;padding-top:6px}
+.home-top h1{font-size:24px;font-weight:800;margin-bottom:4px}
 .home-top p{font-size:13px;color:var(--muted)}
-.var-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-.var-card{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s,transform .15s,box-shadow .15s;box-shadow:0 2px 12px rgba(30,64,175,.07)}
-.var-card:hover{border-color:var(--accent-mid);transform:translateY(-3px);box-shadow:0 8px 24px rgba(30,64,175,.12)}
+.info-box{background:var(--card);border-radius:16px;padding:14px 16px;font-size:12.5px;color:#4b5058;margin-bottom:18px;line-height:1.6}
+.var-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:18px}
+.var-card{background:var(--card);border:2px solid transparent;border-radius:18px;padding:22px 18px;text-align:center}
 .var-card.selected{border-color:var(--accent);background:var(--accent-soft)}
-.var-num{font-size:42px;margin-bottom:10px}
-.var-card h3{font-size:16px;font-weight:700;margin-bottom:4px}
-.var-card p{font-size:12px;color:var(--muted)}
-.var-meta{display:inline-flex;gap:12px;margin-top:12px;font-size:11px;color:var(--muted);background:var(--bg);padding:5px 14px;border-radius:20px}
-.info-box{background:var(--accent-soft);border:1px solid #bfdbfe;border-radius:12px;padding:14px 18px;font-size:12.5px;color:var(--accent);margin-bottom:24px;display:flex;align-items:center;gap:10px}
-.btn-start{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.var-num{font-size:38px;margin-bottom:6px}
+.var-card h3{font-size:17px;font-weight:800;margin-bottom:2px}
+.var-card p{font-size:12.5px;color:var(--muted)}
+.var-meta{display:inline-flex;gap:14px;margin-top:12px;font-size:12px;color:var(--muted);background:#fff;padding:6px 14px;border-radius:20px;font-weight:600}
+.btn-start{width:100%;padding:16px;background:var(--accent);color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-start:hover{background:#1c3a9e}
-.btn-back-code{display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
+.btn-back-code{display:block;margin:14px auto 0;font-size:12.5px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
+.name-field{margin-bottom:16px;text-align:left}
+.name-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:700}
+.name-input{width:100%;padding:14px 16px;border:2px solid transparent;background:var(--card);border-radius:14px;font-size:14.5px;font-family:inherit;outline:none;color:var(--text);transition:border-color .2s,background .2s}
+.name-input:focus{border-color:var(--accent);background:#fff}
 
-/* ── EXAM ── */
-#timer-bar{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 0;margin-bottom:20px}
-.timer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:0 24px;max-width:800px;margin:0 auto}
-#timer-display{font-size:22px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
-#timer-display.urgent{color:var(--red);animation:pulse 1s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.timer-label{font-size:11px;color:var(--muted);margin-bottom:2px}
-.exam-body{padding:0 20px 60px;max-width:800px;margin:0 auto}
-.qpbar{height:5px;background:var(--bg);border-radius:99px;overflow:hidden;margin-bottom:16px}
-.qpfill{height:100%;background:var(--accent-mid);border-radius:99px;transition:width .4s}
-.nav-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px}
-.nav-btn{width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:'Inter',sans-serif}
-.nav-btn.answered{background:var(--accent);color:#fff;border-color:var(--accent)}
-.nav-btn.current{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 2px #bfdbfe}
-.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:14px}
-.q-num{font-size:11.5px;color:var(--muted);margin-bottom:10px;font-weight:600}
-.q-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px;line-height:1.6}
-.q-opts{display:flex;flex-direction:column;gap:8px}
-.q-opt{background:var(--bg);border:2px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:13px;color:var(--text);transition:all .15s;text-align:left;font-family:'Inter',sans-serif;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
-.q-opt:hover:not(.disabled){border-color:var(--accent-mid);background:var(--accent-soft)}
-.q-opt.selected{border-color:var(--accent);background:var(--accent-soft)}
-.q-opt.correct{background:var(--green-soft);border-color:var(--green);color:var(--green)}
-.q-opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+/* ── EXAM: TOP BAR ── */
+#timer-bar{position:sticky;top:0;z-index:50;background:#fff;padding:10px 16px 0;border-bottom:1px solid var(--line)}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-x{width:36px;height:36px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--text);text-decoration:none;font-weight:700;flex-shrink:0}
+.bar-x:hover{background:var(--card-sel)}
+.bar-title{flex:1;min-width:0}
+.bar-name{font-size:14px;font-weight:800;line-height:1.2}
+.bar-sub{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-timer{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;background:var(--card);padding:7px 12px;border-radius:20px}
+#timer-display.urgent{color:var(--red);background:var(--red-soft);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.bar-row2{display:flex;align-items:center;justify-content:space-between;margin:8px 0 8px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.bar-finish{background:none;border:none;color:var(--accent);font-weight:800;font-size:12.5px;cursor:pointer;font-family:inherit;padding:2px 0}
+.qpbar{height:4px;background:var(--card);margin:0 -16px;overflow:hidden}
+.qpfill{height:100%;width:0;background:var(--accent);transition:width .35s}
+
+/* ── EXAM: QUESTION ── */
+.exam-body{padding:20px 18px 12px}
+.nav-grid{display:none}
+.q-card{margin-bottom:16px}
+.q-num{display:none}
+.q-text{font-size:15.5px;line-height:1.65;margin-bottom:18px;color:var(--text)}
+.q-no{font-weight:800;font-style:normal}
+.q-pre{font-style:italic;color:#2a2f36}
+.q-last{font-weight:800}
+.q-head{font-weight:800;margin-bottom:12px}
+.q-table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 2px;table-layout:fixed}
+.q-table td{border:1px solid #cfd3d9;padding:8px 10px;vertical-align:top;line-height:1.45;word-wrap:break-word;overflow-wrap:anywhere}
+.q-opts{display:flex;flex-direction:column;gap:10px}
+.q-opt{display:flex;align-items:flex-start;gap:12px;width:100%;background:var(--card);border:none;border-radius:16px;padding:15px 16px;cursor:pointer;font-size:14px;color:var(--text);text-align:left;font-family:inherit;line-height:1.5;transition:background .15s}
+.q-opt:hover:not(.disabled){background:#eaecef}
+.q-opt.selected{background:var(--card-sel)}
 .q-opt.disabled{cursor:default}
-.opt-letter{font-weight:800;color:var(--accent);min-width:18px;flex-shrink:0;font-size:13px}
-.q-nav{display:flex;gap:10px}
-.q-nav button{flex:1}
-.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;justify-content:center}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid #b8bdc5;flex-shrink:0;margin-top:1px;position:relative;background:#fff}
+.q-opt.selected .radio{border-color:var(--text)}
+.q-opt.selected .radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--text)}
+.opt-text{flex:1;min-width:0}
+.q-nav{position:sticky;bottom:0;margin:0 -18px;padding:14px 18px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,#fff 72%,rgba(255,255,255,0))}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:16px;padding:15px 22px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px;justify-content:center;transition:background .15s}
 .btn-primary:hover{background:#1c3a9e}
-.btn-secondary{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
-.btn-secondary:hover{background:var(--bg)}
+.btn-secondary{background:var(--card);border:none;color:var(--text);border-radius:16px;padding:15px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-secondary:hover{background:var(--card-sel)}
 
 /* ── RESULT ── */
-.result-wrap{min-height:100vh;padding:0 20px 30px;max-width:700px;margin:0 auto}
-.result-circle{width:140px;height:140px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;font-weight:800}
-.rc-gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
-.rc-green{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
-.rc-blue{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff}
-.rc-red{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
-.result-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;margin-bottom:16px;box-shadow:0 2px 12px rgba(30,64,175,.07)}
-.result-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.result-wrap{padding:0 18px 34px;text-align:center}
+.res-title{font-size:21px;font-weight:800;line-height:1.3;margin:6px 8px 12px}
+.score-wrap{position:relative;width:200px;height:200px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center}
+.score-circle{position:relative;z-index:2;width:132px;height:132px;border-radius:50%;background:#fff;box-shadow:0 6px 24px rgba(20,24,28,.10);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-size:44px;font-weight:800;line-height:1}
+.score-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
+.confetti{position:absolute;inset:0;z-index:1}
+.confetti i{position:absolute;border-radius:50%;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.55);opacity:.35}}
+.res-time{font-size:13px;color:#4b5058;margin:12px 0 10px}
+.res-grade{display:inline-block;font-size:12.5px;font-weight:800;padding:6px 14px;border-radius:20px;margin-bottom:18px}
+.gr-gold{background:var(--gold-soft);color:var(--gold)}
+.gr-green{background:var(--green-soft);color:var(--green)}
+.gr-blue{background:var(--accent-soft);color:var(--accent)}
+.gr-red{background:var(--red-soft);color:var(--red)}
+.ring-row{display:flex;justify-content:space-around;background:var(--card);border-radius:20px;padding:16px 8px;margin-bottom:22px}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
+.ring{--p:0;--c:var(--green);width:66px;height:66px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#dfe2e6 0);display:flex;align-items:center;justify-content:center;position:relative}
+.ring::before{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--card)}
+.ring span{position:relative;font-size:18px;font-weight:800}
+.ring-green{--c:var(--green)}
+.ring-red{--c:var(--red)}
+.ring-dark{--c:var(--text)}
+.ring-lbl{font-size:11px;color:var(--muted);font-weight:700;line-height:1.3}
+.res-subject{font-size:15px;font-weight:800;margin-bottom:12px}
+.q-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.qc{aspect-ratio:1/1;border:none;border-radius:14px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;background:#eceef1;color:var(--muted)}
+.qc.ok{background:var(--green-soft);color:var(--green)}
+.qc.bad{background:var(--red-soft);color:var(--red)}
+.qc.on{outline:2px solid var(--text);outline-offset:1px}
+#review-panel{text-align:left}
+.result-card{background:var(--card);border-radius:20px;padding:24px 20px;text-align:center;margin-bottom:16px}
+.result-btns{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 20px}
 .result-btns button{flex:1;min-width:130px}
-.wrong-section{margin-top:4px}
-.w-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:10px}
-.w-num{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px}
-.w-q{font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.5}
-.w-wrong{background:var(--red-soft);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--red);margin-bottom:6px}
-.w-correct{background:var(--green-soft);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--green);margin-bottom:6px}
-.w-exp{background:#f8fafc;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--muted);border-left:3px solid var(--accent-mid)}
+.wrong-section{margin-top:4px;text-align:left}
+.w-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:10px;text-align:left}
+.w-num{font-size:11.5px;color:var(--muted);font-weight:800;margin-bottom:8px}
+.w-q{font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.55}
+.w-wrong{background:var(--red-soft);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--red);margin-bottom:6px}
+.w-correct{background:var(--green-soft);border-radius:10px;padding:10px 12px;font-size:12.5px;color:var(--green);margin-bottom:6px}
+.w-exp{background:#fff;border-radius:10px;padding:10px 12px;font-size:12px;color:#4b5058;border-left:3px solid var(--accent-mid)}
 
 /* ── CERT ── */
-.cert-wrap{min-height:100vh;padding:0 20px 30px;max-width:620px;margin:0 auto}
-.cert-box{border:3px solid var(--accent);border-radius:18px;padding:40px;text-align:center;background:var(--surface);box-shadow:0 4px 24px rgba(30,64,175,.1)}
-@media print{.no-print{display:none!important}.cert-box{border:3px solid var(--accent)!important}}
+.cert-wrap{padding:0 18px 30px}
+.cert-box{border:3px solid var(--accent);border-radius:22px;padding:34px 22px;text-align:center;background:#fff}
+@media print{.no-print{display:none!important}.cert-box{border:3px solid var(--accent)!important}.screen.active{box-shadow:none;max-width:none}}
 
-/* ── TOAST ── */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:11px 20px;border-radius:10px;font-size:12.5px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:500;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.err{background:var(--red)}
-
-/* ── NAME INPUT ── */
-.name-field{margin-bottom:20px;text-align:left}
-.name-field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
-.name-input{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;color:var(--text)}
-.name-input:focus{border-color:var(--accent)}
-
-/* ── LEADERBOARD ── */
-.lb-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:8px}
-.lb-row.lb-me{border-color:var(--accent);background:var(--accent-soft)}
-.lb-rank{width:32px;height:32px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--text)}
+/* ── NAME INPUT / LEADERBOARD ── */
+.lb-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left}
+.lb-row.lb-me{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.lb-rank{width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--text)}
 .lb-rank.gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
 .lb-rank.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
 .lb-rank.bronze{background:linear-gradient(135deg,#c2703d,#9a5324);color:#fff}
@@ -141,13 +167,10 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 .lb-score{font-weight:800;font-size:16px;color:var(--accent);flex-shrink:0}
 .lb-empty,.lb-loading{text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
 
-@media(max-width:600px){
-  .var-grid{grid-template-columns:1fr}
-  .exam-body{padding:0 12px 60px}
-  .q-text{font-size:14px}
-  .timer-inner{padding:0 14px}
-  .topnav{padding:10px 14px}
-}
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:11px 20px;border-radius:12px;font-size:12.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:500;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{background:var(--red)}
 </style>
   <!-- SEO -->
   <meta name="description" content="Maktabgacha pedagogika bo'yicha attestatsiya formatidagi demo test."/>
@@ -218,23 +241,21 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
 <!-- ══ EXAM SCREEN ══ -->
 <div id="screen-exam" class="screen">
   <div id="timer-bar">
-    <div class="timer-inner">
-      <div>
-        <div class="timer-label">Qolgan vaqt</div>
-        <div id="timer-display">90:00</div>
+    <div class="bar-row">
+      <a href="../dashboard.html" class="bar-x no-print" onclick="return confirmDashboard()" aria-label="Chiqish">✕</a>
+      <div class="bar-title">
+        <div class="bar-name">Demo test</div>
+        <div class="bar-sub" id="var-label">1-Variant</div>
       </div>
-      <div style="text-align:center">
-        <div class="timer-label" id="var-label">1-Variant</div>
-        <div style="font-size:13px;font-weight:600" id="q-counter">Savol 1/50</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <a href="../dashboard.html" class="btn-dashboard-back no-print" onclick="return confirmDashboard()">← Dashboard</a>
-        <button class="btn-secondary no-print" onclick="confirmFinish()" style="font-size:12px;padding:8px 14px">✅ Yakunlash</button>
-      </div>
+      <div class="bar-timer" id="timer-display">90:00</div>
     </div>
+    <div class="bar-row2">
+      <span id="q-counter">Savol 1/50</span>
+      <button class="bar-finish no-print" onclick="confirmFinish()">Yakunlash</button>
+    </div>
+    <div class="qpbar"><div class="qpfill" id="qpfill"></div></div>
   </div>
   <div class="exam-body">
-    <div class="qpbar"><div class="qpfill" id="qpfill"></div></div>
     <div class="nav-grid" id="nav-grid"></div>
     <div class="q-card">
       <div class="q-num" id="q-num"></div>
@@ -253,25 +274,30 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background:linear-gradi
     <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
   </div>
   <div class="result-wrap">
-    <div class="result-card">
-      <div class="result-circle" id="result-circle">
-        <span id="result-pct"></span>
-        <span style="font-size:10px;margin-top:2px" id="result-grade-short"></span>
-      </div>
-      <h2 id="result-grade-full" style="font-size:18px;margin-bottom:8px"></h2>
-      <p id="result-msg" style="color:var(--muted);font-size:13px"></p>
-      <div style="display:flex;justify-content:space-around;margin-top:20px;flex-wrap:wrap;gap:12px">
-        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--green)" id="res-correct"></div><div style="font-size:11px;color:var(--muted)">To'g'ri</div></div>
-        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--red)" id="res-wrong"></div><div style="font-size:11px;color:var(--muted)">Xato</div></div>
-        <div style="text-align:center"><div style="font-size:24px;font-weight:800;color:var(--accent)" id="res-total">50</div><div style="font-size:11px;color:var(--muted)">Jami</div></div>
+    <h2 class="res-title">Tabriklaymiz, sinovni tugatdingiz!</h2>
+    <div class="score-wrap">
+      <div class="confetti" id="confetti"></div>
+      <div class="score-circle">
+        <div class="score-num" id="res-score">0</div>
+        <div class="score-lbl">ball</div>
       </div>
     </div>
+    <div class="res-time">Sarflangan vaqt: <b id="res-time">00:00:00</b></div>
+    <div class="res-grade" id="res-grade"></div>
+    <div class="ring-row">
+      <div class="ring-item"><div class="ring ring-green" id="ring-correct"><span id="res-correct">0</span></div><div class="ring-lbl">To'g'ri<br>javoblar</div></div>
+      <div class="ring-item"><div class="ring ring-red" id="ring-wrong"><span id="res-wrong">0</span></div><div class="ring-lbl">Noto'g'ri<br>javoblar</div></div>
+      <div class="ring-item"><div class="ring ring-dark" id="ring-pct"><span id="res-pct">0%</span></div><div class="ring-lbl">Umumiy<br>natija</div></div>
+    </div>
+    <div class="res-subject" id="res-subject"></div>
+    <div class="q-grid" id="res-grid"></div>
+    <div id="review-panel"></div>
     <div class="result-btns no-print">
-      <button class="btn-primary" onclick="showWrong()" style="flex:1">❌ Xato savollar</button>
-      <button class="btn-secondary" onclick="showAllReview()" style="flex:1">📖 Barcha javoblar</button>
-      <button class="btn-secondary" onclick="showLeaderboard('screen-result')" style="flex:1">🏆 Reyting</button>
-      <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none;flex:1">🎖️ Sertifikat</button>
-      <button class="btn-secondary" onclick="goHome()" style="flex:1">🔄 Qayta</button>
+      <button class="btn-primary" onclick="showWrong()">❌ Xato savollar</button>
+      <button class="btn-secondary" onclick="showAllReview()">📖 Barcha javoblar</button>
+      <button class="btn-secondary" onclick="showLeaderboard('screen-result')">🏆 Reyting</button>
+      <button class="btn-secondary" id="btn-cert" onclick="showCert()" style="display:none">🎖️ Sertifikat</button>
+      <button class="btn-secondary" onclick="goHome()">🔄 Qayta</button>
     </div>
     <div id="wrong-section" class="wrong-section" style="display:none"></div>
   </div>
@@ -701,14 +727,14 @@ function renderQ(){
   document.getElementById('qpfill').style.width=(currentQ/total*100)+'%';
   document.getElementById('q-counter').textContent='Savol '+(currentQ+1)+'/'+total;
   document.getElementById('q-num').textContent=(currentQ+1)+'-savol | '+answered+' ta javob berildi';
-  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('q-text').innerHTML=renderQuestionHTML(q.q,currentQ+1);
   var letters=['A','B','D','E'];
   var isAns=userAns[currentQ]!==null;
   var ua=userAns[currentQ];
   document.getElementById('q-opts').innerHTML=q.opts.map(function(o,i){
     var cls='q-opt';
     if(isAns){cls+=' disabled';if(i===ua)cls+=' selected';}
-    return '<button class="'+cls+'" onclick="selectAns('+i+')"><span class="opt-letter">'+(letters[i]||'')+'</span><span>'+o+'</span></button>';
+    return '<button class="'+cls+'" onclick="selectAns('+i+')"><span class="radio"></span><span class="opt-text">'+escapeHtmlLocal(o)+'</span></button>';
   }).join('');
   document.getElementById('next-btn').textContent=currentQ===examQ.length-1?'✅ Yakunlash':'Keyingi →';
   updateNav();
@@ -739,6 +765,77 @@ function confirmFinish(){
   if(!confirm('Testni yakunlashni tasdiqlaysizmi?\nJavob berildi: '+answered+'/'+examQ.length))return;
   finishExam(false);
 }
+/* ═══════ DIZAYN YORDAMCHILARI ═══════ */
+function splitItems(str,sepRe,labelRe){
+  return str.split(sepRe).map(function(x){
+    x=x.trim();
+    var m=x.match(labelRe);
+    return m?{k:m[1],t:x.slice(m[0].length).trim()}:null;
+  }).filter(Boolean);
+}
+// "1-..., 2-.... a-..., b-..." ko'rinishidagi moslashtirish savolini jadvalga ajratadi
+function parseMatching(text){
+  var m=text.match(/(^|[:\s])1[-)]\s*/);
+  if(!m) return null;
+  var li=m.index+m[1].length;
+  var head=text.slice(0,li).trim();
+  var rest=text.slice(li);
+  var r=rest.match(/(^|[\s.])a[-)]\s*/);
+  if(!r) return null;
+  var ri=r.index+r[1].length;
+  var leftStr=rest.slice(0,ri).trim().replace(/[.\s]+$/,'');
+  var rightStr=rest.slice(ri).trim().replace(/[.\s]+$/,'');
+  var left=splitItems(leftStr,/,\s*(?=\d[-)])/,/^(\d)[-)]\s*/);
+  var right=splitItems(rightStr,/,\s*(?=[a-e][-)])/,/^([a-e])[-)]\s*/);
+  if(left.length<2||right.length<2) return null;
+  return {head:head,left:left,right:right};
+}
+// Savol matni: vaziyat — italik, oxirgi (asosiy) savol — qalin; moslashtirish — jadval
+function renderQuestionHTML(raw,no){
+  var t=String(raw==null?'':raw).trim().replace(/^Vaziyat\.\s*/,'');
+  var num='<span class="q-no">'+no+'.</span> ';
+  var mt=parseMatching(t);
+  if(mt){
+    var rows=Math.max(mt.left.length,mt.right.length),tb='';
+    for(var i=0;i<rows;i++){
+      var L=mt.left[i],R=mt.right[i];
+      tb+='<tr><td>'+(L?escapeHtmlLocal(L.k+'. '+L.t):'')+'</td><td>'+(R?escapeHtmlLocal(R.k+'. '+R.t):'')+'</td></tr>';
+    }
+    return '<div class="q-head">'+num+escapeHtmlLocal(mt.head)+'</div><table class="q-table">'+tb+'</table>';
+  }
+  var body=t.replace(/[.?!]+$/,'');
+  var idx=Math.max(body.lastIndexOf('. '),body.lastIndexOf('? '),body.lastIndexOf('! '));
+  if(idx<0) return '<span class="q-last">'+num+escapeHtmlLocal(t)+'</span>';
+  return '<span class="q-pre">'+num+escapeHtmlLocal(t.slice(0,idx+1))+'</span> <span class="q-last">'+escapeHtmlLocal(t.slice(idx+2))+'</span>';
+}
+function fmtTime(sec){
+  function p(n){return String(n).padStart(2,'0');}
+  return p(Math.floor(sec/3600))+':'+p(Math.floor(sec%3600/60))+':'+p(sec%60);
+}
+function renderConfetti(){
+  var box=document.getElementById('confetti');
+  if(!box) return;
+  var colors=['#f59e0b','#3b82f6','#ef4444','#22c55e','#a855f7','#14b8a6','#f472b6'];
+  var h='';
+  for(var i=0;i<60;i++){
+    var ang=Math.random()*Math.PI*2;
+    var r=76+Math.random()*24;
+    var x=100+Math.cos(ang)*r, y=100+Math.sin(ang)*r, sz=3+Math.random()*4;
+    h+='<i style="left:'+x.toFixed(1)+'px;top:'+y.toFixed(1)+'px;width:'+sz.toFixed(1)+'px;height:'+sz.toFixed(1)+'px;background:'+colors[i%colors.length]+';animation-delay:'+(Math.random()*2).toFixed(2)+'s"></i>';
+  }
+  box.innerHTML=h;
+}
+// Natija setkasidagi raqam bosilganda — shu savolning tahlili
+function showReviewFor(i){
+  var q=examQ[i], ua=userAns[i], letters=['A','B','D','E'], ok=ua===q.ans;
+  document.querySelectorAll('#res-grid .qc').forEach(function(b,k){b.classList.toggle('on',k===i);});
+  var p=document.getElementById('review-panel');
+  p.innerHTML='<div class="w-card"><div class="w-num">'+(i+1)+'-savol '+(ok?'✅ To\'g\'ri':'❌ Xato')+'</div><div class="w-q">'+escapeHtmlLocal(q.q)+'</div>'
+    +(ok?'':'<div class="w-wrong">Sizning javobingiz: '+(ua!==null?letters[ua]+') '+escapeHtmlLocal(q.opts[ua]):'Javob berilmadi')+'</div>')
+    +'<div class="w-correct">✅ To\'g\'ri javob: '+letters[q.ans]+') '+escapeHtmlLocal(q.opts[q.ans])+'</div>'
+    +'<div class="w-exp">💡 '+escapeHtmlLocal(q.exp)+'</div></div>';
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function finishExam(timeout,cheat){
   clearInterval(timerInt);examActive=false;
   clearSession();
@@ -748,19 +845,28 @@ function finishExam(timeout,cheat){
   examQ.forEach(function(q,i){if(userAns[i]===q.ans)correct++;});
   var total=examQ.length;
   var pct=Math.round(correct/total*100);
-  var grade,gs,msg,cls;
-  if(pct>=90){grade="A'lo — Eng yuqori toifa";gs="A'LO";msg="Ajoyib natija! Siz attestatsiyaga tayyorsiz!";cls='rc-gold';}
-  else if(pct>=75){grade="Birinchi toifa";gs="1-TOIFA";msg="Yaxshi natija! Biroz mashq qiling.";cls='rc-green';}
-  else if(pct>=60){grade="Ikkinchi toifa";gs="2-TOIFA";msg="O'rtacha natija. Zaif mavzularni qayta o'rganing.";cls='rc-blue';}
-  else{grade="Yetarli emas";gs="PAST";msg="Qo'shimcha tayyorgarlik kerak.";cls='rc-red';}
-  document.getElementById('result-circle').className='result-circle '+cls;
-  document.getElementById('result-pct').textContent=pct+'%';
-  document.getElementById('result-grade-short').textContent=gs;
-  document.getElementById('result-grade-full').textContent=grade;
-  document.getElementById('result-msg').textContent=msg;
+  var spent=Math.max(0,EXAM_TIME_SECONDS-timeLeft);
+  var gradeTxt,gcls;
+  if(pct>=90){gradeTxt="A'lo toifa";gcls='gr-gold';}
+  else if(pct>=75){gradeTxt="Birinchi toifa";gcls='gr-green';}
+  else if(pct>=60){gradeTxt="Ikkinchi toifa";gcls='gr-blue';}
+  else{gradeTxt="Yetarli emas";gcls='gr-red';}
+  document.getElementById('res-score').textContent=pct;
+  document.getElementById('res-time').textContent=fmtTime(spent);
+  var ge=document.getElementById('res-grade');ge.textContent=gradeTxt;ge.className='res-grade '+gcls;
   document.getElementById('res-correct').textContent=correct;
   document.getElementById('res-wrong').textContent=total-correct;
-  document.getElementById('res-total').textContent=total;
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('ring-correct').style.setProperty('--p',total?correct/total*100:0);
+  document.getElementById('ring-wrong').style.setProperty('--p',total?(total-correct)/total*100:0);
+  document.getElementById('ring-pct').style.setProperty('--p',pct);
+  document.getElementById('res-subject').textContent=SELECTED?SELECTED.title:'';
+  document.getElementById('res-grid').innerHTML=examQ.map(function(q,i){
+    return '<button class="qc'+(userAns[i]===q.ans?' ok':' bad')+'" onclick="showReviewFor('+i+')">'+(i+1)+'</button>';
+  }).join('');
+  document.getElementById('review-panel').innerHTML='';
+  document.getElementById('wrong-section').style.display='none';
+  renderConfetti();
   document.getElementById('btn-cert').style.display=pct>=75?'block':'none';
   lastResult={correct:correct,total:total,pct:pct};
   saveResult(correct,total,pct);
