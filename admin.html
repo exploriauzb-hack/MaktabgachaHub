@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>MaktabgachaHub — Admin panel</title>
+</head>
+<body>
+<p id="ld" style="font-family:sans-serif;padding:24px;color:#6b7694">Yuklanmoqda…</p>
+<script>
+/* Bu fayl eski panelni (admin-eski.html) yuklab, unga admin-plus.js ni ulaydi. */
+(async function(){
+  try{
+    var r = await fetch('admin-eski.html', {cache:'no-store'});
+    if(!r.ok) throw new Error('admin-eski.html topilmadi (' + r.status + ')');
+    var html = await r.text();
+    if(!/<\/body>/i.test(html)) throw new Error('admin-eski.html noto\'g\'ri fayl');
+    html = html.replace(/<\/body>/i, function(){ return '<script src="admin-plus.js"><\/script></body>'; });
+    document.open(); document.write(html); document.close();
+  }catch(e){
+    document.getElementById('ld').textContent = 'Xatolik: ' + e.message;
+  }
+})();
+</script>
+</body>
+</html>
