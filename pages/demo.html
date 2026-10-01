@@ -83,6 +83,41 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 .exam-body{padding:20px 18px 12px}
 .nav-grid{display:none}
 .q-card{margin-bottom:16px}
+@keyframes angryShake{
+  0%{transform:translate3d(0,0,0) rotate(0)}
+  10%{transform:translate3d(-10px,0,0) rotate(-1.5deg)}
+  20%{transform:translate3d(9px,-2px,0) rotate(1.5deg)}
+  30%{transform:translate3d(-8px,1px,0) rotate(-1.2deg)}
+  40%{transform:translate3d(7px,-1px,0) rotate(1.2deg)}
+  50%{transform:translate3d(-6px,0,0) rotate(-.8deg)}
+  60%{transform:translate3d(5px,0,0) rotate(.8deg)}
+  70%{transform:translate3d(-4px,0,0) rotate(-.5deg)}
+  80%{transform:translate3d(3px,0,0) rotate(.5deg)}
+  90%{transform:translate3d(-2px,0,0) rotate(0)}
+  100%{transform:translate3d(0,0,0) rotate(0)}
+}
+.q-card.shake-card{animation:angryShake .55s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes redVignette{
+  0%{box-shadow:inset 0 0 0 0 rgba(224,70,75,0)}
+  25%{box-shadow:inset 0 0 60px 10px rgba(224,70,75,.35)}
+  100%{box-shadow:inset 0 0 0 0 rgba(224,70,75,0)}
+}
+.exam-body.flash-red{animation:redVignette .55s ease-out}
+.q-opt.wrong-flash{background:var(--red-soft)!important;animation:optShake .5s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes optShake{
+  10%,90%{transform:translateX(-2px)}
+  20%,80%{transform:translateX(4px)}
+  30%,50%,70%{transform:translateX(-8px)}
+  40%,60%{transform:translateX(8px)}
+}
+.angry-emoji{position:absolute;right:14px;top:50%;font-size:24px;pointer-events:none;animation:angryPop .85s ease-out forwards;z-index:3}
+@keyframes angryPop{
+  0%{opacity:0;transform:translateY(-50%) scale(.3) rotate(-15deg)}
+  25%{opacity:1;transform:translateY(-65%) scale(1.3) rotate(8deg)}
+  45%{transform:translateY(-70%) scale(1.05) rotate(-6deg)}
+  65%{transform:translateY(-75%) scale(1.15) rotate(4deg)}
+  100%{opacity:0;transform:translateY(-115%) scale(.9) rotate(0)}
+}
 .q-num{display:none}
 .q-text{font-size:15.5px;line-height:1.65;margin-bottom:18px;color:var(--text)}
 .q-no{font-weight:800;font-style:normal}
@@ -92,7 +127,7 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 .q-table{width:100%;border-collapse:collapse;font-size:13px;margin:4px 0 2px;table-layout:fixed}
 .q-table td{border:1px solid #cfd3d9;padding:8px 10px;vertical-align:top;line-height:1.45;word-wrap:break-word;overflow-wrap:anywhere}
 .q-opts{display:flex;flex-direction:column;gap:10px}
-.q-opt{display:flex;align-items:flex-start;gap:12px;width:100%;background:var(--card);border:none;border-radius:16px;padding:15px 16px;cursor:pointer;font-size:14px;color:var(--text);text-align:left;font-family:inherit;line-height:1.5;transition:background .15s}
+.q-opt{position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:12px;width:100%;background:var(--card);border:none;border-radius:16px;padding:15px 16px;cursor:pointer;font-size:14px;color:var(--text);text-align:left;font-family:inherit;line-height:1.5;transition:background .15s}
 .q-opt:hover:not(.disabled){background:#eaecef}
 .q-opt.selected{background:var(--card-sel)}
 .q-opt.disabled{cursor:default}
@@ -748,7 +783,32 @@ function renderQ(){
 }
 function selectAns(i){
   if(userAns[currentQ]!==null)return;
-  userAns[currentQ]=i;renderQ();
+  var q=examQ[currentQ];
+  var wasWrong=i!==q.ans;
+  userAns[currentQ]=i;
+  renderQ();
+  if(wasWrong) reactWrong(i);
+}
+var ANGRY_EMOJIS=['😤','😠','🙄','😑','😬'];
+function reactWrong(i){
+  var opts=document.querySelectorAll('#q-opts .q-opt');
+  var btn=opts[i];
+  var card=document.querySelector('.q-card');
+  var body=document.querySelector('.exam-body');
+  if(navigator.vibrate){ try{ navigator.vibrate([35,25,35,25,55]); }catch(e){} }
+  if(card){ card.classList.remove('shake-card'); void card.offsetWidth; card.classList.add('shake-card'); }
+  if(body){ body.classList.remove('flash-red'); void body.offsetWidth; body.classList.add('flash-red'); setTimeout(function(){body.classList.remove('flash-red');},600); }
+  if(btn){
+    btn.classList.add('wrong-flash');
+    var em=document.createElement('span');
+    em.className='angry-emoji';
+    em.textContent=ANGRY_EMOJIS[Math.floor(Math.random()*ANGRY_EMOJIS.length)];
+    btn.appendChild(em);
+    setTimeout(function(){
+      btn.classList.remove('wrong-flash');
+      if(em.parentNode) em.parentNode.removeChild(em);
+    },700);
+  }
 }
 function buildNav(){
   document.getElementById('nav-grid').innerHTML=examQ.map(function(_,i){
