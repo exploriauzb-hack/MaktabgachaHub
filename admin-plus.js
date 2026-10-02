@@ -141,7 +141,7 @@ window.AP={
   if(error)return toast('Xatolik: '+error.message,'err');toast('Xabar yuborildi','ok');$('n-title').value='';$('n-msg').value='';AP.loadN();},
  async delN(id){if(!confirm("Xabar o'chirilsinmi?"))return;const {error}=await _sb.from('notifications').delete().eq('id',id);if(error)return toast(error.message,'err');AP.loadN();},
  async backup(){
-  const all=[];for(let f=0;;f+=1000){const {data,error}=await _sb.from('content').select('*').range(f,f+999);if(error)return toast(error.message,'err');all.push(...data);if(data.length<1000)break;}
+  const all=[];for(let f=0;;f+=1000){const {data,error}=await _sb.from('content').select('*').order('created_at',{ascending:true}).order('id',{ascending:true}).range(f,f+999);if(error)return toast(error.message,'err');all.push(...data);if(data.length<1000)break;}
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(all)],{type:'application/json'}));
   a.download='maktabgachahub-zaxira-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast(all.length+' ta yozuv yuklandi','ok');},
  restore(ev){
