@@ -207,6 +207,15 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 .lb-score{font-weight:800;font-size:16px;color:var(--accent);flex-shrink:0}
 .lb-empty,.lb-loading{text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
 
+/* ── PRO: BROWSE LIST ── */
+.browse-row{display:flex;align-items:center;gap:14px;background:var(--card);border:none;border-radius:16px;padding:16px;width:100%;text-align:left;cursor:pointer;font-family:inherit;transition:background .15s}
+.browse-row:hover{background:var(--card-sel)}
+.browse-ico{font-size:26px;flex-shrink:0}
+.browse-info{flex:1;min-width:0}
+.browse-title{font-weight:800;font-size:14.5px;display:block}
+.browse-meta{font-size:12px;color:var(--muted)}
+.browse-arrow{font-size:18px;color:var(--muted);flex-shrink:0}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:11px 20px;border-radius:12px;font-size:12.5px;font-weight:600;opacity:0;pointer-events:none;transition:all .25s;z-index:500;max-width:92vw;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -250,6 +259,22 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
       <button class="btn-enter" onclick="checkCode()">Kirish →</button>
       <p class="code-hint">Kodni tarbiyachingizdan oling</p>
     </div>
+  </div>
+</div>
+
+<!-- ══ PRO: BARCHA VARIANTLAR ══ -->
+<div id="screen-browse" class="screen">
+  <div class="topnav no-print">
+    <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
+  </div>
+  <div class="home-wrap">
+    <div class="home-top">
+      <div style="font-size:40px;margin-bottom:10px">⭐</div>
+      <h1>Barcha variantlar</h1>
+      <p>Pro imkoniyat — kod kiritmasdan tanlang</p>
+    </div>
+    <div id="browse-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px"></div>
+    <button class="btn-back-code" onclick="backToCode()">Kod bilan kirish</button>
   </div>
 </div>
 
@@ -410,15 +435,20 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 <div id="toast" class="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
 <script>
+// Agar umumiy js/supabase.js biror sababga ko'ra yuklanmasa (masalan sahifa
+// boshqa joyga ko'chirilsa) — demo test baribir mustaqil ishlayversin.
+if (typeof _sb === 'undefined' || !_sb) {
+  var SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
+  var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
+  var _sb = (window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null);
+}
+
 // Bazadan yuklanmagan holatda ishlaydigan zaxira variantlar va ularning kirish kodlari.
 // Kod = variantga bog'langan parol. Har bir kod bitta variantni ochadi.
 var HARD_CODES = { 'ILM150':{id:'V1',title:'1-Variant'}, 'ILM250':{id:'V2',title:'2-Variant'}, 'ILM350':{id:'V3',title:'3-Variant'} };
-
-// Supabase (admin panelda "Kirish kodi" bilan qo'shilgan demo variantlarini o'qish uchun)
-var SUPABASE_URL='https://oxpbltvnbjzxqwsxrpvg.supabase.co';
-var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ';
-var _sb = (window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null);
 
 // Kod tasdiqlangach shu obyekt to'ldiriladi: { id, title, questions:[{q,opts,ans,exp}] }
 var SELECTED = null;
@@ -712,6 +742,54 @@ function backToCode(){
   document.getElementById('codeInput').value='';
   document.getElementById('codeErr').textContent='';
   showScreen('screen-code');
+}
+
+/* ═══════ PRO: KOD KIRITMASDAN BARCHA VARIANTLAR ═══════ */
+async function showProBrowse(){
+  showScreen('screen-browse');
+  var list=document.getElementById('browse-list');
+  list.innerHTML='<div class="lb-loading">Yuklanmoqda…</div>';
+  if(!_sb){ list.innerHTML='<div class="lb-empty">Variantlarni yuklab bo\'lmadi.</div>'; return; }
+  try{
+    var res=await _sb.from('content').select('category,category_title,data').eq('type','demo');
+    if(res.error){ list.innerHTML='<div class="lb-empty">Yuklashda xatolik yuz berdi.</div>'; return; }
+    var groups={}, order=[];
+    (res.data||[]).forEach(function(r){
+      if(!groups[r.category]){ groups[r.category]={code:r.category,title:r.category_title||r.category,count:0}; order.push(r.category); }
+      groups[r.category].count++;
+    });
+    if(!order.length){ list.innerHTML='<div class="lb-empty">Hozircha demo variant mavjud emas.</div>'; return; }
+    list.innerHTML=order.map(function(code){
+      var g=groups[code];
+      return '<button class="browse-row" onclick="selectProVariant(\''+code.replace(/'/g,"\\'")+'\')">'
+        +'<span class="browse-ico">📘</span>'
+        +'<span class="browse-info"><span class="browse-title">'+escapeHtmlLocal(g.title)+'</span>'
+        +'<span class="browse-meta">'+g.count+' ta savol</span></span>'
+        +'<span class="browse-arrow">→</span></button>';
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div class="lb-empty">Yuklashda xatolik yuz berdi.</div>';
+  }
+}
+async function selectProVariant(code){
+  if(!_sb) return;
+  try{
+    var res=await _sb.from('content').select('category,category_title,data').eq('type','demo').eq('category',code);
+    if(res.error || !res.data || !res.data.length){ toast('Variantni yuklab bo\'lmadi.',true); return; }
+    SELECTED={ id:code, title:res.data[0].category_title||code, questions:res.data.map(function(r){return r.data;}) };
+    enterHome();
+  }catch(e){ toast('Variantni yuklab bo\'lmadi.',true); }
+}
+async function initProFlow(){
+  if(tryResumeSession()) return; // davom etilayotgan test bo'lsa — shuni ustun qo'yamiz
+  try{
+    if(typeof initAuth==='function'){
+      var a=await initAuth(false); // mehmonlarni index.html ga yo'naltirmaydi
+      if(a && typeof isPro==='function' && isPro()){
+        await showProBrowse();
+      }
+    }
+  }catch(e){ console.warn('Pro oqimini tekshirishda xato:',e); }
 }
 function enterHome(){
   renderSelectedCard();
@@ -1186,7 +1264,7 @@ document.addEventListener('visibilitychange', function(){
     toast('⚠️ Ogohlantirish ('+tabSwitchCount+'/3): test paytida boshqa oyna/tabga o\'tmang!',true);
   }
 });
-tryResumeSession();
+initProFlow();
 </script>
 <script>
 /* PWA: service worker */
