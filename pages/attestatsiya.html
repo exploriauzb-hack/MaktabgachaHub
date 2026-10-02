@@ -9,14 +9,13 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---ink:#141a3d;--mute:#4a5482;--glass:rgba(255,255,255,.42);--glass2:rgba(255,255,255,.66);--line:rgba(255,255,255,.75);--bg:#e4e9ff;--ok:#0f9d6a;--bad:#e0334f;--gold:#f5a700;--acc:#5b4bff;--g1:#d9f7ff;--g2:#ece3ff;--g3:#ffe4d6;--g4:#d6ffee;--b1:#5eead4;--b2:#a78bfa;--b3:#ffb199;--b4:#7dd3fc}
+--ink:#111827;--mute:#4b5563;--glass:rgba(255,255,255,.58);--glass2:rgba(255,255,255,.82);--line:rgba(255,255,255,.75);--bg:#e8f0fe;--ok:#0f9d6a;--bad:#e0334f;--gold:#f5a700;--acc:#1e40af;--g1:#dbeafe;--g2:#ede9fe;--g3:#fce7f3;--g4:#d1fae5;--b1:#86efac;--b2:#c4b5fd;--b3:#f9a8d4;--b4:#93c5fd}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#f3f5ff;--mute:#b4bce6;--glass:rgba(255,255,255,.09);--glass2:rgba(255,255,255,.16);--line:rgba(255,255,255,.2);--bg:#080a26;--ok:#3ddc97;--bad:#ff6b81;--gold:#ffd166;--acc:#9a8cff;--g1:#08122e;--g2:#1a1046;--g3:#2b1140;--g4:#062a30;--b1:#14b8a6;--b2:#7c5cff;--b3:#ff7a90;--b4:#0ea5e9}}
-:root[data-theme="dark"]{--ink:#f3f5ff;--mute:#b4bce6;--glass:rgba(255,255,255,.09);--glass2:rgba(255,255,255,.16);--line:rgba(255,255,255,.2);--bg:#080a26;--ok:#3ddc97;--bad:#ff6b81;--gold:#ffd166;--acc:#9a8cff;--g1:#08122e;--g2:#1a1046;--g3:#2b1140;--g4:#062a30;--b1:#14b8a6;--b2:#7c5cff;--b3:#ff7a90;--b4:#0ea5e9}
+:root[data-theme="dark"]{--ink:#f3f5ff;--mute:#b4bce6;--glass:rgba(255,255,255,.09);--glass2:rgba(255,255,255,.16);--line:rgba(255,255,255,.2);--bg:#080a26;--ok:#3ddc97;--bad:#ff6b81;--gold:#ffd166;--acc:#60a5fa;--g1:#08122e;--g2:#101a4a;--g3:#2b1140;--g4:#062a30;--b1:#14b8a6;--b2:#7c5cff;--b3:#ff7a90;--b4:#0ea5e9}
 body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5;overflow-x:hidden}
 .aurora{position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(125deg,var(--g1),var(--g2),var(--g3),var(--g4),var(--g1));background-size:400% 400%;animation:flow 22s ease-in-out infinite}
 @keyframes flow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.aurora i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(80px);opacity:.55;animation:drift 20s ease-in-out infinite alternate}
+.aurora i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(80px);opacity:.5;animation:drift 20s ease-in-out infinite alternate}
 .aurora i:nth-child(1){background:var(--b2);top:-15%;left:-10%}
 .aurora i:nth-child(2){background:var(--b3);bottom:-22%;right:-8%;animation-duration:26s}
 .aurora i:nth-child(3){background:var(--b1);top:35%;left:40%;width:32vmax;height:32vmax;animation-duration:30s;opacity:.45}
@@ -28,7 +27,7 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
 .glass{background:radial-gradient(380px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,calc(.26*var(--sp,0))),transparent 65%),var(--glass);border:1px solid var(--line);border-radius:26px;backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5);box-shadow:0 20px 60px rgba(30,20,120,.18)}
 .top{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;margin-bottom:18px;border-radius:99px}
 .brand{font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px}
-.pill{font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;background:linear-gradient(120deg,var(--acc),#ff5ea8);color:#fff}
+.pill{font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;background:linear-gradient(120deg,#1e40af,#3b82f6);color:#fff}
 .screen{display:none}.screen.on{display:block;animation:in .5s ease}
 @keyframes in{from{opacity:0;transform:translateY(14px) scale(.985)}}
 .hero{padding:30px 24px;text-align:center;margin-bottom:16px}
@@ -41,10 +40,10 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt2{padding:16px;border-radius:20px;cursor:pointer;text-align:left;font:inherit;color:inherit;background:var(--glass);border:1.5px solid var(--line);transition:.25s}
 .opt2:hover{transform:translateY(-3px)}
-.opt2.sel{border-color:var(--acc);background:var(--glass2);box-shadow:0 0 0 4px rgba(120,100,255,.2)}
+.opt2.sel{border-color:var(--acc);background:var(--glass2);box-shadow:0 0 0 4px rgba(30,64,175,.18)}
 .opt2 b{display:block;font-size:15px}.opt2 span{font-size:12.5px;color:var(--mute)}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.btn{font:inherit;font-weight:800;border:0;border-radius:99px;padding:14px 30px;cursor:pointer;color:#fff;background:linear-gradient(120deg,var(--acc),#ff5ea8);box-shadow:0 10px 30px rgba(110,80,255,.4);transition:.2s}
+.btn{font:inherit;font-weight:800;border:0;border-radius:99px;padding:14px 30px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#1e40af,#2563eb);box-shadow:0 10px 26px rgba(30,64,175,.38);transition:.2s}
 .btn:hover{transform:translateY(-2px) scale(1.03)}
 .btn.ghost{background:var(--glass2);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
 .btn:focus-visible,.opt2:focus-visible,.o:focus-visible,.nb:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -54,7 +53,7 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
 #tm{font-family:'Unbounded',sans-serif;font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
 #tm.urgent{color:var(--bad);animation:pl 1s infinite}@keyframes pl{50%{opacity:.4}}
 .prog{height:6px;border-radius:9px;background:var(--glass);overflow:hidden;margin-bottom:14px}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),#ff5ea8);transition:width .4s}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1e40af,#3b82f6);transition:width .4s}
 .qc{padding:22px}
 .qn{font-size:12.5px;font-weight:800;color:var(--mute);margin-bottom:10px}
 .qt{font-size:17px;font-weight:800;line-height:1.5;margin-bottom:18px}
@@ -88,7 +87,7 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
 .rv{padding:16px;margin-top:14px;text-align:left;font-size:14px}
 /* intro */
-#intro{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 45%,rgba(120,90,255,.55),rgba(8,10,38,.94) 70%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;color:#fff}
+#intro{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 45%,rgba(30,64,175,.6),rgba(8,10,38,.94) 70%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;color:#fff}
 #intro.on{display:flex;animation:fadeI .4s}
 @keyframes fadeI{from{opacity:0}}
 .rays{position:absolute;width:150vmax;height:150vmax;background:repeating-conic-gradient(from 0deg,rgba(255,209,102,.16) 0 6deg,transparent 6deg 18deg);animation:spin 14s linear infinite;-webkit-mask:radial-gradient(circle,#000 0,transparent 55%);mask:radial-gradient(circle,#000 0,transparent 55%)}
@@ -105,13 +104,13 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:99px;font-weight:700;font-size:13px;opacity:0;transition:.3s;z-index:200;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
 
 .glass:hover{--sp:1}
-.hero h1{background:linear-gradient(100deg,var(--ink),var(--acc),#ff5ea8,var(--ink));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+.hero h1{background:linear-gradient(100deg,var(--ink),#1e40af,#3b82f6,var(--ink));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
 .tg{font:inherit;border:1px solid var(--line);background:var(--glass2);border-radius:99px;width:36px;height:36px;cursor:pointer;font-size:16px;margin-left:auto;margin-right:10px;transition:.3s}.tg:hover{transform:rotate(180deg)}a.dash{font-weight:800;font-size:13px;text-decoration:none;color:var(--ink);padding:8px 14px;border-radius:99px;background:var(--glass2);border:1px solid var(--line);margin-right:12px;white-space:nowrap;transition:.2s}a.dash:hover{transform:translateX(-3px)}
 @media(max-width:560px){.brand{display:none}a.dash{margin-right:0}}
 #sd{margin-left:auto;margin-right:8px}#sd:hover{transform:scale(1.12)}#tg{margin-left:0}
 .goal{padding:16px 20px;margin-bottom:16px}.goal b{display:block}.goal span{color:var(--mute);font-size:13px}
 .gbar{height:10px;border-radius:9px;background:var(--glass2);margin-top:12px;position:relative}
-.gbar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--acc),#ff5ea8,var(--gold));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.gbar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#1e40af,#3b82f6,var(--gold));transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
 .gbar::after{content:'90%';position:absolute;left:90%;top:-4px;bottom:-4px;width:2px;background:var(--gold);font-size:10px;font-weight:800;color:var(--gold);padding-top:16px;white-space:nowrap}
 .swap{animation:slide .38s cubic-bezier(.2,.8,.2,1)}@keyframes slide{from{opacity:0;transform:translateX(26px)}}
 .o.ok{animation:ok .5s}.o.no{animation:sh .45s}
@@ -156,7 +155,7 @@ body{min-height:100%;font-family:'Manrope',system-ui,sans-serif;color:var(--ink)
   <section class="screen" id="s-res">
     <div class="glass res" style="position:relative;overflow:hidden"><div class="conf" id="rconf"></div>
       <h2 id="rt">Tabriklaymiz, sinovni tugatdingiz!</h2>
-      <div class="ringbox"><svg viewBox="0 0 120 120"><defs><linearGradient id="g"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#ff5ea8"/></linearGradient></defs><circle class="bgc" cx="60" cy="60" r="54"/><circle class="fg" id="fg" cx="60" cy="60" r="54"/></svg><div><b id="rp">0</b><small>ball</small></div></div>
+      <div class="ringbox"><svg viewBox="0 0 120 120"><defs><linearGradient id="g"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1e40af"/></linearGradient></defs><circle class="bgc" cx="60" cy="60" r="54"/><circle class="fg" id="fg" cx="60" cy="60" r="54"/></svg><div><b id="rp">0</b><small>ball</small></div></div>
       <p id="rg" style="font-weight:800;font-size:18px"></p><p id="rm" style="color:var(--mute);font-size:13.5px"></p>
       <div class="stats"><div><b id="c1" style="color:var(--ok)"></b><span>To'g'ri</span></div><div><b id="c2" style="color:var(--bad)"></b><span>Noto'g'ri</span></div><div><b id="c3"></b><span>Sarflangan vaqt</span></div></div>
       <div class="grid" id="rgrid"></div>
@@ -388,7 +387,7 @@ document.addEventListener('keydown',e=>{if(!$('s-exam').classList.contains('on')
   else if(k==='arrowright')$('next').click();else if(k==='arrowleft')$('prev').click()});
 const TK='attestatsiya_theme';
 try{const t=localStorage.getItem(TK);if(t)document.documentElement.dataset.theme=t}catch(e){}
-$('tg').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'),nx=cur==='dark'?'light':'dark';d.dataset.theme=nx;try{localStorage.setItem(TK,nx)}catch(e){}};
+$('tg').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||'light',nx=cur==='dark'?'light':'dark';d.dataset.theme=nx;try{localStorage.setItem(TK,nx)}catch(e){}};
 $('dash').addEventListener('click',()=>{if(S&&!S.done)store.set(S)});
 const sdUpd=()=>{$('sd').textContent=soundOn?'🔊':'🔇'};sdUpd();
 $('sd').onclick=()=>{soundOn=!soundOn;try{localStorage.setItem(SK,soundOn?'on':'off')}catch(e){}sdUpd();sfx.tap()};
@@ -396,14 +395,16 @@ document.addEventListener('click',e=>{if(e.target.closest('.opt2,.btn:not(#start
 home();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js" onerror="void 0"></script>
 <script>
 /* Admin panelda qo'shilgan savollarni Supabase'dan yuklaydi (eski sahifadagi bilan bir xil jadval: content, type='attestatsiya') */
 (async function(){
   try{
-    if(!window.supabase)return;
-    const db=window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ');
+    const db=(typeof _sb!=='undefined'&&_sb)?_sb:(window.supabase?window.supabase.createClient('https://oxpbltvnbjzxqwsxrpvg.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94cGJsdHZuYmp6eHF3c3hycHZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAyNDIxNzAsImV4cCI6MjA5NTgxODE3MH0.a_-0iKSBa8l2mr4bte6ay3g5tcgSukFA4i72YX6naQQ'):null);
+    if(!db){toast('Supabase kutubxonasi yuklanmadi (internet yoki sayt sozlamasi)');return}
     const {data,error}=await db.from('content').select('category,category_title,data').eq('type','attestatsiya');
-    if(error||!data||!data.length)return;
+    if(error){toast('Supabase xatosi: '+error.message);return}
+    if(!data||!data.length){toast("Bazadan admin savollari kelmadi (0 ta). Saytga kirganingizni (login) va jadval ruxsatini tekshiring");return}
     let added=0;
     data.forEach(r=>{
       if(!r||!r.data||!r.category||!r.data.q)return;
@@ -413,8 +414,9 @@ home();
       if(r.category_title)TITLES[r.category]=r.category_title;
       else if(!TITLES[r.category])TITLES[r.category]=r.category;
     });
+    toast(`Admin savollari: bazadan ${data.length} ta keldi, ${added} ta yangi qo'shildi`);
     if(added&&document.getElementById('s-home').classList.contains('on'))home();
-  }catch(e){console.warn('Admin savollarini yuklashda xato:',e)}
+  }catch(e){console.warn('Admin savollarini yuklashda xato:',e);toast('Yuklashda xato: '+(e&&e.message||e))}
 })();
 </script>
 </body>
