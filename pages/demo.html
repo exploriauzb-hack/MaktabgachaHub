@@ -307,7 +307,7 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
     </div>
     <button class="btn-start" onclick="startExam()">▶ Testni boshlash</button>
     <button class="btn-secondary" onclick="showLeaderboard('screen-home')" style="width:100%;margin-top:10px">🏆 Reytingni ko'rish</button>
-    <button class="btn-back-code" onclick="backToCode()">← Boshqa kod kiritish</button>
+    <button class="btn-back-code" id="home-back-btn" onclick="backToCode()">← Boshqa kod kiritish</button>
   </div>
 </div>
 
@@ -465,6 +465,8 @@ var HARD_CODES = { 'ILM150':{id:'V1',title:'1-Variant'}, 'ILM250':{id:'V2',title
 
 // Kod tasdiqlangach shu obyekt to'ldiriladi: { id, title, questions:[{q,opts,ans,exp}] }
 var SELECTED = null;
+// SELECTED qanday tanlangani: 'code' (kod kiritib) yoki 'pro' (Pro ro'yxatidan tanlab)
+var ENTRY_MODE = 'code';
 
 var V1 = [
   {q:"Vaziyat. MTT tarbiyachisi 'Mening oilam' mavzusidagi faoliyat davomida bolalarga oila qadriyatlari haqida suhbat o'tkazdi. Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilgan edi. Mazkur vaziyatda asosiy tarbiya tamoyili qaysi?",opts:["Tarbiyalanuvchi shaxsini hurmat qilish","Tarbiyada demokratik va insonparvarlik g'oyalarining ustunligi","Tarbiyada milliy va umumbashariy qadriyatlarning ustunligi","Tarbiyani ijtimoiy hayot bilan bog'lash"],ans:2,exp:"Mashg'ulot mazmuni milliy va umuminsoniy qadriyatlarni uyg'unlashtirishga qaratilganligi bu tamoyilni to'liq ifodalaydi."},
@@ -728,6 +730,7 @@ async function checkCode(){
           title:res.data[0].category_title||val,
           questions:res.data.map(function(r){return r.data;})
         };
+        ENTRY_MODE='code';
         enterHome();
         return;
       }
@@ -742,6 +745,7 @@ async function checkCode(){
   if(HARD_CODES[val]){
     var h=HARD_CODES[val];
     SELECTED={id:h.id,title:h.title,questions:HARD_Q[h.id]};
+    ENTRY_MODE='code';
     enterHome();
     return;
   }
@@ -790,6 +794,7 @@ async function selectProVariant(code){
     var res=await _sb.from('content').select('category,category_title,data').eq('type','demo').eq('category',code);
     if(res.error || !res.data || !res.data.length){ toast('Variantni yuklab bo\'lmadi.',true); return; }
     SELECTED={ id:code, title:res.data[0].category_title||code, questions:res.data.map(function(r){return r.data;}) };
+    ENTRY_MODE='pro';
     enterHome();
   }catch(e){ toast('Variantni yuklab bo\'lmadi.',true); }
 }
@@ -809,6 +814,16 @@ function enterHome(){
   var nameEl=document.getElementById('participantName');
   if(nameEl && !nameEl.value){
     try{ var saved=localStorage.getItem('demoParticipantName'); if(saved) nameEl.value=saved; }catch(e){}
+  }
+  var backBtn=document.getElementById('home-back-btn');
+  if(backBtn){
+    if(ENTRY_MODE==='pro'){
+      backBtn.textContent='← Boshqa variant tanlash';
+      backBtn.onclick=function(){ showProBrowse(); };
+    }else{
+      backBtn.textContent='← Boshqa kod kiritish';
+      backBtn.onclick=function(){ backToCode(); };
+    }
   }
   showScreen('screen-home');
 }
