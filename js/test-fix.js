@@ -1,15 +1,22 @@
-/* test-fix.js v3 — test.html uchun (js/ papkasida turadi)
+/* test-fix.js v4 — test.html uchun (js/ papkasida turadi)
    1) Sahifa ochilganda faqat toifa nomlari va soni yuklanadi (tez)
    2) Savollar toifa tanlanganda yuklanadi
    3) Bazadagi barcha qatorlar to'liq o'qiladi (1000 chegarasiz)
    4) "Har toifada N ta savol" yozuvi olib tashlanadi
    5) Kartalarda eng yaxshi natija to'g'ri chiqadi */
 (function () {
-  window.__testFix = 'v3';
+  window.__testFix = 'v4';
 
   var BASE = {};          // sahifaga qattiq yozilgan savollar soni
   var DBCAT = {};         // bazadagi toifalar: {title,total,loaded}
   Object.keys(QUESTIONS).forEach(function (k) { BASE[k] = QUESTIONS[k].length; });
+
+  function withTimeout(p, label) {
+    var ms = window.__testFixTimeout || 15000;
+    return Promise.race([p, new Promise(function (_, rej) {
+      setTimeout(function () { rej(new Error((label || 'so\'rov') + ' vaqti tugadi')); }, ms);
+    })]);
+  }
 
   function cnt(id) { return (BASE[id] || 0) + ((DBCAT[id] && DBCAT[id].total) || 0); }
 
@@ -17,7 +24,7 @@
   async function pageAll(make) {
     var all = [], from = 0, total = null;
     while (true) {
-      var res = await make(from, from + 999);
+      var res = await withTimeout(make(from, from + 999), 'so\'rov');
       if (res.error || !res.data) throw (res.error || new Error('Javob bo\'sh'));
       if (total === null) total = res.count;
       all = all.concat(res.data);
@@ -28,11 +35,11 @@
   }
 
   // 1) Faqat toifalar va ularning soni
-  window.loadDBQuestions = async function () {
+  async function loadCats() {
     try {
       var rows = null, how = 'rpc';
       try {
-        var r = await _sb.rpc('test_categories');
+        var r = await withTimeout(_sb.rpc('test_categories'), 'rpc');
         if (!r.error && Array.isArray(r.data)) {
           rows = r.data.map(function (x) { return { category: x.category, title: x.category_title, total: Number(x.total) }; });
         }
@@ -62,8 +69,15 @@
           TEST_CATS.push({ id: x.category, icon: 'ti-flask', title: x.title || x.category, desc: 'Test savollari' });
         }
       });
-      console.log('[test-fix v3] toifalar: ' + rows.length + ' (' + how + ')');
-    } catch (e) { console.warn('[test-fix] toifalarni yuklashda xato:', e); }
+      console.log('[test-fix v4] toifalar: ' + rows.length + ' (' + how + ')');
+    } catch (e) { console.warn('[test-fix] toifalarni yuklashda xato:', e); throw e; }
+  }
+
+  // Sahifa kutib qolmasligi uchun: kartalar darrov chiqadi, bazadagi toifalar fonda qo'shiladi
+  window.loadDBQuestions = function () {
+    loadCats().then(function () { return window.renderTestGrid(); })
+      .catch(function () { try { showToast("Ba'zi toifalarni yuklab bo'lmadi", 'err'); } catch (e) {} });
+    return Promise.resolve();
   };
 
   // 2) Savollar test boshlanganda yuklanadi
@@ -84,7 +98,7 @@
           QUESTIONS[id].push({ q: q.q, opts: q.opts || [], ans: q.ans, exp: q.exp || '' });
         });
         d.loaded = true;
-        console.log('[test-fix v3] "' + id + '" yuklandi: ' + rows.length + ' savol');
+        console.log('[test-fix v4] "' + id + '" yuklandi: ' + rows.length + ' savol');
         return true;
       } catch (e) { console.warn('[test-fix] savollarni yuklashda xato:', e); return false; }
       finally { d.loading = null; }
