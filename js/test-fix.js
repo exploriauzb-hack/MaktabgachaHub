@@ -1,21 +1,25 @@
 /* test-fix.js — test.html uchun tuzatish (js/ papkasiga qo'ying)
    1) Bazadan barcha test savollarini o'qiydi (1000 qator chegarasini aylanib o'tadi)
    2) Toifa kartalarida eng yaxshi natija va progress to'g'ri chiqadi */
+window.__testFix = 'v2';
 window.loadDBQuestions = async function () {
   try {
-    var data = [], from = 0;
+    var data = [], from = 0, total = null;
     while (true) {
       var res = await _sb.from('content')
-        .select('category, category_title, data')
+        .select('category, category_title, data', { count: 'exact' })
         .eq('type', 'test')
         .order('created_at', { ascending: true })
         .order('id', { ascending: true })
         .range(from, from + 999);
-      if (res.error || !res.data) break;
-      data = data.concat(res.data);
-      if (res.data.length < 1000) break;
-      from += 1000;
+      if (res.error) { console.warn('[test-fix] xato:', res.error.message); break; }
+      var got = res.data || [];
+      if (total === null) total = res.count;
+      data = data.concat(got);
+      from += got.length;
+      if (!got.length || (total !== null && from >= total)) break;
     }
+    console.log('[test-fix v2] yuklandi: ' + data.length + ' / ' + total + ' qator');
     var known = {};
     TEST_CATS.forEach(function (c) { known[c.id] = true; });
     ADAB_SUBS.forEach(function (s) { known[s.id] = true; });
