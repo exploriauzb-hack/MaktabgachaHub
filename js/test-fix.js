@@ -1,15 +1,14 @@
-/* test-fix.js v4 — test.html uchun (js/ papkasida turadi)
-   1) Sahifa ochilganda faqat toifa nomlari va soni yuklanadi (tez)
-   2) Savollar toifa tanlanganda yuklanadi
-   3) Bazadagi barcha qatorlar to'liq o'qiladi (1000 chegarasiz)
-   4) "Har toifada N ta savol" yozuvi olib tashlanadi
-   5) Kartalarda eng yaxshi natija to'g'ri chiqadi */
+/* test-fix.js v5 — test.html uchun (js/ papkasida turadi)
+   • Kartalar sahifa chizilishi bilan DARROV chiqadi (avtorizatsiyani kutmaydi)
+   • Bazadagi toifalar parallel yuklanadi, savollar toifa tanlanganda olinadi
+   • 1000 qator chegarasi yo'q, "Har toifada N ta savol" yozuvi olib tashlangan */
 (function () {
-  window.__testFix = 'v4';
+  window.__testFix = 'v5';
+  var T = function (m) { try { console.log('[test-fix v5] ' + m + ' — ' + Math.round(performance.now()) + ' ms'); } catch (e) {} };
 
-  var BASE = {};          // sahifaga qattiq yozilgan savollar soni
-  var DBCAT = {};         // bazadagi toifalar: {title,total,loaded}
+  var BASE = {}, DBCAT = {}, BEST = null;     // BEST === null: natijalar hali kelmagan
   Object.keys(QUESTIONS).forEach(function (k) { BASE[k] = QUESTIONS[k].length; });
+  function cnt(id) { return (BASE[id] || 0) + ((DBCAT[id] && DBCAT[id].total) || 0); }
 
   function withTimeout(p, label) {
     var ms = window.__testFixTimeout || 15000;
@@ -18,9 +17,6 @@
     })]);
   }
 
-  function cnt(id) { return (BASE[id] || 0) + ((DBCAT[id] && DBCAT[id].total) || 0); }
-
-  // So'rovni 1000 talik bo'laklarda oxirigacha o'qiydi (server kesib qo'ysa ham)
   async function pageAll(make) {
     var all = [], from = 0, total = null;
     while (true) {
@@ -34,53 +30,63 @@
     return all;
   }
 
-  // 1) Faqat toifalar va ularning soni
-  async function loadCats() {
-    try {
-      var rows = null, how = 'rpc';
-      try {
-        var r = await withTimeout(_sb.rpc('test_categories'), 'rpc');
-        if (!r.error && Array.isArray(r.data)) {
-          rows = r.data.map(function (x) { return { category: x.category, title: x.category_title, total: Number(x.total) }; });
-        }
-      } catch (e) {}
-      if (!rows) {
-        how = 'zaxira';
-        var list = await pageAll(function (a, b) {
-          return _sb.from('content').select('category, category_title', { count: 'exact' })
-            .eq('type', 'test').order('created_at', { ascending: true }).order('id', { ascending: true }).range(a, b);
-        });
-        var map = {}; rows = [];
-        list.forEach(function (x) {
-          if (!x.category) return;
-          if (!map[x.category]) { map[x.category] = { category: x.category, title: x.category_title, total: 0 }; rows.push(map[x.category]); }
-          map[x.category].total++;
-        });
-      }
-      var known = {};
-      TEST_CATS.forEach(function (c) { known[c.id] = true; });
-      ADAB_SUBS.forEach(function (s) { known[s.id] = true; });
-      rows.forEach(function (x) {
-        if (!x.category) return;
-        DBCAT[x.category] = { title: x.title, total: x.total, loaded: false };
-        if (!QUESTIONS[x.category]) QUESTIONS[x.category] = [];
-        if (!known[x.category]) {
-          known[x.category] = true;
-          TEST_CATS.push({ id: x.category, icon: 'ti-flask', title: x.title || x.category, desc: 'Test savollari' });
-        }
-      });
-      console.log('[test-fix v4] toifalar: ' + rows.length + ' (' + how + ')');
-    } catch (e) { console.warn('[test-fix] toifalarni yuklashda xato:', e); throw e; }
+  // Kartalarni chizish (tarmoqsiz — darrov)
+  function draw() {
+    var el = document.getElementById('test-grid'); if (!el) return;
+    el.innerHTML = TEST_CATS.map(function (c) {
+      var b = BEST ? BEST[c.title] : undefined;
+      var status = BEST === null ? ''
+        : b === undefined ? 'Hali ishlanmagan'
+        : (b >= 90 ? 'Alo (3 yulduz)' : b >= 70 ? 'Yaxshi (2 yulduz)' : b >= 50 ? 'Qoniqarli (1 yulduz)' : 'Qayta ishlang') + ' (' + b + '%)';
+      var bar = (BEST && b !== undefined) ? '<div class="tc-pbar"><div class="tc-pfill" style="width:' + b + '%"></div></div>' : '';
+      var n = c.hasSub ? ADAB_SUBS.reduce(function (a, s) { return a + cnt(s.id); }, 0) : cnt(c.id);
+      var click = c.hasSub ? 'showAdabiyotlarView()' : ('startTest(\'' + jsq(c.id) + '\',\'' + jsq(c.title) + '\')');
+      return '<div class="tc-card" onclick="' + click + '">' +
+        '<div class="tc-count">' + n + ' savol</div>' +
+        '<div class="tc-icon"><i class="ti ' + c.icon + '"></i></div>' +
+        '<h3>' + c.title + '</h3><p>' + c.desc + '</p>' + bar +
+        '<div class="tc-status">' + status + '</div></div>';
+    }).join('');
   }
 
-  // Sahifa kutib qolmasligi uchun: kartalar darrov chiqadi, bazadagi toifalar fonda qo'shiladi
-  window.loadDBQuestions = function () {
-    loadCats().then(function () { return window.renderTestGrid(); })
-      .catch(function () { try { showToast("Ba'zi toifalarni yuklab bo'lmadi", 'err'); } catch (e) {} });
-    return Promise.resolve();
-  };
+  // Bazadagi toifalar va ularning soni
+  async function loadCats() {
+    var rows = null, how = 'rpc';
+    try {
+      var r = await withTimeout(_sb.rpc('test_categories'), 'rpc');
+      if (!r.error && Array.isArray(r.data)) {
+        rows = r.data.map(function (x) { return { category: x.category, title: x.category_title, total: Number(x.total) }; });
+      }
+    } catch (e) {}
+    if (!rows) {
+      how = 'zaxira';
+      var list = await pageAll(function (a, b) {
+        return _sb.from('content').select('category, category_title', { count: 'exact' })
+          .eq('type', 'test').order('created_at', { ascending: true }).order('id', { ascending: true }).range(a, b);
+      });
+      var map = {}; rows = [];
+      list.forEach(function (x) {
+        if (!x.category) return;
+        if (!map[x.category]) { map[x.category] = { category: x.category, title: x.category_title, total: 0 }; rows.push(map[x.category]); }
+        map[x.category].total++;
+      });
+    }
+    var known = {};
+    TEST_CATS.forEach(function (c) { known[c.id] = true; });
+    ADAB_SUBS.forEach(function (s) { known[s.id] = true; });
+    rows.forEach(function (x) {
+      if (!x.category) return;
+      DBCAT[x.category] = { title: x.title, total: x.total, loaded: false };
+      if (!QUESTIONS[x.category]) QUESTIONS[x.category] = [];
+      if (!known[x.category]) {
+        known[x.category] = true;
+        TEST_CATS.push({ id: x.category, icon: 'ti-flask', title: x.title || x.category, desc: 'Test savollari' });
+      }
+    });
+    T('toifalar yuklandi: ' + rows.length + ' (' + how + ')');
+  }
 
-  // 2) Savollar test boshlanganda yuklanadi
+  // Savollar test boshlanganda yuklanadi
   async function ensureLoaded(id) {
     var d = DBCAT[id];
     if (!d || d.loaded) return true;
@@ -98,7 +104,7 @@
           QUESTIONS[id].push({ q: q.q, opts: q.opts || [], ans: q.ans, exp: q.exp || '' });
         });
         d.loaded = true;
-        console.log('[test-fix v4] "' + id + '" yuklandi: ' + rows.length + ' savol');
+        T('"' + id + '" savollari yuklandi: ' + rows.length);
         return true;
       } catch (e) { console.warn('[test-fix] savollarni yuklashda xato:', e); return false; }
       finally { d.loading = null; }
@@ -116,26 +122,20 @@
     return _start(catId, catTitle);
   };
 
-  // Kartalar (savollar soni bazadan, natijalar sarlavha bo'yicha)
+  // Sahifaning o'z chaqiruvlari: toifalar allaqachon yo'lda, kutmaymiz
+  window.loadDBQuestions = function () { return Promise.resolve(); };
   window.renderTestGrid = async function () {
-    var best = {};
-    var res = await _sb.from('test_results').select('category, percentage').eq('user_id', _currentUser.id);
-    (res.data || []).forEach(function (t) {
-      if (best[t.category] === undefined || t.percentage > best[t.category]) best[t.category] = t.percentage;
-    });
-    document.getElementById('test-grid').innerHTML = TEST_CATS.map(function (c) {
-      var b = best[c.title];
-      var stars = b === undefined ? 'Hali ishlanmagan'
-        : b >= 90 ? 'Alo (3 yulduz)' : b >= 70 ? 'Yaxshi (2 yulduz)' : b >= 50 ? 'Qoniqarli (1 yulduz)' : 'Qayta ishlang';
-      var bar = b !== undefined ? '<div class="tc-pbar"><div class="tc-pfill" style="width:' + b + '%"></div></div>' : '';
-      var n = c.hasSub ? ADAB_SUBS.reduce(function (a, s) { return a + cnt(s.id); }, 0) : cnt(c.id);
-      var click = c.hasSub ? 'showAdabiyotlarView()' : ('startTest(\'' + jsq(c.id) + '\',\'' + jsq(c.title) + '\')');
-      return '<div class="tc-card" onclick="' + click + '">' +
-        '<div class="tc-count">' + n + ' savol</div>' +
-        '<div class="tc-icon"><i class="ti ' + c.icon + '"></i></div>' +
-        '<h3>' + c.title + '</h3><p>' + c.desc + '</p>' + bar +
-        '<div class="tc-status">' + stars + (b !== undefined ? ' (' + b + '%)' : '') + '</div></div>';
-    }).join('');
+    draw();
+    try {
+      var res = await withTimeout(_sb.from('test_results').select('category, percentage').eq('user_id', _currentUser.id), 'natijalar');
+      var best = {};
+      (res.data || []).forEach(function (t) {
+        if (best[t.category] === undefined || t.percentage > best[t.category]) best[t.category] = t.percentage;
+      });
+      BEST = best;
+    } catch (e) { console.warn('[test-fix] natijalar yuklanmadi:', e); if (BEST === null) BEST = {}; }
+    draw();
+    T('natijalar chizildi');
   };
 
   window.renderAdabSubs = function () {
@@ -148,7 +148,14 @@
     }).join('');
   };
 
-  // 4) "Har toifada 20 ta savol" yozuvini olib tashlash
   var ib = document.querySelector('.info-box');
   if (ib) ib.innerHTML = '<i class="ti ti-info-circle"></i> <b>80%</b> va yuqori \u2014 A\'lo toifa!';
+
+  // ISHGA TUSHIRISH: kartalar darrov, toifalar parallel
+  draw();
+  T('kartalar ko\'rindi');
+  loadCats().then(draw).catch(function (e) {
+    console.warn('[test-fix] toifalarni yuklashda xato:', e);
+    try { showToast("Ba'zi toifalarni yuklab bo'lmadi", 'err'); } catch (x) {}
+  });
 })();
