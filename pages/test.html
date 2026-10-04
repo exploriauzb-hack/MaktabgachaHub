@@ -4,6 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MaktabgachaHub — Testlar</title>
+<link rel="preconnect" href="https://oxpbltvnbjzxqwsxrpvg.supabase.co" crossorigin/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"/>
+<link rel="preload" as="script" href="../js/supabase.js"/>
+<link rel="preload" as="script" href="../js/auth.js"/>
+<link rel="preload" as="script" href="../js/premium.js"/>
+<link rel="preload" as="script" href="../js/test-fix.js?v=5"/>
 </head>
 <body>
 <p id="ld" style="font-family:sans-serif;padding:24px;color:#6b7694">Yuklanmoqda…</p>
@@ -11,11 +19,11 @@
 /* Bu fayl eski sahifani (test-eski.html) yuklab, unga test-fix.js ni ulaydi. */
 (async function(){
   try{
-    var r = await fetch('test-eski.html', {cache:'no-store'});
+    var r = await fetch('test-eski.html', {cache:'no-cache'});
     if(!r.ok) throw new Error('test-eski.html topilmadi (' + r.status + ')');
     var html = await r.text();
     if(!/<\/body>/i.test(html)) throw new Error('test-eski.html noto\'g\'ri fayl');
-    html = html.replace(/<\/body>/i, function(){ return '<script src="../js/test-fix.js?t=' + Date.now() + '"><\/script></body>'; });
+    html = html.replace(/<\/body>/i, function(){ return '<script src="../js/test-fix.js?v=5"><\/script></body>'; });
     document.open(); document.write(html); document.close();
   }catch(e){
     document.getElementById('ld').textContent = 'Xatolik: ' + e.message;
