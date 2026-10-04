@@ -1,10 +1,10 @@
-/* test-fix.js v5 — test.html uchun (js/ papkasida turadi)
+/* test-fix.js v6 — test.html uchun (js/ papkasida turadi)
    • Kartalar sahifa chizilishi bilan DARROV chiqadi (avtorizatsiyani kutmaydi)
    • Bazadagi toifalar parallel yuklanadi, savollar toifa tanlanganda olinadi
    • 1000 qator chegarasi yo'q, "Har toifada N ta savol" yozuvi olib tashlangan */
 (function () {
-  window.__testFix = 'v5';
-  var T = function (m) { try { console.log('[test-fix v5] ' + m + ' — ' + Math.round(performance.now()) + ' ms'); } catch (e) {} };
+  window.__testFix = 'v6';
+  var T = function (m) { try { console.log('[test-fix v6] ' + m + ' — ' + Math.round(performance.now()) + ' ms'); } catch (e) {} };
 
   var BASE = {}, DBCAT = {}, BEST = null;     // BEST === null: natijalar hali kelmagan
   Object.keys(QUESTIONS).forEach(function (k) { BASE[k] = QUESTIONS[k].length; });
@@ -28,6 +28,20 @@
       if (!res.data.length || (total !== null && from >= total)) break;
     }
     return all;
+  }
+
+  // Yuqori o'ngdagi tarif yozuvi (sahifada qattiq "Bepul" yozilgan edi)
+  function paintPlan() {
+    try {
+      var pill = document.querySelector('.plan-pill');
+      if (!pill || typeof isPro !== 'function') return;
+      var corp = (typeof isCorporate === 'function') && isCorporate();
+      var pro = isPro() || corp;
+      pill.style.background = pro ? 'var(--pro-soft)' : '';
+      pill.style.color = pro ? 'var(--pro)' : '';
+      pill.innerHTML = pro ? '<i class="ti ti-crown"></i> ' + (corp ? 'Korporativ' : 'PRO')
+                           : '<i class="ti ti-free-rights"></i> Bepul';
+    } catch (e) {}
   }
 
   // Kartalarni chizish (tarmoqsiz — darrov)
@@ -125,6 +139,7 @@
   // Sahifaning o'z chaqiruvlari: toifalar allaqachon yo'lda, kutmaymiz
   window.loadDBQuestions = function () { return Promise.resolve(); };
   window.renderTestGrid = async function () {
+    paintPlan();
     draw();
     try {
       var res = await withTimeout(_sb.from('test_results').select('category, percentage').eq('user_id', _currentUser.id), 'natijalar');
