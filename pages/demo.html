@@ -199,9 +199,17 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 @media print{.no-print{display:none!important}.cert-box{border:3px solid var(--accent)!important}.screen.active{box-shadow:none;max-width:none}}
 
 /* ── NAME INPUT / LEADERBOARD ── */
-.lb-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;text-align:left}
-.lb-row.lb-me{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
-.lb-rank{width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--text)}
+/* ── UMUMIY EKRAN SARLAVHASI (reyting/statistika) ── */
+.screen-head{text-align:center;padding:30px 20px 20px}
+.screen-head-ico{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:27px;margin:0 auto 12px}
+.screen-head h2{font-size:19px;font-weight:800;margin-bottom:4px}
+.screen-head p{font-size:12.5px;color:var(--muted)}
+.ico-gold{background:var(--gold-soft);color:var(--gold)}
+.ico-blue{background:var(--accent-soft);color:var(--accent)}
+
+.lb-row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 14px;margin-bottom:8px;text-align:left;box-shadow:0 2px 10px rgba(17,24,39,.04)}
+.lb-row.lb-me{background:var(--accent-soft);border-color:#b9c7f2;box-shadow:0 2px 12px rgba(30,64,175,.1)}
+.lb-rank{width:32px;height:32px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--text)}
 .lb-rank.gold{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
 .lb-rank.silver{background:linear-gradient(135deg,#94a3b8,#64748b);color:#fff}
 .lb-rank.bronze{background:linear-gradient(135deg,#c2703d,#9a5324);color:#fff}
@@ -210,6 +218,28 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 .lb-date{font-size:11px;color:var(--muted)}
 .lb-score{font-weight:800;font-size:16px;color:var(--accent);flex-shrink:0}
 .lb-empty,.lb-loading{text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
+
+/* ── STATISTIKA ── */
+.stat-box{text-align:center;flex:1;min-width:72px}
+.stat-box .v{font-size:21px;font-weight:800}
+.stat-box .l{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.3}
+.stats-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 18px;box-shadow:0 2px 14px rgba(17,24,39,.05)}
+.grade-row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;font-weight:600}
+.grade-row span:last-child{color:var(--muted);font-weight:600}
+.grade-track{height:9px;background:var(--card);border-radius:99px;overflow:hidden}
+.grade-fill{height:100%;border-radius:99px}
+
+/* ── SERTIFIKAT ── */
+.cert-wrap{padding:0 18px 30px}
+.cert-box{background:#fff;border-radius:26px;padding:38px 26px 30px;text-align:center;box-shadow:0 12px 36px rgba(17,24,39,.08);border:1px solid var(--line)}
+.cert-top-badge{display:inline-flex;align-items:center;gap:6px;background:var(--card);padding:6px 14px;border-radius:20px;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:20px}
+.cert-title{font-size:21px;font-weight:800;margin-bottom:8px}
+.cert-sub{font-size:12.5px;color:var(--muted);margin-bottom:18px;line-height:1.5}
+.cert-name{font-size:23px;font-weight:800;margin-bottom:6px}
+.cert-stars{font-size:22px;margin:2px 0 4px}
+.cert-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.cert-disclaimer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.6}
+@media print{.cert-box{box-shadow:none;border:2px solid var(--accent)}}
 
 /* ── PRO: HERO BANNER ── */
 .pro-hero{position:relative;padding:62px 24px 54px;text-align:center;color:#fff;overflow:hidden;background:linear-gradient(135deg,#6d28d9 0%,#7c3aed 45%,#9333ea 100%)}
@@ -396,10 +426,10 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
     <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
   </div>
   <div class="result-wrap">
-    <div class="result-card">
-      <div style="font-size:36px;margin-bottom:6px">🏆</div>
-      <h2 style="font-size:18px;margin-bottom:4px">Reyting jadvali</h2>
-      <p style="color:var(--muted);font-size:12.5px" id="lb-variant-name"></p>
+    <div class="screen-head">
+      <div class="screen-head-ico ico-gold">🏆</div>
+      <h2>Reyting jadvali</h2>
+      <p id="lb-variant-name"></p>
     </div>
     <div id="lb-list"></div>
     <div class="result-btns no-print" style="margin-top:16px">
@@ -415,10 +445,10 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
     <a href="../dashboard.html" class="btn-dashboard-back">← Dashboard</a>
   </div>
   <div class="result-wrap">
-    <div class="result-card">
-      <div style="font-size:36px;margin-bottom:6px">📊</div>
-      <h2 style="font-size:18px;margin-bottom:4px">Umumiy statistika</h2>
-      <p style="color:var(--muted);font-size:12.5px" id="stats-variant-name"></p>
+    <div class="screen-head">
+      <div class="screen-head-ico ico-blue">📊</div>
+      <h2>Umumiy statistika</h2>
+      <p id="stats-variant-name"></p>
     </div>
     <div id="stats-body"></div>
     <div class="result-btns no-print" style="margin-top:16px">
@@ -434,19 +464,20 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
   </div>
   <div class="cert-wrap">
     <div class="cert-box">
-      <div style="font-size:3.5rem;margin-bottom:10px">🎓</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">MaktabgachaHub | Demo Test</div>
-      <h2 style="color:var(--accent);font-size:20px;margin-bottom:10px">MUVAFFAQIYAT SERTIFIKATI</h2>
-      <p style="color:var(--muted);font-size:12px;margin-bottom:14px">Quyidagi ishtirokchi testni muvaffaqiyatli topshirdi:</p>
-      <div style="font-size:24px;font-weight:800;margin:14px 0 6px" id="cert-name">Ishtirokchi</div>
-      <div style="font-size:22px;margin:8px 0" id="cert-stars"></div>
-      <div style="font-size:3.5rem;font-weight:900;color:var(--accent)" id="cert-score"></div>
-      <div style="font-size:16px;font-weight:700;color:var(--green);margin-bottom:10px" id="cert-grade"></div>
-      <div style="font-size:12px;color:var(--muted)" id="cert-variant"></div>
-      <div style="font-size:12px;color:var(--muted);margin-top:8px" id="cert-date"></div>
-      <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)">Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting.</div>
+      <div class="cert-top-badge">🎓 MaktabgachaHub — Demo Test</div>
+      <h2 class="cert-title">Muvaffaqiyat sertifikati</h2>
+      <p class="cert-sub">Quyidagi ishtirokchi testni muvaffaqiyatli topshirdi:</p>
+      <div class="cert-name" id="cert-name">Ishtirokchi</div>
+      <div class="score-wrap" style="margin:14px auto">
+        <div class="score-circle"><div class="score-num" id="cert-score">0</div><div class="score-lbl">ball</div></div>
+      </div>
+      <div class="cert-stars" id="cert-stars"></div>
+      <div class="res-grade" id="cert-grade" style="margin-top:4px"></div>
+      <div class="cert-meta" id="cert-variant"></div>
+      <div class="cert-meta" id="cert-date"></div>
+      <div class="cert-disclaimer">Bu sertifikat trening maqsadida berilgan. Rasmiy toifa uchun davlat attestatsiyasidan o'ting.</div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:16px" class="no-print">
+    <div class="result-btns no-print" style="margin-top:16px">
       <button class="btn-primary" onclick="window.print()" style="flex:1">🖨️ Chop etish</button>
       <button class="btn-secondary" onclick="showScreen('screen-result')" style="flex:1">← Natijaga qaytish</button>
     </div>
@@ -1204,13 +1235,13 @@ async function showLeaderboard(fromScreen){
     list.innerHTML='<div class="lb-empty">Reytingni yuklashda xatolik.</div>';
   }
 }
-function statBox(val,label){
-  return '<div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--accent)">'+val+'</div><div style="font-size:11px;color:var(--muted)">'+label+'</div></div>';
+function statBox(val,label,color){
+  return '<div class="stat-box"><div class="v" style="color:'+(color||'var(--text)')+'">'+val+'</div><div class="l">'+label+'</div></div>';
 }
 function gradeBar(label,count,total,color){
   var pct=total?Math.round(count/total*100):0;
-  return '<div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+label+'</span><span>'+count+' ta ('+pct+'%)</span></div>'
-    +'<div style="height:8px;background:var(--bg);border-radius:99px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+color+'"></div></div></div>';
+  return '<div style="margin-bottom:12px"><div class="grade-row"><span>'+label+'</span><span>'+count+" ta ("+pct+"%)</span></div>"
+    +'<div class="grade-track"><div class="grade-fill" style="width:'+pct+'%;background:'+color+'"></div></div></div>';
 }
 async function showStats(){
   showScreen('screen-stats');
@@ -1234,15 +1265,15 @@ async function showStats(){
       else past++;
     });
     var avg=Math.round(sum/n);
-    body.innerHTML='<div class="result-card" style="text-align:left">'
-      +'<div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:14px;margin-bottom:20px">'
-      +statBox(n,'Jami urinish')+statBox(avg+'%','O\'rtacha')+statBox(max+'%','Eng yuqori')+statBox(min+'%','Eng past')
+    body.innerHTML='<div class="stats-card">'
+      +'<div style="display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-bottom:22px">'
+      +statBox(n,'Jami urinish','var(--text)')+statBox(avg+'%','O\'rtacha','var(--accent)')+statBox(max+'%','Eng yuqori','var(--green)')+statBox(min+'%','Eng past','var(--red)')
       +'</div>'
-      +'<div style="display:flex;flex-direction:column;gap:10px">'
-      +gradeBar("A'lo (90%+)",alo,n,'#f59e0b')
-      +gradeBar('1-toifa (75-89%)',birinchi,n,'#22c55e')
-      +gradeBar('2-toifa (60-74%)',ikkinchi,n,'#3b82f6')
-      +gradeBar('Yetarli emas (<60%)',past,n,'#ef4444')
+      +'<div>'
+      +gradeBar("A'lo (90%+)",alo,n,'#c76a00')
+      +gradeBar('1-toifa (75-89%)',birinchi,n,'#2e9d5a')
+      +gradeBar('2-toifa (60-74%)',ikkinchi,n,'#1e40af')
+      +gradeBar('Yetarli emas (<60%)',past,n,'#e0464b')
       +'</div></div>';
   }catch(e){
     body.innerHTML='<div class="lb-empty">Statistikani yuklashda xatolik.</div>';
@@ -1277,14 +1308,12 @@ function showAllReview(){
 function showCert(){
   var correct=userAns.filter(function(a,i){return a===examQ[i].ans}).length;
   var pct=Math.round(correct/examQ.length*100);
-  var grade,stars;
-  if(pct>=90){grade="A'lo — Eng yuqori toifa";stars="⭐⭐⭐⭐⭐";}
-  else if(pct>=75){grade="Birinchi toifa";stars="⭐⭐⭐⭐";}
-  else{grade="Ikkinchi toifa";stars="⭐⭐⭐";}
+  var gr=gradeInfo(pct);
+  var stars = pct>=90 ? '⭐⭐⭐⭐⭐' : pct>=75 ? '⭐⭐⭐⭐' : pct>=60 ? '⭐⭐⭐' : '⭐⭐';
   document.getElementById('cert-name').textContent=PARTICIPANT_NAME||'Ishtirokchi';
-  document.getElementById('cert-score').textContent=pct+'%';
+  document.getElementById('cert-score').textContent=pct;
   document.getElementById('cert-stars').textContent=stars;
-  document.getElementById('cert-grade').textContent=grade;
+  var ge=document.getElementById('cert-grade'); ge.textContent=gr.text; ge.className='res-grade '+gr.cls;
   document.getElementById('cert-variant').textContent='📋 '+SELECTED.title+' | '+examQ.length+' ta savol';
   document.getElementById('cert-date').textContent='📅 '+uzDate(new Date());
   showScreen('screen-cert');
