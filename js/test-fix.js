@@ -1,10 +1,10 @@
-/* test-fix.js v6 — test.html uchun (js/ papkasida turadi)
+/* test-fix.js v7 — test.html uchun (js/ papkasida turadi)
    • Kartalar sahifa chizilishi bilan DARROV chiqadi (avtorizatsiyani kutmaydi)
    • Bazadagi toifalar parallel yuklanadi, savollar toifa tanlanganda olinadi
    • 1000 qator chegarasi yo'q, "Har toifada N ta savol" yozuvi olib tashlangan */
 (function () {
-  window.__testFix = 'v6';
-  var T = function (m) { try { console.log('[test-fix v6] ' + m + ' — ' + Math.round(performance.now()) + ' ms'); } catch (e) {} };
+  window.__testFix = 'v7';
+  var T = function (m) { try { console.log('[test-fix v7] ' + m + ' — ' + Math.round(performance.now()) + ' ms'); } catch (e) {} };
 
   var BASE = {}, DBCAT = {}, BEST = null;     // BEST === null: natijalar hali kelmagan
   Object.keys(QUESTIONS).forEach(function (k) { BASE[k] = QUESTIONS[k].length; });
@@ -35,14 +35,27 @@
     try {
       var pill = document.querySelector('.plan-pill');
       if (!pill || typeof isPro !== 'function') return;
-      var corp = (typeof isCorporate === 'function') && isCorporate();
-      var pro = isPro() || corp;
+      var corp = (typeof isCorporate === 'function') && !!isCorporate();
+      var prof = !!isPro();
+      var pro = prof || corp;
       pill.style.background = pro ? 'var(--pro-soft)' : '';
       pill.style.color = pro ? 'var(--pro)' : '';
       pill.innerHTML = pro ? '<i class="ti ti-crown"></i> ' + (corp ? 'Korporativ' : 'PRO')
                            : '<i class="ti ti-free-rights"></i> Bepul';
+      pill.title = 'isPro=' + prof + ', korporativ=' + corp + ' \u00b7 test-fix v7';
+      T('tarif: ' + (pro ? (corp ? 'Korporativ' : 'PRO') : 'Bepul') + ' (isPro=' + prof + ', korporativ=' + corp + ')');
     } catch (e) {}
   }
+
+  // Avtorizatsiya tugashini kutib, tarifni bir marta yangilaydi (16 soniyagacha)
+  (function watchPlan() {
+    var tries = 0;
+    var iv = setInterval(function () {
+      tries++;
+      if (typeof _currentUser !== 'undefined' && _currentUser && typeof isPro === 'function') { paintPlan(); clearInterval(iv); }
+      else if (tries > 40) clearInterval(iv);
+    }, 400);
+  })();
 
   // Kartalarni chizish (tarmoqsiz — darrov)
   function draw() {
