@@ -149,6 +149,18 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
 .result-wrap{padding:0 18px 34px;text-align:center}
 .res-title{font-size:21px;font-weight:800;line-height:1.3;margin:6px 8px 12px}
 .score-wrap{position:relative;width:200px;height:200px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center}
+.reveal-stage{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#fff;border-radius:50%;opacity:1;transition:opacity .5s ease}
+.reveal-stage.hide{opacity:0;pointer-events:none}
+.reveal-spinner{width:40px;height:40px;border-radius:50%;border:4px solid var(--card);border-top-color:var(--accent);animation:revealSpin .8s linear infinite}
+@keyframes revealSpin{to{transform:rotate(360deg)}}
+.reveal-text{font-size:11.5px;color:var(--muted);font-weight:700;text-align:center;max-width:120px;line-height:1.4}
+#score-circle-box{opacity:0;transform:scale(.7);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)}
+#score-circle-box.revealed{opacity:1;transform:scale(1)}
+#score-circle-box::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.75) 50%,transparent 60%);background-size:250% 100%;background-position:150% 0;pointer-events:none}
+#score-circle-box.shine::after{animation:scoreShine 1.1s ease}
+@keyframes scoreShine{to{background-position:-50% 0}}
+.res-motivation{font-size:13px;color:var(--text);font-weight:600;margin:2px 0 18px;padding:0 24px;line-height:1.5;opacity:0;transform:translateY(6px);transition:opacity .5s ease,transform .5s ease}
+.res-motivation.show{opacity:1;transform:translateY(0)}
 .score-circle{position:relative;z-index:2;width:132px;height:132px;border-radius:50%;background:#fff;box-shadow:0 6px 24px rgba(20,24,28,.10);display:flex;flex-direction:column;align-items:center;justify-content:center}
 .score-num{font-size:44px;font-weight:800;line-height:1}
 .score-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-top:2px}
@@ -393,13 +405,18 @@ body{font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--text);font-s
     <h2 class="res-title">Tabriklaymiz, sinovni tugatdingiz!</h2>
     <div class="score-wrap">
       <div class="confetti" id="confetti"></div>
-      <div class="score-circle">
+      <div class="reveal-stage" id="reveal-stage">
+        <div class="reveal-spinner"></div>
+        <div class="reveal-text">Natijangiz hisoblanmoqda…</div>
+      </div>
+      <div class="score-circle" id="score-circle-box">
         <div class="score-num" id="res-score">0</div>
         <div class="score-lbl">ball</div>
       </div>
     </div>
     <div class="res-time">Sarflangan vaqt: <b id="res-time">00:00:00</b></div>
     <div class="res-grade" id="res-grade"></div>
+    <div class="res-motivation" id="res-motivation"></div>
     <div class="ring-row">
       <div class="ring-item"><div class="ring ring-green" id="ring-correct"><span id="res-correct">0</span></div><div class="ring-lbl">To'g'ri<br>javoblar</div></div>
       <div class="ring-item"><div class="ring ring-red" id="ring-wrong"><span id="res-wrong">0</span></div><div class="ring-lbl">Noto'g'ri<br>javoblar</div></div>
@@ -1053,10 +1070,14 @@ function uzDateShort(d){
   return d.getDate()+'-'+m[d.getMonth()];
 }
 function gradeInfo(pct){
-  if(pct>=90) return {text:"A'lo toifa",cls:'gr-gold',bg:'#fff1d6',fg:'#c76a00'};
-  if(pct>=75) return {text:'Birinchi toifa',cls:'gr-green',bg:'#e2f4e8',fg:'#2e9d5a'};
-  if(pct>=60) return {text:'Ikkinchi toifa',cls:'gr-blue',bg:'#eef2ff',fg:'#1e40af'};
-  return {text:'Yetarli emas',cls:'gr-red',bg:'#fde9e9',fg:'#e0464b'};
+  if(pct>=90) return {text:"A'lo toifa",cls:'gr-gold',bg:'#fff1d6',fg:'#c76a00',confetti:90,
+    msg:"Ajoyib! Siz chinakam professional darajadasiz 🌟"};
+  if(pct>=75) return {text:'Birinchi toifa',cls:'gr-green',bg:'#e2f4e8',fg:'#2e9d5a',confetti:55,
+    msg:"Zo'r natija! Yana ozgina — va A'lo toifa qo'lingizda 💪"};
+  if(pct>=60) return {text:'Ikkinchi toifa',cls:'gr-blue',bg:'#eef2ff',fg:'#1e40af',confetti:0,
+    msg:"Yaxshi boshlanish! Davom eting, muvaffaqiyat yaqin 🚀"};
+  return {text:'Yetarli emas',cls:'gr-red',bg:'#fde9e9',fg:'#e0464b',confetti:0,
+    msg:"Har bir usta shunday boshlagan. Qayta urinib ko'ring! 🔥"};
 }
 function animateNumber(el,from,to,dur,onFrame){
   if(!el) return;
@@ -1124,12 +1145,13 @@ function fmtTime(sec){
   function p(n){return String(n).padStart(2,'0');}
   return p(Math.floor(sec/3600))+':'+p(Math.floor(sec%3600/60))+':'+p(sec%60);
 }
-function renderConfetti(){
+function renderConfetti(count){
   var box=document.getElementById('confetti');
   if(!box) return;
+  if(!count){ box.innerHTML=''; return; }
   var colors=['#f59e0b','#3b82f6','#ef4444','#22c55e','#a855f7','#14b8a6','#f472b6'];
   var h='';
-  for(var i=0;i<60;i++){
+  for(var i=0;i<count;i++){
     var ang=Math.random()*Math.PI*2;
     var r=76+Math.random()*24;
     var x=100+Math.cos(ang)*r, y=100+Math.sin(ang)*r, sz=3+Math.random()*4;
@@ -1172,25 +1194,40 @@ function finishExam(timeout,cheat){
   document.getElementById('res-grid').innerHTML=examQ.map(function(q,i){
     return '<button class="qc'+(userAns[i]===q.ans?' ok':' bad')+'" style="animation-delay:'+(i*22)+'ms" onclick="showReviewFor('+i+')">'+(i+1)+'</button>';
   }).join('');
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      animateNumber(document.getElementById('res-score'),0,pct,900);
-      animateNumber(document.getElementById('res-correct'),0,correct,900);
-      animateNumber(document.getElementById('res-wrong'),0,total-correct,900);
-      var pe=document.getElementById('res-pct');
-      animateNumber(pe,0,pct,900,function(v){pe.textContent=v+'%';});
-      document.getElementById('ring-correct').style.setProperty('--p',total?correct/total*100:0);
-      document.getElementById('ring-wrong').style.setProperty('--p',total?(total-correct)/total*100:0);
-      document.getElementById('ring-pct').style.setProperty('--p',pct);
-    });
-  });
   document.getElementById('review-panel').innerHTML='';
   document.getElementById('wrong-section').style.display='none';
-  renderConfetti();
+  renderConfetti(0);
   document.getElementById('btn-cert').style.display=pct>=75?'block':'none';
   lastResult={correct:correct,total:total,pct:pct};
   saveResult(correct,total,pct);
+
+  // Kino kabi "kutilish" sahnasi — keyin natija dramatik tarzda ochiladi
+  var stage=document.getElementById('reveal-stage');
+  var circle=document.getElementById('score-circle-box');
+  var motiv=document.getElementById('res-motivation');
+  motiv.textContent=gr.msg;
+  motiv.classList.remove('show');
+  if(stage) stage.classList.remove('hide');
+  if(circle) circle.classList.remove('revealed','shine');
   showScreen('screen-result');
+  setTimeout(function(){
+    if(stage) stage.classList.add('hide');
+    if(circle){ circle.classList.add('revealed'); requestAnimationFrame(function(){ circle.classList.add('shine'); }); }
+    renderConfetti(gr.confetti);
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        animateNumber(document.getElementById('res-score'),0,pct,900);
+        animateNumber(document.getElementById('res-correct'),0,correct,900);
+        animateNumber(document.getElementById('res-wrong'),0,total-correct,900);
+        var pe=document.getElementById('res-pct');
+        animateNumber(pe,0,pct,900,function(v){pe.textContent=v+'%';});
+        document.getElementById('ring-correct').style.setProperty('--p',total?correct/total*100:0);
+        document.getElementById('ring-wrong').style.setProperty('--p',total?(total-correct)/total*100:0);
+        document.getElementById('ring-pct').style.setProperty('--p',pct);
+      });
+    });
+    setTimeout(function(){ motiv.classList.add('show'); },250);
+  },900);
 }
 function saveResult(correct,total,pct){
   if(!_sb || !SELECTED) return;
