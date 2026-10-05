@@ -753,6 +753,22 @@ function confirmDashboard(){
 }
 
 /* ═══════ KOD TEKSHIRISH ═══════ */
+// Supabase standart holatda bir so'rovda cheklangan qator (odatda 1000) qaytaradi.
+// Savollar ko'p bo'lsa, ba'zi qatorlar "kesilib" qolishi mumkin — shu sababli
+// ro'yxat to'liq chiqmasligi yoki savollar soni kamroq ko'rsatilishi mumkin edi.
+// Shu funksiya har doim HAMMA qatorni, sahifalab (1000 tadan) yig'ib oladi.
+async function fetchAllRows(buildQuery){
+  var pageSize=1000, from=0, all=[];
+  while(true){
+    var res=await buildQuery(_sb).range(from, from+pageSize-1);
+    if(res.error) return res;
+    var batch=res.data||[];
+    all=all.concat(batch);
+    if(batch.length<pageSize) break;
+    from+=pageSize;
+  }
+  return {data:all, error:null};
+}
 async function checkCode(){
   var val=document.getElementById('codeInput').value.trim().toUpperCase();
   var errEl=document.getElementById('codeErr');
@@ -764,9 +780,9 @@ async function checkCode(){
   if(_sb){
     try{
       if(btn){btn._t=btn.textContent;btn.textContent='Tekshirilmoqda…';btn.disabled=true;}
-      var res=await _sb.from('content')
-        .select('category,category_title,data')
-        .eq('type','demo').ilike('category',val);
+      var res=await fetchAllRows(function(sb){
+        return sb.from('content').select('category,category_title,data').eq('type','demo').ilike('category',val);
+      });
       if(btn){btn.textContent=btn._t||'Kirish →';btn.disabled=false;}
       if(!res.error && res.data && res.data.length){
         SELECTED={
@@ -812,7 +828,9 @@ async function showProBrowse(){
   list.innerHTML='<div class="lb-loading">Yuklanmoqda…</div>';
   if(!_sb){ list.innerHTML='<div class="lb-empty">Variantlarni yuklab bo\'lmadi.</div>'; return; }
   try{
-    var res=await _sb.from('content').select('category,category_title,data').eq('type','demo');
+    var res=await fetchAllRows(function(sb){
+      return sb.from('content').select('category,category_title,data').eq('type','demo');
+    });
     if(res.error){ list.innerHTML='<div class="lb-empty">Yuklashda xatolik yuz berdi.</div>'; return; }
     var groups={}, order=[];
     (res.data||[]).forEach(function(r){
@@ -835,7 +853,9 @@ async function showProBrowse(){
 async function selectProVariant(code){
   if(!_sb) return;
   try{
-    var res=await _sb.from('content').select('category,category_title,data').eq('type','demo').eq('category',code);
+    var res=await fetchAllRows(function(sb){
+      return sb.from('content').select('category,category_title,data').eq('type','demo').eq('category',code);
+    });
     if(res.error || !res.data || !res.data.length){ toast('Variantni yuklab bo\'lmadi.',true); return; }
     SELECTED={ id:code, title:res.data[0].category_title||code, questions:res.data.map(function(r){return r.data;}) };
     ENTRY_MODE='pro';
